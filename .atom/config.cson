@@ -1,0 +1,6 @@
+"*":
+  "prettier-atom":
+    formatOnSaveOptions:
+      enabled: true
+    useEslint: false
+    useStylelint: true

@@ -1,0 +1,47 @@
+.DS_Store
+src/.DS_Store
+/components/.DS_Store
+.idea
+node_modules
+dump.rdb
+routes/tmp/*
+!routes/tmp/.gitkeep
+
+coverage
+restart.sh
+log/
+newrelic_agent.log
+
+# dotenv environment variables files
+/.env*
+!/.env.example
+!/.env.test
+
+/database
+/migrations
+# Local DynamoDB
+shared-local-instance.db
+
+.nyc_output
+
+# Legacy app folder
+app/
+
+# Self-signed certs folder
+certs/
+
+# Frontend contamination during merge
+common/containers
+
+# Test scripts
+/test.js
+tests/output
+
+package-lock.json
+scratch.*
+
+# Local secrets file
+local_secrets.yaml
+
+# build folder
+build
