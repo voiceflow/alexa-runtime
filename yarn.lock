@@ -779,6 +779,13 @@
     randomstring "^1.1.5"
     sinon "^7.5.0"
 
+"@voiceflow/client@ssh://git@github.com/voiceflow/client#094e0057260dbd457244a03222405e76fa32f4e7":
+  version "1.0.0"
+  resolved "ssh://git@github.com/voiceflow/client#094e0057260dbd457244a03222405e76fa32f4e7"
+  dependencies:
+    axios "^0.19.0"
+    immer "^5.1.0"
+
 "@voiceflow/commitlint-config@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@voiceflow/commitlint-config/-/commitlint-config-1.0.1.tgz#e9513aa348d5e88ff064022e2dae8d0d7e227f6a"
@@ -1005,6 +1012,21 @@ alce@1.0.0:
   dependencies:
     esprima "~1.0.4"
     estraverse "~1.3.0"
+
+alexa-verifier-middleware@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/alexa-verifier-middleware/-/alexa-verifier-middleware-1.0.2.tgz#395858b8b78297a208f4a03f698edcca6abb7b26"
+  integrity sha512-ytRxmTLFnVq504U00AuG0BkpHLXGTFKwau1Nvs/2/ceztouzuCi/XOAFFjOL3R53GmCtNp1vdXcOK4mIUq00eA==
+  dependencies:
+    alexa-verifier "^2.0.1"
+
+alexa-verifier@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/alexa-verifier/-/alexa-verifier-2.0.1.tgz#90bf4e08b5c8aa9073e211e9cd1dbc43acc69b83"
+  integrity sha512-jRE5tRPKiR91gHi5ss4wrVilc4HK/HGgt8KQP936IJGsdjUZPyh7GoFsvMvspIJwxzTiaMxI5XUXakkzXMOL3A==
+  dependencies:
+    node-forge "^0.7.0"
+    validator "^9.0.0"
 
 ansi-align@^2.0.0:
   version "2.0.0"
@@ -1251,6 +1273,39 @@ asap@^2.0.0:
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha1-5QNHYR1+aQlDIIu9r+vLwvuGbUY=
 
+ask-sdk-core@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/ask-sdk-core/-/ask-sdk-core-2.7.0.tgz#477064d850250149f0c3c4e1d510c7809109e98c"
+  integrity sha512-XEuoQOH8B+fQqdVRtEeLWtNL46yjKxwIpbXg042ZaCNYwwmJaVmbvmnR5p0UXgKjULqWm1QEXjYL5INQlfrK7w==
+  dependencies:
+    ask-sdk-runtime "^2.7.0"
+
+ask-sdk-dynamodb-persistence-adapter@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/ask-sdk-dynamodb-persistence-adapter/-/ask-sdk-dynamodb-persistence-adapter-2.7.0.tgz#1c77a96422a40f765ff44ff4a820d97fd005fd13"
+  integrity sha512-LbwdNLFaUXfy6Wt6Hs4wrZfeopbpZT90SuYT5oo+/g0m8JQNTVVH3Kn4R4K7PTwYFGdHuppvHC1bIu9emt5zZw==
+  dependencies:
+    aws-sdk "^2.163.0"
+
+ask-sdk-model@^1.9.0:
+  version "1.25.1"
+  resolved "https://registry.yarnpkg.com/ask-sdk-model/-/ask-sdk-model-1.25.1.tgz#691694ec2e90ec255aa3eb910be2e49bef8ae9f2"
+  integrity sha512-/rP8zdsIOdsp7B2THbtZpHq3cPW4VXPFyd18pN3cdaaBtfM4Karl9xDFGYBL160c4LT1mLohB2ke6NDb8izYfQ==
+
+ask-sdk-runtime@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/ask-sdk-runtime/-/ask-sdk-runtime-2.7.0.tgz#2905ed9921d9d961c8770ebd29116cb4c7236b39"
+  integrity sha512-l2YxzibbTc8Ld5Rpy/Kg3oASiCGKHxgbZnKYrywZStlDPF5tEAGpRBhdtVd+yBSRikl/9fgcetb2wMewtoZF2g==
+
+ask-sdk@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/ask-sdk/-/ask-sdk-2.7.0.tgz#041a1371408a5fa1801eade547a6bc94d529d357"
+  integrity sha512-BMCD810Y7E/DlHmqQ8Ginvobrs69pgEzCWSyCDUhaLnDUIduf+BmqZpxc0zQ/8ABBOjNtzhJ8/mV7USQijk6iw==
+  dependencies:
+    ask-sdk-core "^2.7.0"
+    ask-sdk-dynamodb-persistence-adapter "^2.7.0"
+    ask-sdk-model "^1.9.0"
+
 asn1@~0.2.3:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/asn1/-/asn1-0.2.4.tgz#8d2475dfab553bb33e77b54e59e880bb8ce23136"
@@ -1318,7 +1373,7 @@ auto-parse@^1.3.0:
   dependencies:
     typpy "2.3.11"
 
-aws-sdk@^2.448.0:
+aws-sdk@^2.163.0, aws-sdk@^2.448.0:
   version "2.599.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.599.0.tgz#45705cbf95a34b6b7f455c3b43c9c7a8c37297e4"
   integrity sha512-7yTXnV5SC9W6m+STbziPd1ZNVh9fTtEZ7Mm0rMqEDm/B2fJBa5xd45TwWG8JvS40X5+9jUBykiWdCuVBBx82rg==
@@ -4590,6 +4645,11 @@ ignore@^5.0.5, ignore@^5.1.1, ignore@^5.1.2:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.4.tgz#84b7b3dbe64552b6ef0eca99f6743dbec6d97adf"
   integrity sha512-MzbUSahkTW1u7JpKKjY7LCARd1fU5W2rLdxlM4kdkayuCwZImjkpluF9CM1aLewYJguPDqewLam18Y6AU69A8A==
 
+immer@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-5.1.0.tgz#38d9eba40dbb0389b7ae7b8b99e4661df0cf89e3"
+  integrity sha512-t6gyFtTcokCuI0tX9KQZJQAkIjSqo/nTeJnwojfty69EzrorZbywwhZ8qNNlF+faajHeRnhOvM2F40KHLFCghQ==
+
 import-fresh@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/import-fresh/-/import-fresh-2.0.0.tgz#d81355c15612d386c61f9ddd3922d4304822a546"
@@ -6526,6 +6586,11 @@ node-fetch@^2.3.0:
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
   integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
 
+node-forge@^0.7.0:
+  version "0.7.6"
+  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.7.6.tgz#fdf3b418aee1f94f0ef642cd63486c77ca9724ac"
+  integrity sha512-sol30LUpz1jQFBjOKwbjxijiE3b6pjd74YwfD0fJOKPjF+fONKb2Yg8rYgS6+bK6VDl+/wfr4IYpC7jDzLUIfw==
+
 node-gyp@^5.0.2, node-gyp@^5.0.5:
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/node-gyp/-/node-gyp-5.0.5.tgz#f6cf1da246eb8c42b097d7cd4d6c3ce23a4163af"
@@ -7431,11 +7496,6 @@ pg-packet-stream@^1.1.0:
   resolved "https://registry.yarnpkg.com/pg-packet-stream/-/pg-packet-stream-1.1.0.tgz#e45c3ae678b901a2873af1e17b92d787962ef914"
   integrity sha512-kRBH0tDIW/8lfnnOyTwKD23ygJ/kexQVXZs7gEyBljw4FYqimZFxnMMx50ndZ8In77QgfGuItS5LLclC2TtjYg==
 
-pg-pool@^2.0.7:
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-2.0.7.tgz#f14ecab83507941062c313df23f6adcd9fd0ce54"
-  integrity sha512-UiJyO5B9zZpu32GSlP0tXy8J2NsJ9EFGFfz5v6PSbdz/1hBLX1rNiiy5+mAm5iJJYwfCv4A0EBcQLGWwjbpzZw==
-
 pg-pool@^2.0.9:
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-2.0.9.tgz#7ed69a27e204f99e9804a851404db6aa908a6dea"
@@ -7462,19 +7522,6 @@ pg@^7.10.0:
     pg-connection-string "0.1.3"
     pg-packet-stream "^1.1.0"
     pg-pool "^2.0.9"
-    pg-types "^2.1.0"
-    pgpass "1.x"
-    semver "4.3.2"
-
-pg@^7.14.0:
-  version "7.14.0"
-  resolved "https://registry.yarnpkg.com/pg/-/pg-7.14.0.tgz#f46727845ad19c2670a7e8151063a670338b6057"
-  integrity sha512-TLsdOWKFu44vHdejml4Uoo8h0EwCjdIj9Z9kpz7pA5i8iQxOTwVb1+Fy+X86kW5AXKxQpYpYDs4j/qPDbro/lg==
-  dependencies:
-    buffer-writer "2.0.0"
-    packet-reader "1.0.0"
-    pg-connection-string "0.1.3"
-    pg-pool "^2.0.7"
     pg-types "^2.1.0"
     pgpass "1.x"
     semver "4.3.2"
@@ -9694,6 +9741,11 @@ validator@^11.1.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-11.1.0.tgz#ac18cac42e0aa5902b603d7a5d9b7827e2346ac4"
   integrity sha512-qiQ5ktdO7CD6C/5/mYV4jku/7qnqzjrxb3C/Q5wR3vGGinHTgJZN/TdFT3ZX4vXhX2R1PXx42fB1cn5W+uJ4lg==
+
+validator@^9.0.0:
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-9.4.1.tgz#abf466d398b561cd243050112c6ff1de6cc12663"
+  integrity sha512-YV5KjzvRmSyJ1ee/Dm5UED0G+1L4GZnLN3w6/T+zZm8scVua4sOhYKWTUrKa0H/tMiJyO9QLHMPN+9mB/aMunA==
 
 vary@^1, vary@~1.1.2:
   version "1.1.2"
