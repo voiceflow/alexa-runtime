@@ -1,19 +1,29 @@
+import { routeWrapper } from '@/lib/utils';
 import { Config, Controller } from '@/types';
 
-import { FullServiceMap } from '../types';
-import Example from './example';
-import { AbstractController } from './utils';
-
-export { AbstractController };
+import { FullServiceMap } from '../services';
+import Alexa from './alexa';
 
 export interface ControllerMap {
-  example: Example;
+  alexa: Alexa;
 }
 
 export interface ControllerClass<T = Controller> {
   new (services: FullServiceMap, config: Config): T;
 }
 
-export default {
-  Example,
+/**
+ * Build all controllers
+ */
+const buildControllers = (services: FullServiceMap, config: Config) => {
+  const controllers = {} as ControllerMap;
+
+  controllers.alexa = new Alexa(services, config);
+
+  // everything before this will be route-wrapped
+  routeWrapper(controllers);
+
+  return controllers;
 };
+
+export default buildControllers;

@@ -15,8 +15,6 @@ export interface Config {
   // Secrets configuration
   SECRETS_PROVIDER: string;
   API_KEYS_SECRET: string | null;
-  MAIN_DB_SECRET: string | null;
-  LOGGING_DB_SECRET: string | null;
 
   // Release information
   GIT_SHA: string | null;
@@ -26,6 +24,8 @@ export interface Config {
 
   // diagrams table
   SKILLS_DYNAMO_TABLE_BASE_NAME: string;
+
+  VF_DATA_SECRET: string;
 }
 
 export interface Request<P extends {} = {}> extends Express.Request<P> {
