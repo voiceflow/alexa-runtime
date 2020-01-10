@@ -1,7 +1,7 @@
+import { utils } from '@voiceflow/common';
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 
 import { buildContext } from './lifecycle';
-import { utils } from '@voiceflow/common';
 
 interface Audio {
   url: string;
@@ -48,9 +48,7 @@ const streamMetaData = (audio: Audio) => {
 };
 
 const AudioPlayerHandler: RequestHandler = {
-  canHandle(input: HandlerInput): boolean {
-    return input.requestEnvelope.request.type.startsWith('AudioPlayer.');
-  },
+  canHandle: (input: HandlerInput): boolean => input.requestEnvelope.request.type.startsWith('AudioPlayer.'),
   async handle(input: HandlerInput) {
     const context = await buildContext(input, null);
 

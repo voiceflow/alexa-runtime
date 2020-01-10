@@ -3,8 +3,8 @@ import DefaultHandlers from '@voiceflow/handlers';
 
 import { Config } from '@/types';
 
-import Handlers from './handlers';
 import { ServiceMap } from '..';
+import Handlers from './handlers';
 
 const Voiceflow = (_services: ServiceMap, config: Config) =>
   new Client({
