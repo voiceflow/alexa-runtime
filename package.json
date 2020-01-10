@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "@voiceflow/backend-utils": "2.0.0",
-    "@voiceflow/client": "ssh://git@github.com/voiceflow/client#8cfbc281dacba81c37a675a815344057adbcc3fb",
+    "@voiceflow/client": "https://github.com/voiceflow/client.git#8cfbc281dacba81c37a675a815344057adbcc3fb",
     "@voiceflow/common": "^6.2.0",
-    "@voiceflow/handlers": "ssh://git@github.com/voiceflow/handlers#91c79277e118f1e3f0c83bcbfca15df73ba2c1f5",
+    "@voiceflow/handlers": "https://github.com/voiceflow/handlers.git#7cb5cbefd4ee62497104d606eeb89ff0385ee1da",
     "@voiceflow/secrets-provider": "^1.6.1",
     "@voiceflow/verror": "^1.1.0",
     "alexa-verifier-middleware": "^1.0.2",
