@@ -1,7 +1,6 @@
 /* eslint no-process-exit: "off", no-process-env: "off" */
 import Promise from 'bluebird';
 import express from 'express';
-import fs from 'fs';
 import http from 'http';
 import https from 'https';
 
@@ -31,19 +30,7 @@ class Server {
     // await this.serviceManager.start()
 
     this.app = express();
-    if (process.env.NODE_ENV === 'local') {
-      this.server = https.createServer(
-        {
-          key: fs.readFileSync('./certs/localhost.key'),
-          cert: fs.readFileSync('./certs/localhost.crt'),
-          requestCert: false,
-          rejectUnauthorized: false,
-        },
-        this.app
-      );
-    } else {
-      this.server = http.createServer(this.app);
-    }
+    this.server = http.createServer(this.app);
 
     const { middlewares, controllers } = this.serviceManager;
 

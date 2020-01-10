@@ -11,7 +11,7 @@ const LaunchHandler: RequestHandler = {
     const context = await buildContext(input, null);
     await launch(context, input);
 
-    context.update();
+    await context.update();
 
     return buildResponse(context, input);
   },

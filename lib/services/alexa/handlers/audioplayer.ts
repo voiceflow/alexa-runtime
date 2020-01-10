@@ -1,16 +1,8 @@
 import { utils } from '@voiceflow/common';
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 
+import { Audio } from '../types';
 import { buildContext } from './lifecycle';
-
-interface Audio {
-  url: string;
-  title?: string;
-  description?: string;
-  icon?: string;
-  background?: string;
-  offset: number;
-}
 
 const streamMetaData = (audio: Audio) => {
   if (!play || _.isEmpty(play)) return {};

@@ -4,13 +4,10 @@ import { Config } from '@/types';
 
 const DocClient = (config: Config) => {
   return config.DYNAMO_ENDPOINT
-    ? new AWS.DynamoDB.DocumentClient({
-        convertEmptyValues: true,
+    ? new AWS.DynamoDB({
         endpoint: config.DYNAMO_ENDPOINT,
       })
-    : new AWS.DynamoDB.DocumentClient({
-        convertEmptyValues: true,
-      });
+    : new AWS.DynamoDB();
 };
 
 export default DocClient;

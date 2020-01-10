@@ -10,11 +10,11 @@ const IntentHandler: RequestHandler = {
   async handle(input: HandlerInput) {
     const context = await buildContext(input, null);
 
-    if (context.stack.getSize() === 0) {
-      launch(context, input);
+    if (context.stack.isEmpty()) {
+      await launch(context, input);
     }
 
-    context.update();
+    await context.update();
 
     return buildResponse(context, input);
   },
