@@ -22,8 +22,7 @@ export interface Config {
   SEM_VER: string | null;
   BUILD_URL: string | null;
 
-  // diagrams table
-  SKILLS_DYNAMO_TABLE_BASE_NAME: string;
+  SESSIONS_DYNAMO_TABLE: string;
 
   VF_DATA_SECRET: string;
 }
