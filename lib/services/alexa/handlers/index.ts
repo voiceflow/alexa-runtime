@@ -1,7 +1,3 @@
-import IntentHandler from './IntentHandler';
-import LaunchHandler from './LaunchHandler';
-
-export default {
-  LaunchHandler,
-  IntentHandler,
-};
+export { default as IntentHandler } from './intent';
+export { default as LaunchHandler } from './launch';
+export { default as AudioplayerHandler } from './audioplayer';

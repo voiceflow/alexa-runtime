@@ -1,10 +1,10 @@
 {
-  "name": "backend-template",
-  "description": "Template project for creating new backend repos",
+  "name": "@voiceflow/alexa",
+  "description": "voiceflow alexa runtime client",
   "version": "1.0.0",
   "author": "Voiceflow",
   "bugs": {
-    "url": "https://github.com/voiceflow/backend-template/issues"
+    "url": "https://github.com/voiceflow/alexa/issues"
   },
   "config": {
     "commitizen": {
@@ -15,6 +15,7 @@
     "@voiceflow/backend-utils": "2.0.0",
     "@voiceflow/client": "ssh://git@github.com/voiceflow/client#094e0057260dbd457244a03222405e76fa32f4e7",
     "@voiceflow/common": "^6.2.0",
+    "@voiceflow/handlers": "ssh://git@github.com/voiceflow/handlers#91c79277e118f1e3f0c83bcbfca15df73ba2c1f5",
     "@voiceflow/secrets-provider": "^1.6.1",
     "@voiceflow/verror": "^1.1.0",
     "alexa-verifier-middleware": "^1.0.2",
