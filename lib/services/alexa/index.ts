@@ -1,8 +1,9 @@
 import ASK from 'ask-sdk';
 
-import { FullServiceMap } from '..';
-import { IntentHandler, LaunchHandler, AudioplayerHandler } from './handlers';
 import { Config } from '@/types';
+
+import { FullServiceMap } from '..';
+import { AudioplayerHandler, IntentHandler, LaunchHandler } from './handlers';
 
 const ResponseInterceptor = {
   async process(handlerInput) {
@@ -11,17 +12,14 @@ const ResponseInterceptor = {
   },
 };
 
-function Alexa(services: FullServiceMap, config: Config) {
-  return (
-    ASK.SkillBuilders.standard()
-      .addRequestHandlers(LaunchHandler, IntentHandler, AudioplayerHandler)
-      .addErrorHandlers(errorHandler)
-      // .addRequestInterceptors(RequestInterceptor)
-      .addResponseInterceptors(ResponseInterceptor)
-      .withTableName(config.SESSIONS_DYNAMO_TABLE)
-      .withAutoCreateTable(false)
-      .create()
-  );
-}
+const Alexa = (services: FullServiceMap, config: Config) =>
+  ASK.SkillBuilders.standard()
+    .addRequestHandlers(LaunchHandler, IntentHandler, AudioplayerHandler)
+    .addErrorHandlers(errorHandler)
+    // .addRequestInterceptors(RequestInterceptor)
+    .addResponseInterceptors(ResponseInterceptor)
+    .withTableName(config.SESSIONS_DYNAMO_TABLE)
+    .withAutoCreateTable(false)
+    .create();
 
 export default Alexa;
