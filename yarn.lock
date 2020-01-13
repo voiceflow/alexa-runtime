@@ -779,9 +779,9 @@
     randomstring "^1.1.5"
     sinon "^7.5.0"
 
-"@voiceflow/client@ssh://git@github.com/voiceflow/client#094e0057260dbd457244a03222405e76fa32f4e7":
+"@voiceflow/client@https://github.com/voiceflow/client.git#094e0057260dbd457244a03222405e76fa32f4e7":
   version "1.0.0"
-  resolved "ssh://git@github.com/voiceflow/client#094e0057260dbd457244a03222405e76fa32f4e7"
+  resolved "https://github.com/voiceflow/client.git#094e0057260dbd457244a03222405e76fa32f4e7"
   dependencies:
     axios "^0.19.0"
     immer "^5.1.0"
@@ -856,11 +856,11 @@
   dependencies:
     current-git-branch "^1.1.0"
 
-"@voiceflow/handlers@ssh://git@github.com/voiceflow/handlers#91c79277e118f1e3f0c83bcbfca15df73ba2c1f5":
+"@voiceflow/handlers@https://github.com/voiceflow/handlers.git#7cb5cbefd4ee62497104d606eeb89ff0385ee1da":
   version "1.0.0"
-  resolved "ssh://git@github.com/voiceflow/handlers#91c79277e118f1e3f0c83bcbfca15df73ba2c1f5"
+  resolved "https://github.com/voiceflow/handlers.git#7cb5cbefd4ee62497104d606eeb89ff0385ee1da"
   dependencies:
-    "@voiceflow/client" "ssh://git@github.com/voiceflow/client#094e0057260dbd457244a03222405e76fa32f4e7"
+    "@voiceflow/client" "https://github.com/voiceflow/client.git#094e0057260dbd457244a03222405e76fa32f4e7"
     axios "^0.19.0"
     immer "^5.1.0"
 
