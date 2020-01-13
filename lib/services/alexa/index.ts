@@ -1,9 +1,9 @@
-import ASK from 'ask-sdk';
+import { SkillBuilders } from 'ask-sdk';
 
 import { Config } from '@/types';
 
 import { FullServiceMap } from '..';
-import { AudioplayerHandler, IntentHandler, LaunchHandler } from './handlers';
+import { ErrorHandler, IntentHandler, LaunchHandler } from './handlers';
 
 const ResponseInterceptor = {
   async process(handlerInput) {
@@ -13,11 +13,12 @@ const ResponseInterceptor = {
 };
 
 const Alexa = (services: FullServiceMap, config: Config) =>
-  ASK.SkillBuilders.standard()
-    .addRequestHandlers(LaunchHandler, IntentHandler, AudioplayerHandler)
-    .addErrorHandlers(errorHandler)
+  SkillBuilders.standard()
+    .addRequestHandlers(LaunchHandler, IntentHandler)
+    .addErrorHandlers(ErrorHandler)
     // .addRequestInterceptors(RequestInterceptor)
     .addResponseInterceptors(ResponseInterceptor)
+    .withDynamoDbClient(services.dynamo)
     .withTableName(config.SESSIONS_DYNAMO_TABLE)
     .withAutoCreateTable(false)
     .create();

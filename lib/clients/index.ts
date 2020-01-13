@@ -3,11 +3,11 @@ import { AxiosStatic } from 'axios';
 
 import { Config } from '@/types';
 
-import DocClient from './docClient';
+import Dynamo from './dynamo';
 import Static from './static';
 
 export interface ClientMap {
-  docClient: AWS.DynamoDB.DocumentClient;
+  dynamo: AWS.DynamoDB;
   axios: AxiosStatic;
 }
 
@@ -17,7 +17,7 @@ export interface ClientMap {
 const buildClients = (config: Config) => {
   const clients = { ...Static } as ClientMap;
 
-  clients.docClient = DocClient(config);
+  clients.dynamo = Dynamo(config);
 
   return clients;
 };

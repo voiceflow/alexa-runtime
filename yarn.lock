@@ -786,6 +786,13 @@
     axios "^0.19.0"
     immer "^5.1.0"
 
+"@voiceflow/client@ssh://git@github.com/voiceflow/client#803ef62721f61fbadafd153921f4c379b9d7262d":
+  version "0.1.0"
+  resolved "ssh://git@github.com/voiceflow/client#803ef62721f61fbadafd153921f4c379b9d7262d"
+  dependencies:
+    axios "^0.19.0"
+    immer "^5.1.0"
+
 "@voiceflow/commitlint-config@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@voiceflow/commitlint-config/-/commitlint-config-1.0.1.tgz#e9513aa348d5e88ff064022e2dae8d0d7e227f6a"
