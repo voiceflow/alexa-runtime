@@ -1,5 +1,4 @@
 import { HTTP_STATUS } from '@voiceflow/verror';
-import bodyParser from 'body-parser';
 import PrettyStream from 'bunyan-prettystream';
 import compression from 'compression';
 import timeout from 'connect-timeout';
@@ -45,13 +44,6 @@ class ExpressMiddleware {
     app.use(helmet());
 
     app.use(compression());
-    app.use(bodyParser.json({ limit: '50mb' }));
-    app.use(
-      bodyParser.urlencoded({
-        limit: '50mb',
-        extended: true,
-      })
-    );
     app.use(cookieParser());
     app.enable('trust proxy');
     app.disable('x-powered-by');

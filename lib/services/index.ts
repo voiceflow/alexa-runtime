@@ -27,7 +27,7 @@ const buildServices = (config: Config, clients: ClientMap): FullServiceMap => {
 
   services.secretsProvider = secretsProvider;
   services.voiceflow = Voiceflow(services, config);
-  services.alexa = Alexa(services);
+  services.alexa = Alexa(services, config);
 
   return services;
 };
