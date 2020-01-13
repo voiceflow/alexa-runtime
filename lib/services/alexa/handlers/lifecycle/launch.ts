@@ -25,7 +25,7 @@ const launch = async (context: Context, input: HandlerInput): Promise<void> => {
   storage.set(S.USER, input.requestEnvelope.context.System.user.userId);
 
   // set based on metadata
-  storage.set(S.ALEXA_PERMISSIONS, meta.alexa_permissions);
+  storage.set(S.ALEXA_PERMISSIONS, meta.alexa_permissions ?? []);
   storage.set(S.REPEAT, meta.repeat ?? 100);
 
   // default global variables
@@ -35,8 +35,14 @@ const launch = async (context: Context, input: HandlerInput): Promise<void> => {
     user_id: storage.get(S.USER),
     sessions: storage.get(S.SESSIONS),
     platform: 'alexa',
-    // hidden system variables
-    voiceflow: {},
+
+    // hidden system variables (code block only)
+    voiceflow: {
+      // TODO: implement all exposed voiceflow variables
+      permissions: storage.get(S.ALEXA_PERMISSIONS),
+      events: [],
+    },
+    _system: input.requestEnvelope.context.System,
   });
 
   // initialize all the global variables

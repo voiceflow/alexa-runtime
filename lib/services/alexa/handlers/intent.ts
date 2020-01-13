@@ -1,6 +1,6 @@
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 
-import { buildContext, buildResponse, launch } from './lifecycle';
+import { buildContext, buildResponse, launch, update } from './lifecycle';
 
 const IntentHandler: RequestHandler = {
   canHandle(input: HandlerInput): boolean {
@@ -14,7 +14,7 @@ const IntentHandler: RequestHandler = {
       await launch(context, input);
     }
 
-    await context.update();
+    await update(context);
 
     return buildResponse(context, input);
   },

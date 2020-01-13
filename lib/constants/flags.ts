@@ -11,6 +11,7 @@ export enum Turn {
   AUDIO = 'play',
   PERMISSION_CARD = 'permission_card',
   END = 'end',
+  PREVIOUS_OUTPUT = 'lastOutput',
 }
 
 export default {
