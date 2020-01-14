@@ -105,13 +105,7 @@ const InteractionHandler: Handler = {
       }
     });
     if (nextId === undefined) {
-      // const commandId = findCommand(state, diagram, state.transformed_input);
-
-      // if (state.enteringNewDiagram) {
-      //   nextId = null;
-      // } else {
-      //   nextId = commandId || block.elseId;
-      // }
+      // TODO: check if there is a command that fulfills intent. Otherwise nextId is elseId.
       nextId = block.elseId;
     }
     mapVariables(context, variables, block.overwrite);
