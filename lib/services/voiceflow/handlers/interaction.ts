@@ -63,6 +63,26 @@ const mapVariables = (context, variables, overwrite = false) => {
   turn.delete('mappings');
 };
 
+const replacer = (match, inner, variables, modifier) => {
+  if (inner in variables) {
+    return typeof modifier === 'function' ? modifier(variables[inner]) : variables[inner];
+  }
+  return match;
+};
+
+const RegexVariables = (phrase: string, variables: Record<string, any>, modifier?: Function) => {
+  if (!phrase || !phrase.trim()) {
+    return '';
+  }
+  return phrase.replace(/\{([a-zA-Z0-9_]{1,32})\}/g, (match, inner) => replacer(match, inner, variables, modifier));
+};
+
+const addRepromptIfExists = (block, context, variables) => {
+  if (block.reprompt) {
+    context.turn.set('reprompt', RegexVariables(block.reprompt, variables));
+  }
+};
+
 const InteractionHandler: Handler = {
   canHandle: (block) => {
     return !!block.interactions;
@@ -71,7 +91,7 @@ const InteractionHandler: Handler = {
     const { turn } = context;
 
     if (!turn.get('intent')) {
-      // TODO: add reprompt if exists
+      addRepromptIfExists(block, context, variables);
       context.end();
       return block.id;
     }
