@@ -16,6 +16,7 @@
     "@voiceflow/client": "https://github.com/voiceflow/client.git#8cfbc281dacba81c37a675a815344057adbcc3fb",
     "@voiceflow/common": "^6.2.0",
     "@voiceflow/handlers": "https://github.com/voiceflow/handlers.git#7cb5cbefd4ee62497104d606eeb89ff0385ee1da",
+    "@voiceflow/logger": "^1.1.0",
     "@voiceflow/secrets-provider": "^1.6.1",
     "@voiceflow/verror": "^1.1.0",
     "alexa-verifier-middleware": "^1.0.2",

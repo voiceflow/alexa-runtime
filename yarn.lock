@@ -786,9 +786,9 @@
     axios "^0.19.0"
     immer "^5.1.0"
 
-"@voiceflow/client@ssh://git@github.com/voiceflow/client#803ef62721f61fbadafd153921f4c379b9d7262d":
+"@voiceflow/client@https://github.com/voiceflow/client.git#8cfbc281dacba81c37a675a815344057adbcc3fb":
   version "0.1.0"
-  resolved "ssh://git@github.com/voiceflow/client#803ef62721f61fbadafd153921f4c379b9d7262d"
+  resolved "https://github.com/voiceflow/client.git#8cfbc281dacba81c37a675a815344057adbcc3fb"
   dependencies:
     axios "^0.19.0"
     immer "^5.1.0"

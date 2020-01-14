@@ -1,5 +1,7 @@
 import { Handler } from '@voiceflow/client';
 
+import Logger from '@/logger';
+
 // TODO: this whole file is horrible just want to make things work as a first step
 
 const formatName = (name) => {
@@ -10,7 +12,9 @@ const formatName = (name) => {
   try {
     formatted_name = name.replace(/ /g, '_');
     // eslint-disable-next-line no-empty
-  } catch (err) {}
+  } catch (err) {
+    Logger.log(err);
+  }
 
   Array.from(Array(10).keys()).forEach((i) => {
     const replace = i.toString();
