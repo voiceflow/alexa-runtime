@@ -8,7 +8,6 @@ const IntentHandler: RequestHandler = {
     return type === 'IntentRequest' || type.startsWith('PlaybackController');
   },
   async handle(input: HandlerInput) {
-    // console.log('INPUT ALEXA INTENT HANDLER', input);
     const { type, ...payload } = input.requestEnvelope.request as any;
     const context = await buildContext(input, { type, payload });
 

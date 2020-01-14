@@ -1,5 +1,7 @@
 import { Handler } from '@voiceflow/client';
 
+// TODO: this whole file is horrible just want to make things work as a first step
+
 const formatName = (name) => {
   if (!name) {
     return name;
@@ -17,26 +19,6 @@ const formatName = (name) => {
   });
   return formatted_name;
 };
-
-// const replacer = (match, inner, variables, modifier) => {
-//   if (inner in variables) {
-//     return typeof modifier === 'function' ? modifier(variables[inner]) : variables[inner];
-//   }
-//   return match;
-// };
-
-// const RegexVariables = (phrase: string, variables: Record<string, any>, modifier?: Function) => {
-//   if (!phrase || !phrase.trim()) {
-//     return '';
-//   }
-//   return phrase.replace(/\{([a-zA-Z0-9_]{1,32})\}/g, (match, inner) => replacer(match, inner, variables, modifier));
-// };
-
-// const addRepromptIfExists = (block, context, variables) => {
-//   if (block.reprompt) {
-//     context.storage.set('reprompt', RegexVariables(block.reprompt, variables));
-//   }
-// };
 
 const stringToNumIfNumeric = (str) => {
   // eslint-disable-next-line no-restricted-globals
@@ -85,7 +67,7 @@ const InteractionHandler: Handler = {
     const { turn } = context;
 
     if (!turn.get('intent')) {
-      // addRepromptIfExists(block, context, variables);
+      // TODO: add reprompt if exists
       context.end();
       return block.id;
     }
