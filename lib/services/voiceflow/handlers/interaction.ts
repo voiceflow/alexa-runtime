@@ -33,9 +33,9 @@ const stringToNumIfNumeric = (str) => {
 };
 
 const mapVariables = (context, variables, overwrite = false) => {
-  const { turn } = context;
-  if (turn.get('mappings') && turn.get('slots')) {
-    turn.get('mappings').forEach((map) => {
+  const { payload } = context.getRequest();
+  if (payload.mappings && payload.intent.slots) {
+    payload.mappings.forEach((map) => {
       if (!map.slot) {
         return;
       }
@@ -45,14 +45,14 @@ const mapVariables = (context, variables, overwrite = false) => {
       let fromSlotValue;
       try {
         fromSlotValue =
-          turn.get('slots')[fromSlot].resolutions.resolutionsPerAuthority[0].values &&
-          turn.get('slots')[fromSlot].resolutions.resolutionsPerAuthority[0].values[0].value.name;
+          payload.intent.slots[fromSlot].resolutions.resolutionsPerAuthority[0].values &&
+          payload.intent.slots[fromSlot].resolutions.resolutionsPerAuthority[0].values[0].value.name;
       } catch (e) {
         // Resolution does not exist
       }
 
       if (!fromSlotValue) {
-        fromSlotValue = turn.get('slots')[fromSlot] ? turn.get('slots')[fromSlot].value : null;
+        fromSlotValue = payload.intent.slots[fromSlot] ? payload.intent.slots[fromSlot].value : null;
       }
 
       if (toVariable && (fromSlotValue || overwrite)) {
@@ -60,7 +60,7 @@ const mapVariables = (context, variables, overwrite = false) => {
       }
     });
   }
-  turn.delete('mappings');
+  delete payload.mappings;
 };
 
 const replacer = (match, inner, variables, modifier) => {
@@ -88,9 +88,9 @@ const InteractionHandler: Handler = {
     return !!block.interactions;
   },
   handle: (block, context, variables) => {
-    const { turn } = context;
+    const { payload } = context.getRequest();
 
-    if (!turn.get('intent')) {
+    if (!payload.intent) {
       addRepromptIfExists(block, context, variables);
       context.end();
       return block.id;
@@ -98,9 +98,10 @@ const InteractionHandler: Handler = {
 
     let nextId;
 
+    const intentName = payload.intent.name;
     block.interactions.forEach((choice, i) => {
-      if (choice.intent && formatName(choice.intent) === turn.get('intent')) {
-        context.turn.set('mappings', choice.mappings);
+      if (choice.intent && formatName(choice.intent) === intentName) {
+        payload.mappings = choice.mappings;
         nextId = block.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
       }
     });
@@ -109,7 +110,7 @@ const InteractionHandler: Handler = {
       nextId = block.elseId;
     }
     mapVariables(context, variables, block.overwrite);
-    turn.delete('intent');
+    delete payload.intent;
     return nextId;
   },
 };
