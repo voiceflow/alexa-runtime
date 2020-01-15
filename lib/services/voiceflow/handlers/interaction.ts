@@ -1,107 +1,29 @@
-import { Handler } from '@voiceflow/client';
+import { Choice, Handler } from '@voiceflow/client';
 
-import Logger from '@/logger';
+import { R } from '@/lib/constants';
 
-// TODO: this whole file is horrible just want to make things work as a first step
-
-const formatName = (name) => {
-  if (!name) {
-    return name;
-  }
-  let formatted_name = '';
-  try {
-    formatted_name = name.replace(/ /g, '_');
-    // eslint-disable-next-line no-empty
-  } catch (err) {
-    Logger.log(err);
-  }
-
-  Array.from(Array(10).keys()).forEach((i) => {
-    const replace = i.toString();
-    const re = new RegExp(replace, 'g');
-    formatted_name = formatted_name.replace(re, String.fromCharCode(i + 65));
-  });
-  return formatted_name;
-};
-
-const stringToNumIfNumeric = (str) => {
-  // eslint-disable-next-line no-restricted-globals
-  if (!isNaN(str)) {
-    str = +str;
-  }
-  return str;
-};
-
-const mapVariables = (context, variables, overwrite = false) => {
-  const { payload } = context.getRequest();
-  if (payload.mappings && payload.intent.slots) {
-    payload.mappings.forEach((map) => {
-      if (!map.slot) {
-        return;
-      }
-      const toVariable = map.variable;
-      const fromSlot = map.slot ? formatName(map.slot) : null;
-
-      let fromSlotValue;
-      try {
-        fromSlotValue =
-          payload.intent.slots[fromSlot].resolutions.resolutionsPerAuthority[0].values &&
-          payload.intent.slots[fromSlot].resolutions.resolutionsPerAuthority[0].values[0].value.name;
-      } catch (e) {
-        // Resolution does not exist
-      }
-
-      if (!fromSlotValue) {
-        fromSlotValue = payload.intent.slots[fromSlot] ? payload.intent.slots[fromSlot].value : null;
-      }
-
-      if (toVariable && (fromSlotValue || overwrite)) {
-        variables.set(toVariable, stringToNumIfNumeric(fromSlotValue));
-      }
-    });
-  }
-  delete payload.mappings;
-};
-
-const replacer = (match, inner, variables, modifier) => {
-  if (inner in variables) {
-    return typeof modifier === 'function' ? modifier(variables[inner]) : variables[inner];
-  }
-  return match;
-};
-
-const RegexVariables = (phrase: string, variables: Record<string, any>, modifier?: Function) => {
-  if (!phrase || !phrase.trim()) {
-    return '';
-  }
-  return phrase.replace(/\{([a-zA-Z0-9_]{1,32})\}/g, (match, inner) => replacer(match, inner, variables, modifier));
-};
-
-const addRepromptIfExists = (block, context, variables) => {
-  if (block.reprompt) {
-    context.turn.set('reprompt', RegexVariables(block.reprompt, variables));
-  }
-};
+import { addRepromptIfExists, formatName, mapVariables } from '../utils';
 
 const InteractionHandler: Handler = {
   canHandle: (block) => {
     return !!block.interactions;
   },
   handle: (block, context, variables) => {
-    const { payload } = context.getRequest();
+    const { payload: reqPayload } = context.getRequest();
 
-    if (!payload.intent) {
+    if (!reqPayload.get(R.INTENT)) {
       addRepromptIfExists(block, context, variables);
+      // quit cycleStack without ending session
       context.end();
       return block.id;
     }
 
-    let nextId;
+    let nextId: string;
 
-    const intentName = payload.intent.name;
-    block.interactions.forEach((choice, i) => {
+    const intentName = reqPayload.get(R.INTENT).name;
+    block.interactions.forEach((choice: Choice, i: number) => {
       if (choice.intent && formatName(choice.intent) === intentName) {
-        payload.mappings = choice.mappings;
+        reqPayload.set(R.MAPPINGS, choice.mappings);
         nextId = block.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
       }
     });
@@ -109,8 +31,13 @@ const InteractionHandler: Handler = {
       // TODO: check if there is a command that fulfills intent. Otherwise nextId is elseId.
       nextId = block.elseId;
     }
+
+    // map request mappings to variables
     mapVariables(context, variables, block.overwrite);
-    delete payload.intent;
+
+    // intent has been processed. can be deleted from request
+    reqPayload.delete(R.INTENT);
+
     return nextId;
   },
 };

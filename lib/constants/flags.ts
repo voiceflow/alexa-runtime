@@ -12,9 +12,16 @@ export enum Turn {
   PERMISSION_CARD = 'permission_card',
   END = 'end',
   PREVIOUS_OUTPUT = 'lastOutput',
+  REPROMPT = 'reprompt',
+}
+
+export enum Request {
+  INTENT = 'intent',
+  MAPPINGS = 'mappings',
 }
 
 export default {
   Storage,
   Turn,
+  Request,
 };

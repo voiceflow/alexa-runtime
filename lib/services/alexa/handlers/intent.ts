@@ -1,3 +1,4 @@
+import { Store } from '@voiceflow/client';
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 
 import { buildContext, buildResponse, launch, update } from './lifecycle';
@@ -9,7 +10,6 @@ const IntentHandler: RequestHandler = {
   },
   async handle(input: HandlerInput) {
     const { type, ...payload } = input.requestEnvelope.request as any;
-    const context = await buildContext(input, { type, payload });
 
     // TODO: improve this when working on displays
     if (type.startsWith('PlaybackController')) {
@@ -32,6 +32,8 @@ const IntentHandler: RequestHandler = {
       }
       payload.intent = intent;
     }
+
+    const context = await buildContext(input, { type, payload: new Store(payload) });
 
     if (context.stack.isEmpty()) {
       await launch(context, input);
