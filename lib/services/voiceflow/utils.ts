@@ -62,3 +62,57 @@ export const mapVariables = (context: Context, variables: Store, overwrite = fal
 export const addRepromptIfExists = (block: Record<string, any>, context: Context, variables: Store): void => {
   if (block.reprompt) context.turn.set(T.REPROMPT, _regexVariables(block.reprompt, variables.getState()));
 };
+
+export const findCommand = (context: Context) => {
+  let nextId: string;
+
+  const reqPayload = context.getRequest().payload;
+
+  if (reqPayload.get(R.INTENT).name === 'VoiceFlowIntent') return null;
+
+  // If AMAZON.CancelIntent is not handled turn it into AMAZON.StopIntent
+  // This first loop is AMAZON specific
+  if (reqPayload.get(R.INTENT).name === 'AMAZON.CancelIntent') {
+    const found = context.stack
+      .getFrames()
+      .reverse()
+      .some((frame) => {
+        if (reqPayload.get(R.INTENT).name in frame.getRequests()) return true;
+
+        return false;
+      });
+
+    if (!found) reqPayload.set(R.INTENT, { ...reqPayload.get(R.INTENT), name: 'AMAZON.StopIntent' });
+  }
+
+  const intentName = reqPayload.get(R.INTENT).name;
+
+  context.stack
+    .getFrames()
+    .reverse()
+    .some((frame) => {
+      // This can only be true if intentName is number. Get's transformed into number by transformInput in old server code
+      if (intentName in frame.getRequests()) {
+        // request = command in old server code
+        const request = frame.getRequests()[intentName];
+
+        if (Array.isArray(request.mappings)) {
+          reqPayload.set(R.MAPPINGS, request.mappings);
+        }
+
+        // TODO: Ensure diagram doesn't get popped off the stack since there is no more line
+
+        // if (request.diagram_id) {
+        //   // TODO
+        // } else if (request.next) {
+        //   // TODO
+        // }
+
+        return true;
+      }
+
+      return false;
+    });
+
+  return nextId;
+};

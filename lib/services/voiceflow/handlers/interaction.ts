@@ -2,7 +2,7 @@ import { Choice, Handler } from '@voiceflow/client';
 
 import { R } from '@/lib/constants';
 
-import { addRepromptIfExists, formatName, mapVariables } from '../utils';
+import { addRepromptIfExists, findCommand, formatName, mapVariables } from '../utils';
 
 const InteractionHandler: Handler = {
   canHandle: (block) => {
@@ -28,8 +28,10 @@ const InteractionHandler: Handler = {
       }
     });
     if (nextId === undefined) {
-      // TODO: check if there is a command that fulfills intent. Otherwise nextId is elseId.
-      nextId = block.elseId;
+      // check if there is a command that fulfills intent. Otherwise nextId is elseId.
+      const commandId = findCommand(context);
+
+      nextId = commandId || block.elseId;
     }
 
     // map request mappings to variables
