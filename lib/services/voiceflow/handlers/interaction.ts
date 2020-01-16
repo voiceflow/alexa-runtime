@@ -11,7 +11,7 @@ const InteractionHandler: Handler = {
   handle: (block, context, variables) => {
     const { payload: reqPayload } = context.getRequest();
 
-    if (!reqPayload.get(R.INTENT)) {
+    if (!(reqPayload.get(R.INTENT) || reqPayload.get('transformedInput'))) {
       addRepromptIfExists(block, context, variables);
       // quit cycleStack without ending session
       context.end();

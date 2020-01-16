@@ -1,4 +1,4 @@
-import { Context, Mapping, Store } from '@voiceflow/client';
+import { Context, Frame, Mapping, Store } from '@voiceflow/client';
 
 import { R, T } from '@/lib/constants';
 
@@ -90,7 +90,7 @@ export const findCommand = (context: Context) => {
   context.stack
     .getFrames()
     .reverse()
-    .some((frame) => {
+    .some((frame, i) => {
       // This can only be true if intentName is number. Get's transformed into number by transformInput in old server code
       if (intentName in frame.getRequests()) {
         // request = command in old server code
@@ -100,19 +100,44 @@ export const findCommand = (context: Context) => {
           reqPayload.set(R.MAPPINGS, request.mappings);
         }
 
-        // TODO: Ensure diagram doesn't get popped off the stack since there is no more line
+        // Ensure diagram doesn't get popped off the stack since there is no more line
+        // context.end();
 
-        // if (request.diagram_id) {
-        //   // TODO
-        // } else if (request.next) {
-        //   // TODO
-        // }
+        if (request.diagram_id) {
+          // Reset state to beginning of new diagram and store current line to the stack
+          // TODO: do smth with commented lines
+          // state.diagrams[state.diagrams.length - 1].line = state.line_id;
+          // state.diagrams[state.diagrams.length - 1].speak = state.last_speak;
+          const newFrame = new Frame({ diagramID: request.diagram_id });
+          context.stack.push(newFrame);
+          // console.log('CAME HERE');
+        } else if (request.next) {
+          if (request.return) {
+            // Reset state to beginning of new diagram and store current line to the stack
+            // TODO: do smth with commented lines
+            // state.diagrams[state.diagrams.length - 1].line = state.line_id;
+            // state.diagrams[state.diagrams.length - 1].speak = state.last_speak;
+
+            context.stack.push(frame);
+            context.storage.set('resumeId', request.next);
+          } else if (i < context.stack.getSize() - 1) {
+            // otherwise destructive and pop off everything before the command
+            context.stack.popTo(i + 1);
+            // TODO: make use of resumeId
+            context.storage.set('resumeId', request.next);
+          } else if (i === context.stack.getSize() - 1) {
+            nextId = request.next;
+            // context.setAction(Action.RUNNING);
+          }
+        }
 
         return true;
       }
 
       return false;
     });
+
+  if (!(nextId || context.hasEnded())) return null;
 
   return nextId;
 };
