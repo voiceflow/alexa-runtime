@@ -93,38 +93,36 @@ export const findCommand = (context: Context) => {
     .some((frame, i) => {
       const diagramIndex = context.stack.getSize() - 1 - i;
 
-      if (intentName in frame.getRequests()) {
-        // request = command in old server code
-        const request = frame.getRequests()[intentName];
+      if (!(intentName in frame.getRequests())) return false;
 
-        if (Array.isArray(request.mappings)) {
-          reqPayload.set(R.MAPPINGS, request.mappings);
-        }
+      // request ~ command
+      const request = frame.getRequests()[intentName];
 
-        if (request.diagram_id) {
-          // Reset state to beginning of new diagram and store current line to the stack
-          // TODO: use last_speak
-          const newFrame = new Frame({ diagramID: request.diagram_id });
-          context.stack.push(newFrame);
-        } else if (request.next) {
-          if (request.return) {
-            // Reset state to beginning of new diagram and store current line to the stack
-            // TODO: use last_speak
-            context.stack.push(frame);
-            context.stack.top().setBlockID(request.next);
-          } else if (diagramIndex < context.stack.getSize() - 1) {
-            // otherwise destructive and pop off everything before the command
-            context.stack.popTo(diagramIndex + 1);
-            context.stack.top().setBlockID(request.next);
-          } else if (diagramIndex === context.stack.getSize() - 1) {
-            nextId = request.next;
-          }
-        }
-
-        return true;
+      if (Array.isArray(request.mappings)) {
+        reqPayload.set(R.MAPPINGS, request.mappings);
       }
 
-      return false;
+      if (request.diagram_id) {
+        // Reset state to beginning of new diagram and store current line to the stack
+        // TODO: use last_speak
+        const newFrame = new Frame({ diagramID: request.diagram_id });
+        context.stack.push(newFrame);
+      } else if (request.next) {
+        if (request.return) {
+          // Reset state to beginning of new diagram and store current line to the stack
+          // TODO: use last_speak
+          context.stack.push(frame);
+          context.stack.top().setBlockID(request.next);
+        } else if (diagramIndex < context.stack.getSize() - 1) {
+          // otherwise destructive and pop off everything before the command
+          context.stack.popTo(diagramIndex + 1);
+          context.stack.top().setBlockID(request.next);
+        } else if (diagramIndex === context.stack.getSize() - 1) {
+          nextId = request.next;
+        }
+      }
+
+      return true;
     });
 
   if (!(nextId || context.hasEnded())) return null;
