@@ -9,7 +9,7 @@ const _replacer = (match: string, inner: string, variables: Record<string, any>,
   return match;
 };
 
-const _regexVariables = (phrase: string, variables: Record<string, any>, modifier?: Function) => {
+export const regexVariables = (phrase: string, variables: Record<string, any>, modifier?: Function) => {
   if (!phrase || !phrase.trim()) return '';
 
   return phrase.replace(/\{([a-zA-Z0-9_]{1,32})\}/g, (match, inner) => _replacer(match, inner, variables, modifier));
@@ -60,7 +60,7 @@ export const mapVariables = (context: Context, variables: Store, overwrite = fal
 };
 
 export const addRepromptIfExists = (block: Record<string, any>, context: Context, variables: Store): void => {
-  if (block.reprompt) context.turn.set(T.REPROMPT, _regexVariables(block.reprompt, variables.getState()));
+  if (block.reprompt) context.turn.set(T.REPROMPT, regexVariables(block.reprompt, variables.getState()));
 };
 
 export const findCommand = (context: Context) => {
