@@ -13,15 +13,10 @@ export enum Turn {
   END = 'end',
   PREVIOUS_OUTPUT = 'lastOutput',
   REPROMPT = 'reprompt',
-}
-
-export enum Request {
-  INTENT = 'intent',
-  MAPPINGS = 'mappings',
+  REQUEST = 'request',
 }
 
 export default {
   Storage,
   Turn,
-  Request,
 };

@@ -1,6 +1,9 @@
-import { Context, Mapping, Store } from '@voiceflow/client';
+import { Context, Store } from '@voiceflow/client';
+import { Slot } from 'ask-sdk-model';
 
-import { R, T } from '@/lib/constants';
+import { T } from '@/lib/constants';
+
+import { Mapping } from './types';
 
 const _replacer = (match: string, inner: string, variables: Record<string, any>, modifier?: Function) => {
   if (inner in variables) {
@@ -33,12 +36,8 @@ export const formatName = (name: string): string => {
   return formattedName;
 };
 
-export const mapVariables = (context: Context, variables: Store, overwrite = false) => {
-  const { payload: reqPayload } = context.getRequest();
-
-  const mappings = reqPayload.get(R.MAPPINGS);
-  const { slots } = reqPayload.get(R.INTENT);
-
+export const mapSlots = (mappings: Mapping[], slots: { [key: string]: Slot }, overwrite = false): object => {
+  const variables = {};
   if (mappings && slots) {
     mappings.forEach((map: Mapping) => {
       if (!map.slot) return;
@@ -50,13 +49,12 @@ export const mapVariables = (context: Context, variables: Store, overwrite = fal
       const fromSlotValue = slots[fromSlot]?.resolutions?.resolutionsPerAuthority?.[0].values?.[0].value?.name || slots[fromSlot]?.value || null;
 
       if (toVariable && (fromSlotValue || overwrite)) {
-        variables.set(toVariable, _stringToNumIfNumeric(fromSlotValue));
+        variables[toVariable] = _stringToNumIfNumeric(fromSlotValue);
       }
     });
   }
 
-  // mappings have been processed. can be deleted from request
-  reqPayload.delete(R.MAPPINGS);
+  return variables;
 };
 
 export const addRepromptIfExists = (block: Record<string, any>, context: Context, variables: Store): void => {
