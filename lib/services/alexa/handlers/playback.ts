@@ -16,23 +16,23 @@ const PlaybackControllerHandler: RequestHandler = {
     const intent: Intent = { name: '', confirmationStatus: null };
 
     switch (command) {
-      case 'PlaybackController.NextCommandIssued':
+      case 'NextCommandIssued':
         intent.name = 'AMAZON.NextIntent';
         break;
-      case 'PlaybackController.PreviousCommandIssued':
+      case 'PreviousCommandIssued':
         intent.name = 'AMAZON.PreviousIntent';
         break;
-      case 'PlaybackController.PlayCommandIssued':
+      case 'PlayCommandIssued':
         intent.name = 'AMAZON.ResumeIntent';
         break;
-      case 'PlaybackController.PauseCommandIssued':
+      case 'PauseCommandIssued':
         intent.name = 'AMAZON.PauseIntent';
         break;
       default:
-        intent.name = '';
+        intent.name = 'AMAZON.FallbackIntent';
     }
-    request.intent = intent;
 
+    request.intent = intent;
     return IntentHandler.handle(input);
   },
 };
