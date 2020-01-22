@@ -5,7 +5,7 @@ import { buildContext, buildResponse, launch, update } from './lifecycle';
 const IntentHandler: RequestHandler = {
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
-    return type === 'IntentRequest' || type.startsWith('PlaybackController');
+    return type === 'IntentRequest';
   },
   async handle(input: HandlerInput) {
     const context = await buildContext(input);
