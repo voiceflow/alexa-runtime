@@ -1,6 +1,3 @@
-import { Request } from '@voiceflow/client';
-import { Intent } from 'ask-sdk-model';
-
 export interface Slot {
   name: string;
   type: {
