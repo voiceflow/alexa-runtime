@@ -14,7 +14,6 @@ export enum Turn {
   PREVIOUS_OUTPUT = 'lastOutput',
   REPROMPT = 'reprompt',
   REQUEST = 'request',
-  MAP = 'map',
 }
 
 export default {
