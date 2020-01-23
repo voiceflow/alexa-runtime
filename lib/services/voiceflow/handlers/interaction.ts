@@ -3,7 +3,7 @@ import { Handler } from '@voiceflow/client';
 import { T } from '@/lib/constants';
 
 import { Choice, IntentRequest, Mapping, RequestType } from '../types';
-import { addRepromptIfExists, formatName, mapSlots } from '../utils';
+import { addRepromptIfExists, findAlexaCommand, formatName, mapSlots } from '../utils';
 
 const InteractionHandler: Handler = {
   canHandle: (block) => {
@@ -24,6 +24,7 @@ const InteractionHandler: Handler = {
 
     const { intent } = request.payload;
 
+    // check if there is a choice in the block that fulfills intent
     block.interactions.forEach((choice: Choice, i: number) => {
       if (choice.intent && formatName(choice.intent) === intent.name) {
         variableMap = choice.mappings;
@@ -31,9 +32,12 @@ const InteractionHandler: Handler = {
       }
     });
 
+    // check if there is a command in the stack that fulfills intent.
     if (nextId === undefined) {
-      // TODO: check if there is a command that fulfills intent. Otherwise nextId is elseId.
-      nextId = block.elseId;
+      const commandData = findAlexaCommand(intent.name, context);
+      if (commandData) {
+        ({ nextId, variableMap } = commandData);
+      }
     }
 
     if (variableMap) {
@@ -44,7 +48,7 @@ const InteractionHandler: Handler = {
     // request for this turn has been processed, delete request
     context.turn.set(T.REQUEST, null);
 
-    return nextId;
+    return nextId || block.elseId;
   },
 };
 

@@ -1,4 +1,4 @@
-import { Context, Store } from '@voiceflow/client';
+import { Context, extractFrameCommand, Frame, Store } from '@voiceflow/client';
 import { Slot } from 'ask-sdk-model';
 
 import { T } from '@/lib/constants';
@@ -12,7 +12,7 @@ const _replacer = (match: string, inner: string, variables: Record<string, any>,
   return match;
 };
 
-const _regexVariables = (phrase: string, variables: Record<string, any>, modifier?: Function) => {
+export const regexVariables = (phrase: string, variables: Record<string, any>, modifier?: Function) => {
   if (!phrase || !phrase.trim()) return '';
 
   return phrase.replace(/\{([a-zA-Z0-9_]{1,32})\}/g, (match, inner) => _replacer(match, inner, variables, modifier));
@@ -58,5 +58,51 @@ export const mapSlots = (mappings: Mapping[], slots: { [key: string]: Slot }, ov
 };
 
 export const addRepromptIfExists = (block: Record<string, any>, context: Context, variables: Store): void => {
-  if (block.reprompt) context.turn.set(T.REPROMPT, _regexVariables(block.reprompt, variables.getState()));
+  if (block.reprompt) context.turn.set(T.REPROMPT, regexVariables(block.reprompt, variables.getState()));
+};
+
+export const findAlexaCommand = (intentName: string, context: Context): { nextId: string; variableMap: Mapping[] } => {
+  let nextId: string;
+  let variableMap: Mapping[];
+
+  if (intentName === 'VoiceFlowIntent') return null;
+
+  const matcher = (command) => command?.intent === intentName;
+
+  // If AMAZON.CancelIntent is not handled turn it into AMAZON.StopIntent
+  // This first loop is AMAZON specific, if cancel intent is not explicitly used anywhere at all, map it to stop intent
+  if (intentName === 'AMAZON.CancelIntent') {
+    const found = context.stack.getFrames().some((frame) => frame.getCommands().some(matcher));
+    if (!found) intentName = 'AMAZON.StopIntent';
+  }
+
+  const { index, command } = extractFrameCommand(context.stack, matcher);
+  if (command) {
+    variableMap = command.mappings;
+
+    if (command.diagram_id) {
+      // Reset state to beginning of new diagram and store current line to the stack
+      // TODO: use last_speak
+      const newFrame = new Frame({ diagramID: command.diagram_id });
+      context.stack.push(newFrame);
+    } else if (command.next) {
+      if (command.return) {
+        // Reset state to beginning of new diagram and store current line to the stack
+        // TODO: use last_speak
+        context.stack.push(context.stack.get(index));
+        context.stack.top().setBlockID(command.next);
+      } else if (index < context.stack.getSize() - 1) {
+        // otherwise destructive and pop off everything before the command
+        context.stack.popTo(index + 1);
+        context.stack.top().setBlockID(command.next);
+      } else if (index === context.stack.getSize() - 1) {
+        // jumping to an intent within the same flow
+        nextId = command.next;
+      }
+    }
+  }
+
+  if (!(nextId || context.hasEnded())) return null;
+
+  return { nextId, variableMap };
 };
