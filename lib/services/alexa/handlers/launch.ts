@@ -8,7 +8,7 @@ const LaunchHandler: RequestHandler = {
     return type === 'LaunchRequest' || type === 'CanFulfillIntentRequest';
   },
   async handle(input: HandlerInput) {
-    const context = await buildContext(input, null);
+    const context = await buildContext(input);
     await launch(context, input);
 
     await update(context);

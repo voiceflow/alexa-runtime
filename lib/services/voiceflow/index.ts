@@ -1,6 +1,5 @@
 import Client from '@voiceflow/client';
 
-// import DefaultHandlers from '@voiceflow/handlers';
 import { Config } from '@/types';
 
 import { ServiceMap } from '..';

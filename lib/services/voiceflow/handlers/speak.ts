@@ -1,20 +1,7 @@
 import { Handler } from '@voiceflow/client';
 import _ from 'lodash';
 
-// TODO: this whole file is horrible just want to test if things are working
-const replacer = (match, inner, variables, modifier) => {
-  if (inner in variables) {
-    return typeof modifier === 'function' ? modifier(variables[inner]) : variables[inner];
-  }
-  return match;
-};
-
-const RegexVariables = (phrase: string, variables: Record<string, any>, modifier?: Function) => {
-  if (!phrase || !phrase.trim()) {
-    return '';
-  }
-  return phrase.replace(/\{([a-zA-Z0-9_]{1,32})\}/g, (match, inner) => replacer(match, inner, variables, modifier));
-};
+import { regexVariables } from '../utils';
 
 const SpeakHandler: Handler = {
   canHandle: (block) => {
@@ -27,17 +14,16 @@ const SpeakHandler: Handler = {
       speak = _.sample(block.random_speak);
     }
 
-    const temp = Object.entries(variables.getState()).reduce((acc, [key, value]) => {
-      if (typeof value === 'number' && value % 1 !== 0) {
-        acc[key] = value.toFixed(2);
-      } else {
-        acc[key] = value;
-      }
+    // turn float variables to 2 decimal places
+    const sanitizedVars = Object.entries(variables.getState()).reduce((acc, [key, value]) => {
+      if (typeof value === 'number' && !Number.isInteger(value)) acc[key] = value.toFixed(2);
+      else acc[key] = value;
+
       return acc;
     }, {});
 
     if (typeof speak === 'string') {
-      const output = RegexVariables(speak, temp);
+      const output = regexVariables(speak, sanitizedVars);
 
       context.storage.produce((draft) => {
         draft.output += output;

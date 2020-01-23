@@ -12,6 +12,8 @@ export enum Turn {
   PERMISSION_CARD = 'permission_card',
   END = 'end',
   PREVIOUS_OUTPUT = 'lastOutput',
+  REPROMPT = 'reprompt',
+  REQUEST = 'request',
 }
 
 export default {
