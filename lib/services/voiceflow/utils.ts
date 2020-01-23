@@ -1,6 +1,9 @@
-import { Context, Frame, Mapping, Store } from '@voiceflow/client';
+import { Context, extractFrameCommand, Frame, Store } from '@voiceflow/client';
+import { Slot } from 'ask-sdk-model';
 
-import { R, T } from '@/lib/constants';
+import { T } from '@/lib/constants';
+
+import { Mapping } from './types';
 
 const _replacer = (match: string, inner: string, variables: Record<string, any>, modifier?: Function) => {
   if (inner in variables) {
@@ -33,12 +36,8 @@ export const formatName = (name: string): string => {
   return formattedName;
 };
 
-export const mapVariables = (context: Context, variables: Store, overwrite = false) => {
-  const { payload: reqPayload } = context.getRequest();
-
-  const mappings = reqPayload.get(R.MAPPINGS);
-  const { slots } = reqPayload.get(R.INTENT);
-
+export const mapSlots = (mappings: Mapping[], slots: { [key: string]: Slot }, overwrite = false): object => {
+  const variables = {};
   if (mappings && slots) {
     mappings.forEach((map: Mapping) => {
       if (!map.slot) return;
@@ -50,82 +49,60 @@ export const mapVariables = (context: Context, variables: Store, overwrite = fal
       const fromSlotValue = slots[fromSlot]?.resolutions?.resolutionsPerAuthority?.[0].values?.[0].value?.name || slots[fromSlot]?.value || null;
 
       if (toVariable && (fromSlotValue || overwrite)) {
-        variables.set(toVariable, _stringToNumIfNumeric(fromSlotValue));
+        variables[toVariable] = _stringToNumIfNumeric(fromSlotValue);
       }
     });
   }
 
-  // mappings have been processed. can be deleted from request
-  reqPayload.delete(R.MAPPINGS);
+  return variables;
 };
 
 export const addRepromptIfExists = (block: Record<string, any>, context: Context, variables: Store): void => {
   if (block.reprompt) context.turn.set(T.REPROMPT, regexVariables(block.reprompt, variables.getState()));
 };
 
-export const findCommand = (context: Context) => {
+export const findAlexaCommand = (intentName: string, context: Context): { nextId: string; variableMap: Mapping[] } => {
   let nextId: string;
+  let variableMap: Mapping[];
 
-  const reqPayload = context.getRequest().payload;
+  if (intentName === 'VoiceFlowIntent') return null;
 
-  if (reqPayload.get(R.INTENT).name === 'VoiceFlowIntent') return null;
+  const matcher = (command) => command?.intent === intentName;
 
   // If AMAZON.CancelIntent is not handled turn it into AMAZON.StopIntent
-  // This first loop is AMAZON specific
-  if (reqPayload.get(R.INTENT).name === 'AMAZON.CancelIntent') {
-    const found = context.stack
-      .getFrames()
-      .reverse()
-      .some((frame) => {
-        if (reqPayload.get(R.INTENT).name in frame.getRequests()) return true;
-
-        return false;
-      });
-
-    if (!found) reqPayload.set(R.INTENT, { ...reqPayload.get(R.INTENT), name: 'AMAZON.StopIntent' });
+  // This first loop is AMAZON specific, if cancel intent is not explicitly used anywhere at all, map it to stop intent
+  if (intentName === 'AMAZON.CancelIntent') {
+    const found = context.stack.getFrames().some((frame) => frame.getCommands().some(matcher));
+    if (!found) intentName = 'AMAZON.StopIntent';
   }
 
-  const intentName = reqPayload.get(R.INTENT).name;
+  const { index, command } = extractFrameCommand(context.stack, matcher);
+  if (command) {
+    variableMap = command.mappings;
 
-  context.stack
-    .getFrames()
-    .reverse()
-    .some((frame, i) => {
-      const diagramIndex = context.stack.getSize() - 1 - i;
-
-      if (!(intentName in frame.getRequests())) return false;
-
-      // request ~ command
-      const request = frame.getRequests()[intentName];
-
-      if (Array.isArray(request.mappings)) {
-        reqPayload.set(R.MAPPINGS, request.mappings);
-      }
-
-      if (request.diagram_id) {
+    if (command.diagram_id) {
+      // Reset state to beginning of new diagram and store current line to the stack
+      // TODO: use last_speak
+      const newFrame = new Frame({ diagramID: command.diagram_id });
+      context.stack.push(newFrame);
+    } else if (command.next) {
+      if (command.return) {
         // Reset state to beginning of new diagram and store current line to the stack
         // TODO: use last_speak
-        const newFrame = new Frame({ diagramID: request.diagram_id });
-        context.stack.push(newFrame);
-      } else if (request.next) {
-        if (request.return) {
-          // Reset state to beginning of new diagram and store current line to the stack
-          // TODO: use last_speak
-          context.stack.push(frame);
-          context.stack.top().setBlockID(request.next);
-        } else if (diagramIndex < context.stack.getSize() - 1) {
-          // otherwise destructive and pop off everything before the command
-          context.stack.popTo(diagramIndex + 1);
-          context.stack.top().setBlockID(request.next);
-        } else if (diagramIndex === context.stack.getSize() - 1) {
-          nextId = request.next;
-        }
+        context.stack.push(context.stack.get(index));
+        context.stack.top().setBlockID(command.next);
+      } else if (index < context.stack.getSize() - 1) {
+        // otherwise destructive and pop off everything before the command
+        context.stack.popTo(index + 1);
+        context.stack.top().setBlockID(command.next);
+      } else if (index === context.stack.getSize() - 1) {
+        // jumping to an intent within the same flow
+        nextId = command.next;
       }
-
-      return true;
-    });
+    }
+  }
 
   if (!(nextId || context.hasEnded())) return null;
 
-  return nextId;
+  return { nextId, variableMap };
 };

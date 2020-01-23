@@ -1,17 +1,18 @@
-import { Choice, Handler } from '@voiceflow/client';
+import { Handler } from '@voiceflow/client';
 
-import { R } from '@/lib/constants';
+import { T } from '@/lib/constants';
 
-import { addRepromptIfExists, findCommand, formatName, mapVariables } from '../utils';
+import { Choice, IntentRequest, Mapping, RequestType } from '../types';
+import { addRepromptIfExists, findAlexaCommand, formatName, mapSlots } from '../utils';
 
 const InteractionHandler: Handler = {
   canHandle: (block) => {
     return !!block.interactions;
   },
   handle: (block, context, variables) => {
-    const { payload: reqPayload } = context.getRequest();
+    const request = context.turn.get(T.REQUEST) as IntentRequest;
 
-    if (!(reqPayload.get(R.INTENT) || reqPayload.get('transformedInput'))) {
+    if (request?.type !== RequestType.INTENT) {
       addRepromptIfExists(block, context, variables);
       // quit cycleStack without ending session
       context.end();
@@ -19,28 +20,35 @@ const InteractionHandler: Handler = {
     }
 
     let nextId: string;
+    let variableMap: Mapping[];
 
-    const intentName = reqPayload.get(R.INTENT).name;
+    const { intent } = request.payload;
+
+    // check if there is a choice in the block that fulfills intent
     block.interactions.forEach((choice: Choice, i: number) => {
-      if (choice.intent && formatName(choice.intent) === intentName) {
-        reqPayload.set(R.MAPPINGS, choice.mappings);
+      if (choice.intent && formatName(choice.intent) === intent.name) {
+        variableMap = choice.mappings;
         nextId = block.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
       }
     });
-    if (nextId === undefined) {
-      // check if there is a command that fulfills intent. Otherwise nextId is elseId.
-      const commandId = findCommand(context);
 
-      nextId = commandId || block.elseId;
+    // check if there is a command in the stack that fulfills intent.
+    if (nextId === undefined) {
+      const commandData = findAlexaCommand(intent.name, context);
+      if (commandData) {
+        ({ nextId, variableMap } = commandData);
+      }
     }
 
-    // map request mappings to variables
-    mapVariables(context, variables, block.overwrite);
+    if (variableMap) {
+      // map request mappings to variables
+      variables.merge(mapSlots(variableMap, intent.slots));
+    }
 
-    // intent has been processed. can be deleted from request
-    reqPayload.delete(R.INTENT);
+    // request for this turn has been processed, delete request
+    context.turn.set(T.REQUEST, null);
 
-    return nextId;
+    return nextId || block.elseId;
   },
 };
 
