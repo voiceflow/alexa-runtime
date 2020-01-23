@@ -786,9 +786,9 @@
     axios "^0.19.0"
     immer "^5.1.0"
 
-"@voiceflow/client@ssh://git@github.com/voiceflow/client#803ef62721f61fbadafd153921f4c379b9d7262d":
+"@voiceflow/client@https://github.com/voiceflow/client.git#8cfbc281dacba81c37a675a815344057adbcc3fb":
   version "0.1.0"
-  resolved "ssh://git@github.com/voiceflow/client#803ef62721f61fbadafd153921f4c379b9d7262d"
+  resolved "https://github.com/voiceflow/client.git#8cfbc281dacba81c37a675a815344057adbcc3fb"
   dependencies:
     axios "^0.19.0"
     immer "^5.1.0"
@@ -1302,7 +1302,7 @@ ask-sdk-dynamodb-persistence-adapter@^2.7.0:
   dependencies:
     aws-sdk "^2.163.0"
 
-ask-sdk-model@^1.9.0:
+ask-sdk-model@^1.25.1, ask-sdk-model@^1.9.0:
   version "1.25.1"
   resolved "https://registry.yarnpkg.com/ask-sdk-model/-/ask-sdk-model-1.25.1.tgz#691694ec2e90ec255aa3eb910be2e49bef8ae9f2"
   integrity sha512-/rP8zdsIOdsp7B2THbtZpHq3cPW4VXPFyd18pN3cdaaBtfM4Karl9xDFGYBL160c4LT1mLohB2ke6NDb8izYfQ==

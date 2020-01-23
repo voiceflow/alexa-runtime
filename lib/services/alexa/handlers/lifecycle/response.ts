@@ -12,7 +12,10 @@ const response = async (context: Context, input: HandlerInput): Promise<import('
     turn.set(T.END, true);
   }
 
-  builder = builder.speak(storage.get(S.OUTPUT)).withShouldEndSession(!!turn.get(T.END));
+  builder = builder
+    .speak(storage.get(S.OUTPUT))
+    .reprompt(turn.get('reprompt') || storage.get(S.OUTPUT))
+    .withShouldEndSession(!!turn.get(T.END));
 
   // check permissions card needed
   // const permissionCard = turn.get(Turn.PERMISSION_CARD);

@@ -1,3 +1,4 @@
+import InteractionHandler from './interaction';
 import SpeakHandler from './speak';
 
-export default [SpeakHandler];
+export default [SpeakHandler, InteractionHandler];
