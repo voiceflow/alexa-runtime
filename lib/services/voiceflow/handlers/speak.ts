@@ -1,5 +1,6 @@
-import { Handler } from '@voiceflow/client';
 import _ from 'lodash';
+
+import { Handler } from '@/lib/services/voiceflow/types';
 
 import { regexVariables } from '../utils';
 
