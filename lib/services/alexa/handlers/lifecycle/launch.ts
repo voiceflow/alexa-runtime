@@ -1,7 +1,8 @@
-import { Context, Frame } from '@voiceflow/client';
+import { Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
 import { S } from '@/lib/constants';
+import { Context } from '@/lib/services/voiceflow/types';
 
 import { SkillMetadata } from '../../types';
 
@@ -46,7 +47,7 @@ const launch = async (context: Context, input: HandlerInput): Promise<void> => {
   });
 
   // initialize all the global variables
-  variables.initialize(meta.global, 0);
+  Store.initialize(variables, meta.global, 0);
 
   if (stack.isEmpty()) {
     stack.push(new Frame({ diagramID: meta.diagram }));

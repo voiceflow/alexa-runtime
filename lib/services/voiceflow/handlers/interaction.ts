@@ -1,8 +1,6 @@
-import { Handler } from '@voiceflow/client';
-
 import { T } from '@/lib/constants';
 
-import { Choice, IntentRequest, Mapping, RequestType } from '../types';
+import { Choice, Handler, IntentRequest, Mapping, RequestType } from '../types';
 import { addRepromptIfExists, findAlexaCommand, formatName, mapSlots } from '../utils';
 
 const InteractionHandler: Handler = {
