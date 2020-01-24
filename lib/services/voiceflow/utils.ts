@@ -1,9 +1,9 @@
-import { Context, extractFrameCommand, Frame, Store } from '@voiceflow/client';
+import { extractFrameCommand, Frame, Store } from '@voiceflow/client';
 import { Slot } from 'ask-sdk-model';
 
 import { T } from '@/lib/constants';
 
-import { Mapping } from './types';
+import { Context, Mapping } from './types';
 
 const _replacer = (match: string, inner: string, variables: Record<string, any>, modifier?: Function) => {
   if (inner in variables) {

@@ -1,6 +1,5 @@
-import { Context } from '@voiceflow/client';
-
 import { S, T } from '@/lib/constants';
+import { Context } from '@/lib/services/voiceflow/types';
 
 const update = async (context: Context): Promise<void> => {
   const { turn, storage } = context;
