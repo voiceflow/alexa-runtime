@@ -1,4 +1,5 @@
+import CaptureHandler from './capture';
 import InteractionHandler from './interaction';
 import SpeakHandler from './speak';
 
-export default [SpeakHandler, InteractionHandler];
+export default [SpeakHandler, InteractionHandler, CaptureHandler];
