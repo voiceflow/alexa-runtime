@@ -3,8 +3,8 @@ import wordsToNumbers from 'words-to-numbers';
 
 import { T } from '@/lib/constants';
 
-import { Handler, IntentRequest, Mapping, RequestType } from '../types';
-import { addRepromptIfExists, mapSlots } from '../utils';
+import { Handler, IntentRequest, RequestType } from '../types';
+import { addRepromptIfExists } from '../utils';
 import CommandHandler from './command';
 
 const CaptureHandler: Handler = {
