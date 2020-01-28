@@ -9,7 +9,8 @@ export enum Storage {
 
 export enum Turn {
   AUDIO = 'play',
-  PERMISSION_CARD = 'permission_card',
+  PERMISSION_CARD = 'permissionCard',
+  ACCOUNT_LINKING = 'accountLinking',
   END = 'end',
   PREVIOUS_OUTPUT = 'lastOutput',
   REPROMPT = 'reprompt',
