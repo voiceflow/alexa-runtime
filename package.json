@@ -40,7 +40,8 @@
     "helmet": "^3.21.2",
     "lodash": "^4.17.15",
     "luxon": "^1.21.3",
-    "regenerator-runtime": "^0.13.3"
+    "regenerator-runtime": "^0.13.3",
+    "words-to-numbers": "^1.5.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
