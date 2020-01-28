@@ -3,8 +3,8 @@ import wordsToNumbers from 'words-to-numbers';
 
 import { T } from '@/lib/constants';
 
-import { Handler, IntentRequest, RequestType } from '../types';
-import { addRepromptIfExists, findAlexaCommand } from '../utils';
+import { Handler, IntentRequest, Mapping, RequestType } from '../types';
+import { addRepromptIfExists, findAlexaCommand, mapSlots } from '../utils';
 
 const CaptureHandler: Handler = {
   canHandle: (block) => {
@@ -21,17 +21,14 @@ const CaptureHandler: Handler = {
     }
 
     let nextId: string;
-    // TODO: variableMap
-    // let variableMap: Mapping[];
+    let variableMap: Mapping[];
 
     const { intent } = request.payload;
-    // TODO: transformInput?
-    const input = _.values(intent.slots)[0]?.value;
+    const input = _.keys(intent.slots).length === 1 ? _.values(intent.slots)[0]?.value : null;
 
     const commandData = findAlexaCommand(intent.name, context);
-    // TODO: add enteringNewDiagram if
     if (commandData) {
-      ({ nextId /* , variableMap */ } = commandData);
+      ({ nextId, variableMap } = commandData);
     } else if (input) {
       const num = wordsToNumbers(input);
 
@@ -42,6 +39,11 @@ const CaptureHandler: Handler = {
       }
 
       ({ nextId } = block);
+    }
+
+    if (variableMap) {
+      // map request mappings to variables
+      variables.merge(mapSlots(variableMap, intent.slots));
     }
 
     // request for this turn has been processed, delete request
