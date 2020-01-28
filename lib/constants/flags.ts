@@ -5,6 +5,7 @@ export enum Storage {
   REPEAT = 'repeat',
   LOCALE = 'locale',
   USER = 'user',
+  ACCESS_TOKEN = 'accessToken',
 }
 
 export enum Turn {
