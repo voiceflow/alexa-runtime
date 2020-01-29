@@ -6,6 +6,7 @@ export enum Storage {
   LOCALE = 'locale',
   USER = 'user',
   ACCESS_TOKEN = 'accessToken',
+  PERMISSIONS = 'permissions',
 }
 
 export enum Turn {
