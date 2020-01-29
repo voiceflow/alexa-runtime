@@ -1,7 +1,8 @@
 import { T } from '@/lib/constants';
 
 import { Choice, Handler, IntentRequest, Mapping, RequestType } from '../types';
-import { addRepromptIfExists, findAlexaCommand, formatName, mapSlots } from '../utils';
+import { addRepromptIfExists, formatName, mapSlots } from '../utils';
+import CommandHandler from './command';
 
 const InteractionHandler: Handler = {
   canHandle: (block) => {
@@ -17,7 +18,7 @@ const InteractionHandler: Handler = {
       return block.id;
     }
 
-    let nextId: string;
+    let nextId: string = null;
     let variableMap: Mapping[];
 
     const { intent } = request.payload;
@@ -30,17 +31,14 @@ const InteractionHandler: Handler = {
       }
     });
 
-    // check if there is a command in the stack that fulfills intent.
-    if (nextId === undefined) {
-      const commandData = findAlexaCommand(intent.name, context);
-      if (commandData) {
-        ({ nextId, variableMap } = commandData);
-      }
-    }
-
     if (variableMap) {
       // map request mappings to variables
       variables.merge(mapSlots(variableMap, intent.slots));
+    }
+
+    if (!nextId) {
+      // check if there is a command in the stack that fulfills intent
+      nextId = CommandHandler.handle(context, variables);
     }
 
     // request for this turn has been processed, delete request

@@ -3,8 +3,9 @@ import wordsToNumbers from 'words-to-numbers';
 
 import { T } from '@/lib/constants';
 
-import { Handler, IntentRequest, Mapping, RequestType } from '../types';
-import { addRepromptIfExists, findAlexaCommand, mapSlots } from '../utils';
+import { Handler, IntentRequest, RequestType } from '../types';
+import { addRepromptIfExists } from '../utils';
+import CommandHandler from './command';
 
 const CaptureHandler: Handler = {
   canHandle: (block) => {
@@ -21,29 +22,26 @@ const CaptureHandler: Handler = {
     }
 
     let nextId: string;
-    let variableMap: Mapping[];
 
     const { intent } = request.payload;
-    const input = _.keys(intent.slots).length === 1 ? _.values(intent.slots)[0]?.value : null;
 
-    const commandData = findAlexaCommand(intent.name, context);
-    if (commandData) {
-      ({ nextId, variableMap } = commandData);
-    } else if (input) {
-      const num = wordsToNumbers(input);
+    // check if there is a command in the stack that fulfills intent
+    nextId = CommandHandler.handle(context, variables);
 
-      if (typeof num !== 'number' || Number.isNaN(num)) {
-        variables.set(block.variable, input);
-      } else {
-        variables.set(block.variable, num);
+    if (!nextId) {
+      // try to match the first slot of the intent to the variable
+      const input = _.keys(intent.slots).length === 1 ? _.values(intent.slots)[0]?.value : null;
+      if (input) {
+        const num = wordsToNumbers(input);
+
+        if (typeof num !== 'number' || Number.isNaN(num)) {
+          variables.set(block.variable, input);
+        } else {
+          variables.set(block.variable, num);
+        }
       }
 
       ({ nextId } = block);
-    }
-
-    if (variableMap) {
-      // map request mappings to variables
-      variables.merge(mapSlots(variableMap, intent.slots));
     }
 
     // request for this turn has been processed, delete request
