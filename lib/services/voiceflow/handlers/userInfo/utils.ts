@@ -162,7 +162,7 @@ const getUserInfo = async (permission: Permission, context: Context<Record<strin
   )
     return false;
 
-  const permissionVariable = permission?.map_to?.label?.slice(1, -1); // remove {} from var name
+  const permissionVariable = permission?.map_to?.value;
 
   if (permissionValue === PERMISSIONS.NOTIFICATIONS_WRITE) {
     return true;

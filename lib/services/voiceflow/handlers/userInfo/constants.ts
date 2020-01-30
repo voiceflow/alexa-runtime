@@ -1,6 +1,6 @@
 export type Permission = {
   selected?: { value: string };
-  map_to?: { label: string };
+  map_to?: { value: string };
   product?: { value: string };
   transaction?: { value: string };
 } | null;
