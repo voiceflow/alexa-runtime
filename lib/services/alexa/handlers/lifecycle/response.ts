@@ -8,6 +8,9 @@ const response = async (context: Context, input: HandlerInput): Promise<import('
 
   const { storage, turn } = context;
 
+  // store access token
+  storage.set(S.ACCESS_TOKEN, input.requestEnvelope.context.System.user.accessToken);
+
   if (context.stack.isEmpty()) {
     turn.set(T.END, true);
   }
@@ -17,14 +20,15 @@ const response = async (context: Context, input: HandlerInput): Promise<import('
     .reprompt(turn.get('reprompt') || storage.get(S.OUTPUT))
     .withShouldEndSession(!!turn.get(T.END));
 
-  // check permissions card needed
-  // const permissionCard = turn.get(Turn.PERMISSION_CARD);
-  // if (permissionCard) {
-  //   const perms = (Array.isArray(permissionCard) && permissionCard) ?? storage.get(Storage.ALEXA_PERMISSIONS) ?? [];
-  //   if (perms.length) {
-  //     builder = builder.withAskForPermissionsConsentCard(perms);
-  //   }
-  // }
+  // check account linking
+  if (turn.get(T.ACCOUNT_LINKING)) builder = builder.withLinkAccountCard();
+
+  // check permissions card
+  const permissionCard = turn.get(T.PERMISSION_CARD);
+  if (permissionCard) {
+    const permissions = Array.isArray(permissionCard) ? permissionCard : storage.get(S.ALEXA_PERMISSIONS);
+    if (permissions?.length) builder = builder.withAskForPermissionsConsentCard(permissions);
+  }
 
   input.attributesManager.setPersistentAttributes(context.getFinalState());
   return builder.getResponse();

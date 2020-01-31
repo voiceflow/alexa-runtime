@@ -5,11 +5,14 @@ export enum Storage {
   REPEAT = 'repeat',
   LOCALE = 'locale',
   USER = 'user',
+  ACCESS_TOKEN = 'accessToken',
+  PERMISSIONS = 'permissions',
 }
 
 export enum Turn {
   AUDIO = 'play',
-  PERMISSION_CARD = 'permission_card',
+  PERMISSION_CARD = 'permissionCard',
+  ACCOUNT_LINKING = 'accountLinking',
   END = 'end',
   PREVIOUS_OUTPUT = 'lastOutput',
   REPROMPT = 'reprompt',
