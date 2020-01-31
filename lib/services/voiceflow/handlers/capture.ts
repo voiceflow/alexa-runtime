@@ -16,9 +16,8 @@ const CaptureHandler: Handler = {
 
     if (request?.type !== RequestType.INTENT) {
       addRepromptIfExists(block, context, variables);
-      // quit cycleStack without ending session
-      context.end();
-      return block.id;
+      // quit cycleStack without ending session by stopping on itself
+      return block.blockID;
     }
 
     let nextId: string;

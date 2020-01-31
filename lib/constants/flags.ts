@@ -7,6 +7,7 @@ export enum Storage {
   USER = 'user',
   ACCESS_TOKEN = 'accessToken',
   PERMISSIONS = 'permissions',
+  PAYMENT = 'payment',
 }
 
 export enum Turn {

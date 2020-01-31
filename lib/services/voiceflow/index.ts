@@ -9,7 +9,7 @@ const Voiceflow = (_services: ServiceMap, config: Config) =>
   new Client({
     secret: config.VF_DATA_SECRET,
     endpoint: config.VF_DATA_ENDPOINT,
-    handlers: [...Handlers],
+    handlers: Handlers,
   });
 
 export default Voiceflow;
