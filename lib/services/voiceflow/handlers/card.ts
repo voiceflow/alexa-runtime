@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import { Store } from '@voiceflow/client';
+import { ResponseBuilder } from 'ask-sdk';
 
 import { T } from '@/lib/constants';
 
@@ -7,28 +8,49 @@ import { regexVariables } from '../utils';
 
 enum CardType {
   STANDARD = 'Standard',
+  SIMPLE = 'Simple',
 }
 
-const PermissionCardHandler: Handler = {
+export const responseBuilder = (turn: Store, builder: ResponseBuilder) => {
+  const card = turn.get(T.CARD);
+  if (card) {
+    if (card.type === CardType.SIMPLE) builder.withSimpleCard(card.title, card.content);
+    else if (card.type === CardType.STANDARD) builder.withStandardCard(card.title, card.text, card.image.smallImageUrl, card.image.largeImageUrl);
+  }
+};
+
+const CardHandler: Handler = {
   canHandle: (block) => {
     return !!block.card;
   },
   handle: (block, context, variables) => {
-    const card = _.cloneDeep(block.card);
+    const { card } = block;
+    const newCard = {
+      type: card.type,
+      title: '',
+      text: '',
+      content: '',
+      image: {
+        largeImageUrl: '',
+        smallImageUrl: '',
+      },
+    };
 
-    if (card.title) card.title = regexVariables(card.title, variables.getState());
-    if (card.text) card.text = regexVariables(card.text, variables.getState());
-    if (card.content) card.content = regexVariables(card.content, variables.getState());
+    if (card.title) newCard.title = regexVariables(card.title, variables.getState());
+    if (card.text) newCard.text = regexVariables(card.text, variables.getState());
+    if (card.content) newCard.content = regexVariables(card.content, variables.getState());
 
     if (card.type === CardType.STANDARD && card.image?.largeImageUrl) {
-      card.image.largeImageUrl = regexVariables(card.image.largeImageUrl, variables.getState());
-      card.image.smallImageUrl = card.image.smallImageUrl ? regexVariables(card.image.smallImageUrl, variables.getState()) : card.image.largeImageUrl;
+      newCard.image.largeImageUrl = regexVariables(card.image.largeImageUrl, variables.getState());
+      newCard.image.smallImageUrl = card.image.smallImageUrl
+        ? regexVariables(card.image.smallImageUrl, variables.getState())
+        : newCard.image.largeImageUrl;
     }
 
-    context.turn.set(T.CARD, card);
+    context.turn.set(T.CARD, newCard);
 
     return block.nextId;
   },
 };
 
-export default PermissionCardHandler;
+export default CardHandler;
