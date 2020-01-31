@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { Context, Handler } from '@voiceflow/client';
 import _ from 'lodash';
 import wordsToNumbers from 'words-to-numbers';
 
@@ -11,10 +11,7 @@ import CommandHandler from './command';
 export type Capture = {
   variable: string | number;
   reprompt?: string;
-  nextId: string;
 };
-
-const CaptureHandler: Handler<Capture> = {
   canHandle: (block) => {
     return !!block.variable;
   },
@@ -22,21 +19,22 @@ const CaptureHandler: Handler<Capture> = {
     const request = context.turn.get(T.REQUEST) as IntentRequest;
 
     if (request?.type !== RequestType.INTENT) {
-      addRepromptIfExists(block, context, variables);
+      addRepromptIfExists<Capture>(block, context, variables);
       // quit cycleStack without ending session by stopping on itself
       return block.blockID;
     }
 
-    let nextId: string;
+    let nextId: string | null = null;
 
     const { intent } = request.payload;
 
     // check if there is a command in the stack that fulfills intent
-    nextId = CommandHandler.handle(context, variables);
+    nextId = CommandHandler.handle(context as Context<any>, variables);
 
     if (!nextId) {
       // try to match the first slot of the intent to the variable
       const input = _.keys(intent.slots).length === 1 ? _.values(intent.slots)[0]?.value : null;
+
       if (input) {
         const num = wordsToNumbers(input);
 
@@ -47,7 +45,7 @@ const CaptureHandler: Handler<Capture> = {
         }
       }
 
-      ({ nextId } = block);
+      ({ nextId = null } = block);
     }
 
     // request for this turn has been processed, delete request

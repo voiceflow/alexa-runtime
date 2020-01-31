@@ -1,11 +1,12 @@
-import { Context, Frame, Store } from '@voiceflow/client';
+import { Context, DefaultBlock, Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
 import { S } from '@/lib/constants';
+import { Block } from '@/lib/services/voiceflow';
 
 import { SkillMetadata } from '../../types';
 
-const launch = async (context: Context, input: HandlerInput): Promise<void> => {
+const launch = async (context: Context<Block | DefaultBlock>, input: HandlerInput): Promise<void> => {
   // fetch the metadata for this version (project)
   const meta = (await context.fetchMetadata()) as SkillMetadata;
 

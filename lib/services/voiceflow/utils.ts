@@ -1,9 +1,7 @@
-import { Context, Store } from '@voiceflow/client';
+import { Context, Mapping, Store } from '@voiceflow/client';
 import { Slot } from 'ask-sdk-model';
 
 import { T } from '@/lib/constants';
-
-import { Mapping } from './types';
 
 const _replacer = (match: string, inner: string, variables: Record<string, any>, modifier?: Function) => {
   if (inner in variables) {
@@ -18,8 +16,9 @@ export const regexVariables = (phrase: string, variables: Record<string, any>, m
   return phrase.replace(/\{([a-zA-Z0-9_]{1,32})\}/g, (match, inner) => _replacer(match, inner, variables, modifier));
 };
 
-const _stringToNumIfNumeric = (str: string): number | string => {
+const _stringToNumIfNumeric = (str: string | null): number | string | null => {
   const number = Number(str);
+
   return Number.isNaN(number) ? str : number;
 };
 
@@ -37,7 +36,8 @@ export const formatName = (name: string): string => {
 };
 
 export const mapSlots = (mappings: Mapping[], slots: { [key: string]: Slot }, overwrite = false): object => {
-  const variables = {};
+  const variables: Record<string, any> = {};
+
   if (mappings && slots) {
     mappings.forEach((map: Mapping) => {
       if (!map.slot) return;
@@ -57,6 +57,8 @@ export const mapSlots = (mappings: Mapping[], slots: { [key: string]: Slot }, ov
   return variables;
 };
 
-export const addRepromptIfExists = (block: Record<string, any>, context: Context, variables: Store): void => {
-  if (block.reprompt) context.turn.set(T.REPROMPT, regexVariables(block.reprompt, variables.getState()));
+export const addRepromptIfExists = <B extends { reprompt?: string }>(block: Record<string, any>, context: Context<B>, variables: Store): void => {
+  if (block.reprompt) {
+    context.turn.set(T.REPROMPT, regexVariables(block.reprompt, variables.getState()));
+  }
 };

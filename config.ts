@@ -4,7 +4,7 @@ import { Config } from './types';
 
 const { getProcessEnv, hasProcessEnv } = Common.utils.general;
 
-const optionalProcessEnv = (name) => (hasProcessEnv(name) ? getProcessEnv(name) : null);
+const optionalProcessEnv = (name: string) => (hasProcessEnv(name) ? getProcessEnv(name) : null);
 
 const CONFIG: Config = {
   NODE_ENV: getProcessEnv('NODE_ENV'),

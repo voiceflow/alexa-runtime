@@ -8,7 +8,6 @@ export type Speak = {
   speak?: string;
   prompt?: string;
   random_speak?: string[];
-  nextId?: string;
 };
 
 const SpeakHandler: Handler<Speak> = {
@@ -17,15 +16,19 @@ const SpeakHandler: Handler<Speak> = {
   },
   handle: (block, context, variables) => {
     let { speak } = block;
+
     // Pick a random part to speak
     if (Array.isArray(block.random_speak)) {
       speak = _.sample(block.random_speak);
     }
 
     // turn float variables to 2 decimal places
-    const sanitizedVars = Object.entries(variables.getState()).reduce((acc, [key, value]) => {
-      if (typeof value === 'number' && !Number.isInteger(value)) acc[key] = value.toFixed(2);
-      else acc[key] = value;
+    const sanitizedVars = Object.entries(variables.getState()).reduce<Record<string, any>>((acc, [key, value]) => {
+      if (typeof value === 'number' && !Number.isInteger(value)) {
+        acc[key] = value.toFixed(2);
+      } else {
+        acc[key] = value;
+      }
 
       return acc;
     }, {});
@@ -38,7 +41,7 @@ const SpeakHandler: Handler<Speak> = {
       });
     }
 
-    return block.nextId;
+    return block.nextId ?? null;
   },
 };
 
