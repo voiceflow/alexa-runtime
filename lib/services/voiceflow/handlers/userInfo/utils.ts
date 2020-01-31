@@ -175,7 +175,7 @@ const isPermissionGranted = async (permission: Permission, context: Context, var
     return _ispPermission(handlerInput);
   }
 
-  if (permissionValue === PERMISSIONS.PRODUCT && permission.product?.value) {
+  if (permissionValue === PERMISSIONS.PRODUCT && permission?.product?.value) {
     return _productPermission(handlerInput, permission, permissionVariable, context.storage.get(S.LOCALE), variables);
   }
 

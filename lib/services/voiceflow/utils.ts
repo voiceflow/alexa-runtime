@@ -18,8 +18,9 @@ export const regexVariables = (phrase: string, variables: Record<string, any>, m
   return phrase.replace(/\{([a-zA-Z0-9_]{1,32})\}/g, (match, inner) => _replacer(match, inner, variables, modifier));
 };
 
-const _stringToNumIfNumeric = (str: string): number | string => {
+const _stringToNumIfNumeric = (str: string | null): number | string | null => {
   const number = Number(str);
+
   return Number.isNaN(number) ? str : number;
 };
 
@@ -37,7 +38,8 @@ export const formatName = (name: string): string => {
 };
 
 export const mapSlots = (mappings: Mapping[], slots: { [key: string]: Slot }, overwrite = false): object => {
-  const variables = {};
+  const variables: Record<string, any> = {};
+
   if (mappings && slots) {
     mappings.forEach((map: Mapping) => {
       if (!map.slot) return;
@@ -58,5 +60,7 @@ export const mapSlots = (mappings: Mapping[], slots: { [key: string]: Slot }, ov
 };
 
 export const addRepromptIfExists = (block: Record<string, any>, context: Context, variables: Store): void => {
-  if (block.reprompt) context.turn.set(T.REPROMPT, regexVariables(block.reprompt, variables.getState()));
+  if (block.reprompt) {
+    context.turn.set(T.REPROMPT, regexVariables(block.reprompt, variables.getState()));
+  }
 };

@@ -6,39 +6,34 @@ import { buildClients, buildControllers, buildMiddleware, buildServices, ClientM
 import { Config } from '@/types';
 
 class ServiceManager {
-  clients: ClientMap = null;
+  clients: ClientMap;
 
-  services: FullServiceMap = null;
+  services: FullServiceMap;
 
-  middlewares: MiddlewareMap = null;
+  middlewares: MiddlewareMap;
 
-  controllers: ControllerMap = null;
+  controllers: ControllerMap;
 
   constructor(public config: Config) {
     // Clients
-    const clients = buildClients(config);
+    this.clients = buildClients(config);
 
     // Services
-    const services = buildServices(config, clients);
+    this.services = buildServices(config, this.clients);
 
     // Middleware
-    const middlewares = buildMiddleware(services, config);
+    this.middlewares = buildMiddleware(this.services, config);
 
     // Controllers
-    const controllers = buildControllers(services, config);
-
-    Object.assign(this, {
-      clients,
-      services,
-      middlewares,
-      controllers,
-    });
+    this.controllers = buildControllers(this.services, config);
   }
 
   /**
    * Start services
    */
-  async start() {}
+  async start() {
+    // needed for eslint
+  }
 
   /**
    * Stop services

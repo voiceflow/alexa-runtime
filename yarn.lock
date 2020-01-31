@@ -447,6 +447,11 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
+"@types/bluebird@^3.5.29":
+  version "3.5.29"
+  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.29.tgz#7cd933c902c4fc83046517a1bef973886d00bdb6"
+  integrity sha512-kmVtnxTuUuhCET669irqQmPAez4KFnFVKvpleVRyfC3g+SHD1hIkFZcWLim9BVcwUBLO59o8VZE4yGCmTif8Yw==
+
 "@types/body-parser@*":
   version "1.17.1"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.17.1.tgz#18fcf61768fb5c30ccc508c21d6fd2e8b3bf7897"
@@ -779,20 +784,6 @@
     randomstring "^1.1.5"
     sinon "^7.5.0"
 
-"@voiceflow/client@https://github.com/voiceflow/client.git#094e0057260dbd457244a03222405e76fa32f4e7":
-  version "1.0.0"
-  resolved "https://github.com/voiceflow/client.git#094e0057260dbd457244a03222405e76fa32f4e7"
-  dependencies:
-    axios "^0.19.0"
-    immer "^5.1.0"
-
-"@voiceflow/client@https://github.com/voiceflow/client.git#8cfbc281dacba81c37a675a815344057adbcc3fb":
-  version "0.1.0"
-  resolved "https://github.com/voiceflow/client.git#8cfbc281dacba81c37a675a815344057adbcc3fb"
-  dependencies:
-    axios "^0.19.0"
-    immer "^5.1.0"
-
 "@voiceflow/commitlint-config@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@voiceflow/commitlint-config/-/commitlint-config-1.0.1.tgz#e9513aa348d5e88ff064022e2dae8d0d7e227f6a"
@@ -855,14 +846,6 @@
   integrity sha512-C6cTvGXBcWxVhGyWnVmCIOjweKYO0kifocoEZ2Xac7ZHNyaJYA/8OjqjqLv/d/fUTdVifin24BFDCOq0flPavw==
   dependencies:
     current-git-branch "^1.1.0"
-
-"@voiceflow/handlers@https://github.com/voiceflow/handlers.git#7cb5cbefd4ee62497104d606eeb89ff0385ee1da":
-  version "1.0.0"
-  resolved "https://github.com/voiceflow/handlers.git#7cb5cbefd4ee62497104d606eeb89ff0385ee1da"
-  dependencies:
-    "@voiceflow/client" "https://github.com/voiceflow/client.git#094e0057260dbd457244a03222405e76fa32f4e7"
-    axios "^0.19.0"
-    immer "^5.1.0"
 
 "@voiceflow/logger@^1.1.0":
   version "1.1.0"
@@ -4664,16 +4647,6 @@ ignore@^5.0.5, ignore@^5.1.1, ignore@^5.1.2:
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.4.tgz#84b7b3dbe64552b6ef0eca99f6743dbec6d97adf"
   integrity sha512-MzbUSahkTW1u7JpKKjY7LCARd1fU5W2rLdxlM4kdkayuCwZImjkpluF9CM1aLewYJguPDqewLam18Y6AU69A8A==
-
-immer@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-5.1.0.tgz#38d9eba40dbb0389b7ae7b8b99e4661df0cf89e3"
-  integrity sha512-t6gyFtTcokCuI0tX9KQZJQAkIjSqo/nTeJnwojfty69EzrorZbywwhZ8qNNlF+faajHeRnhOvM2F40KHLFCghQ==
-
-immer@^5.3.2:
-  version "5.3.2"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-5.3.2.tgz#e3a1c9f3550f925278fd86b8d2d644f7d5e9561b"
-  integrity sha512-wPWsSV0fv8iT7QQVs3rxBDWTbi5pHrVgnQv/McMfaRGJTLfQ3jFMEr08UibqS8hM17KCQXcjjYYzQzYe5e7BIA==
 
 import-fresh@^2.0.0:
   version "2.0.0"

@@ -1,6 +1,6 @@
 /* eslint no-process-exit: "off", no-process-env: "off" */
 import Promise from 'bluebird';
-import express from 'express';
+import express, { Express } from 'express';
 import http from 'http';
 import https from 'https';
 
@@ -15,9 +15,9 @@ const name = pjson.name.replace(/^@[a-zA-Z0-9-]+\//g, '');
  * @class
  */
 class Server {
-  app = null;
+  app: Express | null = null;
 
-  server: https.Server | http.Server = null;
+  server: https.Server | http.Server | null = null;
 
   constructor(public serviceManager: ServiceManager, public config: Config) {}
 
@@ -29,14 +29,18 @@ class Server {
     // Start services. This way if pubsub doesn't connect, it'll hang
     // await this.serviceManager.start()
 
-    this.app = express();
-    this.server = http.createServer(this.app);
+    const app = express();
+    const server = http.createServer(app);
 
     const { middlewares, controllers } = this.serviceManager;
 
-    ExpressMiddleware.attach(this.app, middlewares, controllers);
+    this.app = app;
+    this.server = server;
 
-    await new Promise((resolve) => this.server.listen(this.config.PORT, resolve));
+    ExpressMiddleware.attach(app, middlewares, controllers);
+
+    await Promise.fromCallback((cb: any) => server.listen(this.config.PORT, cb));
+
     log.info(`${name} listening on port ${this.config.PORT}`);
   }
 

@@ -1,3 +1,5 @@
+/* @ts-nocheck */
+
 import { utils } from '@voiceflow/common';
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 

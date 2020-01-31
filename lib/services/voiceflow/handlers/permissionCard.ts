@@ -24,7 +24,7 @@ const PermissionCardHandler: Handler<PermissionCard> = {
   handle: (block, context) => {
     context.turn.set(T.PERMISSION_CARD, block.permission_card);
 
-    return block.nextId;
+    return block.nextId ?? null;
   },
 };
 

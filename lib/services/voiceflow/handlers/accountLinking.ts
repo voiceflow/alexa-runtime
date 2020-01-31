@@ -15,12 +15,12 @@ export type AccountLinking = {
 
 const AccountLinkingHandler: Handler<AccountLinking> = {
   canHandle: (block) => {
-    return block.link_account;
+    return !!block.link_account;
   },
   handle: (block, context) => {
     context.turn.set(T.ACCOUNT_LINKING, true);
 
-    return block.nextId;
+    return block.nextId ?? null;
   },
 };
 

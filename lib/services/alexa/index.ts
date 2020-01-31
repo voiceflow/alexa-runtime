@@ -1,4 +1,4 @@
-import { SkillBuilders } from 'ask-sdk';
+import { HandlerInput, SkillBuilders } from 'ask-sdk';
 
 import { Config } from '@/types';
 
@@ -6,7 +6,7 @@ import { FullServiceMap } from '..';
 import { ErrorHandler, EventHandler, IntentHandler, LaunchHandler, PlaybackControllerHandler } from './handlers';
 
 const ResponseInterceptor = {
-  async process(handlerInput) {
+  async process(handlerInput: HandlerInput) {
     // save session attributes to persistent attributes
     await handlerInput.attributesManager.savePersistentAttributes();
   },
