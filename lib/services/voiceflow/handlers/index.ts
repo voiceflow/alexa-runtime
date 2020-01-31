@@ -20,6 +20,6 @@ export default [
   CardHandler,
   PaymentHandler,
 ];
-export type Block = Capture | Interaction | Speak;
+export type Block = Capture | Interaction | Speak | AccountLinking | PermissionCard | UserInfo;
 
-export default [SpeakHandler, InteractionHandler, CaptureHandler] as Handler<Block>[];
+export default [SpeakHandler, InteractionHandler, CaptureHandler, AccountLinkingHandler, PermissionCardHandler, UserInfoHandler] as Handler<Block>[];
