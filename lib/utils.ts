@@ -1,3 +1,4 @@
+import { ResponseBuilder } from '@voiceflow/backend-utils';
 import { ValidationChain } from 'express-validator';
 import { Middleware } from 'express-validator/src/base';
 
@@ -31,4 +32,25 @@ export const router = <T extends ClassType>(clazz: T): void => {
   }, []);
 };
 
-export const getMethods = (obj: any) => obj?.[METHODS_KEY] || [];
+export const getInstanceMethodNames = (obj) => {
+  const proto = Object.getPrototypeOf(obj);
+  if (proto.constructor.name === 'Object') {
+    return Object.getOwnPropertyNames(obj);
+  }
+  return Object.getOwnPropertyNames(proto).filter((name) => name !== 'constructor');
+};
+
+const responseBuilder = new ResponseBuilder();
+export const routeWrapper = (routers) => {
+  Object.values(routers).forEach((routes) => {
+    getInstanceMethodNames(routes).forEach((route) => {
+      if (typeof routes[route] === 'function' && !routes[route].route) {
+        const routeHandler = routes[route].bind(routes);
+        routeHandler.validations = routes[route].validations;
+        routeHandler.callback = routes[route].callback;
+
+        routes[route] = responseBuilder.route(routeHandler);
+      }
+    });
+  });
+};

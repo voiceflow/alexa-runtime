@@ -1,4 +1,4 @@
-export { default as Middlewares, AbstractMiddleware, MiddlewareMap, MiddlewareClass } from './middlewares';
-export { default as Services, AbstractManager, ServiceMap } from './services';
-export { default as Controllers, AbstractController, ControllerMap, ControllerClass } from './controllers';
-export * from './types';
+export { default as buildControllers, ControllerMap } from './controllers';
+export { default as buildMiddleware, MiddlewareMap } from './middlewares';
+export { default as buildServices, FullServiceMap } from './services';
+export { default as buildClients, ClientMap } from './clients';

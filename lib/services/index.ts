@@ -1,13 +1,35 @@
-import ExampleManager from './exampleManager';
-import { AbstractManager } from './utils';
+import Client from '@voiceflow/client';
+import secretsProvider, { SecretsProvider } from '@voiceflow/secrets-provider';
+import ASK from 'ask-sdk';
 
-export { AbstractManager };
-// ORDER BY DEPENDENCY
+import { Config } from '@/types';
+
+import { ClientMap } from '../clients';
+import Alexa from './alexa';
+import Voiceflow from './voiceflow';
 
 export interface ServiceMap {
-  exampleManager: ExampleManager;
+  alexa: ASK.Skill;
+  voiceflow: Client;
 }
 
-export default {
-  ExampleManager,
+export interface FullServiceMap extends ClientMap, ServiceMap {
+  secretsProvider: SecretsProvider;
+}
+
+/**
+ * Build all services
+ */
+const buildServices = (config: Config, clients: ClientMap): FullServiceMap => {
+  const services = {
+    ...clients,
+  } as FullServiceMap;
+
+  services.secretsProvider = secretsProvider;
+  services.voiceflow = Voiceflow(services, config);
+  services.alexa = Alexa(services, config);
+
+  return services;
 };
+
+export default buildServices;

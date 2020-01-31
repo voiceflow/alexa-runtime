@@ -1,12 +1,14 @@
-'use strict';
-
+import bodyParser from 'body-parser';
 import express from 'express';
+
 import { ControllerMap, MiddlewareMap } from '@/lib';
 
 export default (middlewares: MiddlewareMap, controllers: ControllerMap) => {
   const router = express.Router();
 
-  router.get('/:id', middlewares.example.checkExample, controllers.example.getExample);
+  router.use(middlewares.alexa.verifier);
+  router.use(bodyParser.json());
+  router.post('/state/skill/:versionID', controllers.alexa.handler);
 
   return router;
 };

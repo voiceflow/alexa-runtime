@@ -1,19 +1,29 @@
+import { routeWrapper } from '@/lib/utils';
 import { Config, MiddlewareGroup } from '@/types';
 
-import { FullServiceMap } from '../types';
-import Example from './example';
-import { AbstractMiddleware } from './utils';
-
-export { AbstractMiddleware };
+import { FullServiceMap } from '../services';
+import Alexa from './alexa';
 
 export interface MiddlewareMap {
-  example: Example;
+  alexa: Alexa;
 }
 
 export interface MiddlewareClass<T = MiddlewareGroup> {
   new (services: FullServiceMap, config: Config): T;
 }
 
-export default {
-  Example,
+/**
+ * Build all middlewares
+ */
+const buildMiddleware = (services: FullServiceMap, config: Config) => {
+  const middlewares = {} as MiddlewareMap;
+
+  middlewares.alexa = new Alexa(services, config);
+
+  // everything before this will be route-wrapped
+  routeWrapper(middlewares);
+
+  return middlewares;
 };
+
+export default buildMiddleware;
