@@ -4,18 +4,23 @@ import axios from 'axios';
 
 import { Storage as S } from '@/lib/constants/flags';
 
-import { Permission, PERMISSIONS } from './constants';
+import { Permission, PERMISSIONS, PRODUCT } from './constants';
 
-const _ispPermission = async (handlerInput: any): Promise<boolean> => {
+const _alexaApiCall = (handlerInput: any, endpoint: string) => {
+  const { apiEndpoint, authorizationValue } = handlerInput.serviceClientFactory.apiConfiguration;
+  return axios.get(`${apiEndpoint}${endpoint}`, {
+    headers: {
+      Authorization: `Bearer ${authorizationValue}`,
+      'Accept-Language': handlerInput.requestEnvelope.request.locale,
+      Host: handlerInput.requestEnvelope.context.System.apiEndpoint.substring(8),
+    },
+  });
+};
+
+const _ispPermission = async (handlerInput: HandlerInput): Promise<boolean> => {
   try {
-    const { apiEndpoint, authorizationValue } = handlerInput.serviceClientFactory.apiConfiguration;
-    const status = await axios.get(`${apiEndpoint}/v1/users/~current/skills/~current/settings/voicePurchasing.enabled`, {
-      headers: {
-        Authorization: `Bearer ${authorizationValue}`,
-        'Accept-Language': handlerInput.requestEnvelope.request.locale,
-        Host: handlerInput.requestEnvelope.context.System.apiEndpoint.substring(8),
-      },
-    });
+    const voicePurchasingEndpoint = '/v1/users/~current/skills/~current/settings/voicePurchasing.enabled';
+    const status = await _alexaApiCall(handlerInput, voicePurchasingEndpoint);
     return status.data === true;
   } catch (err) {
     return false;
@@ -23,7 +28,7 @@ const _ispPermission = async (handlerInput: any): Promise<boolean> => {
 };
 
 const _productPermission = async (
-  handlerInput: any,
+  handlerInput: HandlerInput,
   permission: Permission,
   permissionVariable: string,
   locale: string,
@@ -34,21 +39,15 @@ const _productPermission = async (
 
     // Kids ISP testing
     if (permission.transaction && permission.transaction.value) {
-      if (result.entitlementReason === 'PURCHASED' && result.entitled === 'ENTITLED') {
-        variables.set(permission.transaction.value, 'APPROVED_BY_PARENT');
-      } else if (result.entitlementReason === 'AUTO_ENTITLED') {
-        variables.set(permission.transaction.value, 'FTU');
-      } else if (result.purchasable === 'NOT_PURCHASABLE') {
+      if (result.entitlementReason === PRODUCT.PURCHASED && result.entitled === PRODUCT.ENTITLED) {
+        variables.set(permission.transaction.value, PRODUCT.APPROVED_BY_PARENT);
+      } else if (result.entitlementReason === PRODUCT.AUTO_ENTITLED) {
+        variables.set(permission.transaction.value, PRODUCT.FTU);
+      } else if (result.purchasable === PRODUCT.NOT_PURCHASABLE) {
         // eslint-disable-next-line max-depth
         try {
-          const { apiEndpoint, authorizationValue } = handlerInput.serviceClientFactory.apiConfiguration;
-          const transactions = await axios.get(`${apiEndpoint}/v1/users/~current/skills/~current/inSkillProductsTransactions`, {
-            headers: {
-              Authorization: `Bearer ${authorizationValue}`,
-              'Accept-Language': handlerInput.requestEnvelope.request.locale,
-              Host: handlerInput.requestEnvelope.context.System.apiEndpoint.substring(8),
-            },
-          });
+          const transactionsEndpoint = '/v1/users/~current/skills/~current/inSkillProductsTransactions';
+          const transactions = await _alexaApiCall(handlerInput, transactionsEndpoint);
 
           const found = transactions.data.results.find((t) => t.productId === permission.product.value);
           variables.set(permission.transaction.value, found ? found.status : 0);
@@ -60,11 +59,11 @@ const _productPermission = async (
       }
     }
 
-    if (!result || !(result.entitled === 'ENTITLED' || result.entitlementReason === 'AUTO_ENTITLED')) {
+    if (!result || !(result.entitled === PRODUCT.ENTITLED || result.entitlementReason === PRODUCT.AUTO_ENTITLED)) {
       return false;
     }
-    if (result.type === 'CONSUMABLE' && permissionVariable) {
-      if (result.entitlementReason === 'AUTO_ENTITLED') {
+    if (result.type === PRODUCT.CONSUMABLE && permissionVariable) {
+      if (result.entitlementReason === PRODUCT.AUTO_ENTITLED) {
         result.activeEntitlementCount = 100;
       }
       variables.set(permissionVariable, result.activeEntitlementCount);
@@ -149,7 +148,7 @@ const _geolocationRead = async (handlerInput: HandlerInput, permissionVariable: 
   return true;
 };
 
-const getUserInfo = async (permission: Permission, context: Context<Record<string, any>>, variables: Store): Promise<boolean> => {
+const isPermissionGranted = async (permission: Permission, context: Context<Record<string, any>>, variables: Store): Promise<boolean> => {
   const permissionValue = permission?.selected?.value;
   const handlerInput = context.turn.get('handlerInput');
 
@@ -207,4 +206,4 @@ const getUserInfo = async (permission: Permission, context: Context<Record<strin
   return false;
 };
 
-export default getUserInfo;
+export default isPermissionGranted;

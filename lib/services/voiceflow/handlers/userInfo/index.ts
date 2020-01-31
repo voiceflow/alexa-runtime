@@ -1,5 +1,5 @@
 import { Handler } from '../../types';
-import getUserInfo from './utils';
+import isPermissionGranted from './utils';
 
 const UserInfoHandler: Handler = {
   canHandle: (block) => {
@@ -8,9 +8,8 @@ const UserInfoHandler: Handler = {
   handle: async (block, context, variables) => {
     let nextId = block.fail_id;
 
-    const requests = [];
     if (Array.isArray(block.permissions) && block.permissions.length) {
-      block.permissions.forEach((p) => requests.push(getUserInfo(p, context, variables)));
+      const requests = block.permissions.map((p) => isPermissionGranted(p, context, variables));
       const results = await Promise.all(requests);
       if (!results.includes(false)) {
         nextId = block.success_id;
