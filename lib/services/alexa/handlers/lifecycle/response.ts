@@ -1,9 +1,11 @@
+import { Context, DefaultBlock } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
+import { Response } from 'ask-sdk-model';
 
 import { S, T } from '@/lib/constants';
-import { Context } from '@/lib/services/voiceflow/types';
+import { Block } from '@/lib/services/voiceflow';
 
-const response = async (context: Context, input: HandlerInput): Promise<import('ask-sdk-model').Response> => {
+const response = async (context: Context<Block | DefaultBlock>, input: HandlerInput): Promise<Response> => {
   let builder = input.responseBuilder;
 
   const { storage, turn } = context;

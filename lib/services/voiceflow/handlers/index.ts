@@ -1,8 +1,12 @@
+import { Handler } from '@voiceflow/client';
+
 import AccountLinkingHandler from './accountLinking';
-import CaptureHandler from './capture';
-import InteractionHandler from './interaction';
+import CaptureHandler, { Capture } from './capture';
+import InteractionHandler, { Interaction } from './interaction';
 import PermissionCardHandler from './permissionCard';
-import SpeakHandler from './speak';
+import SpeakHandler, { Speak } from './speak';
 import UserInfoHandler from './userInfo';
 
-export default [SpeakHandler, InteractionHandler, CaptureHandler, AccountLinkingHandler, PermissionCardHandler, UserInfoHandler];
+export type Block = Capture | Interaction | Speak;
+
+export default [SpeakHandler, InteractionHandler, CaptureHandler] as Handler<Block>[];

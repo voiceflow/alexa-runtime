@@ -5,7 +5,7 @@ import { Request } from '@/types';
 import { router, validate } from '../utils';
 import { AbstractController } from './utils';
 
-@router
+@router<AlexaController>(['handler'])
 class AlexaController extends AbstractController {
   static VALIDATIONS = {
     PARAMS: {
