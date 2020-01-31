@@ -1,10 +1,14 @@
 import { HandlerInput } from 'ask-sdk';
+import { Response, ui } from 'ask-sdk-model';
 
 import { S, T } from '@/lib/constants';
 import { Context } from '@/lib/services/voiceflow/types';
 
-const response = async (context: Context, input: HandlerInput): Promise<import('ask-sdk-model').Response> => {
+const response = async (context: Context, input: HandlerInput): Promise<Response> => {
   let builder = input.responseBuilder;
+
+  // additional attributes added to the response
+  const extras = {} as { card?: ui.Card };
 
   const { storage, turn } = context;
 
@@ -30,8 +34,12 @@ const response = async (context: Context, input: HandlerInput): Promise<import('
     if (permissions?.length) builder = builder.withAskForPermissionsConsentCard(permissions);
   }
 
+  const card = turn.get(T.CARD);
+  if (card) extras.card = card;
+
   input.attributesManager.setPersistentAttributes(context.getFinalState());
-  return builder.getResponse();
+
+  return { ...builder.getResponse(), ...extras };
 };
 
 export default response;
