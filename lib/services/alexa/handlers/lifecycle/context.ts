@@ -15,7 +15,10 @@ const context = async (input: HandlerInput): Promise<Context> => {
     request = { type: RequestType.INTENT, payload: alexaRequest };
   }
 
-  return voiceflow.createContext(versionID, rawState as State, request);
+  const newContext = voiceflow.createContext(versionID, rawState as State, request);
+  newContext.turn.set('handlerInput', input);
+
+  return newContext;
 };
 
 export default context;
