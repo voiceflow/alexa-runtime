@@ -8,6 +8,9 @@ const response = async (context: Context, input: HandlerInput): Promise<import('
 
   const { storage, turn } = context;
 
+  // store access token
+  storage.set(S.ACCESS_TOKEN, input.requestEnvelope.context.System.user.accessToken);
+
   if (context.stack.isEmpty()) {
     turn.set(T.END, true);
   }
