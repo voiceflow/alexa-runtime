@@ -1,8 +1,8 @@
-import { extractFrameCommand, Frame, Store } from '@voiceflow/client';
+import { Context, extractFrameCommand, Frame, Store } from '@voiceflow/client';
 
 import { T } from '@/lib/constants';
 
-import { Context, IntentRequest, Mapping, RequestType } from '../types';
+import { IntentRequest, Mapping, RequestType } from '../types';
 import { mapSlots } from '../utils';
 
 /**

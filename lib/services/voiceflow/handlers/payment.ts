@@ -1,7 +1,7 @@
 import { Handler } from '@voiceflow/client';
 
 import { S } from '@/lib/constants';
-import { ResponseBuilder } from "@/lib/services/voiceflow/types";
+import { ResponseBuilder } from '@/lib/services/voiceflow/types';
 
 export type PaymentsBlock = {
   blockID: string;
@@ -26,10 +26,9 @@ export const PaymentResponseBuilder: ResponseBuilder = (context, builder) => {
         },
         token: 'correlatonToken',
       })
-      .withShouldEndSession(true)
-      .getResponse();
+      .withShouldEndSession(true);
   }
-}
+};
 
 const PaymentHandler: Handler<PaymentsBlock> = {
   canHandle: (block) => {

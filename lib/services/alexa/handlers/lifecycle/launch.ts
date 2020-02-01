@@ -1,8 +1,7 @@
-import { Frame, Store } from '@voiceflow/client';
+import { Context, Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
 import { S } from '@/lib/constants';
-import { Context } from '@/lib/services/voiceflow/types';
 
 import { SkillMetadata } from '../../types';
 

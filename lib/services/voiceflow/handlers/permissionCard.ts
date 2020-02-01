@@ -1,6 +1,12 @@
+import { Handler } from '@voiceflow/client';
+
 import { S, T } from '@/lib/constants';
 
-import { Handler, ResponseBuilder } from '../types';
+import { ResponseBuilder } from '../types';
+
+export type PermissionCard = {
+  permission_card?: string;
+};
 
 export const PermissionCardResponseBuilder: ResponseBuilder = (context, builder) => {
   // check permissions card
@@ -11,9 +17,9 @@ export const PermissionCardResponseBuilder: ResponseBuilder = (context, builder)
   }
 };
 
-const PermissionCardHandler: Handler = {
+const PermissionCardHandler: Handler<PermissionCard> = {
   canHandle: (block) => {
-    return block.permission_card;
+    return !!block.permission_card;
   },
   handle: (block, context) => {
     context.turn.set(T.PERMISSION_CARD, block.permission_card);

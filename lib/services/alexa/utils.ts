@@ -1,7 +1,5 @@
-import { State } from '@voiceflow/client';
+import { Context, State } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
-
-import { Context } from '../voiceflow/types';
 
 // eslint-disable-next-line import/prefer-default-export
 export const updateContext = async (input: HandlerInput, produce: (context: Context) => Promise<void> | void) => {

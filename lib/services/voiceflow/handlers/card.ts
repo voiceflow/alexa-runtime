@@ -1,12 +1,27 @@
+import { Handler } from '@voiceflow/client';
+
 import { T } from '@/lib/constants';
 
-import { Handler, ResponseBuilder } from '../types';
+import { ResponseBuilder } from '../types';
 import { regexVariables } from '../utils';
 
 enum CardType {
   STANDARD = 'Standard',
   SIMPLE = 'Simple',
 }
+
+export type Card = {
+  card: {
+    type?: CardType;
+    title?: string;
+    text?: string;
+    content?: string;
+    image?: {
+      smallImageUrl?: string;
+      largeImageUrl?: string;
+    };
+  };
+};
 
 export const CardResponseBuilder: ResponseBuilder = (context, builder) => {
   const card = context.turn.get(T.CARD);
@@ -16,7 +31,7 @@ export const CardResponseBuilder: ResponseBuilder = (context, builder) => {
   }
 };
 
-const CardHandler: Handler = {
+const CardHandler: Handler<Card> = {
   canHandle: (block) => {
     return !!block.card;
   },

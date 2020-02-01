@@ -1,13 +1,19 @@
+import { Handler } from '@voiceflow/client';
 import _ from 'lodash';
 import wordsToNumbers from 'words-to-numbers';
 
 import { T } from '@/lib/constants';
 
-import { Handler, IntentRequest, RequestType } from '../types';
+import { IntentRequest, RequestType } from '../types';
 import { addRepromptIfExists } from '../utils';
 import CommandHandler from './command';
 
-const CaptureHandler: Handler = {
+export type Capture = {
+  variable: string | number;
+  reprompt?: string;
+};
+
+const CaptureHandler: Handler<Capture> = {
   canHandle: (block) => {
     return !!block.variable;
   },
