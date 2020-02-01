@@ -36,7 +36,7 @@ class Server {
 
     ExpressMiddleware.attach(this.app, middlewares, controllers);
 
-    await Promise.fromCallback((cb) => this.server.listen(this.config.PORT, cb));
+    await new Promise((resolve) => this.server.listen(this.config.PORT, resolve));
     log.info(`${name} listening on port ${this.config.PORT}`);
   }
 
