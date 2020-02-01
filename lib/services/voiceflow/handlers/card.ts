@@ -1,9 +1,6 @@
-import { Store } from '@voiceflow/client';
-import { ResponseBuilder } from 'ask-sdk';
-
 import { T } from '@/lib/constants';
 
-import { Handler } from '../types';
+import { Handler, ResponseBuilder } from '../types';
 import { regexVariables } from '../utils';
 
 enum CardType {
@@ -11,8 +8,8 @@ enum CardType {
   SIMPLE = 'Simple',
 }
 
-export const responseBuilder = (turn: Store, builder: ResponseBuilder) => {
-  const card = turn.get(T.CARD);
+export const CardResponseBuilder: ResponseBuilder = (context, builder) => {
+  const card = context.turn.get(T.CARD);
   if (card) {
     if (card.type === CardType.SIMPLE) builder.withSimpleCard(card.title, card.content);
     else if (card.type === CardType.STANDARD) builder.withStandardCard(card.title, card.text, card.image.smallImageUrl, card.image.largeImageUrl);

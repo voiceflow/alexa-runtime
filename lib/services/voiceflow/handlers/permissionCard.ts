@@ -1,6 +1,15 @@
-import { T } from '@/lib/constants';
+import { S, T } from '@/lib/constants';
 
-import { Handler } from '../types';
+import { Handler, ResponseBuilder } from '../types';
+
+export const PermissionCardResponseBuilder: ResponseBuilder = (context, builder) => {
+  // check permissions card
+  const permissionCard = context.turn.get(T.PERMISSION_CARD);
+  if (permissionCard) {
+    const permissions = Array.isArray(permissionCard) ? permissionCard : context.storage.get(S.ALEXA_PERMISSIONS);
+    if (permissions?.length) builder.withAskForPermissionsConsentCard(permissions);
+  }
+};
 
 const PermissionCardHandler: Handler = {
   canHandle: (block) => {
