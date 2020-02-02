@@ -11,6 +11,7 @@ export const AccountLinkingResponseBuilder: ResponseBuilder = (context, builder)
 
 export type AccountLinking = {
   link_account?: boolean;
+  nextId?: string;
 };
 
 const AccountLinkingHandler: Handler<AccountLinking> = {

@@ -6,11 +6,11 @@ import { Config } from '@/types';
 
 import { ClientMap } from '../clients';
 import Alexa from './alexa';
-import Voiceflow, { Block } from './voiceflow';
+import Voiceflow from './voiceflow';
 
 export interface ServiceMap {
   alexa: ASK.Skill;
-  voiceflow: Client<Block>;
+  voiceflow: Client;
 }
 
 export interface FullServiceMap extends ClientMap, ServiceMap {

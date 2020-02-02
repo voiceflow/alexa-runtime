@@ -11,7 +11,7 @@
 
     /* Strictness Checks */
     "alwaysStrict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": false, // TODO: temporarily disabled for typing error
     "noUnusedLocals": true,
     "noImplicitThis": true,
     "strictNullChecks": true,

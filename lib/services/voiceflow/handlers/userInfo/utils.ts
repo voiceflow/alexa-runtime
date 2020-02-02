@@ -34,11 +34,18 @@ const _productPermission = async (
   locale: string,
   variables: Store
 ): Promise<boolean> => {
+  if (!permission) {
+    return false;
+  }
   try {
-    const result = await handlerInput.serviceClientFactory.getMonetizationServiceClient().getInSkillProduct(locale, permission.product.value);
+    const result = await handlerInput.serviceClientFactory?.getMonetizationServiceClient().getInSkillProduct(locale, permission.product?.value || '');
+
+    if (!result) {
+      return false;
+    }
 
     // Kids ISP testing
-    if (permission.transaction && permission.transaction.value) {
+    if (permission.transaction?.value) {
       if (result.entitlementReason === PRODUCT.PURCHASED && result.entitled === PRODUCT.ENTITLED) {
         variables.set(permission.transaction.value, PRODUCT.APPROVED_BY_PARENT);
       } else if (result.entitlementReason === PRODUCT.AUTO_ENTITLED) {
@@ -49,7 +56,7 @@ const _productPermission = async (
           const transactionsEndpoint = '/v1/users/~current/skills/~current/inSkillProductsTransactions';
           const transactions = await _alexaApiCall(handlerInput, transactionsEndpoint);
 
-          const found = transactions.data.results.find((t) => t.productId === permission.product.value);
+          const found = transactions.data.results.find((t) => t.productId === permission.product?.value);
           variables.set(permission.transaction.value, found ? found.status : 0);
         } catch (err) {
           variables.set(permission.transaction.value, 0);
@@ -84,18 +91,17 @@ const _accountLinkingPermission = async (accessToken: string, permissionVariable
 };
 
 const _personIdReadPermission = async (handlerInput: HandlerInput, permissionVariable: string, variables: Store): Promise<boolean> => {
-  try {
-    const { personId } = await handlerInput.requestEnvelope.context.System.person;
+  const personId = await handlerInput.requestEnvelope.context.System.person?.personId;
+  if (personId) {
     if (permissionVariable) variables.set(permissionVariable, personId ?? 0);
     return true;
-  } catch (error) {
-    return false;
   }
+  return false;
 };
 
 const _profileEmailReadPermission = async (handlerInput: HandlerInput, permissionVariable: string, variables: Store): Promise<boolean> => {
   try {
-    const email = await handlerInput.serviceClientFactory.getUpsServiceClient().getProfileEmail();
+    const email = await handlerInput.serviceClientFactory?.getUpsServiceClient().getProfileEmail();
 
     if (permissionVariable) variables.set(permissionVariable, email);
     return true;
@@ -106,7 +112,7 @@ const _profileEmailReadPermission = async (handlerInput: HandlerInput, permissio
 
 const _profileNameReadPermission = async (handlerInput: HandlerInput, permissionVariable: string, variables: Store): Promise<boolean> => {
   try {
-    const name = await handlerInput.serviceClientFactory.getUpsServiceClient().getProfileName();
+    const name = await handlerInput.serviceClientFactory?.getUpsServiceClient().getProfileName();
 
     if (permissionVariable) variables.set(permissionVariable, name);
     return true;
@@ -117,7 +123,7 @@ const _profileNameReadPermission = async (handlerInput: HandlerInput, permission
 
 const _profileNumberReadPermission = async (handlerInput: HandlerInput, permissionVariable: string, variables: Store): Promise<boolean> => {
   try {
-    const number = await handlerInput.serviceClientFactory.getUpsServiceClient().getProfileMobileNumber();
+    const number = await handlerInput.serviceClientFactory?.getUpsServiceClient().getProfileMobileNumber();
 
     if (permissionVariable)
       variables.set(
@@ -131,19 +137,19 @@ const _profileNumberReadPermission = async (handlerInput: HandlerInput, permissi
 };
 
 const _geolocationRead = async (handlerInput: HandlerInput, permissionVariable: string, variables: Store): Promise<boolean> => {
-  const skillPermissionGranted = handlerInput.requestEnvelope.context.System.user.permissions.scopes['alexa::devices:all:geolocation:read'].status;
+  const skillPermissionGranted =
+    handlerInput.requestEnvelope.context.System.user.permissions?.scopes?.['alexa::devices:all:geolocation:read']?.status;
 
   if (skillPermissionGranted !== 'GRANTED') return false;
 
   try {
-    const { access, status } = handlerInput.requestEnvelope.context.Geolocation.locationServices;
+    const { access, status } = handlerInput.requestEnvelope.context.Geolocation?.locationServices || {};
     if (access === 'ENABLED' && status === 'RUNNING' && permissionVariable) {
       const geoObject = handlerInput.requestEnvelope.context.Geolocation;
       variables.set(permissionVariable, geoObject?.coordinate ? geoObject : undefined);
     }
   } catch (error) {
     if (permissionVariable) variables.set(permissionVariable, undefined);
-    return true;
   }
   return true;
 };
@@ -161,7 +167,7 @@ const isPermissionGranted = async (permission: Permission, context: Context, var
   )
     return false;
 
-  const permissionVariable = permission?.map_to?.value;
+  const permissionVariable = permission?.map_to?.value || '';
 
   if (permissionValue === PERMISSIONS.NOTIFICATIONS_WRITE) {
     return true;

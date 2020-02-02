@@ -21,6 +21,7 @@ export type Card = {
       largeImageUrl?: string;
     };
   };
+  nextId?: string;
 };
 
 export const CardResponseBuilder: ResponseBuilder = (context, builder) => {
@@ -61,7 +62,7 @@ const CardHandler: Handler<Card> = {
 
     context.turn.set(T.CARD, newCard);
 
-    return block.nextId;
+    return block.nextId ?? null;
   },
 };
 
