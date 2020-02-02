@@ -9,3 +9,5 @@ scratch.js
 /database
 /node_modules
 /routes
+/build
+/certs

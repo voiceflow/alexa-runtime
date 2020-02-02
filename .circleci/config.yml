@@ -1,0 +1,58 @@
+version: 2.1
+
+# What environment(s) do we execute our job(s) in?
+executors:
+  code-test-executor:
+    working_directory: ~/voiceflow # directory where steps will run
+    resource_class: medium+
+    docker: # run the steps with Docker
+      - image: circleci/node:12 # Test steps container
+
+# What are common sets of actions that are run?
+commands:
+  install_node_modules:
+    steps:
+      - restore_cache:
+          keys:
+            - node-module-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: yarn install packages
+          command: |
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+            yarn install --frozen-lockfile
+      - save_cache: # special step to save the dependency cache
+          key: node-module-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+  lint_source:
+    steps:
+      - run:
+          name: Lint source
+          command: npm run lint
+
+# Job -> A sequence of commands. A job is the unit of work that gets run on CircleCI
+jobs:
+  test:
+    executor: code-test-executor
+    steps:
+      - checkout
+      - install_node_modules
+      - lint_source
+      - run:
+          name: Run source tests
+          command: CIRCLECI=TRUE npm run test
+  test-build-app:
+    executor: code-test-executor
+    steps:
+      - run_tests:
+          saveCache: false
+          tests:
+            - run:
+                name: (Build App)
+                command: yarn build
+
+# When should each job run and what are their dependencies?
+workflows:
+  build-deploy:
+    jobs:
+      - test
