@@ -1,10 +1,25 @@
+import { Handler } from '@voiceflow/client';
+
 import { T } from '@/lib/constants';
 
-import { Choice, Handler, IntentRequest, Mapping, RequestType } from '../types';
+import { IntentRequest, Mapping, RequestType } from '../types';
 import { addRepromptIfExists, formatName, mapSlots } from '../utils';
 import CommandHandler from './command';
 
-const InteractionHandler: Handler = {
+type Choice = {
+  intent: string;
+  mappings?: Mapping[];
+  nextIdIndex?: number;
+};
+
+export type Interaction = {
+  elseId?: string;
+  nextIds: string[];
+  reprompt?: string;
+  interactions: Choice[];
+};
+
+const InteractionHandler: Handler<Interaction> = {
   canHandle: (block) => {
     return !!block.interactions;
   },
@@ -13,9 +28,8 @@ const InteractionHandler: Handler = {
 
     if (request?.type !== RequestType.INTENT) {
       addRepromptIfExists(block, context, variables);
-      // quit cycleStack without ending session
-      context.end();
-      return block.id;
+      // quit cycleStack without ending session by stopping on itself
+      return block.blockID;
     }
 
     let nextId: string = null;

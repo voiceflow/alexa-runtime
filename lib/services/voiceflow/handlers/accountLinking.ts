@@ -1,8 +1,20 @@
+import { Handler } from '@voiceflow/client';
+
 import { T } from '@/lib/constants';
 
-import { Handler } from '../types';
+import { ResponseBuilder } from '../types';
 
-const AccountLinkingHandler: Handler = {
+export const AccountLinkingResponseBuilder: ResponseBuilder = (context, builder) => {
+  // check account linking
+  if (context.turn.get(T.ACCOUNT_LINKING)) builder.withLinkAccountCard();
+};
+
+export type AccountLinking = {
+  link_account?: boolean;
+  nextId: string;
+};
+
+const AccountLinkingHandler: Handler<AccountLinking> = {
   canHandle: (block) => {
     return block.link_account;
   },

@@ -148,7 +148,7 @@ const _geolocationRead = async (handlerInput: HandlerInput, permissionVariable: 
   return true;
 };
 
-const isPermissionGranted = async (permission: Permission, context: Context<Record<string, any>>, variables: Store): Promise<boolean> => {
+const isPermissionGranted = async (permission: Permission, context: Context, variables: Store): Promise<boolean> => {
   const permissionValue = permission?.selected?.value;
   const handlerInput = context.turn.get('handlerInput');
 
