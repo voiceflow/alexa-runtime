@@ -1,7 +1,7 @@
 {
   "name": "@voiceflow/alexa",
   "description": "voiceflow alexa runtime client",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "author": "Voiceflow",
   "bugs": {
     "url": "https://github.com/voiceflow/alexa/issues"
