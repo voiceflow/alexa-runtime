@@ -7,6 +7,7 @@ export enum Storage {
   USER = 'user',
   ACCESS_TOKEN = 'accessToken',
   PERMISSIONS = 'permissions',
+  PAYMENT = 'payment',
 }
 
 export enum Turn {
@@ -17,6 +18,7 @@ export enum Turn {
   PREVIOUS_OUTPUT = 'lastOutput',
   REPROMPT = 'reprompt',
   REQUEST = 'request',
+  CARD = 'card',
 }
 
 export default {

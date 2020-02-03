@@ -1,9 +1,17 @@
-import { Handler } from '../../types';
+import { Handler } from '@voiceflow/client';
+
+import { Permission } from './constants';
 import isPermissionGranted from './utils';
 
-const UserInfoHandler: Handler = {
+export type UserInfo = {
+  fail_id?: string;
+  success_id?: string;
+  permissions?: Permission[];
+};
+
+const UserInfoHandler: Handler<UserInfo> = {
   canHandle: (block) => {
-    return block.permissions;
+    return !!block.permissions;
   },
   handle: async (block, context, variables) => {
     let nextId = block.fail_id;

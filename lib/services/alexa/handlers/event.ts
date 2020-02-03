@@ -2,6 +2,8 @@ import { HandlerInput, RequestHandler } from 'ask-sdk';
 
 import { S } from '@/lib/constants';
 
+import { updateContext } from '../utils';
+
 enum REQ_TYPES {
   EVENT_ROOT = 'AlexaSkillEvent.',
   ACCEPTED = 'AlexaSkillEvent.SkillPermissionAccepted',
@@ -17,15 +19,14 @@ const EventHandler: RequestHandler = {
     const { request } = input.requestEnvelope as any;
 
     if ((request.type === REQ_TYPES.ACCEPTED || request.type === REQ_TYPES.CHANGED) && Array.isArray(request.body?.acceptedPermissions)) {
-      const rawState = await input.attributesManager.getPersistentAttributes();
-      rawState.storage = {
-        ...rawState.storage,
-        [S.PERMISSIONS]: request.body.acceptedPermissions.reduce((acc: string[], permission: { scope?: string }) => {
-          if (permission.scope) acc.push(permission.scope);
-          return acc;
-        }, []),
-      };
-      input.attributesManager.setPersistentAttributes(rawState);
+      const permissions = request.body.acceptedPermissions.reduce((acc: string[], permission: { scope?: string }) => {
+        if (permission.scope) acc.push(permission.scope);
+        return acc;
+      }, []);
+
+      await updateContext(input, (context) => {
+        context.storage.set(S.PERMISSIONS, permissions);
+      });
     }
 
     return input.responseBuilder.getResponse();

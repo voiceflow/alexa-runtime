@@ -1,12 +1,19 @@
+import { Handler } from '@voiceflow/client';
 import _ from 'lodash';
-
-import { Handler } from '@/lib/services/voiceflow/types';
 
 import { regexVariables } from '../utils';
 
-const SpeakHandler: Handler = {
+export type Speak = {
+  audio?: string;
+  speak?: string;
+  prompt?: string;
+  random_speak?: string[];
+  nextId?: string;
+};
+
+const SpeakHandler: Handler<Speak> = {
   canHandle: (block) => {
-    return block.random_speak || block.audio || (typeof block.prompt === 'string' && block.prompt !== 'true') || block.speak;
+    return !!block.random_speak || !!block.audio || (typeof block.prompt === 'string' && block.prompt !== 'true') || !!block.speak;
   },
   handle: (block, context, variables) => {
     let { speak } = block;

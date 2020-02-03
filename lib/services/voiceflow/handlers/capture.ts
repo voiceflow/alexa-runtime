@@ -1,13 +1,20 @@
+import { Handler } from '@voiceflow/client';
 import _ from 'lodash';
 import wordsToNumbers from 'words-to-numbers';
 
 import { T } from '@/lib/constants';
 
-import { Handler, IntentRequest, RequestType } from '../types';
+import { IntentRequest, RequestType } from '../types';
 import { addRepromptIfExists } from '../utils';
 import CommandHandler from './command';
 
-const CaptureHandler: Handler = {
+export type Capture = {
+  variable: string | number;
+  reprompt?: string;
+  nextId: string;
+};
+
+const CaptureHandler: Handler<Capture> = {
   canHandle: (block) => {
     return !!block.variable;
   },
@@ -16,9 +23,8 @@ const CaptureHandler: Handler = {
 
     if (request?.type !== RequestType.INTENT) {
       addRepromptIfExists(block, context, variables);
-      // quit cycleStack without ending session
-      context.end();
-      return block.id;
+      // quit cycleStack without ending session by stopping on itself
+      return block.blockID;
     }
 
     let nextId: string;
