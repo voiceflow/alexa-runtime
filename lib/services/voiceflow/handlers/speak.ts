@@ -7,6 +7,7 @@ export type Speak = {
   audio?: string;
   speak?: string;
   prompt?: string;
+  nextId?: string;
   random_speak?: string[];
 };
 

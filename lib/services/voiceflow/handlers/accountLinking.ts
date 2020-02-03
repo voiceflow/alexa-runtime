@@ -6,7 +6,9 @@ import { ResponseBuilder } from '../types';
 
 export const AccountLinkingResponseBuilder: ResponseBuilder = (context, builder) => {
   // check account linking
-  if (context.turn.get(T.ACCOUNT_LINKING)) builder.withLinkAccountCard();
+  if (context.turn.get(T.ACCOUNT_LINKING)) {
+    builder.withLinkAccountCard();
+  }
 };
 
 export type AccountLinking = {

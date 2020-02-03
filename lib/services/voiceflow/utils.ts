@@ -1,7 +1,9 @@
-import { Context, Mapping, Store } from '@voiceflow/client';
+import { Context, Store } from '@voiceflow/client';
 import { Slot } from 'ask-sdk-model';
 
 import { T } from '@/lib/constants';
+
+import { Mapping } from '../voiceflow/types';
 
 const _replacer = (match: string, inner: string, variables: Record<string, any>, modifier?: Function) => {
   if (inner in variables) {
@@ -57,7 +59,7 @@ export const mapSlots = (mappings: Mapping[], slots: { [key: string]: Slot }, ov
   return variables;
 };
 
-export const addRepromptIfExists = <B extends { reprompt?: string }>(block: Record<string, any>, context: Context<B>, variables: Store): void => {
+export const addRepromptIfExists = <B extends { reprompt?: string }>(block: B, context: Context, variables: Store): void => {
   if (block.reprompt) {
     context.turn.set(T.REPROMPT, regexVariables(block.reprompt, variables.getState()));
   }

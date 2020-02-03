@@ -1,15 +1,16 @@
-import Client, { Context, DefaultBlock, State } from '@voiceflow/client';
+import Client, { Context, State } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 import { IntentRequest as AlexaIntentRequest } from 'ask-sdk-model';
 
 import { IntentRequest, RequestType } from '@/lib/services/voiceflow/types';
-import { Block } from '@/lib/services/voiceflow';
 
-const context = async (input: HandlerInput): Promise<Context<Block | DefaultBlock>> => {
-  const { versionID, voiceflow } = input.context as { versionID: string; voiceflow: Client<Block> };
-  const rawState = await input.attributesManager.getPersistentAttributes();
+const context = async (input: HandlerInput): Promise<Context> => {
+  const { versionID, voiceflow } = input.context as { versionID: string; voiceflow: Client };
+  const { attributesManager, requestEnvelope } = input;
 
-  const alexaRequest = input.requestEnvelope.request as AlexaIntentRequest;
+  const rawState = await attributesManager.getPersistentAttributes();
+
+  const alexaRequest = requestEnvelope.request as AlexaIntentRequest;
 
   let request: IntentRequest | undefined;
 

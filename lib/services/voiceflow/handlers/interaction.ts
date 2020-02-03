@@ -1,8 +1,8 @@
-import { Context, Handler, Mapping } from '@voiceflow/client';
+import { Handler } from '@voiceflow/client';
 
 import { T } from '@/lib/constants';
 
-import { IntentRequest, RequestType } from '../types';
+import { IntentRequest, Mapping, RequestType } from '../types';
 import { addRepromptIfExists, formatName, mapSlots } from '../utils';
 import CommandHandler from './command';
 
@@ -12,7 +12,7 @@ type Choice = {
   nextIdIndex?: number;
 };
 
-export type Interaction = {
+type Interaction = {
   elseId?: string;
   nextIds: string[];
   reprompt?: string;
@@ -52,7 +52,7 @@ const InteractionHandler: Handler<Interaction> = {
 
     if (!nextId) {
       // check if there is a command in the stack that fulfills intent
-      nextId = CommandHandler.handle(context as Context<any>, variables);
+      nextId = CommandHandler.handle(context, variables);
     }
 
     // request for this turn has been processed, delete request

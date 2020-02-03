@@ -19,6 +19,7 @@ const UserInfoHandler: Handler<UserInfo> = {
     if (Array.isArray(block.permissions) && block.permissions.length) {
       const requests = block.permissions.map((p) => isPermissionGranted(p, context, variables));
       const results = await Promise.all(requests);
+
       if (!results.includes(false)) {
         nextId = block.success_id ?? null;
       }

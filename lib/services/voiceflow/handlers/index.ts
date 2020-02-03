@@ -9,6 +9,7 @@ import StateHandlers from './state';
 import UserInfoHandler from './userInfo';
 
 export const responseHandlers = [CardResponseBuilder, AccountLinkingResponseBuilder, PermissionCardResponseBuilder, PaymentResponseBuilder];
+
 export default [
   ...StateHandlers,
   SpeakHandler,
@@ -20,6 +21,3 @@ export default [
   CardHandler,
   PaymentHandler,
 ];
-export type Block = Capture | Interaction | Speak | AccountLinking | PermissionCard | UserInfo;
-
-export default [SpeakHandler, InteractionHandler, CaptureHandler, AccountLinkingHandler, PermissionCardHandler, UserInfoHandler] as Handler<Block>[];

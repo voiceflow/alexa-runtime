@@ -3,6 +3,21 @@ import { Intent } from 'ask-sdk-model';
 
 import IntentHandler from './intent';
 
+enum Command {
+  NEXT = 'NextCommandIssued',
+  PREV = 'PreviousCommandIssued',
+  PLAY = 'PlayCommandIssued',
+  PAUSE = 'PauseCommandIssued',
+}
+
+enum IntentName {
+  NEXT = 'AMAZON.NextIntent',
+  PREV = 'AMAZON.PreviousIntent',
+  PAUSE = 'AMAZON.PauseIntent',
+  RESUME = 'AMAZON.ResumeIntent',
+  FALLBACK = 'AMAZON.FallbackIntent',
+}
+
 const PlaybackControllerHandler: RequestHandler = {
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
@@ -17,20 +32,20 @@ const PlaybackControllerHandler: RequestHandler = {
     const intent: Intent = { name: '', confirmationStatus: 'NONE' };
 
     switch (command) {
-      case 'NextCommandIssued':
-        intent.name = 'AMAZON.NextIntent';
+      case Command.NEXT:
+        intent.name = IntentName.NEXT;
         break;
-      case 'PreviousCommandIssued':
-        intent.name = 'AMAZON.PreviousIntent';
+      case Command.PREV:
+        intent.name = IntentName.PREV;
         break;
-      case 'PlayCommandIssued':
-        intent.name = 'AMAZON.ResumeIntent';
+      case Command.PLAY:
+        intent.name = IntentName.RESUME;
         break;
-      case 'PauseCommandIssued':
-        intent.name = 'AMAZON.PauseIntent';
+      case Command.PAUSE:
+        intent.name = IntentName.PAUSE;
         break;
       default:
-        intent.name = 'AMAZON.FallbackIntent';
+        intent.name = IntentName.FALLBACK;
     }
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore

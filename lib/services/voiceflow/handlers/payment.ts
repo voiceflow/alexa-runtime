@@ -13,6 +13,7 @@ export type PaymentsBlock = {
 export const PaymentResponseBuilder: ResponseBuilder = (context, builder) => {
   // check payment
   const payment = context.storage.get(S.PAYMENT);
+
   if (payment && !payment.result) {
     // return an early response if there is a payment block
     builder

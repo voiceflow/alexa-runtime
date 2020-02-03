@@ -33,7 +33,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types", "./typings"]
   },
   "compileOnSave": false,
   "include": ["**/*.ts", "typings/**/*.d.ts"],

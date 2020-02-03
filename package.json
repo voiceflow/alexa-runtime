@@ -135,8 +135,8 @@
     "deploy:staging": "git push origin $(git branch | grep \\* | cut -d ' ' -f2):staging -f",
     "gen-certs": "scripts/generate_certs.sh",
     "lint": "eslint \"src/**/*.{js,ts}\"",
-    "local": "NODE_ENV=local ts-node -r tsconfig-paths/register start.ts",
-    "local:watch": "NODE_ENV=local forever --watch -c \"ts-node -r tsconfig-paths/register\" start.ts",
+    "local": "NODE_ENV=local ts-node --files -r tsconfig-paths/register start.ts",
+    "local:watch": "NODE_ENV=local forever --watch -c \"ts-node --files -r tsconfig-paths/register\" start.ts",
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
     "test": "NODE_ENV=test nyc ts-mocha --paths --opts mocha.opts"
   }

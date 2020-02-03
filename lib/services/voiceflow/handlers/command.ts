@@ -1,15 +1,15 @@
-import { Command, Context, extractFrameCommand, Frame, Mapping, Store } from '@voiceflow/client';
+import { Command, Context, extractFrameCommand, Frame, Store } from '@voiceflow/client';
 
 import { T } from '@/lib/constants';
 
-import { IntentRequest, RequestType } from '../types';
+import { IntentRequest, Mapping, RequestType } from '../types';
 import { mapSlots } from '../utils';
 
 /**
  * The Command Handler is meant to be used inside other handlers, and should never handle blocks directly
  */
 const CommandHandler = {
-  handle: (context: Context<{}>, variables: Store): string | null => {
+  handle: (context: Context, variables: Store): string | null => {
     const request = context.turn.get(T.REQUEST) as IntentRequest;
 
     if (request?.type !== RequestType.INTENT) {

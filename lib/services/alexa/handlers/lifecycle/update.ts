@@ -1,8 +1,8 @@
-import { Context, DefaultBlock } from '@voiceflow/client';
-import { S, T } from '@/lib/constants';
-import { Block } from '@/lib/services/voiceflow';
+import { Context } from '@voiceflow/client';
 
-const update = async (context: Context<Block | DefaultBlock>): Promise<void> => {
+import { S, T } from '@/lib/constants';
+
+const update = async (context: Context): Promise<void> => {
   const { turn, storage } = context;
 
   turn.set(T.REQUEST, context.getRequest());
