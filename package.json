@@ -13,9 +13,8 @@
   },
   "dependencies": {
     "@voiceflow/backend-utils": "2.0.0",
-    "@voiceflow/client": "https://github.com/voiceflow/client.git#8cfbc281dacba81c37a675a815344057adbcc3fb",
+    "@voiceflow/client": "^1.0.0",
     "@voiceflow/common": "^6.2.0",
-    "@voiceflow/handlers": "https://github.com/voiceflow/handlers.git#7cb5cbefd4ee62497104d606eeb89ff0385ee1da",
     "@voiceflow/logger": "^1.1.0",
     "@voiceflow/secrets-provider": "^1.6.1",
     "@voiceflow/verror": "^1.1.0",
@@ -122,11 +121,11 @@
   },
   "prettier": "@voiceflow/prettier-config",
   "release": {
-    "branch": "production"
+    "branch": "master"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/voiceflow/backend-template.git"
+    "url": "git+https://github.com/voiceflow/alexa.git"
   },
   "scripts": {
     "build": "npm run clean && ttsc --project ./tsconfig.build.json",
