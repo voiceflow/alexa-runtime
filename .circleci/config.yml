@@ -1,0 +1,54 @@
+version: 2.1
+
+executors:
+  build-executor:
+    docker:
+      - image: circleci/node:12
+    resource_class: medium
+
+commands:
+  install_node_modules:
+    steps:
+      - restore_cache:
+          keys:
+            - node-module-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: yarn install packages
+          command: |
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+            yarn install --frozen-lockfile
+      - save_cache: # special step to save the dependency cache
+          key: node-module-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+
+jobs:
+  release:
+    executor: build-executor
+    steps:
+      - checkout
+      - run: npx semantic-release@15
+  build-and-test:
+    executor: build-executor
+    steps:
+      - checkout
+      - install_node_modules
+      - run:
+          name: "Build package"
+          command: |
+            yarn build
+      - run:
+          name: "Run tests"
+          command: |
+            yarn test
+workflows:
+  test-and-release:
+    jobs:
+      - release:
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: master
+      - build-and-test # Run on all branches
+
