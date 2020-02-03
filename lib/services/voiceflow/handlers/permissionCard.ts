@@ -6,6 +6,7 @@ import { ResponseBuilder } from '../types';
 
 export type PermissionCard = {
   permission_card?: string;
+  nextId: string;
 };
 
 export const PermissionCardResponseBuilder: ResponseBuilder = (context, builder) => {

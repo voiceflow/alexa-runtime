@@ -11,6 +11,7 @@ import CommandHandler from './command';
 export type Capture = {
   variable: string | number;
   reprompt?: string;
+  nextId: string;
 };
 
 const CaptureHandler: Handler<Capture> = {

@@ -21,6 +21,7 @@ export type Card = {
       largeImageUrl?: string;
     };
   };
+  nextId: string;
 };
 
 export const CardResponseBuilder: ResponseBuilder = (context, builder) => {
