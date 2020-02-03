@@ -7,24 +7,24 @@ import fixtures from './fixture';
 
 const tests = [
   {
-    method: 'get',
-    calledPath: '/example/:id',
+    method: 'post',
+    calledPath: '/state/skill/:versionID',
     expected: {
       controllers: {
-        example: {
-          getExample: 1,
+        alexa: {
+          handler: 1,
         },
       },
       middlewares: {
-        example: {
-          checkExample: 1,
+        alexa: {
+          verifier: 1,
         },
       },
       validations: {
         controllers: {
-          example: {
-            getExample: {
-              PARAMS_ID: 1,
+          alexa: {
+            handler: {
+              VERSION_ID: 1,
             },
           },
         },
@@ -33,7 +33,7 @@ const tests = [
   },
 ];
 
-describe('example route unit tests', () => {
+describe('alexa route unit tests', () => {
   let app;
   let server;
 
