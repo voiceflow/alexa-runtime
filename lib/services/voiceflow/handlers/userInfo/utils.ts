@@ -2,7 +2,7 @@ import { Context, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 import axios from 'axios';
 
-import { Storage as S } from '@/lib/constants/flags';
+import { Storage as S, Turn as T } from '@/lib/constants/flags';
 
 import { Permission, PERMISSIONS, PRODUCT } from './constants';
 
@@ -182,7 +182,7 @@ const _geolocationRead = async (handlerInput: HandlerInput, permissionVariable: 
 
 const isPermissionGranted = async (permission: Permission, context: Context, variables: Store): Promise<boolean> => {
   const permissionValue = permission?.selected?.value;
-  const handlerInput = context.turn.get('handlerInput');
+  const handlerInput = context.turn.get(T.HANDLER_INPUT);
 
   if (
     !permissionValue ||
