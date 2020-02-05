@@ -7,20 +7,34 @@ import { S, T } from '@/lib/constants';
 
 import { regexVariables } from '../utils';
 
-export type Reminder = {
-  reminder: string;
+enum REMINDER_TYPE {
+  SCHEDULED_ABSOLUTE = 'SCHEDULED_ABSOLUTE',
+  SCHEDULED_RELATIVE = 'SCHEDULED_RELATIVE',
+}
+
+type Reminder = {
+  time: { h: string; m: string; s: string };
+  type: REMINDER_TYPE;
+  text: string;
+  date?: string;
+  recurrence?: string;
+  timezone?: string;
+};
+
+export type ReminderBlock = {
+  reminder: Reminder;
   success_id: string;
   fail_id: string;
 };
 
-const _deriveSeconds = (text, multiplier = 1): number => {
+const _deriveSeconds = (text: string, multiplier = 1): number => {
   const number = parseInt(text, 10);
   if (Number.isNaN(number)) return 0;
 
   return number * multiplier;
 };
 
-const _createReminderObject = (reminder, variablesMap: Record<string, any>, locale: string) => {
+const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, any>, locale: string) => {
   const reminderObject = {
     requestTime: new Date().toISOString(),
     alertInfo: {
@@ -45,49 +59,38 @@ const _createReminderObject = (reminder, variablesMap: Record<string, any>, loca
       _deriveSeconds(regexVariables(reminder.time.s, variablesMap))
   );
 
-  if (reminder.type === 'SCHEDULED_ABSOLUTE') {
-    let { date } = reminder;
-    if (date.includes('/')) {
-      date = moment.utc(date, 'DD/MM/YYYY');
-    } else {
-      [date] = date.split('T');
-      date = moment.utc(date, 'YYYY-MM-DD');
-    }
-    if (!date.isValid()) {
-      throw new Error('Invalid Date');
-    } else {
-      date.add(seconds, 's');
-    }
+  if (reminder.type === REMINDER_TYPE.SCHEDULED_ABSOLUTE) {
+    const { date } = reminder;
+    const time = date.includes('/') ? moment.utc(date, 'DD/MM/YYYY') : moment.utc(date.split('T')[0], 'YYYY-MM-DD');
+
+    if (!time.isValid()) throw new Error('invalid date');
+    else time.add(seconds, 's');
+
     reminderObject.trigger = {
-      type: 'SCHEDULED_ABSOLUTE',
-      scheduledTime: date.toISOString().split('.')[0],
+      type: reminder.type,
+      scheduledTime: time.toISOString().split('.')[0],
+      recurrence: reminder.recurrence ?? undefined,
+      timeZoneId: reminder.timezone !== 'User Timezone' ? reminder.timezone : undefined,
     };
 
-    if (reminder.recurrence) {
-      reminderObject.trigger.recurrence = reminder.recurrence;
-    }
-
-    if (reminder.timezone !== 'User Timezone') {
-      reminderObject.trigger.timeZoneId = reminder.timezone;
-    }
     return reminderObject;
   }
-  if (reminder.type === 'SCHEDULED_RELATIVE') {
-    if (seconds < 1) {
-      throw new Error('Invalid Relative Seconds');
-    }
+
+  if (reminder.type === REMINDER_TYPE.SCHEDULED_RELATIVE) {
+    if (seconds < 1) throw new Error('invalid relative seconds');
+
     reminderObject.trigger = {
-      type: 'SCHEDULED_RELATIVE',
+      type: reminder.type,
       offsetInSeconds: seconds,
     };
 
     return reminderObject;
   }
 
-  throw new Error('Invalid Reminder Type');
+  throw new Error('invalid reminder type');
 };
 
-const ReminderHandler: Handler<Reminder> = {
+const ReminderHandler: Handler<ReminderBlock> = {
   canHandle: (block) => {
     return !!block.reminder;
   },
@@ -98,7 +101,7 @@ const ReminderHandler: Handler<Reminder> = {
       const handlerInput = context.turn.get(T.HANDLER_INPUT) as HandlerInput;
       const { apiEndpoint, apiAccessToken } = handlerInput.requestEnvelope.context.System;
 
-      if (!apiEndpoint || !apiAccessToken) throw new Error('Invalid Login Token');
+      if (!apiEndpoint || !apiAccessToken) throw new Error('invalid login token');
 
       const reminderObject = _createReminderObject(block.reminder, variables.getState(), context.storage.get(S.LOCALE));
 
@@ -108,6 +111,7 @@ const ReminderHandler: Handler<Reminder> = {
           'Content-Type': 'application/json',
         },
       });
+
       nextId = block.success_id;
     } catch (err) {
       nextId = block.fail_id;
