@@ -35,6 +35,9 @@ const _deriveSeconds = (text: string, multiplier = 1): number => {
 };
 
 const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, any>, locale: string) => {
+  if (reminder.type !== REMINDER_TYPE.SCHEDULED_ABSOLUTE && reminder.type !== REMINDER_TYPE.SCHEDULED_RELATIVE)
+    throw new Error('invalid reminder type');
+
   const reminderObject = {
     requestTime: new Date().toISOString(),
     alertInfo: {
@@ -72,22 +75,16 @@ const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, 
       recurrence: reminder.recurrence ?? undefined,
       timeZoneId: reminder.timezone !== 'User Timezone' ? reminder.timezone : undefined,
     };
-
-    return reminderObject;
-  }
-
-  if (reminder.type === REMINDER_TYPE.SCHEDULED_RELATIVE) {
+  } else if (reminder.type === REMINDER_TYPE.SCHEDULED_RELATIVE) {
     if (seconds < 1) throw new Error('invalid relative seconds');
 
     reminderObject.trigger = {
       type: reminder.type,
       offsetInSeconds: seconds,
     };
-
-    return reminderObject;
   }
 
-  throw new Error('invalid reminder type');
+  return reminderObject;
 };
 
 const ReminderHandler: Handler<ReminderBlock> = {
