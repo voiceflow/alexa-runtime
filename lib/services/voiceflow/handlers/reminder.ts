@@ -72,9 +72,10 @@ const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, 
     reminderObject.trigger = {
       type: reminder.type,
       scheduledTime: time.toISOString().split('.')[0],
-      recurrence: reminder.recurrence ?? undefined,
-      timeZoneId: reminder.timezone !== 'User Timezone' ? reminder.timezone : undefined,
     };
+
+    if (reminder.recurrence) reminderObject.trigger.recurrence = reminder.recurrence;
+    if (reminder.timezone !== 'User Timezone') reminderObject.trigger.timeZoneId = reminder.timezone;
   } else if (reminder.type === REMINDER_TYPE.SCHEDULED_RELATIVE) {
     if (seconds < 1) throw new Error('invalid relative seconds');
 
