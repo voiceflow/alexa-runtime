@@ -2,6 +2,11 @@ import { ResponseBuilder } from '@voiceflow/backend-utils';
 import { ValidationChain } from 'express-validator';
 import { Middleware } from 'express-validator/src/base';
 
+import { ControllerMap } from './controllers';
+import { AbstractController } from './controllers/utils';
+import { MiddlewareMap } from './middlewares';
+import { AbstractMiddleware } from './middlewares/utils';
+
 type Validations = Record<string, ValidationChain>;
 
 export const validate = (validations: Validations) => (_target: object, _key: string, descriptor: PropertyDescriptor) => {
@@ -16,12 +21,27 @@ export const factory = () => (_target: () => Middleware, _key: string, descripto
   return descriptor;
 };
 
+export const getInstanceMethodNames = (obj: AbstractMiddleware | AbstractController) => {
+  const proto = Object.getPrototypeOf(obj);
+  if (proto.constructor.name === 'Object') {
+    return Object.getOwnPropertyNames(obj);
+  }
+
+  return Object.getOwnPropertyNames(proto).filter((name) => name !== 'constructor');
+};
+
 const responseBuilder = new ResponseBuilder();
 
-export const router = <T>(members: (keyof T)[] = []) => <C extends Function>(constructor: C) => {
-  members.forEach((name) => {
-    constructor.prototype[name] = responseBuilder.route(constructor.prototype[name].bind(constructor.prototype));
-  });
+export const routeWrapper = (routers: ControllerMap | MiddlewareMap) => {
+  Object.values(routers).forEach((routes) => {
+    getInstanceMethodNames(routes).forEach((route) => {
+      if (typeof routes[route] === 'function' && !routes[route].route) {
+        const routeHandler = routes[route].bind(routes);
+        routeHandler.validations = routes[route].validations;
+        routeHandler.callback = routes[route].callback;
 
-  return constructor;
+        routes[route] = responseBuilder.route(routeHandler);
+      }
+    });
+  });
 };
