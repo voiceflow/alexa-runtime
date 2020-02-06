@@ -22,7 +22,9 @@ const PurchaseHandler: RequestHandler = {
     const result: false | undefined | interfaces.monetization.v1.PurchaseResult = +(status?.code || 0) < 300 && payload?.purchaseResult;
 
     await updateContext(input, (context) => {
-      context.storage.set(S.PAYMENT, { ...context.storage.get(S.PAYMENT), status: result || false });
+      context.storage.produce((draft) => {
+        if (draft[S.PAYMENT]) draft[S.PAYMENT].status = result || false;
+      });
     });
 
     return IntentHandler.handle(input);
