@@ -2,10 +2,9 @@ import { param } from 'express-validator';
 
 import { Request } from '@/types';
 
-import { router, validate } from '../utils';
+import { validate } from '../utils';
 import { AbstractController } from './utils';
 
-@router
 class AlexaController extends AbstractController {
   static VALIDATIONS = {
     PARAMS: {
