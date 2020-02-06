@@ -19,6 +19,7 @@ export enum Turn {
   REPROMPT = 'reprompt',
   REQUEST = 'request',
   CARD = 'card',
+  HANDLER_INPUT = 'handlerInput',
 }
 
 export default {

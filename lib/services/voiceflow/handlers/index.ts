@@ -4,6 +4,7 @@ import CardHandler, { CardResponseBuilder } from './card';
 import InteractionHandler from './interaction';
 import PaymentHandler, { PaymentResponseBuilder } from './payment';
 import PermissionCardHandler, { PermissionCardResponseBuilder } from './permissionCard';
+import ReminderHandler from './reminder';
 import SpeakHandler from './speak';
 import StateHandlers from './state';
 import UserInfoHandler from './userInfo';
@@ -20,4 +21,5 @@ export default [
   UserInfoHandler,
   CardHandler,
   PaymentHandler,
+  ReminderHandler,
 ];
