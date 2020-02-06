@@ -19,7 +19,6 @@ const buildControllers = (services: FullServiceMap, config: Config) => {
   const controllers = {} as ControllerMap;
 
   controllers.alexa = new Alexa(services, config);
-
   // everything before this will be route-wrapped
   routeWrapper(controllers);
 

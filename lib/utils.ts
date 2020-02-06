@@ -2,46 +2,37 @@ import { ResponseBuilder } from '@voiceflow/backend-utils';
 import { ValidationChain } from 'express-validator';
 import { Middleware } from 'express-validator/src/base';
 
+import { ControllerMap } from './controllers';
+import { AbstractController } from './controllers/utils';
+import { MiddlewareMap } from './middlewares';
+import { AbstractMiddleware } from './middlewares/utils';
+
 type Validations = Record<string, ValidationChain>;
 
-type ClassType<A extends any[] = any[], I = any> = { new (...args: A): I };
-
-const METHODS_KEY = Symbol('methods-key');
-
-export const validate = (validations: Validations): any => (_target: object, _key: string, descriptor: PropertyDescriptor) => {
+export const validate = (validations: Validations) => (_target: object, _key: string, descriptor: PropertyDescriptor) => {
   descriptor.value = Object.assign(descriptor.value, { validations });
 
   return descriptor;
 };
 
-export const factory = (): any => (_target: () => Middleware, _key: string, descriptor: PropertyDescriptor) => {
+export const factory = () => (_target: () => Middleware, _key: string, descriptor: PropertyDescriptor) => {
   descriptor.value = Object.assign(descriptor.value, { callback: true });
 
   return descriptor;
 };
 
-export const router = <T extends ClassType>(clazz: T): void => {
-  clazz[METHODS_KEY] = Object.getOwnPropertyNames(clazz.prototype).reduce((acc, key) => {
-    const value = clazz.prototype[key];
-
-    if (key !== 'constructor' && typeof value === 'function') {
-      acc.push(key);
-    }
-
-    return acc;
-  }, []);
-};
-
-export const getInstanceMethodNames = (obj) => {
+export const getInstanceMethodNames = (obj: AbstractMiddleware | AbstractController) => {
   const proto = Object.getPrototypeOf(obj);
   if (proto.constructor.name === 'Object') {
     return Object.getOwnPropertyNames(obj);
   }
+
   return Object.getOwnPropertyNames(proto).filter((name) => name !== 'constructor');
 };
 
 const responseBuilder = new ResponseBuilder();
-export const routeWrapper = (routers) => {
+
+export const routeWrapper = (routers: ControllerMap | MiddlewareMap) => {
   Object.values(routers).forEach((routes) => {
     getInstanceMethodNames(routes).forEach((route) => {
       if (typeof routes[route] === 'function' && !routes[route].route) {

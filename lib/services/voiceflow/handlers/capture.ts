@@ -9,9 +9,9 @@ import { addRepromptIfExists } from '../utils';
 import CommandHandler from './command';
 
 export type Capture = {
+  nextId?: string;
   variable: string | number;
   reprompt?: string;
-  nextId: string;
 };
 
 const CaptureHandler: Handler<Capture> = {
@@ -27,7 +27,7 @@ const CaptureHandler: Handler<Capture> = {
       return block.blockID;
     }
 
-    let nextId: string;
+    let nextId: string | null = null;
 
     const { intent } = request.payload;
 
@@ -37,6 +37,7 @@ const CaptureHandler: Handler<Capture> = {
     if (!nextId) {
       // try to match the first slot of the intent to the variable
       const input = _.keys(intent.slots).length === 1 ? _.values(intent.slots)[0]?.value : null;
+
       if (input) {
         const num = wordsToNumbers(input);
 
@@ -47,7 +48,7 @@ const CaptureHandler: Handler<Capture> = {
         }
       }
 
-      ({ nextId } = block);
+      ({ nextId = null } = block);
     }
 
     // request for this turn has been processed, delete request
