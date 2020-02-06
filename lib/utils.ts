@@ -9,7 +9,7 @@ import { AbstractMiddleware } from './middlewares/utils';
 
 type Validations = Record<string, ValidationChain>;
 
-export const validate = (validations: Validations): any => (_target: object, _key: string, descriptor: PropertyDescriptor) => {
+export const validate = (validations: Validations) => (_target: object, _key: string, descriptor: PropertyDescriptor) => {
   descriptor.value = Object.assign(descriptor.value, { validations });
 
   return descriptor;
