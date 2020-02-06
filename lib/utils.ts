@@ -1,8 +1,11 @@
-// @ts-nocheck
-
 import { ResponseBuilder } from '@voiceflow/backend-utils';
 import { ValidationChain } from 'express-validator';
 import { Middleware } from 'express-validator/src/base';
+
+import { ControllerMap } from './controllers';
+import { AbstractController } from './controllers/utils';
+import { MiddlewareMap } from './middlewares';
+import { AbstractMiddleware } from './middlewares/utils';
 
 type Validations = Record<string, ValidationChain>;
 
@@ -18,7 +21,7 @@ export const factory = () => (_target: () => Middleware, _key: string, descripto
   return descriptor;
 };
 
-export const getInstanceMethodNames = (obj) => {
+export const getInstanceMethodNames = (obj: AbstractMiddleware | AbstractController) => {
   const proto = Object.getPrototypeOf(obj);
   if (proto.constructor.name === 'Object') {
     // obj is instance of class
@@ -31,7 +34,7 @@ export const getInstanceMethodNames = (obj) => {
 
 const responseBuilder = new ResponseBuilder();
 
-export const routeWrapper = (routers) => {
+export const routeWrapper = (routers: ControllerMap | MiddlewareMap) => {
   Object.values(routers).forEach((routes) => {
     getInstanceMethodNames(routes).forEach((route) => {
       if (typeof routes[route] === 'function' && !routes[route].route) {
