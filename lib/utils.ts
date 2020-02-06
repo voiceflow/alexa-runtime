@@ -24,11 +24,9 @@ export const factory = () => (_target: () => Middleware, _key: string, descripto
 export const getInstanceMethodNames = (obj: AbstractMiddleware | AbstractController) => {
   const proto = Object.getPrototypeOf(obj);
   if (proto.constructor.name === 'Object') {
-    // obj is instance of class
     return Object.getOwnPropertyNames(obj);
   }
 
-  // obj is class
   return Object.getOwnPropertyNames(proto).filter((name) => name !== 'constructor');
 };
 
