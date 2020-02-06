@@ -2,6 +2,7 @@ import Client, { Context, State } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 import { IntentRequest as AlexaIntentRequest } from 'ask-sdk-model';
 
+import { T } from '@/lib/constants';
 import { IntentRequest, RequestType } from '@/lib/services/voiceflow/types';
 
 const context = async (input: HandlerInput): Promise<Context> => {
@@ -19,7 +20,7 @@ const context = async (input: HandlerInput): Promise<Context> => {
   }
 
   const newContext = voiceflow.createContext(versionID, rawState as State, request);
-  newContext.turn.set('handlerInput', input);
+  newContext.turn.set(T.HANDLER_INPUT, input);
 
   return newContext;
 };
