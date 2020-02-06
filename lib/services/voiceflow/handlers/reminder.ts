@@ -7,14 +7,14 @@ import { S, T } from '@/lib/constants';
 
 import { regexVariables } from '../utils';
 
-enum REMINDER_TYPE {
+enum ReminderType {
   SCHEDULED_ABSOLUTE = 'SCHEDULED_ABSOLUTE',
   SCHEDULED_RELATIVE = 'SCHEDULED_RELATIVE',
 }
 
 type Reminder = {
   time: { h: string; m: string; s: string };
-  type: REMINDER_TYPE;
+  type: ReminderType;
   text: string;
   date?: string;
   recurrence?: string;
@@ -27,6 +27,19 @@ export type ReminderBlock = {
   fail_id: string;
 };
 
+type Trigger =
+  | {
+      type: ReminderType.SCHEDULED_ABSOLUTE;
+      scheduledTime: string;
+      recurrence?: string;
+      timeZoneId?: string;
+    }
+  | {
+      type: ReminderType.SCHEDULED_RELATIVE;
+      offsetInSeconds?: number;
+    }
+  | null;
+
 const _deriveSeconds = (text: string, multiplier = 1): number => {
   const number = parseInt(text, 10);
   if (Number.isNaN(number)) return 0;
@@ -35,7 +48,7 @@ const _deriveSeconds = (text: string, multiplier = 1): number => {
 };
 
 const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, any>, locale: string) => {
-  if (reminder.type !== REMINDER_TYPE.SCHEDULED_ABSOLUTE && reminder.type !== REMINDER_TYPE.SCHEDULED_RELATIVE)
+  if (reminder.type !== ReminderType.SCHEDULED_ABSOLUTE && reminder.type !== ReminderType.SCHEDULED_RELATIVE)
     throw new Error('invalid reminder type');
 
   const reminderObject = {
@@ -53,7 +66,7 @@ const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, 
     pushNotification: {
       status: 'ENABLED',
     },
-    trigger: null,
+    trigger: null as Trigger,
   };
 
   const seconds = Math.round(
@@ -62,9 +75,9 @@ const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, 
       _deriveSeconds(regexVariables(reminder.time.s, variablesMap))
   );
 
-  if (reminder.type === REMINDER_TYPE.SCHEDULED_ABSOLUTE) {
+  if (reminder.type === ReminderType.SCHEDULED_ABSOLUTE) {
     const { date } = reminder;
-    const time = date.includes('/') ? moment.utc(date, 'DD/MM/YYYY') : moment.utc(date.split('T')[0], 'YYYY-MM-DD');
+    const time = date?.includes('/') ? moment.utc(date, 'DD/MM/YYYY') : moment.utc(date?.split('T')[0], 'YYYY-MM-DD');
 
     if (!time.isValid()) throw new Error('invalid date');
     else time.add(seconds, 's');
@@ -76,7 +89,7 @@ const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, 
 
     if (reminder.recurrence) reminderObject.trigger.recurrence = reminder.recurrence;
     if (reminder.timezone !== 'User Timezone') reminderObject.trigger.timeZoneId = reminder.timezone;
-  } else if (reminder.type === REMINDER_TYPE.SCHEDULED_RELATIVE) {
+  } else if (reminder.type === ReminderType.SCHEDULED_RELATIVE) {
     if (seconds < 1) throw new Error('invalid relative seconds');
 
     reminderObject.trigger = {
