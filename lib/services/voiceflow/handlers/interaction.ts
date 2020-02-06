@@ -12,7 +12,7 @@ type Choice = {
   nextIdIndex?: number;
 };
 
-export type Interaction = {
+type Interaction = {
   elseId?: string;
   nextIds: string[];
   reprompt?: string;
@@ -32,20 +32,20 @@ const InteractionHandler: Handler<Interaction> = {
       return block.blockID;
     }
 
-    let nextId: string = null;
-    let variableMap: Mapping[];
+    let nextId: string | null = null;
+    let variableMap: Mapping[] | null = null;
 
     const { intent } = request.payload;
 
     // check if there is a choice in the block that fulfills intent
-    block.interactions.forEach((choice: Choice, i: number) => {
+    block.interactions.forEach((choice, i: number) => {
       if (choice.intent && formatName(choice.intent) === intent.name) {
-        variableMap = choice.mappings;
+        variableMap = choice.mappings ?? null;
         nextId = block.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
       }
     });
 
-    if (variableMap) {
+    if (variableMap && intent.slots) {
       // map request mappings to variables
       variables.merge(mapSlots(variableMap, intent.slots));
     }
@@ -58,7 +58,7 @@ const InteractionHandler: Handler<Interaction> = {
     // request for this turn has been processed, delete request
     context.turn.set(T.REQUEST, null);
 
-    return nextId || block.elseId;
+    return (nextId || block.elseId) ?? null;
   },
 };
 

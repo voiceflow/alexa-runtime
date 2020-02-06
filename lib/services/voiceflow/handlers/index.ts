@@ -9,6 +9,7 @@ import StateHandlers from './state';
 import UserInfoHandler from './userInfo';
 
 export const responseHandlers = [CardResponseBuilder, AccountLinkingResponseBuilder, PermissionCardResponseBuilder, PaymentResponseBuilder];
+
 export default [
   ...StateHandlers,
   SpeakHandler,

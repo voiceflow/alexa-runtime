@@ -12,6 +12,7 @@
     }
   },
   "dependencies": {
+    "@types/bluebird": "^3.5.29",
     "@voiceflow/backend-utils": "2.0.0",
     "@voiceflow/client": "^1.0.0",
     "@voiceflow/common": "^6.2.0",
@@ -80,6 +81,7 @@
     "eslint-plugin-mocha": "^6.2.2",
     "eslint-plugin-simple-import-sort": "^5.0.0",
     "fixpack": "^2.3.1",
+    "http-status": "^1.4.2",
     "husky": "^3.1.0",
     "knex": "^0.20.4",
     "knex-cleaner": "^1.3.0",
@@ -133,8 +135,8 @@
     "deploy:staging": "git push origin $(git branch | grep \\* | cut -d ' ' -f2):staging -f",
     "gen-certs": "scripts/generate_certs.sh",
     "lint": "eslint \"src/**/*.{js,ts}\"",
-    "local": "NODE_ENV=local ts-node -r tsconfig-paths/register start.ts",
-    "local:watch": "NODE_ENV=local forever --watch -c \"ts-node -r tsconfig-paths/register\" start.ts",
+    "local": "NODE_ENV=local ts-node --files -r tsconfig-paths/register start.ts",
+    "local:watch": "NODE_ENV=local forever --watch -c \"ts-node --files -r tsconfig-paths/register\" start.ts",
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
     "test": "NODE_ENV=test nyc ts-mocha --paths --opts mocha.opts"
   }

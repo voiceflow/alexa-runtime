@@ -2,10 +2,15 @@ import { HandlerInput, RequestHandler } from 'ask-sdk';
 
 import { buildContext, buildResponse, launch, update } from './lifecycle';
 
+enum Request {
+  INTENT = 'IntentRequest',
+}
+
 const IntentHandler: RequestHandler = {
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
-    return type === 'IntentRequest';
+
+    return type === Request.INTENT;
   },
   async handle(input: HandlerInput) {
     const context = await buildContext(input);

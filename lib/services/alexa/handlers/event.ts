@@ -4,7 +4,7 @@ import { S } from '@/lib/constants';
 
 import { updateContext } from '../utils';
 
-enum REQ_TYPES {
+enum Request {
   EVENT_ROOT = 'AlexaSkillEvent.',
   ACCEPTED = 'AlexaSkillEvent.SkillPermissionAccepted',
   CHANGED = 'AlexaSkillEvent.SkillPermissionChanged',
@@ -13,14 +13,17 @@ enum REQ_TYPES {
 const EventHandler: RequestHandler = {
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
-    return type.startsWith(REQ_TYPES.EVENT_ROOT);
+    return type.startsWith(Request.EVENT_ROOT);
   },
   async handle(input: HandlerInput) {
-    const { request } = input.requestEnvelope as any;
+    const { request } = input.requestEnvelope;
 
-    if ((request.type === REQ_TYPES.ACCEPTED || request.type === REQ_TYPES.CHANGED) && Array.isArray(request.body?.acceptedPermissions)) {
-      const permissions = request.body.acceptedPermissions.reduce((acc: string[], permission: { scope?: string }) => {
-        if (permission.scope) acc.push(permission.scope);
+    if ((request.type === Request.ACCEPTED || request.type === Request.CHANGED) && request.body && Array.isArray(request.body?.acceptedPermissions)) {
+      const permissions = request.body.acceptedPermissions.reduce((acc: string[], permission) => {
+        if (permission.scope) {
+          acc.push(permission.scope);
+        }
+
         return acc;
       }, []);
 

@@ -6,6 +6,8 @@ import { S } from '@/lib/constants';
 import { SkillMetadata } from '../../types';
 
 const launch = async (context: Context, input: HandlerInput): Promise<void> => {
+  const { requestEnvelope } = input;
+
   // fetch the metadata for this version (project)
   const meta = (await context.fetchMetadata()) as SkillMetadata;
 
@@ -21,8 +23,8 @@ const launch = async (context: Context, input: HandlerInput): Promise<void> => {
   }
 
   // set based on input
-  storage.set(S.LOCALE, input.requestEnvelope.request.locale);
-  storage.set(S.USER, input.requestEnvelope.context.System.user.userId);
+  storage.set(S.LOCALE, requestEnvelope.request.locale);
+  storage.set(S.USER, requestEnvelope.context.System.user.userId);
 
   // set based on metadata
   storage.set(S.ALEXA_PERMISSIONS, meta.alexa_permissions ?? []);

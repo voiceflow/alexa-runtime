@@ -6,7 +6,9 @@ import { ResponseBuilder } from '../types';
 
 export const AccountLinkingResponseBuilder: ResponseBuilder = (context, builder) => {
   // check account linking
-  if (context.turn.get(T.ACCOUNT_LINKING)) builder.withLinkAccountCard();
+  if (context.turn.get(T.ACCOUNT_LINKING)) {
+    builder.withLinkAccountCard();
+  }
 };
 
 export type AccountLinking = {
@@ -16,12 +18,12 @@ export type AccountLinking = {
 
 const AccountLinkingHandler: Handler<AccountLinking> = {
   canHandle: (block) => {
-    return block.link_account;
+    return !!block.link_account;
   },
   handle: (block, context) => {
     context.turn.set(T.ACCOUNT_LINKING, true);
 
-    return block.nextId;
+    return block.nextId ?? null;
   },
 };
 

@@ -14,16 +14,17 @@ const UserInfoHandler: Handler<UserInfo> = {
     return !!block.permissions;
   },
   handle: async (block, context, variables) => {
-    let nextId = block.fail_id;
+    let nextId = block.fail_id ?? null;
 
     if (Array.isArray(block.permissions) && block.permissions.length) {
       const requests = block.permissions.map((p) => isPermissionGranted(p, context, variables));
       const results = await Promise.all(requests);
+
       if (!results.includes(false)) {
-        nextId = block.success_id;
+        nextId = block.success_id ?? null;
       }
     } else {
-      nextId = block.success_id;
+      nextId = block.success_id ?? null;
     }
 
     return nextId;

@@ -1,7 +1,6 @@
-'use strict';
-
-import fs from 'fs';
 import dotenv from 'dotenv';
+import fs from 'fs';
+
 import log from './logger';
 
 if (process.env.NODE_ENV && fs.existsSync(`./.env.${process.env.NODE_ENV}`)) {

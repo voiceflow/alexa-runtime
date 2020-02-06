@@ -8,22 +8,33 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "experimentalDecorators": true,
+
     /* Strictness Checks */
+    "alwaysStrict": true,
+    "noImplicitAny": true,
     "noUnusedLocals": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
     "noFallthroughCasesInSwitch": true,
+    "strictPropertyInitialization": true,
+
     /* Debugging Options */
     "traceResolution": false,
     "listEmittedFiles": false,
     "listFiles": false,
     "pretty": true,
     "lib": ["es2017"],
+
     "outDir": "./build",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types", "./typings"]
   },
   "compileOnSave": false,
   "include": ["**/*.ts", "typings/**/*.d.ts"],
