@@ -5,24 +5,24 @@ import { ResponseBuilder } from '@/lib/services/voiceflow/types';
 
 export type PaymentsBlock = {
   blockID: string;
-  product_id?: string;
+  cancel_product_id?: string;
   success_id?: string;
   fail_id?: string;
 };
 
-export const PaymentResponseBuilder: ResponseBuilder = (context, builder) => {
-  // check payment
-  const payment = context.storage.get(S.PAYMENT);
+export const CancelPaymentResponseBuilder: ResponseBuilder = (context, builder) => {
+  // check cancel payment
+  const cancelPayment = context.storage.get(S.CANCEL_PAYMENT);
 
-  if (payment && !payment.status) {
-    // return an early response if there is a payment block
+  if (cancelPayment && !cancelPayment.status) {
+    // return an early response if there is a cancel payment block
     builder
       .addDirective({
         type: 'Connections.SendRequest',
-        name: 'Buy',
+        name: 'Cancel',
         payload: {
           InSkillProduct: {
-            productId: payment.productId,
+            productId: cancelPayment.productId,
           },
         },
         token: 'correlatonToken',
@@ -31,13 +31,13 @@ export const PaymentResponseBuilder: ResponseBuilder = (context, builder) => {
   }
 };
 
-const PaymentHandler: Handler<PaymentsBlock> = {
+const CancelPaymentHandler: Handler<PaymentsBlock> = {
   canHandle: (block) => {
-    return !!block.product_id;
+    return !!block.cancel_product_id;
   },
   handle: (block, context) => {
-    context.storage.set(S.PAYMENT, {
-      productId: block.product_id,
+    context.storage.set(S.CANCEL_PAYMENT, {
+      productId: block.cancel_product_id,
       successPath: block.success_id,
       failPath: block.fail_id,
       status: null,
@@ -48,4 +48,4 @@ const PaymentHandler: Handler<PaymentsBlock> = {
   },
 };
 
-export default PaymentHandler;
+export default CancelPaymentHandler;

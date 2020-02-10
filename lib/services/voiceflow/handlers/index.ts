@@ -1,4 +1,5 @@
 import AccountLinkingHandler, { AccountLinkingResponseBuilder } from './accountLinking';
+import CancelPaymentHandler, { CancelPaymentResponseBuilder } from './cancelPayment';
 import CaptureHandler from './capture';
 import CardHandler, { CardResponseBuilder } from './card';
 import InteractionHandler from './interaction';
@@ -9,7 +10,13 @@ import SpeakHandler from './speak';
 import StateHandlers from './state';
 import UserInfoHandler from './userInfo';
 
-export const responseHandlers = [CardResponseBuilder, AccountLinkingResponseBuilder, PermissionCardResponseBuilder, PaymentResponseBuilder];
+export const responseHandlers = [
+  CardResponseBuilder,
+  AccountLinkingResponseBuilder,
+  PermissionCardResponseBuilder,
+  PaymentResponseBuilder,
+  CancelPaymentResponseBuilder,
+];
 
 export default [
   ...StateHandlers,
@@ -21,5 +28,6 @@ export default [
   UserInfoHandler,
   CardHandler,
   PaymentHandler,
+  CancelPaymentHandler,
   ReminderHandler,
 ];
