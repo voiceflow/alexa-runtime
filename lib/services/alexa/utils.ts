@@ -7,7 +7,7 @@ export const updateContext = async (input: HandlerInput, produce: (context: Cont
   const rawState = await input.attributesManager.getPersistentAttributes();
 
   const context = voiceflow.createContext(versionID, rawState as State);
-  produce(context);
+  await produce(context);
 
   input.attributesManager.setPersistentAttributes(context.getRawState());
 };

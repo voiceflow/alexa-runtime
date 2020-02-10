@@ -10,6 +10,7 @@ import ReminderHandler from './reminder';
 import ResetHandler from './reset';
 import SpeakHandler from './speak';
 import StateHandlers from './state';
+import StreamHandler, { StreamResponseBuilder } from './stream';
 import UserInfoHandler from './userInfo';
 
 export const responseHandlers = [
@@ -19,6 +20,7 @@ export const responseHandlers = [
   PaymentResponseBuilder,
   CancelPaymentResponseBuilder,
   DisplayResponseBuilder,
+  StreamResponseBuilder,
 ];
 
 export default [
@@ -35,4 +37,5 @@ export default [
   ReminderHandler,
   ResetHandler,
   DisplayHandler,
+  StreamHandler,
 ];
