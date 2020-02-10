@@ -3,6 +3,7 @@ import { HandlerInput } from 'ask-sdk';
 
 import { F, S } from '@/lib/constants';
 import { createResumeFrame, RESUME_DIAGRAM_ID } from '@/lib/services/voiceflow/diagrams/resume';
+import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 
 import { SkillMetadata } from '../../types';
 
@@ -15,6 +16,14 @@ const initialize = async (context: Context, input: HandlerInput): Promise<void> 
   const meta = (await context.fetchMetadata()) as SkillMetadata;
 
   const { stack, storage, variables } = context;
+
+  // if stopped on stream, go to next block
+  if (storage.get(S.STREAM_PLAY)) {
+    storage.produce((draft) => {
+      draft[S.STREAM_PLAY].action = StreamAction.NEXT;
+    });
+  }
+  storage.delete(S.STREAM_TEMP);
 
   // increment user sessions by 1 or initialize
   if (!storage.get(S.SESSIONS)) {

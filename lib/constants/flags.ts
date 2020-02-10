@@ -9,6 +9,10 @@ export enum Storage {
   PERMISSIONS = 'permissions',
   PAYMENT = 'payment',
   CANCEL_PAYMENT = 'cancel_payment',
+  STREAM_PLAY = 'stream_play',
+  STREAM_PAUSE = 'stream_pause',
+  STREAM_FINISHED = 'stream_finished',
+  STREAM_TEMP = 'stream_temp',
 }
 
 export enum Turn {

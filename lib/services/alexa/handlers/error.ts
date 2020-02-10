@@ -8,7 +8,7 @@ const ErrorHandler: ErrorHandlerType = {
     // TODO: fully implement error handler
 
     // eslint-disable-next-line no-console
-    console.error(error);
+    console.error(input.requestEnvelope.request.type, error);
 
     return input.responseBuilder
       .speak(ERROR_MESSAGE)
