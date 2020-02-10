@@ -3,7 +3,15 @@ import { HandlerInput, SkillBuilders } from 'ask-sdk';
 import { Config } from '@/types';
 
 import { FullServiceMap } from '..';
-import { ErrorHandler, EventHandler, IntentHandler, LaunchHandler, PlaybackControllerHandler, PurchaseHandler } from './handlers';
+import {
+  CancelPurchaseHandler,
+  ErrorHandler,
+  EventHandler,
+  IntentHandler,
+  LaunchHandler,
+  PlaybackControllerHandler,
+  PurchaseHandler,
+} from './handlers';
 
 const ResponseInterceptor = {
   async process(handlerInput: HandlerInput) {
@@ -14,7 +22,7 @@ const ResponseInterceptor = {
 
 const Alexa = (services: FullServiceMap, config: Config) =>
   SkillBuilders.standard()
-    .addRequestHandlers(LaunchHandler, IntentHandler, PlaybackControllerHandler, EventHandler, PurchaseHandler)
+    .addRequestHandlers(LaunchHandler, IntentHandler, PlaybackControllerHandler, EventHandler, PurchaseHandler, CancelPurchaseHandler)
     .addErrorHandlers(ErrorHandler)
     // .addRequestInterceptors(RequestInterceptor)
     .addResponseInterceptors(ResponseInterceptor)
