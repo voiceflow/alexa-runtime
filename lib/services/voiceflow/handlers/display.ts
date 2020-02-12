@@ -32,7 +32,7 @@ const DisplayHandler: Handler<Display> = {
     const supportedInterfaces: SupportedInterfaces | undefined = context.storage.get(S.SUPPORTED_INTERFACES);
     const nextId = block.nextId ?? null;
 
-    if (!supportedInterfaces || !supportedInterfaces[APL_INTERFACE_NAME]) {
+    if (!supportedInterfaces?.[APL_INTERFACE_NAME]) {
       return nextId;
     }
 
