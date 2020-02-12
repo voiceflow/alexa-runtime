@@ -1,6 +1,7 @@
 import { ResponseBuilder } from '@voiceflow/backend-utils';
 import { ValidationChain } from 'express-validator';
 import { Middleware } from 'express-validator/src/base';
+import _ from 'lodash';
 
 import { ControllerMap } from './controllers';
 import { AbstractController } from './controllers/utils';
@@ -44,4 +45,34 @@ export const routeWrapper = (routers: ControllerMap | MiddlewareMap) => {
       }
     });
   });
+};
+
+/*
+  Recursively apply _.filter to collection, returning all results in array.
+  item refers to the actual object, path refers to the path that the object is located at
+*/
+
+export const deepFind = (collection: any, predicate: any) => {
+  let results: { item: any; path: string[] }[] = [];
+
+  const find = (subCollection: any, path: string[]) => {
+    if (!_.isObject(subCollection)) {
+      return;
+    }
+
+    // resolve TS type
+    const _subCollection = subCollection as Record<string, any>;
+
+    const matches = _.filter(_subCollection, predicate);
+
+    if (matches) {
+      results = results.concat(matches.map((item) => ({ item, path })));
+    }
+
+    Object.keys(_subCollection).forEach((key) => find(_subCollection[key], path.concat([key])));
+  };
+
+  find(collection, []);
+
+  return results;
 };

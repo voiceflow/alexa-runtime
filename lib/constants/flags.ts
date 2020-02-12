@@ -9,6 +9,10 @@ export enum Storage {
   PERMISSIONS = 'permissions',
   PAYMENT = 'payment',
   CANCEL_PAYMENT = 'cancel_payment',
+  SUPPORTED_INTERFACES = 'supported_interfaces',
+  DISPLAY_INFO = 'display_info',
+  AWAITING_VIDEO_ENDED_EVENT = 'awaiting_videoended_event',
+  NEXT_ID = 'next_id',
 }
 
 export enum Turn {

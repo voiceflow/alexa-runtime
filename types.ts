@@ -26,6 +26,9 @@ export interface Config {
 
   VF_DATA_SECRET: string;
   VF_DATA_ENDPOINT: string;
+
+  SERVER_DATA_API_URL: string;
+  SERVER_DATA_API_KEY: string;
 }
 
 export interface Request<P extends {} = {}> extends Express.Request<P> {
