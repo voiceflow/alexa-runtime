@@ -4,6 +4,7 @@ import { IntentRequest as AlexaIntentRequest } from 'ask-sdk-model';
 
 import { F, S, T } from '@/lib/constants';
 import { RESUME_DIAGRAM_ID, ResumeDiagram } from '@/lib/services/voiceflow/diagrams/resume';
+import { executeEvents } from '@/lib/services/voiceflow/handlers/events';
 import { IntentRequest, RequestType } from '@/lib/services/voiceflow/types';
 
 const context = async (input: HandlerInput): Promise<Context> => {
@@ -39,6 +40,8 @@ const context = async (input: HandlerInput): Promise<Context> => {
     }
     return null;
   });
+
+  newContext.setEvent(Event.stateDidExecute, (...args) => executeEvents(Event.stateDidExecute, ...args));
 
   return newContext;
 };

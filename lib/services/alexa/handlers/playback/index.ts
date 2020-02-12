@@ -1,16 +1,15 @@
 import { HandlerInput, RequestHandler } from 'ask-sdk';
-import { Intent } from 'ask-sdk-model';
+import { Intent, IntentRequest } from 'ask-sdk-model';
+import Promise from 'bluebird';
 
 import { IntentName } from '@/lib/services/voiceflow/types';
 
-import IntentHandler from './intent';
+import IntentHandler from '../intent';
+import { buildContext } from '../lifecycle';
+import { Command } from './types';
+import VideoControl from './videoControl';
 
-enum Command {
-  NEXT = 'NextCommandIssued',
-  PREV = 'PreviousCommandIssued',
-  PLAY = 'PlayCommandIssued',
-  PAUSE = 'PauseCommandIssued',
-}
+const MediaHandlers = [VideoControl];
 
 const PlaybackControllerHandler: RequestHandler = {
   canHandle(input: HandlerInput): boolean {
@@ -18,8 +17,8 @@ const PlaybackControllerHandler: RequestHandler = {
 
     return type.startsWith('PlaybackController');
   },
-  handle: (input: HandlerInput) => {
-    const { request } = input.requestEnvelope;
+  handle: async (input: HandlerInput) => {
+    const request = input.requestEnvelope.request as IntentRequest;
 
     // translate PlaybackController commands into intents
     const command = request.type.split('.')[1];
@@ -42,11 +41,29 @@ const PlaybackControllerHandler: RequestHandler = {
         intent.name = IntentName.FALLBACK;
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore
     request.intent = intent;
 
-    return IntentHandler.handle(input);
+    const context = await buildContext(input);
+
+    input.context.context = context;
+
+    const MediaHandler = await Promise.reduce<RequestHandler, RequestHandler | null>(
+      MediaHandlers,
+      async (result, handler) => {
+        if (result) {
+          return result;
+        }
+
+        if (await handler.canHandle(input)) {
+          return handler;
+        }
+
+        return null;
+      },
+      null
+    );
+
+    return MediaHandler ? MediaHandler.handle(input) : IntentHandler.handle(input);
   },
 };
 

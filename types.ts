@@ -15,6 +15,7 @@ export interface Config {
   // Secrets configuration
   SECRETS_PROVIDER: string;
   API_KEYS_SECRET: string | null;
+  CONFIG_ID_HASH: string;
 
   // Release information
   GIT_SHA: string | null;

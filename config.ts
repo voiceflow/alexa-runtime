@@ -20,6 +20,7 @@ const CONFIG: Config = {
   // Secrets configuration
   SECRETS_PROVIDER: getProcessEnv('SECRETS_PROVIDER'),
   API_KEYS_SECRET: optionalProcessEnv('API_KEYS_SECRET'),
+  CONFIG_ID_HASH: getProcessEnv('CONFIG_ID_HASH'),
 
   // Release information
   GIT_SHA: optionalProcessEnv('GIT_SHA'),

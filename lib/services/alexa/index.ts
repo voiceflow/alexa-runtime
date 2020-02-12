@@ -4,6 +4,7 @@ import { Config } from '@/types';
 
 import { FullServiceMap } from '..';
 import {
+  APLUserEventHandler,
   CancelPurchaseHandler,
   ErrorHandler,
   EventHandler,
@@ -11,6 +12,7 @@ import {
   LaunchHandler,
   PlaybackControllerHandler,
   PurchaseHandler,
+  SessionEndedHandler,
 } from './handlers';
 
 const ResponseInterceptor = {
@@ -22,7 +24,16 @@ const ResponseInterceptor = {
 
 const Alexa = (services: FullServiceMap, config: Config) =>
   SkillBuilders.standard()
-    .addRequestHandlers(LaunchHandler, IntentHandler, PlaybackControllerHandler, EventHandler, PurchaseHandler, CancelPurchaseHandler)
+    .addRequestHandlers(
+      LaunchHandler,
+      IntentHandler,
+      PlaybackControllerHandler,
+      EventHandler,
+      PurchaseHandler,
+      CancelPurchaseHandler,
+      APLUserEventHandler,
+      SessionEndedHandler
+    )
     .addErrorHandlers(ErrorHandler)
     // .addRequestInterceptors(RequestInterceptor)
     .addResponseInterceptors(ResponseInterceptor)
