@@ -36,7 +36,7 @@ const DEFAULT_APL = {
 class Multimodal {
   constructor(private serverDataApi: ServerDataApiType) {}
 
-  getDisplayDocument = async (displayId: number): Promise<null | object> => {
+  getDisplayDocument = async (displayId: number): Promise<null | Record<string, any>> => {
     if (displayId < 0) {
       return DEFAULT_APL;
     }

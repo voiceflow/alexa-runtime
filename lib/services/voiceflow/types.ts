@@ -17,4 +17,4 @@ export interface IntentRequest extends Request {
   payload: IntentRequestPayload;
 }
 
-export type ResponseBuilder = (context: Context, builder: ASKResponseBuilder) => void | boolean;
+export type ResponseBuilder = (context: Context, builder: ASKResponseBuilder) => void | boolean | Promise<void | boolean>;

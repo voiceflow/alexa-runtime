@@ -52,8 +52,8 @@ export const routeWrapper = (routers: ControllerMap | MiddlewareMap) => {
   item refers to the actual object, path refers to the path that the object is located at
 */
 
-export const deepFind = (collection: any, predicate: any) => {
-  let results: { item: any; path: string[] }[] = [];
+export const deepFind = <T = any>(collection: any, predicate: any) => {
+  let results: { item: T; path: string[] }[] = [];
 
   const find = (subCollection: any, path: string[]) => {
     if (!_.isObject(subCollection)) {
