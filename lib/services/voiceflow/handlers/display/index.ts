@@ -68,7 +68,7 @@ const DisplayHandler: Handler<Display> = {
 
     if (hasOnEndEvent) {
       context.storage.set(S.AWAITING_VIDEO_ENDED_EVENT, true); // APL videoEnded event for Isobar
-      context.storage.set(S.NEXT_ID, block.nextId); // Advance line and leave skill
+      context.stack.top().setBlockID(block.nextId ?? null);
 
       return null;
     }
