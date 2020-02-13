@@ -33,9 +33,6 @@ const CONFIG: Config = {
 
   VF_DATA_SECRET: getProcessEnv('VF_DATA_SECRET'),
   VF_DATA_ENDPOINT: getProcessEnv('VF_DATA_ENDPOINT'),
-
-  SERVER_DATA_API_URL: getProcessEnv('SERVER_DATA_API_URL'),
-  SERVER_DATA_API_KEY: getProcessEnv('SERVER_DATA_API_KEY'),
 };
 
 export default CONFIG;

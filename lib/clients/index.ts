@@ -1,4 +1,4 @@
-import Hashids from 'hashids';
+import Hashids from 'hashids/cjs/index';
 
 import { Config } from '@/types';
 

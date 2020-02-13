@@ -9,8 +9,8 @@ class ServerDataApi {
 
   constructor(config: Config) {
     this.client = axios.create({
-      baseURL: config.SERVER_DATA_API_URL,
-      headers: { authorization: `Bearer ${config.SERVER_DATA_API_KEY}` },
+      baseURL: config.VF_DATA_ENDPOINT,
+      headers: { authorization: `Bearer ${config.VF_DATA_SECRET}` },
     });
   }
 

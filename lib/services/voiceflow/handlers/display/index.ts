@@ -5,7 +5,6 @@ import _ from 'lodash';
 import { S } from '@/lib/constants';
 import { FullServiceMap } from '@/lib/services';
 
-import { regexVariables } from '../../utils';
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from './constants';
 import DisplayResponseBuilder, { DisplayInfo } from './responseBuilder';
 import { deepFindVideos, VideoEvent } from './utils';
@@ -28,7 +27,7 @@ const DisplayHandler: Handler<Display> = {
   canHandle: (block) => {
     return !!block.display_id;
   },
-  handle: async (block, context, variables) => {
+  handle: async (block, context) => {
     const supportedInterfaces: SupportedInterfaces | undefined = context.storage.get(S.SUPPORTED_INTERFACES);
     const nextId = block.nextId ?? null;
 
@@ -42,10 +41,8 @@ const DisplayHandler: Handler<Display> = {
 
     const displayInfo: DisplayInfo = {
       commands: block.apl_commands,
-      dataSource: regexVariables(dataSource, variables.getState()),
-      shouldUpdate: true,
+      dataSource,
       currentDisplay: displayID,
-      lastDataSource: dataSource,
       dataSourceVariables: getVariables(dataSource),
     };
 

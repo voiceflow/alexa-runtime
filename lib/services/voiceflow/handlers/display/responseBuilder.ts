@@ -6,13 +6,14 @@ import { S } from '@/lib/constants';
 import { FullServiceMap } from '@/lib/services';
 
 import { ResponseBuilder } from '../../types';
+import { regexVariables } from '../../utils';
 import { ENDED_EVENT_PREFIX, RENDER_DOCUMENT_DIRECTIVE_TYPE, STARTED_EVENT_PREFIX, VIDEO_ID_PREFIX } from './constants';
-import { deepFindVideos, getEventToSend } from './utils';
+import { deepFindVideos, getEventToSend, shouldRebuildDisplay } from './utils';
 
 export type DisplayInfo = {
   commands?: interfaces.alexa.presentation.apl.Command[] | string;
   dataSource?: string;
-  shouldUpdate?: boolean;
+  lastVariables?: Record<string, any>;
   playingVideos?: Record<string, { started: number }>;
   currentDisplay?: number;
   lastDataSource?: string;
@@ -22,8 +23,13 @@ export type DisplayInfo = {
 
 const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
   const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
+  const variables = context.variables.getState();
 
-  if (!displayInfo?.shouldUpdate || displayInfo.currentDisplay === undefined) {
+  if (
+    !displayInfo ||
+    !shouldRebuildDisplay(displayInfo.dataSourceVariables, variables, displayInfo.lastVariables) ||
+    displayInfo.currentDisplay === undefined
+  ) {
     return;
   }
 
@@ -47,6 +53,18 @@ const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
       ({ document } = document);
     }
 
+    if (displayInfo.dataSource) {
+      try {
+        dataSources = JSON.parse(regexVariables(displayInfo.dataSource, variables));
+      } catch (e) {
+        // DataSources not valid
+      }
+    }
+
+    if (!dataSources) {
+      return;
+    }
+
     const results = deepFindVideos(document);
 
     results.forEach(({ item }) => {
@@ -63,34 +81,23 @@ const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
       }
     });
 
-    if (displayInfo.dataSource) {
-      try {
-        dataSources = JSON.parse(displayInfo.dataSource);
-      } catch (e) {
-        // DataSources not valid
-      }
-    }
+    builder.addDirective({
+      type: RENDER_DOCUMENT_DIRECTIVE_TYPE,
+      token: services.hashids.encode(context.versionID),
+      document: document || undefined,
+      datasources: dataSources,
+    });
 
-    if (dataSources) {
-      builder.addDirective({
-        type: RENDER_DOCUMENT_DIRECTIVE_TYPE,
-        token: services.hashids.encode(context.versionID),
-        document: document || undefined,
-        datasources: dataSources,
-      });
-    }
+    context.storage.produce((state) => {
+      const dInfo = state[S.DISPLAY_INFO] as DisplayInfo;
+
+      dInfo.lastVariables = variables;
+
+      delete dInfo.shouldUpdateOnResume;
+    });
   } catch (e) {
     // error
   }
-
-  // Keep current_display and datasource_variables in state
-  // For future updates and session resumes
-  context.storage.produce((state) => {
-    const dInfo = state[S.DISPLAY_INFO] as DisplayInfo;
-
-    delete dInfo.shouldUpdate;
-    delete dInfo.shouldUpdateOnResume;
-  });
 };
 
 const CommandsResponseBuilder: ResponseBuilder = async (context, builder) => {
