@@ -1,9 +1,8 @@
-import { HandlerInput } from 'ask-sdk';
 import { interfaces } from 'ask-sdk-model';
 import _ from 'lodash';
 import randomstring from 'randomstring';
 
-import { S, T } from '@/lib/constants';
+import { S } from '@/lib/constants';
 import { FullServiceMap } from '@/lib/services';
 
 import { ResponseBuilder } from '../../types';
@@ -12,18 +11,19 @@ import { deepFindVideos, getEventToSend } from './utils';
 
 export type DisplayInfo = {
   commands?: interfaces.alexa.presentation.apl.Command[] | string;
-  dataSource: string;
+  dataSource?: string;
   shouldUpdate?: boolean;
-  currentDisplay: number;
-  lastDataSource: string;
-  dataSourceVariables: string[] | null;
+  playingVideos?: Record<string, { started: number }>;
+  currentDisplay?: number;
+  lastDataSource?: string;
+  dataSourceVariables?: string[];
   shouldUpdateOnResume?: boolean;
 };
 
 const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
   const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
 
-  if (!displayInfo?.shouldUpdate) {
+  if (!displayInfo?.shouldUpdate || displayInfo.currentDisplay === undefined) {
     return;
   }
 
@@ -63,18 +63,18 @@ const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
       }
     });
 
-    try {
-      dataSources = JSON.parse(displayInfo.dataSource);
-    } catch (e) {
-      // Datasources not valid
+    if (displayInfo.dataSource) {
+      try {
+        dataSources = JSON.parse(displayInfo.dataSource);
+      } catch (e) {
+        // DataSources not valid
+      }
     }
 
     if (dataSources) {
-      const handlerInput = context.turn.get(T.HANDLER_INPUT) as HandlerInput;
-
       builder.addDirective({
         type: RENDER_DOCUMENT_DIRECTIVE_TYPE,
-        token: services.hashids.encode(handlerInput.context.versionID as string),
+        token: services.hashids.encode(context.versionID),
         document: document || undefined,
         datasources: dataSources,
       });
@@ -112,12 +112,10 @@ const CommandsResponseBuilder: ResponseBuilder = async (context, builder) => {
   }
 
   if (commands) {
-    const handlerInput = context.turn.get(T.HANDLER_INPUT) as HandlerInput;
-
     builder.addDirective({
-      commands,
       type: 'Alexa.Presentation.APL.ExecuteCommands',
-      token: services.hashids.encode(handlerInput.context.versionID as string),
+      token: services.hashids.encode(context.versionID),
+      commands,
     });
   }
 

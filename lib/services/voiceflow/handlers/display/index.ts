@@ -46,7 +46,7 @@ const DisplayHandler: Handler<Display> = {
       shouldUpdate: true,
       currentDisplay: displayID,
       lastDataSource: dataSource,
-      dataSourceVariables: block.update_on_change ? getVariables(dataSource) : null,
+      dataSourceVariables: getVariables(dataSource),
     };
 
     context.storage.set(S.DISPLAY_INFO, displayInfo);
@@ -59,15 +59,14 @@ const DisplayHandler: Handler<Display> = {
 
     const results = deepFindVideos(document);
 
-    const onEndEvents = results.map((result) => result.item.onEnd).filter(Boolean) as VideoEvent[];
+    const onEndEvents = _.flatMap(results, (result) => result.item.onEnd).filter(Boolean) as VideoEvent[];
 
     const hasOnEndEvent = onEndEvents.some(
       (event) => event.type === EVENT_SEND_EVENT && event.arguments?.some((data) => _.isString(data) && data.includes(ENDED_EVENT_PREFIX))
     );
-    // .map((event) => event.type === EVENT_SEND_EVENT && event.arguments?.includes(ENDED_EVENT_PREFIX));
 
     if (hasOnEndEvent) {
-      context.storage.set(S.AWAITING_VIDEO_ENDED_EVENT, true); // APL videoEnded event for Isobar
+      context.storage.set(S.AWAITING_VIDEO_ENDED_EVENT, true);
       context.stack.top().setBlockID(block.nextId ?? null);
 
       return null;

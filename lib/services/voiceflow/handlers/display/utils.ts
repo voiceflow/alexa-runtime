@@ -9,8 +9,8 @@ export type VideoEvent = {
 
 export type Video = {
   id?: string;
-  onEnd?: VideoEvent;
-  onPlay?: VideoEvent;
+  onEnd?: VideoEvent | VideoEvent[];
+  onPlay?: VideoEvent | VideoEvent[];
 };
 
 export const deepFindVideos = (collection: any) => deepFind<Video>(collection, { type: DOCUMENT_VIDEO_TYPE });
