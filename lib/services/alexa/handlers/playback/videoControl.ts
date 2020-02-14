@@ -3,7 +3,6 @@ import { HandlerInput, RequestHandler } from 'ask-sdk';
 import { IntentRequest } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
-import { FullServiceMap } from '@/lib/services';
 import { DisplayInfo } from '@/lib/services/voiceflow/handlers/display/responseBuilder';
 
 import { IntentName } from './types';
@@ -44,11 +43,9 @@ const EventHandler: RequestHandler = {
     }));
 
     if (commands.length) {
-      const services = context.services as FullServiceMap;
-
       input.responseBuilder.addDirective({
         type: 'Alexa.Presentation.APL.ExecuteCommands',
-        token: services.hashids.encode(context.versionID),
+        token: context.versionID,
         commands,
       });
     }

@@ -6,10 +6,11 @@ import { S } from '@/lib/constants';
 import { FullServiceMap } from '@/lib/services';
 
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from './constants';
+import * as events from './events';
 import DisplayResponseBuilder, { DisplayInfo } from './responseBuilder';
 import { deepFindVideos, VideoEvent } from './utils';
 
-export { DisplayResponseBuilder };
+export { events, DisplayResponseBuilder };
 
 export type Display = {
   nextId?: string;
@@ -42,6 +43,7 @@ const DisplayHandler: Handler<Display> = {
     const displayInfo: DisplayInfo = {
       commands: block.apl_commands,
       dataSource,
+      shouldUpdate: true,
       currentDisplay: displayID,
       dataSourceVariables: getVariables(dataSource),
     };

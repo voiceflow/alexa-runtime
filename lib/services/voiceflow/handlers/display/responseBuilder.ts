@@ -8,11 +8,12 @@ import { FullServiceMap } from '@/lib/services';
 import { ResponseBuilder } from '../../types';
 import { regexVariables } from '../../utils';
 import { ENDED_EVENT_PREFIX, RENDER_DOCUMENT_DIRECTIVE_TYPE, STARTED_EVENT_PREFIX, VIDEO_ID_PREFIX } from './constants';
-import { deepFindVideos, getEventToSend, shouldRebuildDisplay } from './utils';
+import { deepFindVideos, getEventToSend } from './utils';
 
 export type DisplayInfo = {
   commands?: interfaces.alexa.presentation.apl.Command[] | string;
   dataSource?: string;
+  shouldUpdate?: boolean;
   lastVariables?: Record<string, any>;
   playingVideos?: Record<string, { started: number }>;
   currentDisplay?: number;
@@ -23,16 +24,12 @@ export type DisplayInfo = {
 
 const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
   const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
-  const variables = context.variables.getState();
 
-  if (
-    !displayInfo ||
-    !shouldRebuildDisplay(displayInfo.dataSourceVariables, variables, displayInfo.lastVariables) ||
-    displayInfo.currentDisplay === undefined
-  ) {
+  if (!displayInfo?.shouldUpdate || displayInfo.currentDisplay === undefined) {
     return;
   }
 
+  const variables = context.variables.getState();
   const services = context.services as FullServiceMap;
 
   try {
@@ -83,7 +80,7 @@ const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
 
     builder.addDirective({
       type: RENDER_DOCUMENT_DIRECTIVE_TYPE,
-      token: services.hashids.encode(context.versionID),
+      token: context.versionID,
       document: document || undefined,
       datasources: dataSources,
     });
@@ -93,6 +90,7 @@ const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
 
       dInfo.lastVariables = variables;
 
+      delete dInfo.shouldUpdate;
       delete dInfo.shouldUpdateOnResume;
     });
   } catch (e) {
@@ -108,7 +106,6 @@ const CommandsResponseBuilder: ResponseBuilder = async (context, builder) => {
   }
 
   let { commands } = displayInfo;
-  const services = context.services as FullServiceMap;
 
   if (_.isString(commands)) {
     try {
@@ -121,7 +118,7 @@ const CommandsResponseBuilder: ResponseBuilder = async (context, builder) => {
   if (commands) {
     builder.addDirective({
       type: 'Alexa.Presentation.APL.ExecuteCommands',
-      token: services.hashids.encode(context.versionID),
+      token: context.versionID,
       commands,
     });
   }

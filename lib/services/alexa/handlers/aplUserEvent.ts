@@ -18,7 +18,7 @@ enum SourceHandler {
   PLAY = 'Play',
 }
 
-const LaunchHandler: RequestHandler = {
+const APLUserEventHandler: RequestHandler = {
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
@@ -66,4 +66,4 @@ const LaunchHandler: RequestHandler = {
   },
 };
 
-export default LaunchHandler;
+export default APLUserEventHandler;

@@ -19,7 +19,7 @@ enum RequestReason {
   ERROR = 'ERROR',
 }
 
-const LaunchHandler: RequestHandler = {
+const SessionEndedHandler: RequestHandler = {
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
@@ -62,4 +62,4 @@ const LaunchHandler: RequestHandler = {
   },
 };
 
-export default LaunchHandler;
+export default SessionEndedHandler;
