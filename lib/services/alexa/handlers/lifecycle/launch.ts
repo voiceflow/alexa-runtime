@@ -1,9 +1,11 @@
 import { Context, Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
-import { S } from '@/lib/constants';
+import { F, S } from '@/lib/constants';
 
 import { SkillMetadata } from '../../types';
+
+const VAR_VF = 'voiceflow';
 
 const launch = async (context: Context, input: HandlerInput): Promise<void> => {
   const { requestEnvelope } = input;
@@ -39,7 +41,7 @@ const launch = async (context: Context, input: HandlerInput): Promise<void> => {
     platform: 'alexa',
 
     // hidden system variables (code block only)
-    voiceflow: {
+    [VAR_VF]: {
       // TODO: implement all exposed voiceflow variables
       permissions: storage.get(S.ALEXA_PERMISSIONS),
       events: [],
@@ -50,8 +52,16 @@ const launch = async (context: Context, input: HandlerInput): Promise<void> => {
   // initialize all the global variables
   Store.initialize(variables, meta.global, 0);
 
-  if (stack.isEmpty()) {
+  // restart logic
+  const shouldRestart = stack.isEmpty() || meta.restart || context.variables.get(VAR_VF)?.resume === false;
+  if (shouldRestart) {
+    // start the stack with just the root flow
+    stack.flush();
     stack.push(new Frame({ diagramID: meta.diagram }));
+  } else {
+    // give context to where the user left off with last speak block
+    const lastSpeak = stack.top().storage.get(F.SPEAK) ?? '';
+    storage.set(S.OUTPUT, lastSpeak);
   }
 };
 
