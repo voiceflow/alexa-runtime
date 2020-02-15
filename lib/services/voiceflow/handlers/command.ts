@@ -63,12 +63,7 @@ const CommandHandler = {
 
         context.stack.push(newFrame);
       } else if (command.next) {
-        if (command.return) {
-          // Reset state to beginning of new diagram and store current line to the stack
-          // TODO: use last_speak
-          context.stack.push(context.stack.get(index));
-          context.stack.top().setBlockID(command.next);
-        } else if (index < context.stack.getSize() - 1) {
+        if (index < context.stack.getSize() - 1) {
           // otherwise destructive and pop off everything before the command
           context.stack.popTo(index + 1);
           context.stack.top().setBlockID(command.next);
