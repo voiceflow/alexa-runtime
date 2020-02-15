@@ -25,6 +25,7 @@ export enum Turn {
 
 export enum Frame {
   SPEAK = 'speak',
+  CALLED_COMMAND = 'calledCommand',
 }
 
 export default {

@@ -1,8 +1,8 @@
-import Client, { Context, State } from '@voiceflow/client';
+import Client, { Context, Event, State } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 import { IntentRequest as AlexaIntentRequest } from 'ask-sdk-model';
 
-import { S, T } from '@/lib/constants';
+import { F, S, T } from '@/lib/constants';
 import { IntentRequest, RequestType } from '@/lib/services/voiceflow/types';
 
 const context = async (input: HandlerInput): Promise<Context> => {
@@ -24,6 +24,13 @@ const context = async (input: HandlerInput): Promise<Context> => {
   newContext.turn.set(T.HANDLER_INPUT, input);
   newContext.turn.set(T.PREVIOUS_OUTPUT, newContext.storage.get(S.OUTPUT));
   newContext.storage.set(S.OUTPUT, '');
+
+  newContext.setEvent(Event.stateDidExecute, (c: Context) => {
+    if (c.stack.top()?.storage.get(F.CALLED_COMMAND) && !c.turn.get(T.END)) {
+      c.stack.top().storage.delete(F.CALLED_COMMAND);
+      newContext.storage.set(S.OUTPUT, c.stack.top().storage.get(F.SPEAK) ?? '');
+    }
+  });
 
   return newContext;
 };

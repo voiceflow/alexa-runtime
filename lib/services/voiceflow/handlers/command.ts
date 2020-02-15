@@ -1,6 +1,6 @@
 import { Command, Context, extractFrameCommand, Frame, Store } from '@voiceflow/client';
 
-import { T } from '@/lib/constants';
+import { F, T } from '@/lib/constants';
 
 import { IntentRequest, Mapping, RequestType } from '../types';
 import { mapSlots } from '../utils';
@@ -57,10 +57,10 @@ const CommandHandler = {
       variableMap = command.mappings;
 
       if (command.diagram_id) {
-        // Reset state to beginning of new diagram and store current line to the stack
-        // TODO: use last_speak
-        const newFrame = new Frame({ diagramID: command.diagram_id });
+        context.stack.top().storage.set(F.CALLED_COMMAND, true);
 
+        // Reset state to beginning of new diagram and store current line to the stack
+        const newFrame = new Frame({ diagramID: command.diagram_id });
         context.stack.push(newFrame);
       } else if (command.next) {
         if (index < context.stack.getSize() - 1) {

@@ -60,7 +60,9 @@ const launch = async (context: Context, input: HandlerInput): Promise<void> => {
     stack.push(new Frame({ diagramID: meta.diagram }));
   } else {
     // give context to where the user left off with last speak block
+    stack.top().storage.delete(F.CALLED_COMMAND);
     const lastSpeak = stack.top().storage.get(F.SPEAK) ?? '';
+
     storage.set(S.OUTPUT, lastSpeak);
   }
 };
