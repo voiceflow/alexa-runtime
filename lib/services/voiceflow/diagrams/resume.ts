@@ -1,5 +1,7 @@
 import { Diagram, Frame } from '@voiceflow/client';
 
+import { IntentName } from '@/lib/services/voiceflow/types';
+
 export const RESUME_DIAGRAM_ID = '__RESUME_FLOW__';
 
 export enum ResumeVariables {
@@ -48,11 +50,11 @@ const ResumeDiagramRaw = {
       blockID: '2',
       interactions: [
         {
-          intent: 'AMAZON.YesIntent',
+          intent: IntentName.YES,
           mappings: [],
         },
         {
-          intent: 'AMAZON.NoIntent',
+          intent: IntentName.NO,
           mappings: [],
         },
       ],
