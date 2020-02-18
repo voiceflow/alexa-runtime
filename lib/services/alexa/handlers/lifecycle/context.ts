@@ -3,6 +3,7 @@ import { HandlerInput } from 'ask-sdk';
 import { IntentRequest as AlexaIntentRequest } from 'ask-sdk-model';
 
 import { F, S, T } from '@/lib/constants';
+import { RESUME_FLOW_ID, ResumeFlow } from '@/lib/services/voiceflow/flows/resume';
 import { IntentRequest, RequestType } from '@/lib/services/voiceflow/types';
 
 const context = async (input: HandlerInput): Promise<Context> => {
@@ -29,6 +30,12 @@ const context = async (input: HandlerInput): Promise<Context> => {
     if (c.stack.top()?.storage.get(F.CALLED_COMMAND)) {
       c.stack.top().storage.delete(F.CALLED_COMMAND);
       newContext.storage.set(S.OUTPUT, c.stack.top().storage.get(F.SPEAK) ?? '');
+    }
+  });
+
+  newContext.setEvent(Event.diagramWillFetch, (_, diagramID) => {
+    if (diagramID === RESUME_FLOW_ID) {
+      return ResumeFlow;
     }
   });
 
