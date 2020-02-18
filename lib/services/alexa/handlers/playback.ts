@@ -1,6 +1,8 @@
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 import { Intent } from 'ask-sdk-model';
 
+import { IntentName } from '@/lib/services/voiceflow/types';
+
 import IntentHandler from './intent';
 
 enum Command {
@@ -8,14 +10,6 @@ enum Command {
   PREV = 'PreviousCommandIssued',
   PLAY = 'PlayCommandIssued',
   PAUSE = 'PauseCommandIssued',
-}
-
-enum IntentName {
-  NEXT = 'AMAZON.NextIntent',
-  PREV = 'AMAZON.PreviousIntent',
-  PAUSE = 'AMAZON.PauseIntent',
-  RESUME = 'AMAZON.ResumeIntent',
-  FALLBACK = 'AMAZON.FallbackIntent',
 }
 
 const PlaybackControllerHandler: RequestHandler = {

@@ -2,7 +2,7 @@ import { Command, Context, extractFrameCommand, Frame, Store } from '@voiceflow/
 
 import { F, T } from '@/lib/constants';
 
-import { IntentRequest, Mapping, RequestType } from '../types';
+import { IntentName, IntentRequest, Mapping, RequestType } from '../types';
 import { mapSlots } from '../utils';
 
 const getCommand = (context: Context) => {
@@ -14,17 +14,17 @@ const getCommand = (context: Context) => {
   let intentName = intent.name;
 
   // don't act on a catchall intent
-  if (intentName === 'VoiceFlowIntent') return null;
+  if (intentName === IntentName.VOICEFLOW) return null;
 
   const matcher = (command: Command | null) => command?.intent === intentName;
 
-  // If AMAZON.CancelIntent is not handled turn it into AMAZON.StopIntent
+  // If Cancel Intent is not handled turn it into Stop Intent
   // This first loop is AMAZON specific, if cancel intent is not explicitly used anywhere at all, map it to stop intent
-  if (intentName === 'AMAZON.CancelIntent') {
+  if (intentName === IntentName.CANCEL) {
     const found = context.stack.getFrames().some((frame) => frame.getCommands().some(matcher));
 
     if (!found) {
-      intentName = 'AMAZON.StopIntent';
+      intentName = IntentName.STOP;
     }
   }
 
