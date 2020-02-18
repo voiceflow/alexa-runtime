@@ -1,5 +1,3 @@
-import Hashids from 'hashids/cjs/index';
-
 import { Config } from '@/types';
 
 import Dynamo, { DynamoType } from './dynamo';
@@ -9,7 +7,6 @@ import Static, { StaticType } from './static';
 
 export interface ClientMap extends StaticType {
   dynamo: DynamoType;
-  hashids: Hashids;
   multimodal: MultimodalType;
   serverDataApi: ServerDataApiType;
 }
@@ -21,12 +18,10 @@ const buildClients = (config: Config): ClientMap => {
   const dynamo = Dynamo(config);
   const serverDataApi = ServerDataApi(config);
   const multimodal = Multimodal(serverDataApi);
-  const hashids = new Hashids(config.CONFIG_ID_HASH, 10);
 
   return {
     ...Static,
     dynamo,
-    hashids,
     multimodal,
     serverDataApi,
   };
