@@ -16,14 +16,22 @@ export type ResumePrompt = {
   follow_voice: string;
 };
 
+const promptToSSML = (content = '', voice: string | undefined) => {
+  if (!voice || voice === 'Alexa' || !content) {
+    return content;
+  }
+  if (voice === 'audio') {
+    return `<audio src="${content}"/>`;
+  }
+  return `<voice name="${voice}">${content}</voice>`;
+};
+
 export const createResumeFrame = (resumePrompt: ResumePrompt) => {
   return new Frame({
     diagramID: RESUME_DIAGRAM_ID,
     variables: {
-      [ResumeVariables.CONTENT]: resumePrompt.content,
-      [ResumeVariables.VOICE]: resumePrompt.voice,
-      [ResumeVariables.FOLLOW_CONTENT]: resumePrompt.follow_content ?? '',
-      [ResumeVariables.FOLLOW_VOICE]: resumePrompt.follow_voice,
+      [ResumeVariables.CONTENT]: promptToSSML(resumePrompt.content, resumePrompt.voice),
+      [ResumeVariables.FOLLOW_CONTENT]: promptToSSML(resumePrompt.follow_content, resumePrompt.follow_voice),
     },
   });
 };
@@ -33,7 +41,7 @@ const ResumeDiagramRaw = {
   blocks: {
     1: {
       blockID: '1',
-      speak: `<voice name="${ResumeVariables.VOICE}">{${ResumeVariables.CONTENT}}</voice>`,
+      speak: `{${ResumeVariables.CONTENT}}`,
       nextId: '2',
     },
     2: {
@@ -53,7 +61,7 @@ const ResumeDiagramRaw = {
     },
     3: {
       blockID: '3',
-      speak: `<voice name="${ResumeVariables.FOLLOW_VOICE}">{${ResumeVariables.FOLLOW_CONTENT}}</voice>`,
+      speak: `{${ResumeVariables.FOLLOW_CONTENT}}`,
     },
     4: {
       blockID: '4',
