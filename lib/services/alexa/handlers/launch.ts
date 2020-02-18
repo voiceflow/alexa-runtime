@@ -1,6 +1,6 @@
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 
-import { buildContext, buildResponse, launch, update } from './lifecycle';
+import { buildContext, buildResponse, initialize, update } from './lifecycle';
 
 enum Request {
   LAUNCH = 'LaunchRequest',
@@ -16,7 +16,7 @@ const LaunchHandler: RequestHandler = {
   async handle(input: HandlerInput) {
     const context = await buildContext(input);
 
-    await launch(context, input);
+    await initialize(context, input);
 
     await update(context);
 

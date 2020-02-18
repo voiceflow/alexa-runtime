@@ -6,6 +6,7 @@ import InteractionHandler from './interaction';
 import PaymentHandler, { PaymentResponseBuilder } from './payment';
 import PermissionCardHandler, { PermissionCardResponseBuilder } from './permissionCard';
 import ReminderHandler from './reminder';
+import ResetHandler from './reset';
 import SpeakHandler from './speak';
 import StateHandlers from './state';
 import UserInfoHandler from './userInfo';
@@ -30,4 +31,5 @@ export default [
   PaymentHandler,
   CancelPaymentHandler,
   ReminderHandler,
+  ResetHandler,
 ];

@@ -14,7 +14,7 @@
   "dependencies": {
     "@types/bluebird": "^3.5.29",
     "@voiceflow/backend-utils": "2.0.0",
-    "@voiceflow/client": "^1.0.0",
+    "@voiceflow/client": "^1.0.1",
     "@voiceflow/common": "^6.2.0",
     "@voiceflow/logger": "^1.1.0",
     "@voiceflow/secrets-provider": "^1.6.1",

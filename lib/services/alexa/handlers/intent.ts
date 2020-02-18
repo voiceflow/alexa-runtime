@@ -1,6 +1,6 @@
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 
-import { buildContext, buildResponse, launch, update } from './lifecycle';
+import { buildContext, buildResponse, initialize, update } from './lifecycle';
 
 enum Request {
   INTENT = 'IntentRequest',
@@ -16,7 +16,7 @@ const IntentHandler: RequestHandler = {
     const context = await buildContext(input);
 
     if (context.stack.isEmpty()) {
-      await launch(context, input);
+      await initialize(context, input);
     }
 
     await update(context);

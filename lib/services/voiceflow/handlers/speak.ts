@@ -1,6 +1,8 @@
 import { Handler } from '@voiceflow/client';
 import _ from 'lodash';
 
+import { F, S } from '@/lib/constants';
+
 import { regexVariables } from '../utils';
 
 export type Speak = {
@@ -13,7 +15,7 @@ export type Speak = {
 
 const SpeakHandler: Handler<Speak> = {
   canHandle: (block) => {
-    return !!block.random_speak || !!block.audio || (typeof block.prompt === 'string' && block.prompt !== 'true') || !!block.speak;
+    return !!block.random_speak || !!block.audio || (_.isString(block.prompt) && block.prompt !== 'true') || !!block.speak;
   },
   handle: (block, context, variables) => {
     let { speak } = block;
@@ -25,7 +27,7 @@ const SpeakHandler: Handler<Speak> = {
 
     // turn float variables to 2 decimal places
     const sanitizedVars = Object.entries(variables.getState()).reduce<Record<string, any>>((acc, [key, value]) => {
-      if (typeof value === 'number' && !Number.isInteger(value)) {
+      if (_.isNumber(value) && !Number.isInteger(value)) {
         acc[key] = value.toFixed(2);
       } else {
         acc[key] = value;
@@ -34,12 +36,14 @@ const SpeakHandler: Handler<Speak> = {
       return acc;
     }, {});
 
-    if (typeof speak === 'string') {
+    if (_.isString(speak)) {
       const output = regexVariables(speak, sanitizedVars);
 
       context.storage.produce((draft) => {
-        draft.output += output;
+        draft[S.OUTPUT] += output;
       });
+
+      context.stack.top().storage.set(F.SPEAK, output);
     }
 
     return block.nextId ?? null;
