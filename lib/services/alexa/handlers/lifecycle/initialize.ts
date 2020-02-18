@@ -2,7 +2,7 @@ import { Context, Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
 import { F, S } from '@/lib/constants';
-import { createResumeFrame } from '@/lib/services/voiceflow/flows/resume';
+import { createResumeFrame } from '@/lib/services/voiceflow/diagrams/resume';
 
 import { SkillMetadata } from '../../types';
 
