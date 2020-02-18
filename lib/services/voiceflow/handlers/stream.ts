@@ -107,11 +107,11 @@ export const StreamResponseBuilder: ResponseBuilder = (context, builder) => {
       case StreamAction.RESUME:
       case StreamAction.START: {
         const { url, token, offset, metaData } = _streamMetaData(streamPlay);
-        if (url && token && offset) {
+        if (!!url && !!token) {
           context.storage.produce((draft) => {
             draft[S.STREAM_PLAY].token = token;
           });
-          builder.addAudioPlayerPlayDirective(AudioDirective.REPLACE_ALL, url, token, offset, undefined, metaData);
+          builder.addAudioPlayerPlayDirective(AudioDirective.REPLACE_ALL, url, token, offset || 0, undefined, metaData);
         }
         break;
       }
