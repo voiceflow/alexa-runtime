@@ -8,6 +8,19 @@ export enum RequestType {
   INTENT = 'INTENT',
 }
 
+export enum IntentName {
+  VOICEFLOW = 'VoiceFlowIntent',
+  CANCEL = 'AMAZON.CancelIntent',
+  STOP = 'AMAZON.StopIntent',
+  NEXT = 'AMAZON.NextIntent',
+  PREV = 'AMAZON.PreviousIntent',
+  PAUSE = 'AMAZON.PauseIntent',
+  RESUME = 'AMAZON.ResumeIntent',
+  FALLBACK = 'AMAZON.FallbackIntent',
+  YES = 'AMAZON.YesIntent',
+  NO = 'AMAZON.NoIntent',
+}
+
 export interface IntentRequestPayload {
   intent: Intent;
 }
