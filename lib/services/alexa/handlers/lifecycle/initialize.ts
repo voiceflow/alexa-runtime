@@ -2,7 +2,7 @@ import { Context, Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
 import { F, S } from '@/lib/constants';
-import { createResumeFrame } from '@/lib/services/voiceflow/diagrams/resume';
+import { createResumeFrame, RESUME_DIAGRAM_ID } from '@/lib/services/voiceflow/diagrams/resume';
 
 import { SkillMetadata } from '../../types';
 
@@ -62,6 +62,13 @@ const initialize = async (context: Context, input: HandlerInput): Promise<void> 
   } else if (meta.resume_prompt) {
     // resume prompt flow - use command flow logic
     stack.top().storage.set(F.CALLED_COMMAND, true);
+
+    // if there is an existing resume flow, remove itself and anything above it
+    const resumeStackIndex = stack.getFrames().findIndex((frame) => frame.getDiagramID() === RESUME_DIAGRAM_ID);
+    if (resumeStackIndex >= 0) {
+      stack.popTo(resumeStackIndex);
+    }
+
     stack.push(createResumeFrame(meta.resume_prompt));
   } else {
     // give context to where the user left off with last speak block
