@@ -1,11 +1,14 @@
 import { Context, Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
-import { S } from '@/lib/constants';
+import { F, S } from '@/lib/constants';
+import { createResumeFrame, RESUME_DIAGRAM_ID } from '@/lib/services/voiceflow/diagrams/resume';
 
 import { SkillMetadata } from '../../types';
 
-const launch = async (context: Context, input: HandlerInput): Promise<void> => {
+const VAR_VF = 'voiceflow';
+
+const initialize = async (context: Context, input: HandlerInput): Promise<void> => {
   const { requestEnvelope } = input;
 
   // fetch the metadata for this version (project)
@@ -39,7 +42,7 @@ const launch = async (context: Context, input: HandlerInput): Promise<void> => {
     platform: 'alexa',
 
     // hidden system variables (code block only)
-    voiceflow: {
+    [VAR_VF]: {
       // TODO: implement all exposed voiceflow variables
       permissions: storage.get(S.ALEXA_PERMISSIONS),
       events: [],
@@ -50,9 +53,30 @@ const launch = async (context: Context, input: HandlerInput): Promise<void> => {
   // initialize all the global variables
   Store.initialize(variables, meta.global, 0);
 
-  if (stack.isEmpty()) {
+  // restart logic
+  const shouldRestart = stack.isEmpty() || meta.restart || context.variables.get(VAR_VF)?.resume === false;
+  if (shouldRestart) {
+    // start the stack with just the root flow
+    stack.flush();
     stack.push(new Frame({ diagramID: meta.diagram }));
+  } else if (meta.resume_prompt) {
+    // resume prompt flow - use command flow logic
+    stack.top().storage.set(F.CALLED_COMMAND, true);
+
+    // if there is an existing resume flow, remove itself and anything above it
+    const resumeStackIndex = stack.getFrames().findIndex((frame) => frame.getDiagramID() === RESUME_DIAGRAM_ID);
+    if (resumeStackIndex >= 0) {
+      stack.popTo(resumeStackIndex);
+    }
+
+    stack.push(createResumeFrame(meta.resume_prompt));
+  } else {
+    // give context to where the user left off with last speak block
+    stack.top().storage.delete(F.CALLED_COMMAND);
+    const lastSpeak = stack.top().storage.get(F.SPEAK) ?? '';
+
+    storage.set(S.OUTPUT, lastSpeak);
   }
 };
 
-export default launch;
+export default initialize;

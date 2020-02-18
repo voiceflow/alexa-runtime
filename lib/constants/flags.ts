@@ -23,7 +23,13 @@ export enum Turn {
   HANDLER_INPUT = 'handlerInput',
 }
 
+export enum Frame {
+  SPEAK = 'speak',
+  CALLED_COMMAND = 'calledCommand',
+}
+
 export default {
   Storage,
   Turn,
+  Frame,
 };

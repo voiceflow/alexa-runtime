@@ -50,9 +50,9 @@ const InteractionHandler: Handler<Interaction> = {
       variables.merge(mapSlots(variableMap, intent.slots));
     }
 
-    if (!nextId) {
-      // check if there is a command in the stack that fulfills intent
-      nextId = CommandHandler.handle(context, variables);
+    // check if there is a command in the stack that fulfills intent
+    if (!nextId && CommandHandler.canHandle(context)) {
+      return CommandHandler.handle(context, variables);
     }
 
     // request for this turn has been processed, delete request
