@@ -60,13 +60,11 @@ const DisplayHandler: Handler<Display> = {
 
     const onEndEvents = _.flatMap(results, (result) => result.item.onEnd).filter(Boolean) as VideoEvent[];
 
-    const hasOnEndEvent = onEndEvents.some(
-      (event) => event.type === EVENT_SEND_EVENT && event.arguments?.some((data) => _.isString(data) && data.includes(ENDED_EVENT_PREFIX))
-    );
+    const hasOnEndEvent = onEndEvents.some((event) => event.type === EVENT_SEND_EVENT && event.arguments?.includes?.(ENDED_EVENT_PREFIX));
 
     if (hasOnEndEvent) {
-      context.storage.set(S.AWAITING_VIDEO_ENDED_EVENT, true);
       context.stack.top().setBlockID(block.nextId ?? null);
+      context.end();
 
       return null;
     }

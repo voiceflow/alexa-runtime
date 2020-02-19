@@ -1,13 +1,12 @@
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 import { interfaces } from 'ask-sdk-model';
-import _ from 'lodash';
 
 import { S } from '@/lib/constants';
 import { DOCUMENT_VIDEO_TYPE, ENDED_EVENT_PREFIX } from '@/lib/services/voiceflow/handlers/display/constants';
 import { DisplayInfo } from '@/lib/services/voiceflow/handlers/display/responseBuilder';
 
 import { updateContext } from '../utils';
-import { buildContext, buildResponse } from './lifecycle';
+import IntentHandler from './intent';
 
 enum Request {
   APL_USER_EVENT = 'Alexa.Presentation.APL.UserEvent',
@@ -27,6 +26,7 @@ const APLUserEventHandler: RequestHandler = {
   async handle(input: HandlerInput) {
     const request = input.requestEnvelope.request as interfaces.alexa.presentation.apl.UserEvent;
 
+    let hasDisplayInfo = false;
     await updateContext(input, (context) => {
       const source = request.source as undefined | { id: string; type: string; handler: string };
 
@@ -50,16 +50,13 @@ const APLUserEventHandler: RequestHandler = {
 
           state[S.DISPLAY_INFO] = displayInfo;
         }
+
+        if (state[S.DISPLAY_INFO]) hasDisplayInfo = true;
       });
     });
 
-    const context = await buildContext(input);
-
-    if (
-      context.storage.get(S.AWAITING_VIDEO_ENDED_EVENT) &&
-      request.arguments?.some((arg) => _.isString(arg) && arg.toLowerCase().includes(ENDED_EVENT_PREFIX))
-    ) {
-      return buildResponse(context, input);
+    if (hasDisplayInfo && request.arguments?.includes?.(ENDED_EVENT_PREFIX)) {
+      return IntentHandler.handle(input);
     }
 
     return input.responseBuilder.getResponse();

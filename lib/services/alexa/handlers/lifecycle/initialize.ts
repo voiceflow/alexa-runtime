@@ -46,6 +46,7 @@ const initialize = async (context: Context, input: HandlerInput): Promise<void> 
     [VAR_VF]: {
       // TODO: implement all exposed voiceflow variables
       permissions: storage.get(S.ALEXA_PERMISSIONS),
+      capabilities: storage.get(S.SUPPORTED_INTERFACES),
       events: [],
     },
     _system: input.requestEnvelope.context.System,

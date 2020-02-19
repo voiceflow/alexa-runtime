@@ -38,7 +38,8 @@ const SessionEndedHandler: RequestHandler = {
           context.versionID,
           JSON.stringify(context.storage.getState()),
           JSON.stringify(context.turn.getState()),
-          JSON.stringify(context.variables.getState())
+          JSON.stringify(context.variables.getState()),
+          JSON.stringify(context.stack.getState())
         );
       }
 
