@@ -2,24 +2,10 @@ import { Handler } from '@voiceflow/client';
 
 import { S, T } from '@/lib/constants';
 
-import { IntentRequest } from '../../types';
+import { IntentName, IntentRequest } from '../../types';
 import { regexVariables } from '../../utils';
 import CommandHandler from '../command';
 import { StreamAction } from '../stream';
-
-enum PlayIntent {
-  Pause = 'AMAZON.PauseIntent',
-  Resume = 'AMAZON.ResumeIntent',
-  StartOver = 'AMAZON.StartOverIntent',
-  Repeat = 'AMAZON.RepeatIntent',
-  Next = 'AMAZON.NextIntent',
-  Previous = 'AMAZON.PreviousIntent',
-  Cancel = 'AMAZON.CancelIntent',
-  ShuffleOff = 'AMAZON.ShuffleOffIntent',
-  ShuffleOn = 'AMAZON.ShuffleOnIntent',
-  LoopOn = 'AMAZON.LoopOnIntent',
-  LoopOff = 'AMAZON.LoopOffIntent',
-}
 
 const streamStateHandler: Handler<any> = {
   canHandle: (_, context) => {
@@ -32,7 +18,7 @@ const streamStateHandler: Handler<any> = {
 
     let nextId;
 
-    if (intentName === PlayIntent.Pause) {
+    if (intentName === IntentName.PAUSE) {
       if (streamPlay.nextId) {
         // If it is linked to something else, save current pause state
         context.storage.set(S.STREAM_PAUSE, {
@@ -50,16 +36,16 @@ const streamStateHandler: Handler<any> = {
           draft[S.STREAM_PLAY].action = StreamAction.PAUSE;
         });
       }
-    } else if (intentName === PlayIntent.Resume) {
+    } else if (intentName === IntentName.RESUME) {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.RESUME;
       });
-    } else if (intentName === PlayIntent.StartOver || intentName === PlayIntent.Repeat) {
+    } else if (intentName === IntentName.STARTOVER || intentName === IntentName.REPEAT) {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.START;
         draft[S.STREAM_PLAY].offset = 0;
       });
-    } else if (intentName === PlayIntent.Next || streamPlay.action === StreamAction.NEXT) {
+    } else if (intentName === IntentName.NEXT || streamPlay.action === StreamAction.NEXT) {
       if (streamPlay.NEXT) {
         nextId = streamPlay.NEXT;
       }
@@ -69,7 +55,7 @@ const streamStateHandler: Handler<any> = {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
-    } else if (intentName === PlayIntent.Previous) {
+    } else if (intentName === IntentName.PREV) {
       if (streamPlay.PREVIOUS) {
         nextId = streamPlay.PREVIOUS;
       }
@@ -79,35 +65,31 @@ const streamStateHandler: Handler<any> = {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
-    } else if (intentName === PlayIntent.Cancel) {
+    } else if (intentName === IntentName.CANCEL) {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
+    } else if (CommandHandler.canHandle(context)) {
+      context.storage.produce((draft) => {
+        draft[S.STREAM_PLAY].action = StreamAction.END;
+      });
+      return CommandHandler.handle(context, variables);
     } else {
-      nextId = CommandHandler.handle(context, variables);
-
-      if (context.hasEnded()) {
-        // Command found
-        context.storage.produce((draft) => {
-          draft[S.STREAM_PLAY].action = StreamAction.END;
-        });
+      context.storage.produce((draft) => {
+        draft[S.STREAM_PLAY].action = StreamAction.NOEFFECT;
+      });
+      let output: string;
+      if (intentName === IntentName.SHUFFLE_OFF || intentName === IntentName.SHUFFLE_ON) {
+        output = "Sorry, I can't shuffle audio here";
+      } else if (intentName === IntentName.LOOP_OFF || intentName === IntentName.LOOP_ON) {
+        output = "Sorry, I can't loop audio yet";
       } else {
-        context.storage.produce((draft) => {
-          draft[S.STREAM_PLAY].action = StreamAction.NOEFFECT;
-        });
-        let output: string;
-        if (intentName === PlayIntent.ShuffleOff || intentName === PlayIntent.ShuffleOn) {
-          output = "Sorry, I can't shuffle audio here";
-        } else if (intentName === PlayIntent.LoopOff || intentName === PlayIntent.LoopOn) {
-          output = "Sorry, I can't loop audio yet";
-        } else {
-          output = "Sorry, I can't do that yet";
-        }
-
-        context.storage.produce((draft) => {
-          draft.output += output;
-        });
+        output = "Sorry, I can't do that yet";
       }
+
+      context.storage.produce((draft) => {
+        draft.output += output;
+      });
     }
 
     const updatedStreamPlay = context.storage.get(S.STREAM_PLAY);
@@ -119,6 +101,8 @@ const streamStateHandler: Handler<any> = {
       });
     }
 
+    // request for this turn has been processed, delete request
+    context.turn.set(T.REQUEST, null);
     return nextId;
   },
 };
