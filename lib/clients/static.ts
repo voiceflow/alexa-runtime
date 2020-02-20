@@ -1,5 +1,9 @@
 import axios from 'axios';
 
-export default {
+const Static = {
   axios,
-};
+} as const;
+
+export type StaticType = typeof Static;
+
+export default Static;

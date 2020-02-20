@@ -654,13 +654,6 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/hashids@^1.0.30":
-  version "1.0.30"
-  resolved "https://registry.yarnpkg.com/@types/hashids/-/hashids-1.0.30.tgz#c0a056b25c5b13c80bf330fb8d379ac4d4049999"
-  integrity sha512-ESXJxz/GRY+SGa3n0WuWZLR0xM3k8LTr4+2xOoj/a0ZThglF/UfEeKVaMQNNFvFQ+mw3ng8LbC3gmJx/GmR5EQ==
-  dependencies:
-    "@types/node" "*"
-
 "@types/helmet@^0.0.45":
   version "0.0.45"
   resolved "https://registry.yarnpkg.com/@types/helmet/-/helmet-0.0.45.tgz#3eab6550a4e19acf86012596a7f1981529480fd5"
@@ -739,6 +732,11 @@
   dependencies:
     "@types/node" "*"
     "@types/pg-types" "*"
+
+"@types/randomstring@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@types/randomstring/-/randomstring-1.1.6.tgz#45cdc060a6f043d610bcd46503a6887db2a209c3"
+  integrity sha512-XRIZIMTxjcUukqQcYBdpFWGbcRDyNBXrvTEtTYgFMIbBNUVt+9mCKsU+jUUDLeFO/RXopUgR5OLiBqbY18vSHQ==
 
 "@types/range-parser@*":
   version "1.2.3"
