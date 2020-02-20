@@ -11,7 +11,6 @@ export enum Storage {
   CANCEL_PAYMENT = 'cancel_payment',
   SUPPORTED_INTERFACES = 'supported_interfaces',
   DISPLAY_INFO = 'displayInfo',
-  AWAITING_VIDEO_ENDED_EVENT = 'awaiting_videoended_event',
   NEXT_ID = 'next_id',
 }
 
