@@ -56,29 +56,20 @@ const initialize = async (context: Context, input: HandlerInput): Promise<void> 
   // initialize all the global variables
   Store.initialize(variables, meta.global, 0);
 
-  // restart logic
-  const shouldRestart = stack.isEmpty() || meta.restart || context.variables.get(VAR_VF)?.resume === false;
-  if (shouldRestart) {
-    if (storage.get(S.STREAM_PLAY)) {
-      storage.produce((draft) => {
-        draft[S.STREAM_PLAY].action = StreamAction.END;
-      });
-    }
-
-    // start the stack with just the root flow
-    stack.flush();
-    stack.push(new Frame({ diagramID: meta.diagram }));
-    return;
-  }
-
-  // if stopped on stream and not restarting, go to next block
+  // end any existing stream
   if (storage.get(S.STREAM_PLAY)) {
     storage.produce((draft) => {
-      draft[S.STREAM_PLAY].action = StreamAction.NEXT;
+      draft[S.STREAM_PLAY].action = StreamAction.END;
     });
   }
 
-  if (meta.resume_prompt) {
+  // restart logic
+  const shouldRestart = stack.isEmpty() || meta.restart || context.variables.get(VAR_VF)?.resume === false;
+  if (shouldRestart) {
+    // start the stack with just the root flow
+    stack.flush();
+    stack.push(new Frame({ diagramID: meta.diagram }));
+  } else if (meta.resume_prompt) {
     // resume prompt flow - use command flow logic
     stack.top().storage.set(F.CALLED_COMMAND, true);
 

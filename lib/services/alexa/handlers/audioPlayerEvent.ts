@@ -59,7 +59,12 @@ const AudioPlayerEventHandler: RequestHandler = {
           // currect stream loops
           const { url, token, metaData } = _streamMetaData(streamPlay);
 
-          if (url && token) builder.addAudioPlayerPlayDirective(AudioDirective.ENQUEUE, url, token, 0, token, metaData);
+          if (url && token) {
+            storage.produce((draft: any) => {
+              draft[S.STREAM_PLAY].token = token;
+            });
+            builder.addAudioPlayerPlayDirective(AudioDirective.ENQUEUE, url, token, 0, token, metaData);
+          }
         } else if (streamPlay.action === StreamAction.START && !storage.get(S.STREAM_TEMP)) {
           // check for next stream
           const tempContext = voiceflow.createContext(versionID, rawState as State, null);
