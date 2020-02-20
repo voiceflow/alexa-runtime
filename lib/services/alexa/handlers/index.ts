@@ -5,3 +5,5 @@ export { default as PlaybackControllerHandler } from './playback';
 export { default as EventHandler } from './event';
 export { default as PurchaseHandler } from './purchase';
 export { default as CancelPurchaseHandler } from './cancelPurchase';
+export { default as SessionEndedHandler } from './sessionEnded';
+export { default as APLUserEventHandler } from './aplUserEvent';
