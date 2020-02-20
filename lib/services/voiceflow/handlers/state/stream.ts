@@ -35,16 +35,19 @@ const streamStateHandler: Handler<any> = {
         context.storage.produce((draft) => {
           draft[S.STREAM_PLAY].action = StreamAction.PAUSE;
         });
+        context.end();
       }
     } else if (intentName === IntentName.RESUME) {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.RESUME;
       });
+      context.end();
     } else if (intentName === IntentName.STARTOVER || intentName === IntentName.REPEAT) {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.START;
         draft[S.STREAM_PLAY].offset = 0;
       });
+      context.end();
     } else if (intentName === IntentName.NEXT || streamPlay.action === StreamAction.NEXT) {
       if (streamPlay.NEXT) {
         nextId = streamPlay.NEXT;
@@ -69,6 +72,7 @@ const streamStateHandler: Handler<any> = {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
+      context.end();
     } else if (CommandHandler.canHandle(context)) {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
@@ -90,6 +94,7 @@ const streamStateHandler: Handler<any> = {
       context.storage.produce((draft) => {
         draft.output += output;
       });
+      context.end();
     }
 
     const updatedStreamPlay = context.storage.get(S.STREAM_PLAY);
