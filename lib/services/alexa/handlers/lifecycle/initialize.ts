@@ -17,12 +17,6 @@ const initialize = async (context: Context, input: HandlerInput): Promise<void> 
 
   const { stack, storage, variables } = context;
 
-  // if stopped on stream, go to next block
-  if (storage.get(S.STREAM_PLAY)) {
-    storage.produce((draft) => {
-      draft[S.STREAM_PLAY].action = StreamAction.NEXT;
-    });
-  }
   storage.delete(S.STREAM_TEMP);
 
   // increment user sessions by 1 or initialize
@@ -61,6 +55,13 @@ const initialize = async (context: Context, input: HandlerInput): Promise<void> 
 
   // initialize all the global variables
   Store.initialize(variables, meta.global, 0);
+
+  // end any existing stream
+  if (storage.get(S.STREAM_PLAY)) {
+    storage.produce((draft) => {
+      draft[S.STREAM_PLAY].action = StreamAction.END;
+    });
+  }
 
   // restart logic
   const shouldRestart = stack.isEmpty() || meta.restart || context.variables.get(VAR_VF)?.resume === false;

@@ -19,6 +19,12 @@ export enum IntentName {
   FALLBACK = 'AMAZON.FallbackIntent',
   YES = 'AMAZON.YesIntent',
   NO = 'AMAZON.NoIntent',
+  STARTOVER = 'AMAZON.StartOverIntent',
+  REPEAT = 'AMAZON.RepeatIntent',
+  SHUFFLE_OFF = 'AMAZON.ShuffleOffIntent',
+  SHUFFLE_ON = 'AMAZON.ShuffleOnIntent',
+  LOOP_ON = 'AMAZON.LoopOnIntent',
+  LOOP_OFF = 'AMAZON.LoopOffIntent',
 }
 
 export interface IntentRequestPayload {
