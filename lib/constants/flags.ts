@@ -12,6 +12,10 @@ export enum Storage {
   SUPPORTED_INTERFACES = 'supported_interfaces',
   DISPLAY_INFO = 'displayInfo',
   NEXT_ID = 'next_id',
+  STREAM_PLAY = 'stream_play',
+  STREAM_PAUSE = 'stream_pause',
+  STREAM_FINISHED = 'stream_finished',
+  STREAM_TEMP = 'stream_temp',
 }
 
 export enum Turn {

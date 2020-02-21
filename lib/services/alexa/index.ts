@@ -5,6 +5,7 @@ import { Config } from '@/types';
 import { FullServiceMap } from '..';
 import {
   APLUserEventHandler,
+  AudioPlayerEventHandler,
   CancelPurchaseHandler,
   ErrorHandler,
   EventHandler,
@@ -27,12 +28,13 @@ const Alexa = (services: FullServiceMap, config: Config) =>
     .addRequestHandlers(
       LaunchHandler,
       IntentHandler,
+      SessionEndedHandler,
       PlaybackControllerHandler,
+      AudioPlayerEventHandler,
       EventHandler,
       PurchaseHandler,
-      CancelPurchaseHandler,
       APLUserEventHandler,
-      SessionEndedHandler
+      CancelPurchaseHandler
     )
     .addErrorHandlers(ErrorHandler)
     // .addRequestInterceptors(RequestInterceptor)
