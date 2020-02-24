@@ -69,6 +69,7 @@
     "@types/pg": "^7.14.0",
     "@types/sinon": "^7.5.1",
     "@types/supertest": "^2.0.8",
+    "@types/yargs": "^15.0.3",
     "@typescript-eslint/eslint-plugin": "^2.14.0",
     "@typescript-eslint/parser": "^2.14.0",
     "@voiceflow/commitlint-config": "^1.0.1",
@@ -77,14 +78,17 @@
     "@voiceflow/git-branch-check": "^1.0.6",
     "@voiceflow/prettier-config": "^1.0.4",
     "@zerollup/ts-transform-paths": "^1.7.9",
+    "axios-mock-adapter": "^1.17.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "codacy-coverage": "^3.4.0",
     "commitizen": "^4.0.3",
+    "cross-fetch": "^3.0.4",
     "cz-conventional-changelog": "^3.0.2",
     "eslint": "^6.7.2",
     "eslint-plugin-mocha": "^6.2.2",
     "eslint-plugin-simple-import-sort": "^5.0.0",
+    "execa": "^4.0.0",
     "fixpack": "^2.3.1",
     "http-status": "^1.4.2",
     "husky": "^3.1.0",
@@ -93,6 +97,7 @@
     "lint-staged": "^9.5.0",
     "mocha": "^6.2.2",
     "nyc": "^15.0.0",
+    "pg": "^7.18.1",
     "prettier": "^1.19.1",
     "prettier-eslint-cli": "^5.0.0",
     "rimraf": "^3.0.0",
@@ -104,7 +109,8 @@
     "ts-node": "^8.5.4",
     "tsconfig-paths": "^3.9.0",
     "ttypescript": "^1.5.8",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.4",
+    "yargs": "^15.1.0"
   },
   "homepage": "https://github.com/voiceflow/backend-template#readme",
   "husky": {
@@ -144,6 +150,7 @@
     "local:watch": "NODE_ENV=local forever --watch -c \"ts-node --files -r tsconfig-paths/register\" start.ts",
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
     "test": "NODE_ENV=test nyc ts-mocha --paths --opts mocha.opts",
-    "test:single": "NODE_ENV=test ts-mocha --paths --opts mocha-single.opts"
+    "test:single": "NODE_ENV=test ts-mocha --paths --opts mocha-single.opts",
+    "test:smoke": "NODE_env=test ts-node --files -r tsconfig-paths/register tests/initSmokeTest.ts"
   }
 }
