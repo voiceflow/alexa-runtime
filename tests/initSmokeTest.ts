@@ -22,10 +22,6 @@ fs.promises.readdir(RECORDINGS_FOLDER).then(async (files) => {
     const cmd = await execa('ts-node', ['--files', '-r', 'tsconfig-paths/register', TEST_RUNNER, '-f', filePath], {
       preferLocal: true,
       stdio: 'inherit',
-      env: {
-        NODE_ENV: 'test',
-        SECRETS_PROVIDER: 'test',
-      },
     });
 
     console.log(cmd.stdout);
