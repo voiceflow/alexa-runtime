@@ -1,15 +1,17 @@
-import { Context, Event, EventCallback } from '@voiceflow/client';
+import { EventCallback, EventType } from '@voiceflow/client';
 import Promise from 'bluebird';
 
 import { events as displayEvents } from './display';
 
-type EventsMap = Partial<Record<Event, EventCallback[]>>;
+type ExecuteMap = { [key in EventType]: EventCallback<key>[] };
 
-const eventsMap: EventsMap = {
-  [Event.stateDidExecute]: [displayEvents.stateDidExecute],
+const executeMap: Partial<ExecuteMap> = {
+  [EventType.stateDidExecute]: [displayEvents.stateDidExecute],
 };
 
-export const executeEvents = (event: Event, context: Context, ...args: any[]) =>
-  Promise.each(eventsMap[event] || [], (callback) => callback(context, ...args));
+export const executeEvents = <E extends EventType>(eventType: E): EventCallback<E> =>
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
+  (event) => Promise.each(executeMap[eventType] || [], (callback) => callback(event));
 
-export default eventsMap;
+export default executeMap;

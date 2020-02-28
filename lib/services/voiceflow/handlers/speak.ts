@@ -2,6 +2,7 @@ import { Handler } from '@voiceflow/client';
 import _ from 'lodash';
 
 import { F, S } from '@/lib/constants';
+import { addSpeakTrace } from '@/lib/services/test/utils';
 
 import { regexVariables } from '../utils';
 
@@ -44,6 +45,7 @@ const SpeakHandler: Handler<Speak> = {
       });
 
       context.stack.top().storage.set(F.SPEAK, output);
+      addSpeakTrace(context, output);
     }
 
     return block.nextId ?? null;
