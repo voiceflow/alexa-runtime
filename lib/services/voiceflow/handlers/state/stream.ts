@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { Handler } from '@voiceflow/client';
 
 import { S, T } from '@/lib/constants';
@@ -6,6 +7,24 @@ import { IntentName, IntentRequest } from '../../types';
 import { regexVariables } from '../../utils';
 import CommandHandler from '../command';
 import { StreamAction } from '../stream';
+
+const StreamFailPhrase: Record<string, string> = {
+  'en-US': 'Sorry, this action isn’t available in this skill. ',
+  'en-AU': 'Sorry, this action isn’t available in this skill. ',
+  'en-CA': 'Sorry, this action isn’t available in this skill. ',
+  'en-GB': 'Sorry, this action isn’t available in this skill. ',
+  'en-IN': 'Sorry, this action isn’t available in this skill. ',
+  'fr-CA': "Désolé, cette action n'est pas disponible dans cette skill. ",
+  'fr-FR': "Désolé, cette action n'est pas disponible dans cette skill. ",
+  'es-US': 'Lo siento, esta función no está disponible en esta skill. ',
+  'es-ES': 'Lo siento, esta función no está disponible en esta skill. ',
+  'es-MX': 'Lo siento, esta función no está disponible en esta skill. ',
+  'it-IT': 'Spiacenti, questa funzione non è disponibile in questa skill. ',
+  'de-DE': 'Entschuldigung, diese Funktion ist in dieser Skill nicht verfügbar. ',
+  'ja-JP': '申し訳ありませんが、この機能はこのアプリケーションでは使用できません。 ',
+  'pt-BR': 'Desculpe, esta característica não está disponível nesta skill. ',
+  'hi-IN': 'क्षमा करें, यह फ़ंक्शन इस एप्लिकेशन में उपलब्ध नहीं है। ',
+};
 
 const streamStateHandler: Handler<any> = {
   canHandle: (_, context) => {
@@ -82,17 +101,9 @@ const streamStateHandler: Handler<any> = {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.NOEFFECT;
       });
-      let output: string;
-      if (intentName === IntentName.SHUFFLE_OFF || intentName === IntentName.SHUFFLE_ON) {
-        output = "Sorry, I can't shuffle audio here";
-      } else if (intentName === IntentName.LOOP_OFF || intentName === IntentName.LOOP_ON) {
-        output = "Sorry, I can't loop audio yet";
-      } else {
-        output = "Sorry, I can't do that yet";
-      }
 
       context.storage.produce((draft) => {
-        draft.output += output;
+        draft.output += StreamFailPhrase[context.storage.get(S.LOCALE)] || StreamFailPhrase['en-US'];
       });
       context.end();
     }
