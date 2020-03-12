@@ -9,13 +9,16 @@ class TestManager extends AbstractManager {
   async invoke(state: State) {
     const { voiceflow } = this.services;
 
-    const context = voiceflow.createContext(TEST_VERSION_ID, state as State);
+    const context = voiceflow.createTestingContext(TEST_VERSION_ID, state as State);
 
     context.setEvent(EventType.handlerWillHandle, (event) => addBlockTrace(event.context, event.block.blockID));
 
-    context.update();
+    await context.update();
 
-    return context.getRawState();
+    return {
+      ...context.getRawState(),
+      trace: context.getTrace(),
+    };
   }
 }
 

@@ -8,7 +8,7 @@ export default (middlewares: MiddlewareMap, controllers: ControllerMap) => {
 
   router.use(middlewares.alexa.verifier);
   router.use(bodyParser.json());
-  router.post('/state/skill/:versionID', controllers.alexa.handler);
+  router.post('/:versionID', controllers.alexa.handler);
 
   return router;
 };
