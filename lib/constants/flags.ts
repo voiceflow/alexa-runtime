@@ -28,6 +28,7 @@ export enum Turn {
   REQUEST = 'request',
   CARD = 'card',
   HANDLER_INPUT = 'handlerInput',
+  TRACE = 'trace',
 }
 
 export enum Frame {

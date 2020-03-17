@@ -6,11 +6,13 @@ import { Config } from '@/types';
 
 import { ClientMap } from '../clients';
 import Alexa from './alexa';
+import Test from './test';
 import Voiceflow from './voiceflow';
 
 export interface ServiceMap {
   alexa: ASK.Skill;
   voiceflow: Client;
+  test: Test;
 }
 
 export interface FullServiceMap extends ClientMap, ServiceMap {
@@ -28,6 +30,7 @@ const buildServices = (config: Config, clients: ClientMap): FullServiceMap => {
   services.secretsProvider = secretsProvider;
   services.voiceflow = Voiceflow(services, config);
   services.alexa = Alexa(services, config);
+  services.test = new Test(services, config);
 
   return services;
 };

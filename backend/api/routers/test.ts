@@ -3,12 +3,11 @@ import express from 'express';
 
 import { ControllerMap, MiddlewareMap } from '@/lib';
 
-export default (middlewares: MiddlewareMap, controllers: ControllerMap) => {
+export default (_: MiddlewareMap, controllers: ControllerMap) => {
   const router = express.Router();
 
-  router.use(middlewares.alexa.verifier);
   router.use(bodyParser.json());
-  router.post('/:versionID', controllers.alexa.handler);
+  router.post('/', controllers.test.handler);
 
   return router;
 };
