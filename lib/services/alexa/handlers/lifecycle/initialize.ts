@@ -2,6 +2,7 @@ import { Context, Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
 import { F, S } from '@/lib/constants';
+import { addSpeakTrace } from '@/lib/services/test/utils';
 import { createResumeFrame, RESUME_DIAGRAM_ID } from '@/lib/services/voiceflow/diagrams/resume';
 import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 
@@ -88,6 +89,7 @@ const initialize = async (context: Context, input: HandlerInput): Promise<void> 
     const lastSpeak = stack.top().storage.get(F.SPEAK) ?? '';
 
     storage.set(S.OUTPUT, lastSpeak);
+    addSpeakTrace(context, lastSpeak);
   }
 };
 
