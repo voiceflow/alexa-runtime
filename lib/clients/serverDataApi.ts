@@ -1,16 +1,19 @@
-import axios, { AxiosInstance } from 'axios';
+import secretsProvider from '@voiceflow/secrets-provider';
+import { AxiosInstance } from 'axios';
 
 import { Config } from '@/types';
+
+import { StaticType } from './static';
 
 export type Display = { document?: string };
 
 class ServerDataApi {
   private client: AxiosInstance;
 
-  constructor(config: Config) {
-    this.client = axios.create({
+  constructor(clients: StaticType, config: Config) {
+    this.client = clients.axios.create({
       baseURL: config.VF_DATA_ENDPOINT,
-      headers: { authorization: `Bearer ${config.VF_DATA_SECRET}` },
+      headers: { authorization: `Bearer ${secretsProvider.get('VF_DATA_SECRET')}` },
     });
   }
 
@@ -21,7 +24,7 @@ class ServerDataApi {
   };
 }
 
-const ServerDataApiClient = (config: Config): ServerDataApi => new ServerDataApi(config);
+const ServerDataApiClient = (clients: StaticType, config: Config): ServerDataApi => new ServerDataApi(clients, config);
 
 export type ServerDataApiType = ServerDataApi;
 

@@ -7,7 +7,7 @@ import { S, T } from '@/lib/constants';
 
 import { regexVariables } from '../utils';
 
-enum ReminderType {
+export enum ReminderType {
   SCHEDULED_ABSOLUTE = 'SCHEDULED_ABSOLUTE',
   SCHEDULED_RELATIVE = 'SCHEDULED_RELATIVE',
 }
@@ -47,7 +47,7 @@ const _deriveSeconds = (text: string, multiplier = 1): number => {
   return number * multiplier;
 };
 
-const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, any>, locale: string) => {
+export const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, any>, locale: string) => {
   if (reminder.type !== ReminderType.SCHEDULED_ABSOLUTE && reminder.type !== ReminderType.SCHEDULED_RELATIVE)
     throw new Error('invalid reminder type');
 
@@ -89,7 +89,8 @@ const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, 
 
     if (reminder.recurrence) reminderObject.trigger.recurrence = reminder.recurrence;
     if (reminder.timezone !== 'User Timezone') reminderObject.trigger.timeZoneId = reminder.timezone;
-  } else if (reminder.type === ReminderType.SCHEDULED_RELATIVE) {
+  } else {
+    // ReminderType.SCHEDULED_RELATIVE
     if (seconds < 1) throw new Error('invalid relative seconds');
 
     reminderObject.trigger = {
@@ -101,7 +102,12 @@ const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, 
   return reminderObject;
 };
 
-const ReminderHandler: Handler<ReminderBlock> = {
+const utilsObj = {
+  _createReminderObject,
+  axios,
+};
+
+export const ReminderHandlerGenerator = (utils: typeof utilsObj): Handler<ReminderBlock> => ({
   canHandle: (block) => {
     return !!block.reminder;
   },
@@ -114,9 +120,9 @@ const ReminderHandler: Handler<ReminderBlock> = {
 
       if (!apiEndpoint || !apiAccessToken) throw new Error('invalid login token');
 
-      const reminderObject = _createReminderObject(block.reminder, variables.getState(), context.storage.get(S.LOCALE));
+      const reminderObject = utils._createReminderObject(block.reminder, variables.getState(), context.storage.get(S.LOCALE));
 
-      await axios.post(`${apiEndpoint}/v1/alerts/reminders`, reminderObject, {
+      await utils.axios.post(`${apiEndpoint}/v1/alerts/reminders`, reminderObject, {
         headers: {
           Authorization: `Bearer ${apiAccessToken}`,
           'Content-Type': 'application/json',
@@ -130,6 +136,6 @@ const ReminderHandler: Handler<ReminderBlock> = {
 
     return nextId;
   },
-};
+});
 
-export default ReminderHandler;
+export default ReminderHandlerGenerator(utilsObj);
