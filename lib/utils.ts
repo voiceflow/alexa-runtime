@@ -3,6 +3,8 @@ import { ValidationChain } from 'express-validator';
 import { Middleware } from 'express-validator/src/base';
 import _ from 'lodash';
 
+import { AnyClass } from '@/types';
+
 import { ControllerMap } from './controllers';
 import { AbstractController } from './controllers/utils';
 import { MiddlewareMap } from './middlewares';
@@ -75,4 +77,16 @@ export const deepFind = <T = any>(collection: any, predicate: any) => {
   find(collection, []);
 
   return results;
+};
+
+export const isConstructor = <T extends AnyClass>(clazz: T | unknown): clazz is T => {
+  try {
+    // eslint-disable-next-line no-new
+    new new Proxy(clazz as any, {
+      construct: () => ({}),
+    })();
+    return true;
+  } catch {
+    return false;
+  }
 };

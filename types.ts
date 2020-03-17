@@ -50,3 +50,6 @@ export type Controller = Record<string, Route>;
 export type Middleware = (req: Request, res: Response, next: Next) => Promise<void>;
 
 export type MiddlewareGroup = Record<string, Middleware>;
+
+export type Class<T, A extends any[]> = { new (...args: A): T };
+export type AnyClass = Class<any, any[]>;
