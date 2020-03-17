@@ -24,7 +24,6 @@ export interface Config {
 
   SESSIONS_DYNAMO_TABLE: string;
 
-  VF_DATA_SECRET: string;
   VF_DATA_ENDPOINT: string;
 }
 

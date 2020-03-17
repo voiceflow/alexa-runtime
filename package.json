@@ -53,6 +53,7 @@
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@types/bunyan-prettystream": "^0.1.31",
     "@types/chai": "^4.2.7",
+    "@types/chai-as-promised": "^7.1.2",
     "@types/compression": "^1.0.1",
     "@types/connect-timeout": "^0.0.34",
     "@types/cookie-parser": "^1.4.2",
@@ -137,10 +138,11 @@
     "clean": "rimraf build",
     "deploy:staging": "git push origin $(git branch | grep \\* | cut -d ' ' -f2):staging -f",
     "gen-certs": "scripts/generate_certs.sh",
-    "lint": "eslint \"src/**/*.{js,ts}\"",
+    "lint": "eslint \"./**/*.{js,ts}\"",
     "local": "NODE_ENV=local ts-node --files -r tsconfig-paths/register start.ts",
     "local:watch": "NODE_ENV=local forever --watch -c \"ts-node --files -r tsconfig-paths/register\" start.ts",
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
-    "test": "NODE_ENV=test nyc ts-mocha --paths --opts mocha.opts"
+    "test": "NODE_ENV=test nyc ts-mocha --paths --opts mocha.opts",
+    "test:single": "NODE_ENV=test ts-mocha --paths --opts mocha-single.opts"
   }
 }

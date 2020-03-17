@@ -5,13 +5,13 @@ import { RESUME_DIAGRAM_ID, ResumeDiagram } from '@/lib/services/voiceflow/diagr
 import { executeEvents } from '@/lib/services/voiceflow/handlers/events';
 import { Config } from '@/types';
 
-import { ServiceMap } from '..';
+import { FullServiceMap } from '..';
 import { addFlowTrace, addSpeakTrace } from '../test/utils';
 import handlers from './handlers';
 
-const Voiceflow = (services: ServiceMap, config: Config) => {
+const Voiceflow = (services: FullServiceMap, config: Config) => {
   const client = new Client({
-    secret: config.VF_DATA_SECRET,
+    secret: services.secretsProvider.get('VF_DATA_SECRET'),
     endpoint: config.VF_DATA_ENDPOINT,
     handlers,
     services,

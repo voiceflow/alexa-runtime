@@ -1,3 +1,4 @@
+import secretsProvider from '@voiceflow/secrets-provider';
 import axios, { AxiosInstance } from 'axios';
 
 import { Config } from '@/types';
@@ -10,7 +11,7 @@ class ServerDataApi {
   constructor(config: Config) {
     this.client = axios.create({
       baseURL: config.VF_DATA_ENDPOINT,
-      headers: { authorization: `Bearer ${config.VF_DATA_SECRET}` },
+      headers: { authorization: `Bearer ${secretsProvider.get('VF_DATA_SECRET')}` },
     });
   }
 
