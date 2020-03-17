@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { isConstructor } from '@/lib/utils';
+import { Config } from '@/types';
 
 import { FullServiceMap } from '.';
 
