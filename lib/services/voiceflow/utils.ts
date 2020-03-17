@@ -5,7 +5,7 @@ import { T } from '@/lib/constants';
 
 import { Mapping } from '../voiceflow/types';
 
-const _replacer = (match: string, inner: string, variables: Record<string, any>, modifier?: Function) => {
+export const _replacer = (match: string, inner: string, variables: Record<string, any>, modifier?: Function) => {
   if (inner in variables) {
     return typeof modifier === 'function' ? modifier(variables[inner]) : variables[inner];
   }

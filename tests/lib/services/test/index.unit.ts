@@ -21,8 +21,10 @@ describe('test manager unit tests', () => {
         getTrace: sinon.stub().returns(trace),
       };
 
+      const createContext = sinon.stub().returns(context);
+
       const services = {
-        voiceflow: { createContext: sinon.stub().returns(context) },
+        voiceflow: { client: sinon.stub().returns({ createContext }) },
         utils: { addBlockTrace: sinon.stub() },
       };
 
@@ -35,7 +37,7 @@ describe('test manager unit tests', () => {
       const state = { foo2: 'bar2' };
       const request = { foo3: 'bar3' };
       expect(await testManager.invoke(state as any, request as any)).to.eql({ ...rawState, trace });
-      expect(services.voiceflow.createContext.args).to.eql([
+      expect(createContext.args).to.eql([
         [
           TEST_VERSION_ID,
           state,

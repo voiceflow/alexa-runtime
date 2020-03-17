@@ -1,4 +1,3 @@
-import Client from '@voiceflow/client';
 import secretsProvider, { SecretsProvider } from '@voiceflow/secrets-provider';
 import ASK from 'ask-sdk';
 
@@ -11,7 +10,7 @@ import Voiceflow from './voiceflow';
 
 export interface ServiceMap {
   alexa: ASK.Skill;
-  voiceflow: Client;
+  voiceflow: Voiceflow;
   test: Test;
 }
 
@@ -28,7 +27,7 @@ const buildServices = (config: Config, clients: ClientMap): FullServiceMap => {
   } as FullServiceMap;
 
   services.secretsProvider = secretsProvider;
-  services.voiceflow = Voiceflow(services, config);
+  services.voiceflow = new Voiceflow(services, config);
   services.alexa = Alexa(services, config);
   services.test = new Test(services, config);
 

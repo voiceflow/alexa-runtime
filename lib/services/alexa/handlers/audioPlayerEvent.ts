@@ -1,5 +1,5 @@
 /* eslint-disable max-depth */
-import { State } from '@voiceflow/client';
+import Client, { State } from '@voiceflow/client';
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 
 import { S } from '@/lib/constants';
@@ -26,9 +26,9 @@ const AudioPlayerEventHandler: RequestHandler = {
     return type.startsWith(Request.AUDIO_PLAYER);
   },
   async handle(input: HandlerInput) {
-    const { versionID, voiceflow } = input.context;
+    const { versionID, voiceflow } = input.context as { versionID: string; voiceflow: Client };
     const rawState = await input.attributesManager.getPersistentAttributes();
-    let context = voiceflow.createContext(versionID, rawState as State, null);
+    let context = voiceflow.createContext(versionID, rawState as State);
     const { storage } = context;
 
     const { request } = input.requestEnvelope;
@@ -40,7 +40,7 @@ const AudioPlayerEventHandler: RequestHandler = {
     switch (audioPlayerEventName) {
       case AudioEvent.PlaybackStarted:
         if (storage.get(S.STREAM_FINISHED) && storage.get(S.STREAM_TEMP)) {
-          context = voiceflow.createContext(versionID, storage.get(S.STREAM_TEMP) as State, null);
+          context = voiceflow.createContext(versionID, storage.get(S.STREAM_TEMP) as State);
         } else {
           storage.delete(S.STREAM_FINISHED);
         }
@@ -67,7 +67,7 @@ const AudioPlayerEventHandler: RequestHandler = {
           }
         } else if (streamPlay.action === StreamAction.START && !storage.get(S.STREAM_TEMP)) {
           // check for next stream
-          const tempContext = voiceflow.createContext(versionID, rawState as State, null);
+          const tempContext = voiceflow.createContext(versionID, rawState as State);
           tempContext.storage.set(S.STREAM_PLAY, { ...tempContext.storage.get(S.STREAM_PLAY), action: StreamAction.NEXT });
 
           await update(tempContext);

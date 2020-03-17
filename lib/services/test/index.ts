@@ -19,7 +19,7 @@ class TestManager extends AbstractManager<{ utils: typeof utilsObj }> {
   async invoke(state: State, request?: Request) {
     const { voiceflow, utils } = this.services;
 
-    const context = voiceflow.createContext(TEST_VERSION_ID, state as State, request, {
+    const context = voiceflow.client().createContext(TEST_VERSION_ID, state as State, request, {
       endpoint: `${this.config.VF_DATA_ENDPOINT}/test`,
     });
 
