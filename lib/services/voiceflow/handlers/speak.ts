@@ -14,7 +14,11 @@ export type Speak = {
   random_speak?: string[];
 };
 
-const SpeakHandler: Handler<Speak> = {
+const utilsObj = {
+  addSpeakTrace,
+};
+
+export const SpeakHandlerGenerator = (utils: typeof utilsObj): Handler<Speak> => ({
   canHandle: (block) => {
     return !!block.random_speak || !!block.audio || (_.isString(block.prompt) && block.prompt !== 'true') || !!block.speak;
   },
@@ -45,11 +49,11 @@ const SpeakHandler: Handler<Speak> = {
       });
 
       context.stack.top().storage.set(F.SPEAK, output);
-      addSpeakTrace(context, output);
+      utils.addSpeakTrace(context, output);
     }
 
     return block.nextId ?? null;
   },
-};
+});
 
-export default SpeakHandler;
+export default SpeakHandlerGenerator(utilsObj);
