@@ -18,7 +18,7 @@ class AlexaController extends AbstractController {
   async handler(req: Request<{ versionID: string }>) {
     const { alexa, voiceflow } = this.services;
 
-    return alexa.invoke(req.body, { versionID: req.params.versionID, voiceflow: voiceflow.client() });
+    return alexa.skill().invoke(req.body, { versionID: req.params.versionID, voiceflow: voiceflow.client() });
   }
 }
 
