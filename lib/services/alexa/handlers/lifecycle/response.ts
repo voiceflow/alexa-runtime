@@ -5,7 +5,11 @@ import { Response } from 'ask-sdk-model';
 import { S, T } from '@/lib/constants';
 import { responseHandlers } from '@/lib/services/voiceflow/handlers';
 
-const response = async (context: Context, input: HandlerInput): Promise<Response> => {
+const utilsObj = {
+  responseHandlers,
+};
+
+export const responseGenerator = (utils: typeof utilsObj) => async (context: Context, input: HandlerInput): Promise<Response> => {
   const { storage, turn } = context;
   const { responseBuilder, requestEnvelope, attributesManager } = input;
 
@@ -22,7 +26,7 @@ const response = async (context: Context, input: HandlerInput): Promise<Response
     .withShouldEndSession(!!turn.get(T.END));
 
   // eslint-disable-next-line no-restricted-syntax
-  for (const handler of responseHandlers) {
+  for (const handler of utils.responseHandlers) {
     // eslint-disable-next-line no-await-in-loop
     await handler(context, responseBuilder);
   }
@@ -32,4 +36,4 @@ const response = async (context: Context, input: HandlerInput): Promise<Response
   return responseBuilder.getResponse();
 };
 
-export default response;
+export default responseGenerator(utilsObj);
