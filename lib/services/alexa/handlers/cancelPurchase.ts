@@ -6,12 +6,17 @@ import { S } from '@/lib/constants';
 import { updateContext } from '../utils';
 import IntentHandler from './intent';
 
-enum Request {
+export enum Request {
   RESPONSE_TYPE = 'Connections.Response',
   REQ_NAME = 'Cancel',
 }
 
-const CancelPurchaseHandler: RequestHandler = {
+const utilsObj = {
+  updateContext,
+  IntentHandler,
+};
+
+export const CancelPurchaseHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
   canHandle(input: HandlerInput): boolean {
     const { request } = input.requestEnvelope;
 
@@ -21,14 +26,14 @@ const CancelPurchaseHandler: RequestHandler = {
     const { payload } = input.requestEnvelope.request as interfaces.connections.ConnectionsResponse;
     const result: false | interfaces.monetization.v1.PurchaseResult = payload?.purchaseResult ?? false;
 
-    await updateContext(input, (context) => {
+    await utils.updateContext(input, (context) => {
       context.storage.produce((draft) => {
         if (draft[S.CANCEL_PAYMENT]) draft[S.CANCEL_PAYMENT].status = result || false;
       });
     });
 
-    return IntentHandler.handle(input);
+    return utils.IntentHandler.handle(input);
   },
-};
+});
 
-export default CancelPurchaseHandler;
+export default CancelPurchaseHandlerGenerator(utilsObj);

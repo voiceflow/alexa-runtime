@@ -2,18 +2,18 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import PurchaseHandler, { PurchaseHandlerGenerator, Request } from '@/lib/services/alexa/handlers/purchase';
+import CancelPurchaseHandler, { CancelPurchaseHandlerGenerator, Request } from '@/lib/services/alexa/handlers/cancelPurchase';
 
-describe('purchase handler unit tests', () => {
+describe('cancel purchase handler unit tests', () => {
   describe('canHandle', () => {
     it('false', () => {
-      expect(PurchaseHandler.canHandle({ requestEnvelope: { request: { type: 'random-type', name: 'random-name' } } } as any)).to.eql(false);
+      expect(CancelPurchaseHandler.canHandle({ requestEnvelope: { request: { type: 'random-type', name: 'random-name' } } } as any)).to.eql(false);
     });
 
     it('true', () => {
-      expect(PurchaseHandler.canHandle({ requestEnvelope: { request: { type: Request.RESPONSE_TYPE, name: Request.REQ_NAME } } } as any)).to.eql(
-        true
-      );
+      expect(
+        CancelPurchaseHandler.canHandle({ requestEnvelope: { request: { type: Request.RESPONSE_TYPE, name: Request.REQ_NAME } } } as any)
+      ).to.eql(true);
     });
   });
 
@@ -26,10 +26,10 @@ describe('purchase handler unit tests', () => {
         updateContext: sinon.stub(),
       };
 
-      const handler = PurchaseHandlerGenerator(utils as any);
+      const handler = CancelPurchaseHandlerGenerator(utils as any);
 
       const purchaseResult = { foo: 'bar' };
-      const input = { requestEnvelope: { request: { status: { code: 200 }, payload: { purchaseResult } } } };
+      const input = { requestEnvelope: { request: { payload: { purchaseResult } } } };
       expect(await handler.handle(input as any)).to.eql(output);
       expect(utils.IntentHandler.handle.args).to.eql([[input]]);
       expect(utils.updateContext.args[0][0]).to.eql(input);
@@ -41,12 +41,12 @@ describe('purchase handler unit tests', () => {
       fn(context);
 
       const fn2 = context.storage.produce.args[0][0];
-      const draft = { [S.PAYMENT]: { status: null } };
+      const draft = { [S.CANCEL_PAYMENT]: { status: null } };
       fn2(draft);
-      expect(draft[S.PAYMENT]).to.eql({ status: purchaseResult });
+      expect(draft[S.CANCEL_PAYMENT]).to.eql({ status: purchaseResult });
     });
 
-    it('no status', async () => {
+    it('purchase result is null', async () => {
       const output = 'output';
 
       const utils = {
@@ -54,10 +54,9 @@ describe('purchase handler unit tests', () => {
         updateContext: sinon.stub(),
       };
 
-      const handler = PurchaseHandlerGenerator(utils as any);
+      const handler = CancelPurchaseHandlerGenerator(utils as any);
 
-      const purchaseResult = { foo: 'bar' };
-      const input = { requestEnvelope: { request: { payload: { purchaseResult } } } };
+      const input = { requestEnvelope: { request: { payload: { purchaseResult: null } } } };
       expect(await handler.handle(input as any)).to.eql(output);
       // assert updateContext callback
       const fn = utils.updateContext.args[0][1];
@@ -67,9 +66,9 @@ describe('purchase handler unit tests', () => {
       fn(context);
 
       const fn2 = context.storage.produce.args[0][0];
-      const draft = { [S.PAYMENT]: { status: null } };
+      const draft = { [S.CANCEL_PAYMENT]: { status: null } };
       fn2(draft);
-      expect(draft[S.PAYMENT]).to.eql({ status: purchaseResult });
+      expect(draft[S.CANCEL_PAYMENT]).to.eql({ status: false });
     });
 
     it('no payload', async () => {
@@ -80,9 +79,9 @@ describe('purchase handler unit tests', () => {
         updateContext: sinon.stub(),
       };
 
-      const handler = PurchaseHandlerGenerator(utils as any);
+      const handler = CancelPurchaseHandlerGenerator(utils as any);
 
-      const input = { requestEnvelope: { request: { status: { code: 200 } } } };
+      const input = { requestEnvelope: { request: {} } };
       expect(await handler.handle(input as any)).to.eql(output);
       // assert updateContext callback
       const fn = utils.updateContext.args[0][1];
@@ -92,9 +91,9 @@ describe('purchase handler unit tests', () => {
       fn(context);
 
       const fn2 = context.storage.produce.args[0][0];
-      const draft = { [S.PAYMENT]: { status: null } };
+      const draft = { [S.CANCEL_PAYMENT]: { status: null } };
       fn2(draft);
-      expect(draft[S.PAYMENT]).to.eql({ status: false });
+      expect(draft[S.CANCEL_PAYMENT]).to.eql({ status: false });
     });
 
     it('no storage payment', async () => {
@@ -105,7 +104,7 @@ describe('purchase handler unit tests', () => {
         updateContext: sinon.stub(),
       };
 
-      const handler = PurchaseHandlerGenerator(utils as any);
+      const handler = CancelPurchaseHandlerGenerator(utils as any);
 
       const input = { requestEnvelope: { request: {} } };
       expect(await handler.handle(input as any)).to.eql(output);
