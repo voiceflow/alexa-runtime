@@ -6,20 +6,26 @@ import { DisplayInfo } from '@/lib/services/voiceflow/handlers/display/responseB
 
 import { updateContext } from '../utils';
 
-enum Request {
+export enum Request {
   SESSION_ENDED = 'SessionEndedRequest',
 }
 
-enum ErrorType {
+export enum ErrorType {
   INVALID_RESPONSE = 'INVALID_RESPONSE',
   INTERNAL_SERVICE_ERROR = 'INTERNAL_SERVICE_ERROR',
 }
 
-enum RequestReason {
+export enum RequestReason {
   ERROR = 'ERROR',
 }
 
-const SessionEndedHandler: RequestHandler = {
+const utilsObj = {
+  // eslint-disable-next-line no-console
+  log: console.warn,
+  updateContext,
+};
+
+export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
@@ -29,10 +35,10 @@ const SessionEndedHandler: RequestHandler = {
     const request = input.requestEnvelope.request as SessionEndedRequest;
     const errorType = request.error?.type;
 
-    await updateContext(input, (context) => {
+    await utils.updateContext(input, (context) => {
       if (errorType === ErrorType.INVALID_RESPONSE || errorType === ErrorType.INTERNAL_SERVICE_ERROR) {
         // eslint-disable-next-line no-console
-        console.warn(
+        utils.log(
           'errorType=%s, versionID=%s, storage=%s, turn=%s, variables=%s',
           errorType,
           context.versionID,
@@ -45,7 +51,7 @@ const SessionEndedHandler: RequestHandler = {
 
       if (request.reason === RequestReason.ERROR) {
         // eslint-disable-next-line no-console
-        console.warn('error=%s, versionID=%s', request, context.versionID);
+        utils.log('error=%s, versionID=%s', request, context.versionID);
       }
 
       const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
@@ -61,6 +67,6 @@ const SessionEndedHandler: RequestHandler = {
 
     return input.responseBuilder.getResponse();
   },
-};
+});
 
-export default SessionEndedHandler;
+export default SessionEndedHandlerGenerator(utilsObj);
