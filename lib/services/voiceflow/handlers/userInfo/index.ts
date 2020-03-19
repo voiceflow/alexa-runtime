@@ -9,7 +9,11 @@ export type UserInfo = {
   permissions?: Permission[];
 };
 
-const UserInfoHandler: Handler<UserInfo> = {
+const utilsObj = {
+  isPermissionGranted,
+};
+
+export const UserInfoHandlerGenerator = (utils: typeof utilsObj): Handler<UserInfo> => ({
   canHandle: (block) => {
     return !!block.permissions;
   },
@@ -17,7 +21,7 @@ const UserInfoHandler: Handler<UserInfo> = {
     let nextId = block.fail_id ?? null;
 
     if (Array.isArray(block.permissions) && block.permissions.length) {
-      const requests = block.permissions.map((p) => isPermissionGranted(p, context, variables));
+      const requests = block.permissions.map((p) => utils.isPermissionGranted(p, context, variables));
       const results = await Promise.all(requests);
 
       if (!results.includes(false)) {
@@ -29,6 +33,6 @@ const UserInfoHandler: Handler<UserInfo> = {
 
     return nextId;
   },
-};
+});
 
-export default UserInfoHandler;
+export default UserInfoHandlerGenerator(utilsObj);
