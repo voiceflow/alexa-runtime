@@ -8,9 +8,21 @@ import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 
 import { SkillMetadata } from '../../types';
 
-const VAR_VF = 'voiceflow';
+export const VAR_VF = 'voiceflow';
 
-const initialize = async (context: Context, input: HandlerInput): Promise<void> => {
+const utilsObj = {
+  resume: {
+    createResumeFrame,
+    RESUME_DIAGRAM_ID,
+  },
+  client: {
+    Frame,
+    Store,
+  },
+  addSpeakTrace,
+};
+
+export const initializeGenerator = (utils: typeof utilsObj) => async (context: Context, input: HandlerInput): Promise<void> => {
   const { requestEnvelope } = input;
 
   // fetch the metadata for this version (project)
@@ -57,7 +69,7 @@ const initialize = async (context: Context, input: HandlerInput): Promise<void> 
   });
 
   // initialize all the global variables
-  Store.initialize(variables, meta.global, 0);
+  utils.client.Store.initialize(variables, meta.global, 0);
 
   // end any existing stream
   if (storage.get(S.STREAM_PLAY)) {
@@ -71,26 +83,26 @@ const initialize = async (context: Context, input: HandlerInput): Promise<void> 
   if (shouldRestart) {
     // start the stack with just the root flow
     stack.flush();
-    stack.push(new Frame({ diagramID: meta.diagram }));
+    stack.push(new utils.client.Frame({ diagramID: meta.diagram }));
   } else if (meta.resume_prompt) {
     // resume prompt flow - use command flow logic
     stack.top().storage.set(F.CALLED_COMMAND, true);
 
     // if there is an existing resume flow, remove itself and anything above it
-    const resumeStackIndex = stack.getFrames().findIndex((frame) => frame.getDiagramID() === RESUME_DIAGRAM_ID);
+    const resumeStackIndex = stack.getFrames().findIndex((frame) => frame.getDiagramID() === utils.resume.RESUME_DIAGRAM_ID);
     if (resumeStackIndex >= 0) {
       stack.popTo(resumeStackIndex);
     }
 
-    stack.push(createResumeFrame(meta.resume_prompt));
+    stack.push(utils.resume.createResumeFrame(meta.resume_prompt));
   } else {
     // give context to where the user left off with last speak block
     stack.top().storage.delete(F.CALLED_COMMAND);
     const lastSpeak = stack.top().storage.get(F.SPEAK) ?? '';
 
     storage.set(S.OUTPUT, lastSpeak);
-    addSpeakTrace(context, lastSpeak);
+    utils.addSpeakTrace(context, lastSpeak);
   }
 };
 
-export default initialize;
+export default initializeGenerator(utilsObj);
