@@ -118,7 +118,7 @@ const streamStateHandler: Handler<any> = {
     }
 
     // request for this turn has been processed, delete request
-    context.turn.set(T.REQUEST, null);
+    context.turn.delete(T.REQUEST);
     return nextId;
   },
 };
