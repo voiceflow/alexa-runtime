@@ -35,7 +35,7 @@ type StreamBlock = {
   title: string;
 };
 
-type StreamPlay = {
+export type StreamPlay = {
   action: StreamAction;
   url: string;
   loop: boolean;
