@@ -15,7 +15,7 @@ class Multimodal {
         return null;
       }
 
-      return JSON.parse(data?.document);
+      return JSON.parse(data.document);
     } catch (e) {
       return null;
     }
