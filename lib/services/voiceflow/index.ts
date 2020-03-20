@@ -6,7 +6,6 @@ import { executeEvents } from '@/lib/services/voiceflow/handlers/events';
 import { Config } from '@/types';
 
 import { ServiceMap } from '..';
-import { addFlowTrace, addSpeakTrace } from '../test/utils';
 import handlers from './handlers';
 
 const Voiceflow = (services: ServiceMap, config: Config) => {
@@ -24,7 +23,7 @@ const Voiceflow = (services: ServiceMap, config: Config) => {
   client.setEvent(EventType.stackDidChange, ({ context }) => {
     const diagramID = context.stack.top()?.getDiagramID();
 
-    addFlowTrace(context, diagramID);
+    context.trace.flow(diagramID);
   });
 
   client.setEvent(EventType.frameDidFinish, ({ context }) => {
@@ -36,7 +35,7 @@ const Voiceflow = (services: ServiceMap, config: Config) => {
         context.storage.produce((draft) => {
           draft[S.OUTPUT] += output;
         });
-        addSpeakTrace(context, output);
+        context.trace.speak(output);
       }
     }
   });
