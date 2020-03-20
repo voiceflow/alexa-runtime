@@ -87,11 +87,15 @@ export const _streamMetaData = (streamPlay: StreamPlay) => {
   return { metaData, token, url, offset };
 };
 
-export const StreamResponseBuilder: ResponseBuilder = (context, builder) => {
+const responseUtils = {
+  _streamMetaData,
+};
+
+export const StreamResponseBuilderGenerator = (u: typeof responseUtils): ResponseBuilder => (context, builder) => {
   const handlerInput = context.turn.get(T.HANDLER_INPUT) as HandlerInput;
   const streamPlay = context.storage.get(S.STREAM_PLAY);
 
-  if (handlerInput?.requestEnvelope.context && handlerInput?.requestEnvelope.context.AudioPlayer && streamPlay) {
+  if (handlerInput?.requestEnvelope.context?.AudioPlayer && streamPlay) {
     context.storage.produce((draft) => {
       draft[S.STREAM_PLAY].offset = handlerInput.requestEnvelope.context.AudioPlayer?.offsetInMilliseconds;
     });
@@ -106,7 +110,7 @@ export const StreamResponseBuilder: ResponseBuilder = (context, builder) => {
     switch (streamPlay.action) {
       case StreamAction.RESUME:
       case StreamAction.START: {
-        const { url, token, offset, metaData } = _streamMetaData(streamPlay);
+        const { url, token, offset, metaData } = u._streamMetaData(streamPlay);
         if (!!url && !!token) {
           context.storage.produce((draft) => {
             draft[S.STREAM_PLAY].token = token;
@@ -129,13 +133,19 @@ export const StreamResponseBuilder: ResponseBuilder = (context, builder) => {
   }
 };
 
-const StreamHandler: Handler<StreamBlock> = {
+export const StreamResponseBuilder = StreamResponseBuilderGenerator(responseUtils);
+
+const handlerUtils = {
+  regexVariables,
+};
+
+export const StreamHandlerGenerator = (u: typeof handlerUtils): Handler<StreamBlock> => ({
   canHandle: (block) => {
     return !!block.play;
   },
   handle: (block, context, variables) => {
     const variablesMap = variables.getState();
-    const audioUrl = regexVariables(block.play, variablesMap);
+    const audioUrl = u.regexVariables(block.play, variablesMap);
 
     context.storage.set(S.STREAM_PLAY, {
       action: StreamAction.START,
@@ -146,12 +156,12 @@ const StreamHandler: Handler<StreamBlock> = {
       PAUSE_ID: block.PAUSE_ID,
       NEXT: block.NEXT,
       PREVIOUS: block.PREVIOUS,
-      title: regexVariables(block.title, variablesMap),
-      description: regexVariables(block.description, variablesMap),
+      title: u.regexVariables(block.title, variablesMap),
+      description: u.regexVariables(block.description, variablesMap),
       regex_title: block.title,
       regex_description: block.description,
-      icon_img: regexVariables(block.icon_img, variablesMap),
-      background_img: regexVariables(block.background_img, variablesMap),
+      icon_img: u.regexVariables(block.icon_img, variablesMap),
+      background_img: u.regexVariables(block.background_img, variablesMap),
     } as StreamPlay);
 
     const streamPause = context.storage.get(S.STREAM_PAUSE);
@@ -169,6 +179,6 @@ const StreamHandler: Handler<StreamBlock> = {
     context.end();
     return null;
   },
-};
+});
 
-export default StreamHandler;
+export default StreamHandlerGenerator(handlerUtils);
