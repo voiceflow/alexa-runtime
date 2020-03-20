@@ -8,14 +8,14 @@ export enum Storage {
   ACCESS_TOKEN = 'accessToken',
   PERMISSIONS = 'permissions',
   PAYMENT = 'payment',
-  CANCEL_PAYMENT = 'cancel_payment',
+  CANCEL_PAYMENT = 'cancelPayment',
   SUPPORTED_INTERFACES = 'supported_interfaces',
   DISPLAY_INFO = 'displayInfo',
   NEXT_ID = 'next_id',
-  STREAM_PLAY = 'stream_play',
-  STREAM_PAUSE = 'stream_pause',
-  STREAM_FINISHED = 'stream_finished',
-  STREAM_TEMP = 'stream_temp',
+  STREAM_PLAY = 'streamPlay',
+  STREAM_PAUSE = 'streamPause',
+  STREAM_FINISHED = 'streamFinished',
+  STREAM_TEMP = 'streamTemp',
 }
 
 export enum Turn {

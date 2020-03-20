@@ -45,6 +45,7 @@
     "moment": "^2.24.0",
     "randomstring": "^1.1.5",
     "regenerator-runtime": "^0.13.3",
+    "talisman": "^1.1.1",
     "words-to-numbers": "^1.5.1"
   },
   "devDependencies": {
