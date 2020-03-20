@@ -27,13 +27,14 @@ class TestManager extends AbstractManager {
     const stream = context.storage.get(S.STREAM_PLAY) as StreamPlay | undefined;
 
     if (stream) {
-      switch (stream.action) {
+      const { action, url, token, loop } = stream;
+      switch (action) {
         case StreamAction.START:
         case StreamAction.RESUME:
-          await context.trace.stream(stream.url, stream.loop ? TraceStreamAction.LOOP : TraceStreamAction.PLAY);
+          context.trace.stream(url, token, loop ? TraceStreamAction.LOOP : TraceStreamAction.PLAY);
           break;
         case StreamAction.PAUSE:
-          await context.trace.stream(stream.url, TraceStreamAction.PAUSE);
+          context.trace.stream(url, token, TraceStreamAction.PAUSE);
           break;
         default:
           break;
@@ -41,7 +42,7 @@ class TestManager extends AbstractManager {
     }
 
     if (context.stack.isEmpty() || context.turn.get(T.END)) {
-      await context.trace.end();
+      context.trace.end();
     }
 
     return {

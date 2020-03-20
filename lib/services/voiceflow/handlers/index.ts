@@ -2,6 +2,7 @@ import AccountLinkingHandler, { AccountLinkingResponseBuilder } from './accountL
 import CancelPaymentHandler, { CancelPaymentResponseBuilder } from './cancelPayment';
 import CaptureHandler from './capture';
 import CardHandler, { CardResponseBuilder } from './card';
+import ChoiceHandler from './choice';
 import DisplayHandler, { DisplayResponseBuilder } from './display';
 import InteractionHandler from './interaction';
 import PaymentHandler, { PaymentResponseBuilder } from './payment';
@@ -38,4 +39,5 @@ export default [
   ResetHandler,
   DisplayHandler,
   StreamHandler,
+  ChoiceHandler,
 ];
