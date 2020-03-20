@@ -24,7 +24,8 @@ class TestManager extends AbstractManager {
 
     await context.update();
 
-    const stream = context.storage.get(S.STREAM_PLAY) as StreamPlay;
+    const stream = context.storage.get(S.STREAM_PLAY) as StreamPlay | undefined;
+
     if (stream) {
       switch (stream.action) {
         case StreamAction.START:
