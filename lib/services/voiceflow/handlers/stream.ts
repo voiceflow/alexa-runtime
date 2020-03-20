@@ -41,6 +41,7 @@ export type StreamPlay = {
   loop: boolean;
   offset: number;
   nextId: string;
+  token: string;
   PAUSE_ID: string;
   NEXT: string;
   PREVIOUS: string;
@@ -142,6 +143,7 @@ const StreamHandler: Handler<StreamBlock> = {
       url: audioUrl,
       loop: block.loop,
       offset: 0,
+      token: block.blockID,
       nextId: block.nextId,
       PAUSE_ID: block.PAUSE_ID,
       NEXT: block.NEXT,

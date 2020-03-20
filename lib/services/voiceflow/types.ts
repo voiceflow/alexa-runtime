@@ -29,6 +29,7 @@ export enum IntentName {
 
 export interface IntentRequestPayload {
   intent: Intent;
+  input?: string; // test tool only
 }
 
 export interface IntentRequest extends Request {

@@ -28,6 +28,8 @@ const InteractionHandler: Handler<Interaction> = {
 
     if (request?.type !== RequestType.INTENT) {
       addRepromptIfExists(block, context, variables);
+      context.trace.choice(block.interactions.map(({ intent }) => ({ name: intent })));
+
       // quit cycleStack without ending session by stopping on itself
       return block.blockID;
     }
