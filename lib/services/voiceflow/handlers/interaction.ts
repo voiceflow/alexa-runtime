@@ -45,7 +45,7 @@ const InteractionHandler: Handler<Interaction> = {
         variableMap = choice.mappings ?? null;
         nextId = block.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
 
-        context.trace.debug(`matched ${choice.intent} - PATH ${i + 1}`);
+        context.trace.debug(`matched choice **${choice.intent}** - taking path ${i + 1}`);
       }
     });
 
