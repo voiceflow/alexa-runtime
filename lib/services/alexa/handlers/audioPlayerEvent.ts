@@ -7,11 +7,11 @@ import { S } from '@/lib/constants';
 import { _streamMetaData, AudioDirective, StreamAction } from '../../voiceflow/handlers/stream';
 import { update } from './lifecycle';
 
-enum Request {
+export enum Request {
   AUDIO_PLAYER = 'AudioPlayer.',
 }
 
-enum AudioEvent {
+export enum AudioEvent {
   PlaybackStarted = 'PlaybackStarted',
   PlaybackFinished = 'PlaybackFinished',
   PlaybackStopped = 'PlaybackStopped',
@@ -19,7 +19,12 @@ enum AudioEvent {
   PlaybackFailed = 'PlaybackFailed',
 }
 
-const AudioPlayerEventHandler: RequestHandler = {
+const utilsObj = {
+  _streamMetaData,
+  update,
+};
+
+export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
@@ -57,7 +62,7 @@ const AudioPlayerEventHandler: RequestHandler = {
 
         if (streamPlay.loop) {
           // currect stream loops
-          const { url, token, metaData } = _streamMetaData(streamPlay);
+          const { url, token, metaData } = utils._streamMetaData(streamPlay);
 
           if (url && token) {
             storage.produce((draft: any) => {
@@ -70,10 +75,10 @@ const AudioPlayerEventHandler: RequestHandler = {
           const tempContext = voiceflow.createContext(versionID, rawState as State);
           tempContext.storage.set(S.STREAM_PLAY, { ...tempContext.storage.get(S.STREAM_PLAY), action: StreamAction.NEXT });
 
-          await update(tempContext);
+          await utils.update(tempContext);
 
           if (tempContext.storage.get(S.STREAM_PLAY)?.action === StreamAction.START) {
-            const { url, token, metaData } = _streamMetaData(tempContext.storage.get(S.STREAM_PLAY));
+            const { url, token, metaData } = utils._streamMetaData(tempContext.storage.get(S.STREAM_PLAY));
 
             if (url && token) {
               tempContext.storage.produce((draft: any) => {
@@ -85,7 +90,7 @@ const AudioPlayerEventHandler: RequestHandler = {
           }
         } else if (streamPlay.action === StreamAction.RESUME && storage.get(S.STREAM_TEMP)) {
           // resume with next stream present
-          const { url, token, metaData } = _streamMetaData(storage.get(S.STREAM_TEMP)[S.STREAM_PLAY]);
+          const { url, token, metaData } = utils._streamMetaData(storage.get(S.STREAM_TEMP)[S.STREAM_PLAY]);
 
           if (url && token) {
             storage.produce((draft: any) => {
@@ -105,6 +110,6 @@ const AudioPlayerEventHandler: RequestHandler = {
     input.attributesManager.setPersistentAttributes(context.getRawState());
     return builder.getResponse();
   },
-};
+});
 
-export default AudioPlayerEventHandler;
+export default AudioPlayerEventHandlerGenerator(utilsObj);
