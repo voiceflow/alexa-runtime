@@ -1,7 +1,6 @@
 import { ResponseBuilder } from '@voiceflow/backend-utils';
 import { ValidationChain } from 'express-validator';
 import { Middleware } from 'express-validator/src/base';
-import _ from 'lodash';
 
 import { AnyClass } from '@/types';
 
@@ -47,36 +46,6 @@ export const routeWrapper = (routers: ControllerMap | MiddlewareMap) => {
       }
     });
   });
-};
-
-/*
-  Recursively apply _.filter to collection, returning all results in array.
-  item refers to the actual object, path refers to the path that the object is located at
-*/
-
-export const deepFind = <T = any>(collection: any, predicate: any) => {
-  let results: { item: T; path: string[] }[] = [];
-
-  const find = (subCollection: any, path: string[]) => {
-    if (!_.isObject(subCollection)) {
-      return;
-    }
-
-    // resolve TS type
-    const _subCollection = subCollection as Record<string, any>;
-
-    const matches = _.filter(_subCollection, predicate);
-
-    if (matches) {
-      results = results.concat(matches.map((item) => ({ item, path })));
-    }
-
-    Object.keys(_subCollection).forEach((key) => find(_subCollection[key], path.concat([key])));
-  };
-
-  find(collection, []);
-
-  return results;
 };
 
 export const isConstructor = <T extends AnyClass>(clazz: T | unknown): clazz is T => {
