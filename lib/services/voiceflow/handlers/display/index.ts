@@ -20,11 +20,16 @@ export type Display = {
   update_on_change?: boolean;
 };
 
-const getVariables = (str: string): string[] => {
+export const getVariables = (str: string): string[] => {
   return (str.match(/\{[\w\d]+\}/g) || []).map((s) => s.slice(1, -1));
 };
 
-const DisplayHandler: Handler<Display> = {
+const utilsObj = {
+  deepFindVideos,
+  getVariables,
+};
+
+export const DisplayHandlerGerator = (utils: typeof utilsObj): Handler<Display> => ({
   canHandle: (block) => {
     return !!block.display_id;
   },
@@ -45,7 +50,7 @@ const DisplayHandler: Handler<Display> = {
       dataSource,
       shouldUpdate: true,
       currentDisplay: displayID,
-      dataSourceVariables: getVariables(dataSource),
+      dataSourceVariables: utils.getVariables(dataSource),
     };
 
     context.storage.set(S.DISPLAY_INFO, displayInfo);
@@ -56,7 +61,7 @@ const DisplayHandler: Handler<Display> = {
       return nextId;
     }
 
-    const results = deepFindVideos(document);
+    const results = utils.deepFindVideos(document);
 
     const onEndEvents = _.flatMap(results, (result) => result.item.onEnd).filter(Boolean) as VideoEvent[];
 
@@ -71,6 +76,6 @@ const DisplayHandler: Handler<Display> = {
 
     return nextId;
   },
-};
+});
 
-export default DisplayHandler;
+export default DisplayHandlerGerator(utilsObj);
