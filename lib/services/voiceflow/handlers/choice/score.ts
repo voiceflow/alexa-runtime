@@ -3,7 +3,7 @@ import jaccard from 'talisman/metrics/jaccard';
 
 export type Choice = { value: string; index: number };
 
-const getBestScore = (input: string, choices: Array<Choice>, tolerance = 0.9): number | null => {
+const getBestScore = (input: string, choices: Array<Choice>, tolerance = 0.9): Choice | null => {
   if (!input) return null;
 
   const best: { choice: null | Choice; score: number } = {
@@ -28,7 +28,7 @@ const getBestScore = (input: string, choices: Array<Choice>, tolerance = 0.9): n
     }
   });
 
-  return best.choice?.index ?? null;
+  return best.choice ?? null;
 };
 
 export default getBestScore;
