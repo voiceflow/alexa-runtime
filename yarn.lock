@@ -868,10 +868,10 @@
     randomstring "^1.1.5"
     sinon "^7.5.0"
 
-"@voiceflow/client@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/client/-/client-1.2.0.tgz#01629262b71508bf35380fa989860f4d6d4979fe"
-  integrity sha512-705LzHtd1uLNCZetMT76K5xAS8z+q3A6pLnAIjGTyX+paS4hvZye1Nh2nPVdIGM2tq3Gs2Av4DchzpA65A1S6w==
+"@voiceflow/client@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@voiceflow/client/-/client-1.2.1.tgz#0afb941f31874a1a3a8f1a81c8705d8f2cb0eb0c"
+  integrity sha512-xF7yZvizeEQ1grR+1eh8ztlhgc1ZFQr+exR8QgGr2r0wbl9fP1u4jFAfbLNnBlOc7uQcrtiZ0j9vz2hsR1an8Q==
   dependencies:
     axios "^0.19.0"
     bluebird "^3.7.2"

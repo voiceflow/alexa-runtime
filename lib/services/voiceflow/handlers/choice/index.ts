@@ -21,6 +21,7 @@ const utilsObj = {
   CommandHandler,
 };
 
+// THIS HANDLER IS USED PURELY FOR THE TESTING TOOL, NOT FOR ALEXA
 export const ChoiceHandlerGenerator = (utils: typeof utilsObj): Handler<Choice> => ({
   canHandle: (block) => {
     return !!block.choices;
@@ -41,8 +42,6 @@ export const ChoiceHandlerGenerator = (utils: typeof utilsObj): Handler<Choice> 
     const { input } = request.payload;
 
     if (input) {
-      let result = null;
-
       // flatten inputs
       const choices = block.inputs.reduce((acc: Array<{ value: string; index: number }>, option, index) => {
         option.forEach((item) => {
@@ -52,10 +51,11 @@ export const ChoiceHandlerGenerator = (utils: typeof utilsObj): Handler<Choice> 
         return acc;
       }, []);
 
-      result = utils.getBestScore(input, choices);
+      const choice = utils.getBestScore(input, choices);
 
-      if (result != null && result in block.nextIds) {
-        nextId = block.nextIds[result];
+      if (choice != null && choice.index in block.nextIds) {
+        context.trace.debug(`matched choice **${choice.value}** - taking path ${choice.index + 1}`);
+        nextId = block.nextIds[choice.index];
       }
     }
 

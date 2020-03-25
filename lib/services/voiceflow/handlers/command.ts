@@ -57,6 +57,8 @@ const CommandHandler = {
       variableMap = command.mappings;
 
       if (command.diagram_id) {
+        context.trace.debug(`matched command **${command.intent}** - adding command flow`);
+
         context.stack.top().storage.set(F.CALLED_COMMAND, true);
 
         // Reset state to beginning of new diagram and store current line to the stack
@@ -67,9 +69,13 @@ const CommandHandler = {
           // otherwise destructive and pop off everything before the command
           context.stack.popTo(index + 1);
           context.stack.top().setBlockID(command.next);
+
+          context.trace.debug(`matched intent **${command.intent}** - exiting flows and jumping to block`);
         } else if (index === context.stack.getSize() - 1) {
           // jumping to an intent within the same flow
           nextId = command.next;
+
+          context.trace.debug(`matched intent **${command.intent}** - jumping to block`);
         }
       }
     }
