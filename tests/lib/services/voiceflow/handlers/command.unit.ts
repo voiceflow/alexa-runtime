@@ -162,15 +162,20 @@ describe('capture handler unit tests', async () => {
       });
 
       it('diagram_id', () => {
-        const res = { command: { diagram_id: 'diagram-id' } };
+        const res = { command: { diagram_id: 'diagram-id', intent: 'intent' } };
         const utils = { getCommand: sinon.stub().returns(res), Frame: sinon.stub() };
 
         const commandHandler = CommandHandlerGenerator(utils as any);
 
         const topFrame = { storage: { set: sinon.stub() } };
-        const context = { stack: { push: sinon.stub(), top: sinon.stub().returns(topFrame) }, turn: { delete: sinon.stub() } };
+        const context = {
+          trace: { debug: sinon.stub() },
+          stack: { push: sinon.stub(), top: sinon.stub().returns(topFrame) },
+          turn: { delete: sinon.stub() },
+        };
 
         expect(commandHandler.handle(context as any, null as any)).to.eql(null);
+        expect(context.trace.debug.args).to.eql([[`matched command **${res.command.intent}** - adding command flow`]]);
         expect(topFrame.storage.set.args).to.eql([[F.CALLED_COMMAND, true]]);
         expect(utils.Frame.args).to.eql([[{ diagramID: res.command.diagram_id }]]);
         expect(context.stack.push.args).to.eql([[{}]]);
@@ -180,23 +185,29 @@ describe('capture handler unit tests', async () => {
         it('last frame in stack', () => {
           const stackSize = 3;
 
-          const res = { command: { next: 'next-id' }, index: stackSize - 1 };
+          const res = { command: { next: 'next-id', intent: 'intent' }, index: stackSize - 1 };
           const utils = { getCommand: sinon.stub().returns(res) };
           const commandHandler = CommandHandlerGenerator(utils as any);
 
-          const context = { turn: { delete: sinon.stub() }, stack: { getSize: sinon.stub().returns(stackSize) } };
+          const context = {
+            trace: { debug: sinon.stub() },
+            turn: { delete: sinon.stub() },
+            stack: { getSize: sinon.stub().returns(stackSize) },
+          };
 
           expect(commandHandler.handle(context as any, null as any)).to.eql(res.command.next);
+          expect(context.trace.debug.args).to.eql([[`matched intent **${res.command.intent}** - jumping to block`]]);
         });
 
         it('not last frame', () => {
           const index = 1;
-          const res = { command: { next: 'next-id' }, index };
+          const res = { command: { next: 'next-id', intent: 'intent' }, index };
           const utils = { getCommand: sinon.stub().returns(res) };
           const commandHandler = CommandHandlerGenerator(utils as any);
 
           const topFrame = { setBlockID: sinon.stub() };
           const context = {
+            trace: { debug: sinon.stub() },
             turn: { delete: sinon.stub() },
             stack: { getSize: sinon.stub().returns(3), top: sinon.stub().returns(topFrame), popTo: sinon.stub() },
           };
@@ -204,6 +215,7 @@ describe('capture handler unit tests', async () => {
           expect(commandHandler.handle(context as any, null as any)).to.eql(null);
           expect(context.stack.popTo.args).to.eql([[index + 1]]);
           expect(topFrame.setBlockID.args).to.eql([[res.command.next]]);
+          expect(context.trace.debug.args).to.eql([[`matched intent **${res.command.intent}** - exiting flows and jumping to block`]]);
         });
 
         it('index bigger than stack size', () => {

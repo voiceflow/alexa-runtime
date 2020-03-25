@@ -44,6 +44,7 @@ describe('stream handler unit tests', () => {
         const variables = { getState: sinon.stub().returns(variablesMap) };
         const context = { storage: { set: sinon.stub(), get: sinon.stub().returns(null) }, end: sinon.stub() };
         const block = {
+          blockID: 'block-id',
           play: 'play',
           nextId: 'next-id',
           NEXT: 'NEXT',
@@ -73,6 +74,7 @@ describe('stream handler unit tests', () => {
               url: audioUrl,
               loop: block.loop,
               offset: 0,
+              token: block.blockID,
               nextId: block.nextId,
               PAUSE_ID: block.PAUSE_ID,
               NEXT: block.NEXT,

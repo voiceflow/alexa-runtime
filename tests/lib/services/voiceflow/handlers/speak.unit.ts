@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { F, S } from '@/lib/constants';
-import SpeakHandler, { SpeakHandlerGenerator } from '@/lib/services/voiceflow/handlers/speak';
+import SpeakHandler from '@/lib/services/voiceflow/handlers/speak';
 
 describe('speak handler unit tests', async () => {
   afterEach(() => sinon.restore());
@@ -33,14 +33,13 @@ describe('speak handler unit tests', async () => {
         storage: { set: sinon.stub() },
       };
       const context = {
+        trace: { speak: sinon.stub() },
         storage: { produce: sinon.stub() },
         stack: { top: sinon.stub().returns(topFrame) },
       };
       const variables = { getState: sinon.stub().returns({}) };
 
-      const utils = { addSpeakTrace: sinon.stub() };
-
-      expect(SpeakHandlerGenerator(utils).handle(block as any, context as any, variables as any, null as any)).to.eql(block.nextId);
+      expect(SpeakHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.nextId);
       expect(topFrame.storage.set.args[0][0]).to.eql(F.SPEAK);
       // output is one of the options in random_speak
       expect(block.random_speak.includes(topFrame.storage.set.args[0][1])).to.eql(true);
@@ -55,15 +54,14 @@ describe('speak handler unit tests', async () => {
         storage: { set: sinon.stub() },
       };
       const context = {
+        trace: { speak: sinon.stub() },
         storage: { produce: sinon.stub() },
         stack: { top: sinon.stub().returns(topFrame) },
       };
       const varState = { var: 1.234, var1: 'here' };
       const variables = { getState: sinon.stub().returns(varState) };
 
-      const utils = { addSpeakTrace: sinon.stub() };
-
-      expect(SpeakHandlerGenerator(utils).handle(block as any, context as any, variables as any, null as any)).to.eql(null);
+      expect(SpeakHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(null);
       // output has vars replaced and numbers turned to 2digits floats
       expect(topFrame.storage.set.args).to.eql([[F.SPEAK, 'random 1.23 or here']]);
 
@@ -76,7 +74,7 @@ describe('speak handler unit tests', async () => {
       fn(draft);
 
       expect(draft[S.OUTPUT]).to.eq('previous random 1.23 or here');
-      expect(utils.addSpeakTrace.args).to.eql([[context, 'random 1.23 or here']]);
+      expect(context.trace.speak.args).to.eql([['random 1.23 or here']]);
     });
 
     it('speak is not string', () => {

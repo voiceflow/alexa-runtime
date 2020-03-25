@@ -30,7 +30,6 @@ describe('initialize lifecycle unit tests', async () => {
           },
           Frame: sinon.stub().returns('frame'),
         },
-        addSpeakTrace: sinon.stub(),
       };
 
       const metaObj = {
@@ -69,6 +68,9 @@ describe('initialize lifecycle unit tests', async () => {
         variables: {
           get: sinon.stub(),
           merge: sinon.stub(),
+        },
+        trace: {
+          speak: sinon.stub(),
         },
       };
 
@@ -301,7 +303,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
           expect(context.storage.set.args[5]).to.eql([S.OUTPUT, '']);
-          expect(utils.addSpeakTrace.args).to.eql([[context, '']]);
+          expect(context.trace.speak.args).to.eql([['']]);
         });
 
         it('with last speak', async () => {
@@ -319,7 +321,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
           expect(context.storage.set.args[5]).to.eql([S.OUTPUT, lastSpeak]);
-          expect(utils.addSpeakTrace.args).to.eql([[context, lastSpeak]]);
+          expect(context.trace.speak.args).to.eql([[lastSpeak]]);
         });
       });
     });

@@ -21,10 +21,6 @@ describe('voiceflowManager unit tests', async () => {
           },
           Client: sinon.stub().returns(clientObj),
           executeEvents: sinon.stub(),
-          trace: {
-            addSpeakTrace: sinon.stub(),
-            addFlowTrace: sinon.stub(),
-          },
         },
         secretsProvider: {
           get: sinon.stub().returns('random-secret'),
@@ -107,11 +103,11 @@ describe('voiceflowManager unit tests', async () => {
 
         const fn = clientObj.setEvent.args[1][1];
 
-        const context = { stack: { top: sinon.stub().returns(null) } };
+        const context = { trace: { flow: sinon.stub() }, stack: { top: sinon.stub().returns(null) } };
 
         fn({ context });
 
-        expect(services.utils.trace.addFlowTrace.args).to.eql([[context, undefined]]);
+        expect(context.trace.flow.args).to.eql([[undefined]]);
       });
 
       it('with top frame', () => {
@@ -124,11 +120,11 @@ describe('voiceflowManager unit tests', async () => {
         const fn = clientObj.setEvent.args[1][1];
 
         const diagramID = 'diagram-id';
-        const context = { stack: { top: sinon.stub().returns({ getDiagramID: sinon.stub().returns(diagramID) }) } };
+        const context = { trace: { flow: sinon.stub() }, stack: { top: sinon.stub().returns({ getDiagramID: sinon.stub().returns(diagramID) }) } };
 
         fn({ context });
 
-        expect(services.utils.trace.addFlowTrace.args).to.eql([[context, diagramID]]);
+        expect(context.trace.flow.args).to.eql([[diagramID]]);
       });
     });
 
@@ -225,6 +221,7 @@ describe('voiceflowManager unit tests', async () => {
           delete: sinon.stub(),
         };
         const context = {
+          trace: { speak: sinon.stub() },
           stack: {
             top: sinon.stub().returns({ storage: storageTop }),
           },
@@ -238,7 +235,7 @@ describe('voiceflowManager unit tests', async () => {
         expect(topStorageGet.args[0]).to.eql([F.CALLED_COMMAND]);
         expect(storageTop.delete.args[0]).to.eql([F.CALLED_COMMAND]);
         expect(topStorageGet.args[1]).to.eql([F.SPEAK]);
-        expect(services.utils.trace.addSpeakTrace.args).to.eql([[context, fSpeak]]);
+        expect(context.trace.speak.args).to.eql([[fSpeak]]);
 
         const fn2 = context.storage.produce.args[0][0];
 
