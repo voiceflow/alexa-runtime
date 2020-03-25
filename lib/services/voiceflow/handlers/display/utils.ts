@@ -31,7 +31,7 @@ export const deepFind = <T = any>(collection: any, predicate: any) => {
 
     const matches = _.filter(_subCollection, predicate);
 
-    if (matches) {
+    if (matches.length) {
       results = results.concat(matches.map((item) => ({ item, path })));
     }
 
