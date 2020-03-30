@@ -135,7 +135,7 @@
     "url": "git+https://github.com/voiceflow/alexa.git"
   },
   "scripts": {
-    "build": "npm run clean && ttsc --project ./tsconfig.build.json",
+    "build": "npm run clean && ttsc --project ./tsconfig.build.json && cp app.config.js yarn.lock build/",
     "clean": "rimraf build",
     "deploy:staging": "git push origin $(git branch | grep \\* | cut -d ' ' -f2):staging -f",
     "gen-certs": "scripts/generate_certs.sh",
