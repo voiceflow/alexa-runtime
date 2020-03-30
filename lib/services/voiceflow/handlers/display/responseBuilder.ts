@@ -22,7 +22,7 @@ export type DisplayInfo = {
   shouldUpdateOnResume?: boolean;
 };
 
-const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
+export const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
   const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
 
   if (!displayInfo?.shouldUpdate || displayInfo.currentDisplay === undefined) {
@@ -98,7 +98,7 @@ const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
   }
 };
 
-const CommandsResponseBuilder: ResponseBuilder = async (context, builder) => {
+export const CommandsResponseBuilder: ResponseBuilder = async (context, builder) => {
   const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
 
   if (!displayInfo?.commands) {
@@ -115,7 +115,7 @@ const CommandsResponseBuilder: ResponseBuilder = async (context, builder) => {
     }
   }
 
-  if (commands) {
+  if (commands.length) {
     builder.addDirective({
       type: 'Alexa.Presentation.APL.ExecuteCommands',
       token: context.versionID,

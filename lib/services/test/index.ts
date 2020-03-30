@@ -14,8 +14,8 @@ class TestManager extends AbstractManager {
   async invoke(state: State, request?: Request) {
     const { voiceflow } = this.services;
 
-    const context = voiceflow.createContext(TEST_VERSION_ID, state as State, request, {
-      endpoint: `${this.config?.VF_DATA_ENDPOINT}/test`,
+    const context = voiceflow.client().createContext(TEST_VERSION_ID, state as State, request, {
+      endpoint: `${this.config.VF_DATA_ENDPOINT}/test`,
     });
 
     context.setEvent(EventType.handlerWillHandle, (event) => context.trace.block(event.block.blockID));

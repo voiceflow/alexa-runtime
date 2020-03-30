@@ -5,7 +5,7 @@ import { T } from '@/lib/constants';
 import { ResponseBuilder } from '../types';
 import { regexVariables } from '../utils';
 
-enum CardType {
+export enum CardType {
   STANDARD = 'Standard',
   SIMPLE = 'Simple',
 }
@@ -40,10 +40,14 @@ export const CardResponseBuilder: ResponseBuilder = (context, builder) => {
   }
 };
 
-const addVariables = (value: string | undefined, variables: Store, defaultValue = '') =>
-  value ? regexVariables(value, variables.getState()) : defaultValue;
+export const addVariables = (regex: typeof regexVariables) => (value: string | undefined, variables: Store, defaultValue = '') =>
+  value ? regex(value, variables.getState()) : defaultValue;
 
-const CardHandler: Handler<CardBlock> = {
+const utilsObj = {
+  addVariables: addVariables(regexVariables),
+};
+
+export const CardHandlerGenerator = (utils: typeof utilsObj): Handler<CardBlock> => ({
   canHandle: (block) => {
     return !!block.card;
   },
@@ -52,9 +56,9 @@ const CardHandler: Handler<CardBlock> = {
 
     const newCard: Required<Card> = {
       type: card.type ?? CardType.SIMPLE,
-      title: addVariables(card.title, variables),
-      text: addVariables(card.text, variables),
-      content: addVariables(card.content, variables),
+      title: utils.addVariables(card.title, variables),
+      text: utils.addVariables(card.text, variables),
+      content: utils.addVariables(card.content, variables),
       image: {
         largeImageUrl: '',
         smallImageUrl: '',
@@ -62,14 +66,14 @@ const CardHandler: Handler<CardBlock> = {
     };
 
     if (card.type === CardType.STANDARD && card.image?.largeImageUrl) {
-      newCard.image.largeImageUrl = addVariables(card.image.largeImageUrl, variables);
-      newCard.image.smallImageUrl = addVariables(card.image.smallImageUrl, variables, card.image.largeImageUrl);
+      newCard.image.largeImageUrl = utils.addVariables(card.image.largeImageUrl, variables);
+      newCard.image.smallImageUrl = utils.addVariables(card.image.smallImageUrl, variables, card.image.largeImageUrl);
     }
 
     context.turn.set(T.CARD, newCard);
 
     return block.nextId;
   },
-};
+});
 
-export default CardHandler;
+export default CardHandlerGenerator(utilsObj);
