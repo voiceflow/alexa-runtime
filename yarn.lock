@@ -993,10 +993,22 @@
   resolved "https://registry.yarnpkg.com/@voiceflow/prettier-config/-/prettier-config-1.0.4.tgz#fe3ef88f1370f326a844686b57ee15522fc03b02"
   integrity sha512-hVjP3v3uKEmbjen4dGjv4A8EEHjopvzEnNdg8KHFZnvvD1eYu4IvDAyKqoK3xGoacqcLlkBo3abyCzOaHOp0Dg==
 
-"@voiceflow/secrets-provider@^1.4.1", "@voiceflow/secrets-provider@^1.6.1":
+"@voiceflow/secrets-provider@^1.4.1":
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/@voiceflow/secrets-provider/-/secrets-provider-1.6.1.tgz#f76ca19c8e53c2887ca26c80ad50eee3a225fd2d"
   integrity sha512-v8qeAFgFOUAqWCoCF3NBbLkxCHgY96GXDGfxxF2P+1u5hWY+J6T2+2N0200pdRtq8E+xGUoFL6mtwLljG7YNIQ==
+  dependencies:
+    aws-sdk "^2.494.0"
+    bluebird "^3.5.5"
+    dotenv "^8.0.0"
+    dotenv-extended "^2.4.0"
+    node-cron "^2.0.3"
+    yaml "^1.6.0"
+
+"@voiceflow/secrets-provider@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@voiceflow/secrets-provider/-/secrets-provider-1.6.2.tgz#4a430094502849e80afa62a259eeef4bcc38d96a"
+  integrity sha512-OapDgTZcD5/XdN1pTo7Wpsaod8EKdzepMFb/T7my6EoRRFyxolFroRqAyQJ+RSdXy2mdA3Pv5Pk3xCvuagpxoA==
   dependencies:
     aws-sdk "^2.494.0"
     bluebird "^3.5.5"
