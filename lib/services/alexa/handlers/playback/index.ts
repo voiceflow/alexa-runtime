@@ -9,9 +9,13 @@ import { buildContext } from '../lifecycle';
 import { Command } from './types';
 import VideoControl from './videoControl';
 
-const MediaHandlers = [VideoControl];
+const utilsObj = {
+  MediaHandlers: [VideoControl],
+  buildContext,
+  IntentHandler,
+};
 
-const PlaybackControllerHandler: RequestHandler = {
+export const PlaybackControllerHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
@@ -43,12 +47,12 @@ const PlaybackControllerHandler: RequestHandler = {
 
     request.intent = intent;
 
-    const context = await buildContext(input);
+    const context = await utils.buildContext(input);
 
     input.context.context = context;
 
     const MediaHandler = await Promise.reduce<RequestHandler, RequestHandler | null>(
-      MediaHandlers,
+      utils.MediaHandlers,
       async (result, handler) => {
         if (result) {
           return result;
@@ -63,8 +67,8 @@ const PlaybackControllerHandler: RequestHandler = {
       null
     );
 
-    return MediaHandler ? MediaHandler.handle(input) : IntentHandler.handle(input);
+    return MediaHandler ? MediaHandler.handle(input) : utils.IntentHandler.handle(input);
   },
-};
+});
 
-export default PlaybackControllerHandler;
+export default PlaybackControllerHandlerGenerator(utilsObj);

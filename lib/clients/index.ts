@@ -16,7 +16,7 @@ export interface ClientMap extends StaticType {
  */
 const buildClients = (config: Config): ClientMap => {
   const dynamo = Dynamo(config);
-  const serverDataApi = ServerDataApi(config);
+  const serverDataApi = ServerDataApi(Static, config);
   const multimodal = Multimodal(serverDataApi);
 
   return {

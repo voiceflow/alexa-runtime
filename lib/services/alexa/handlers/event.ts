@@ -4,13 +4,17 @@ import { S } from '@/lib/constants';
 
 import { updateContext } from '../utils';
 
-enum Request {
+export enum Request {
   EVENT_ROOT = 'AlexaSkillEvent.',
   ACCEPTED = 'AlexaSkillEvent.SkillPermissionAccepted',
   CHANGED = 'AlexaSkillEvent.SkillPermissionChanged',
 }
 
-const EventHandler: RequestHandler = {
+const utilsObj = {
+  updateContext,
+};
+
+export const EventHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
     return type.startsWith(Request.EVENT_ROOT);
@@ -18,7 +22,7 @@ const EventHandler: RequestHandler = {
   async handle(input: HandlerInput) {
     const { request } = input.requestEnvelope;
 
-    if ((request.type === Request.ACCEPTED || request.type === Request.CHANGED) && request.body && Array.isArray(request.body?.acceptedPermissions)) {
+    if ((request.type === Request.ACCEPTED || request.type === Request.CHANGED) && request.body && Array.isArray(request.body.acceptedPermissions)) {
       const permissions = request.body.acceptedPermissions.reduce((acc: string[], permission) => {
         if (permission.scope) {
           acc.push(permission.scope);
@@ -27,13 +31,13 @@ const EventHandler: RequestHandler = {
         return acc;
       }, []);
 
-      await updateContext(input, (context) => {
+      await utils.updateContext(input, (context) => {
         context.storage.set(S.PERMISSIONS, permissions);
       });
     }
 
     return input.responseBuilder.getResponse();
   },
-};
+});
 
-export default EventHandler;
+export default EventHandlerGenerator(utilsObj);

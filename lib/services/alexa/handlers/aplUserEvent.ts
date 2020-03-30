@@ -8,16 +8,18 @@ import { DisplayInfo } from '@/lib/services/voiceflow/handlers/display/responseB
 import { updateContext } from '../utils';
 import IntentHandler from './intent';
 
-enum Request {
+export enum Request {
   APL_USER_EVENT = 'Alexa.Presentation.APL.UserEvent',
 }
 
-enum SourceHandler {
+export enum SourceHandler {
   END = 'End',
   PLAY = 'Play',
 }
 
-const APLUserEventHandler: RequestHandler = {
+const utilsObj = { updateContext, IntentHandler };
+
+export const APLUserEventHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
@@ -27,13 +29,13 @@ const APLUserEventHandler: RequestHandler = {
     const request = input.requestEnvelope.request as interfaces.alexa.presentation.apl.UserEvent;
 
     let hasDisplayInfo = false;
-    await updateContext(input, (context) => {
+    await utils.updateContext(input, (context) => {
       const source = request.source as undefined | { id: string; type: string; handler: string };
 
       context.storage.produce((state) => {
         let displayInfo = state[S.DISPLAY_INFO] as DisplayInfo | undefined;
 
-        if (source?.type === DOCUMENT_VIDEO_TYPE && source?.handler === SourceHandler.END && displayInfo?.playingVideos) {
+        if (source?.type === DOCUMENT_VIDEO_TYPE && source.handler === SourceHandler.END && displayInfo?.playingVideos) {
           delete displayInfo.playingVideos[source.id];
         } else if (source?.type === DOCUMENT_VIDEO_TYPE && source.handler === SourceHandler.PLAY) {
           const videoId = source.id;
@@ -56,11 +58,11 @@ const APLUserEventHandler: RequestHandler = {
     });
 
     if (hasDisplayInfo && request.arguments?.includes?.(ENDED_EVENT_PREFIX)) {
-      return IntentHandler.handle(input);
+      return utils.IntentHandler.handle(input);
     }
 
     return input.responseBuilder.getResponse();
   },
-};
+});
 
-export default APLUserEventHandler;
+export default APLUserEventHandlerGenerator(utilsObj);

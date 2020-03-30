@@ -14,7 +14,13 @@ export type Capture = {
   reprompt?: string;
 };
 
-const CaptureHandler: Handler<Capture> = {
+const utilsObj = {
+  wordsToNumbers,
+  addRepromptIfExists,
+  CommandHandler,
+};
+
+export const CaptureHandlerGenerator = (utils: typeof utilsObj): Handler<Capture> => ({
   canHandle: (block) => {
     return !!block.variable;
   },
@@ -22,25 +28,25 @@ const CaptureHandler: Handler<Capture> = {
     const request = context.turn.get(T.REQUEST) as IntentRequest;
 
     if (request?.type !== RequestType.INTENT) {
-      addRepromptIfExists(block, context, variables);
+      utils.addRepromptIfExists(block, context, variables);
       // quit cycleStack without ending session by stopping on itself
       return block.blockID;
     }
 
     let nextId: string | null = null;
 
-    const { intent } = request.payload;
-
     // check if there is a command in the stack that fulfills intent
-    if (CommandHandler.canHandle(context)) {
-      return CommandHandler.handle(context, variables);
+    if (utils.CommandHandler.canHandle(context)) {
+      return utils.CommandHandler.handle(context, variables);
     }
+
+    const { intent } = request.payload;
 
     // try to match the first slot of the intent to the variable
     const input = _.keys(intent.slots).length === 1 ? _.values(intent.slots)[0]?.value : null;
 
     if (input) {
-      const num = wordsToNumbers(input);
+      const num = utils.wordsToNumbers(input);
 
       if (typeof num !== 'number' || Number.isNaN(num)) {
         variables.set(block.variable, input);
@@ -52,10 +58,10 @@ const CaptureHandler: Handler<Capture> = {
     ({ nextId = null } = block);
 
     // request for this turn has been processed, delete request
-    context.turn.set(T.REQUEST, null);
+    context.turn.delete(T.REQUEST);
 
     return nextId;
   },
-};
+});
 
-export default CaptureHandler;
+export default CaptureHandlerGenerator(utilsObj);

@@ -8,7 +8,7 @@ import { regexVariables } from '../../utils';
 import CommandHandler from '../command';
 import { StreamAction } from '../stream';
 
-const StreamFailPhrase: Record<string, string> = {
+export const StreamFailPhrase: Record<string, string> = {
   'en-US': 'Sorry, this action isn’t available in this skill. ',
   'en-AU': 'Sorry, this action isn’t available in this skill. ',
   'en-CA': 'Sorry, this action isn’t available in this skill. ',
@@ -26,9 +26,14 @@ const StreamFailPhrase: Record<string, string> = {
   'hi-IN': 'क्षमा करें, यह फ़ंक्शन इस एप्लिकेशन में उपलब्ध नहीं है। ',
 };
 
-const streamStateHandler: Handler<any> = {
+const utilsObj = {
+  CommandHandler,
+  regexVariables,
+};
+
+export const streamStateHandlerGenerator = (utils: typeof utilsObj): Handler<any> => ({
   canHandle: (_, context) => {
-    return context.storage.get(S.STREAM_PLAY) && context.storage.get(S.STREAM_PLAY).action !== StreamAction.END;
+    return !!(context.storage.get(S.STREAM_PLAY) && context.storage.get(S.STREAM_PLAY).action !== StreamAction.END);
   },
   handle: (_, context, variables) => {
     const request = context.turn.get(T.REQUEST) as IntentRequest;
@@ -92,11 +97,11 @@ const streamStateHandler: Handler<any> = {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
       context.end();
-    } else if (CommandHandler.canHandle(context)) {
+    } else if (utils.CommandHandler.canHandle(context)) {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
-      return CommandHandler.handle(context, variables);
+      return utils.CommandHandler.handle(context, variables);
     } else {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.NOEFFECT;
@@ -112,15 +117,15 @@ const streamStateHandler: Handler<any> = {
     if (updatedStreamPlay) {
       const variablesMap = variables.getState();
       context.storage.produce((draft) => {
-        draft[S.STREAM_PLAY].title = regexVariables(updatedStreamPlay.regex_title, variablesMap);
-        draft[S.STREAM_PLAY].description = regexVariables(updatedStreamPlay.regex_description, variablesMap);
+        draft[S.STREAM_PLAY].title = utils.regexVariables(updatedStreamPlay.regex_title, variablesMap);
+        draft[S.STREAM_PLAY].description = utils.regexVariables(updatedStreamPlay.regex_description, variablesMap);
       });
     }
 
     // request for this turn has been processed, delete request
-    context.turn.set(T.REQUEST, null);
+    context.turn.delete(T.REQUEST);
     return nextId;
   },
-};
+});
 
-export default streamStateHandler;
+export default streamStateHandlerGenerator(utilsObj);

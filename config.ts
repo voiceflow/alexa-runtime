@@ -30,7 +30,6 @@ const CONFIG: Config = {
   // diagrams table
   SESSIONS_DYNAMO_TABLE: getProcessEnv('SESSIONS_DYNAMO_TABLE'),
 
-  VF_DATA_SECRET: getProcessEnv('VF_DATA_SECRET'),
   VF_DATA_ENDPOINT: getProcessEnv('VF_DATA_ENDPOINT'),
 };
 

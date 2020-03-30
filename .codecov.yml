@@ -1,0 +1,20 @@
+parsers:
+  javascript:
+    enable_partials: yes
+
+coverage:
+  status:
+    patch:
+      default:
+        target: auto
+        base: auto
+        threshold: 1%
+        flags:
+          - unit
+          - integration
+        paths:
+          - src
+        only_pulls: true
+
+ignore:
+  - '*.js'

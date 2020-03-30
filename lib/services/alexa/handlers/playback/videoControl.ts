@@ -8,11 +8,11 @@ import { IntentName } from '@/lib/services/voiceflow/types';
 
 const MEDIA_CONTROL_INTENTS = [IntentName.PAUSE, IntentName.RESUME];
 
-enum VideoCommandType {
+export enum VideoCommandType {
   CONTROL_MEDIA = 'ControlMedia',
 }
 
-enum VideoCommand {
+export enum VideoCommand {
   PLAY = 'play',
   PAUSE = 'pause',
 }
@@ -25,7 +25,7 @@ const EventHandler: RequestHandler = {
 
     return (
       !!displayInfo?.playingVideos &&
-      Object.keys(displayInfo?.playingVideos).length > 0 &&
+      Object.keys(displayInfo.playingVideos).length > 0 &&
       MEDIA_CONTROL_INTENTS.includes(request.intent.name as IntentName)
     );
   },
