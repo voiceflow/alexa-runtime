@@ -4,13 +4,31 @@ orbs:
   codecov: codecov/codecov@1.0.2
 
 executors:
-  build-executor:
+  test-executor:
     docker:
       - image: circleci/node:12
       - image: circleci/dynamodb:13-oracle # DynamoDB service container
     resource_class: medium
+  build-executor:
+    working_directory: /tmp/vf-build
+    docker:
+      - image: voiceflow/ci-image:v3
+    resource_class: medium
+  default-executor: # used to run the release
+    docker:
+      - image: circleci/node:12
+    resource_class: small
 
 commands:
+  setup_test_env:
+    steps:
+      - run:
+          name: AWS Config
+          command: ./scripts/mock_aws_credentials.sh
+      - run:
+          name: Wait for Dynamo Docker Image
+          command: dockerize -wait tcp://localhost:8000 -timeout 1m
+
   install_node_modules:
     steps:
       - restore_cache:
@@ -25,45 +43,123 @@ commands:
           key: node-module-cache-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
-  setup_test_env:
-    steps:
-      - run:
-          name: AWS Config
-          command: ./scripts/mock_aws_credentials.sh
-      - run:
-          name: Wait for Dynamo Docker Image
-          command: dockerize -wait tcp://localhost:8000 -timeout 1m
 
 jobs:
-  release:
-    executor: build-executor
-    steps:
-      - checkout
-      - run: npx semantic-release@15
-  build-and-test:
-    executor: build-executor
+  test:
+    executor: test-executor
     steps:
       - checkout
       - install_node_modules
       - setup_test_env
       - run:
-          name: 'Build package'
+          name: "Build package"
           command: |
             yarn build
       - run:
-          name: 'Run tests'
+          name: "Run tests"
           command: |
             yarn test
       - codecov/upload:
           file: nyc_coverage/lcov.info
+
+  build-push-image:
+    executor: build-executor
+    steps:
+      - checkout # special step to check out source code to working directory
+      - setup_remote_docker
+      - run:
+          name: "Build docker image"
+          command: |
+            mkdir -p /tmp/vf-build/vars
+            # Fix semantic versioning 
+            if [ "$CIRCLE_BRANCH" == "master" ]; then
+              npm config set unsafe-perm true # needed for npx to work
+              set +e  # Don't exit on the any error (for semantic-release)
+              npx semantic-release@15 --prepare --dry-run | tee sem_release.output  # print semver to screen and force return 0
+              SEM_VER=$(cat sem_release.output | grep 'Published release ' | awk '{print $NF}')  # Get release semver
+              set -e  # Don't exit on the any error (for semantic-release)
+              if [ -z "$SEM_VER" ]; then
+                echo -e "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+                SEM_VER=$(npm view @voiceflow/alexa version)
+              fi
+            else
+              SEM_VER=$CIRCLE_BRANCH-$CIRCLE_SHA1
+            fi
+            echo -e "Building with SEM_VER=$SEM_VER"
+            $(aws ecr get-login --no-include-email --region us-east-1)
+            docker build \
+              --build-arg NPM_TOKEN=//registry.npmjs.org/:_authToken=${NPM_TOKEN} \
+              --build-arg build_BUILD_NUM=${CIRCLE_BUILD_NUM} \
+              --build-arg build_BUILD_URL=${CIRCLE_BUILD_URL}	\
+              --build-arg build_GIT_SHA=${CIRCLE_SHA1} \
+              --build-arg build_SEM_VER=${SEM_VER} \
+              -t 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM . 
+            echo $CIRCLE_BUILD_NUM > /tmp/vf-build/vars/build_num
+      - run:
+          name: "Push docker images"
+          command: |
+            docker push 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+            docker tag 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:latest-$CIRCLE_BRANCH
+            docker push 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:latest-$CIRCLE_BRANCH
+      - persist_to_workspace:
+          root: vars
+          paths:
+            - build_num
+
+  deploy-image:
+    executor: build-executor
+    steps:
+      - attach_workspace:
+          at: /tmp/vf-build/vars
+      - run:
+          name: Update kubernetes image
+          command: |
+            aws eks --region us-east-1 update-kubeconfig --name development
+            BUILD_NUM=$(cat /tmp/vf-build/vars/build_num)
+            kubectl set image --namespace voiceflow-v1 deployment/alexa-$CIRCLE_BRANCH app=168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_BRANCH-$BUILD_NUM
+            if [ "$CIRCLE_BRANCH" == "master" ]; then
+              aws eks --region us-east-1 update-kubeconfig --name production
+              kubectl set image --namespace voiceflow-v1 deployment/alexa-production app=168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_BRANCH-$BUILD_NUM
+            fi
+
+  release:
+    executor: default-executor
+    steps:
+      - checkout
+      - run: npx semantic-release@15
+
+# When should each job run and what are their dependencies?
 workflows:
-  test-and-release:
+  build-deploy:
     jobs:
-      - release:
+      - test:
+          context: dev-test
+          filters:
+            branches:
+              ignore:
+                - /ephemeral.*/
+      - build-push-image:
+          context: dev-test
+          filters:
+            branches:
+              only:
+                - master
+                - staging
+      - deploy-image:
+          context: dev-test
           requires:
-            - build-and-test
+            - test
+            - build-push-image
+          filters:
+            branches:
+              only:
+                - master
+                - staging
+      - release:
+          context: dev-test
+          requires:
+            - test
+            - deploy-image
           filters:
             branches:
               only: master
-      - build-and-test # Run on all branches
-
