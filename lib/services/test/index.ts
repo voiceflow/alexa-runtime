@@ -7,6 +7,7 @@ import { StreamAction, StreamPlay } from '@/lib/services/voiceflow/handlers/stre
 import { RequestType } from '@/lib/services/voiceflow/types';
 
 import { AbstractManager } from '../utils';
+import handlers from './handlers';
 
 type Request = { type: RequestType; payload: AlexaIntentRequest };
 
@@ -16,8 +17,11 @@ class TestManager extends AbstractManager {
 
     const context = voiceflow.client().createContext(TEST_VERSION_ID, state as State, request, {
       endpoint: `${this.config.VF_DATA_ENDPOINT}/test`,
+      handlers,
     });
 
+    // eslint-disable-next-line no-console
+    context.setEvent(EventType.updateDidCatch, (event) => console.error(event.error));
     context.setEvent(EventType.handlerWillHandle, (event) => context.trace.block(event.block.blockID));
 
     context.turn.set(T.REQUEST, request);

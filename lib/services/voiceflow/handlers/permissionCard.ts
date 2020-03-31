@@ -25,6 +25,12 @@ const PermissionCardHandler: Handler<PermissionCard> = {
   handle: (block, context) => {
     context.turn.set(T.PERMISSION_CARD, block.permission_card);
 
+    context.trace.debug('__Permissions__ - entered');
+
+    if (block.nextId) {
+      context.trace.debug('Permissions - redirecting to the next block');
+    }
+
     return block.nextId ?? null;
   },
 };
