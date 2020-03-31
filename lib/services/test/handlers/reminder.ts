@@ -1,0 +1,22 @@
+import { Handler } from '@voiceflow/client';
+
+import { ReminderBlock } from '@/lib/services/voiceflow/handlers/reminder';
+
+export const ReminderHandlerGenerator: Handler<ReminderBlock> = {
+  canHandle: (block) => {
+    return !!block.reminder;
+  },
+  handle: async (block, context) => {
+    context.trace.debug('__Reminder__ - entered');
+
+    if (block.success_id || block.fail_id) {
+      context.trace.debug(
+        block.success_id ? 'Reminder - redirecting to the success block' : 'Reminder - success link is not provided, redirecting to the fail block'
+      );
+    }
+
+    return block.success_id ?? block.fail_id ?? null;
+  },
+};
+
+export default ReminderHandlerGenerator;
