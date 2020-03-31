@@ -55,12 +55,10 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
       }
 
       const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
-
-      if (displayInfo?.playingVideos) {
+      if (displayInfo.playingVideos) {
         context.storage.produce((state) => {
           const dInfo = state[S.DISPLAY_INFO] as DisplayInfo;
-
-          delete dInfo.playingVideos;
+          dInfo.playingVideos = {};
         });
       }
     });

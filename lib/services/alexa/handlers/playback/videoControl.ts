@@ -3,19 +3,10 @@ import { HandlerInput, RequestHandler } from 'ask-sdk';
 import { IntentRequest } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
-import { DisplayInfo } from '@/lib/services/voiceflow/handlers/display/responseBuilder';
+import { DisplayInfo, VideoCommand, VideoCommandType } from '@/lib/services/voiceflow/handlers/display/types';
 import { IntentName } from '@/lib/services/voiceflow/types';
 
 const MEDIA_CONTROL_INTENTS = [IntentName.PAUSE, IntentName.RESUME];
-
-export enum VideoCommandType {
-  CONTROL_MEDIA = 'ControlMedia',
-}
-
-export enum VideoCommand {
-  PLAY = 'play',
-  PAUSE = 'pause',
-}
 
 const EventHandler: RequestHandler = {
   canHandle: (input: HandlerInput) => {
@@ -23,11 +14,7 @@ const EventHandler: RequestHandler = {
     const request = input.requestEnvelope.request as IntentRequest;
     const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
 
-    return (
-      !!displayInfo?.playingVideos &&
-      Object.keys(displayInfo.playingVideos).length > 0 &&
-      MEDIA_CONTROL_INTENTS.includes(request.intent.name as IntentName)
-    );
+    return !!displayInfo && Object.keys(displayInfo.playingVideos).length > 0 && MEDIA_CONTROL_INTENTS.includes(request.intent.name as IntentName);
   },
   async handle(input: HandlerInput) {
     const context = input.context.context as Context;
