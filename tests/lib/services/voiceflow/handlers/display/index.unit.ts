@@ -39,7 +39,56 @@ describe('DisplayHandler unit tests', () => {
         [
           S.DISPLAY_INFO,
           {
-            commands: block.apl_commands,
+            playingVideos: {},
+            commands: undefined,
+            dataSource: block.datasource,
+            shouldUpdate: true,
+            currentDisplay: block.display_id,
+            dataSourceVariables: ['hello', 'name'],
+          },
+        ],
+      ]);
+      expect(context.services.multimodal.getDisplayDocument.args).to.eql([[block.display_id]]);
+    });
+
+    it('valid json command', async () => {
+      const context = {
+        storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
+        services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
+      };
+      const rawCommand = ['a', 'b'];
+      const block = { display_id: 'display-id', apl_commands: JSON.stringify(rawCommand), datasource: '{hello} there, {name}' };
+      expect(await DisplayHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
+      expect(context.storage.set.args).to.eql([
+        [
+          S.DISPLAY_INFO,
+          {
+            playingVideos: {},
+            commands: rawCommand,
+            dataSource: block.datasource,
+            shouldUpdate: true,
+            currentDisplay: block.display_id,
+            dataSourceVariables: ['hello', 'name'],
+          },
+        ],
+      ]);
+      expect(context.services.multimodal.getDisplayDocument.args).to.eql([[block.display_id]]);
+    });
+
+    it('undefined command', async () => {
+      const context = {
+        storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
+        services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
+      };
+
+      const block = { display_id: 'display-id', datasource: '{hello} there, {name}' };
+      expect(await DisplayHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
+      expect(context.storage.set.args).to.eql([
+        [
+          S.DISPLAY_INFO,
+          {
+            commands: undefined,
+            playingVideos: {},
             dataSource: block.datasource,
             shouldUpdate: true,
             currentDisplay: block.display_id,

@@ -1,5 +1,3 @@
-import { interfaces } from 'ask-sdk-model';
-import _ from 'lodash';
 import randomstring from 'randomstring';
 
 import { S } from '@/lib/constants';
@@ -8,19 +6,8 @@ import { FullServiceMap } from '@/lib/services';
 import { ResponseBuilder } from '../../types';
 import { regexVariables } from '../../utils';
 import { ENDED_EVENT_PREFIX, RENDER_DOCUMENT_DIRECTIVE_TYPE, STARTED_EVENT_PREFIX, VIDEO_ID_PREFIX } from './constants';
+import { DisplayInfo, VideoCommand, VideoCommandType } from './types';
 import { deepFindVideos, getEventToSend } from './utils';
-
-export type DisplayInfo = {
-  commands?: interfaces.alexa.presentation.apl.Command[] | string;
-  dataSource?: string;
-  shouldUpdate?: boolean;
-  lastVariables?: Record<string, any>;
-  playingVideos?: Record<string, { started: number }>;
-  currentDisplay?: number;
-  lastDataSource?: string;
-  dataSourceVariables?: string[];
-  shouldUpdateOnResume?: boolean;
-};
 
 export const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
   const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
@@ -105,17 +92,16 @@ export const CommandsResponseBuilder: ResponseBuilder = async (context, builder)
     return;
   }
 
-  let { commands } = displayInfo;
-
-  if (_.isString(commands)) {
-    try {
-      commands = JSON.parse(commands) as interfaces.alexa.presentation.apl.Command[];
-    } catch {
-      return;
-    }
-  }
+  const { commands } = displayInfo;
 
   if (commands.length) {
+    commands.forEach(({ type, command, componentId }) => {
+      if (type === VideoCommandType.CONTROL_MEDIA && command === VideoCommand.PLAY) {
+        context.storage.produce((storage) => {
+          storage[S.DISPLAY_INFO].playingVideos[componentId] = { started: Date.now() };
+        });
+      }
+    });
     builder.addDirective({
       type: 'Alexa.Presentation.APL.ExecuteCommands',
       token: context.versionID,
@@ -125,7 +111,6 @@ export const CommandsResponseBuilder: ResponseBuilder = async (context, builder)
 
   context.storage.produce((state) => {
     const dInfo = state[S.DISPLAY_INFO] as DisplayInfo;
-
     delete dInfo.commands;
   });
 };

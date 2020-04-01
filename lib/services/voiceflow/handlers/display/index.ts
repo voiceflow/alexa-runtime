@@ -1,5 +1,5 @@
 import { Handler } from '@voiceflow/client';
-import { interfaces, SupportedInterfaces } from 'ask-sdk-model';
+import { SupportedInterfaces } from 'ask-sdk-model';
 import _ from 'lodash';
 
 import { S } from '@/lib/constants';
@@ -7,7 +7,8 @@ import { FullServiceMap } from '@/lib/services';
 
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from './constants';
 import * as events from './events';
-import DisplayResponseBuilder, { DisplayInfo } from './responseBuilder';
+import DisplayResponseBuilder from './responseBuilder';
+import { Command, DisplayInfo } from './types';
 import { deepFindVideos, VideoEvent } from './utils';
 
 export { events, DisplayResponseBuilder };
@@ -16,7 +17,7 @@ export type Display = {
   nextId?: string;
   display_id?: number;
   datasource?: string;
-  apl_commands?: interfaces.alexa.presentation.apl.Command[] | string;
+  apl_commands?: Command[] | string;
   update_on_change?: boolean;
 };
 
@@ -45,9 +46,19 @@ export const DisplayHandlerGerator = (utils: typeof utilsObj): Handler<Display> 
     const displayID = block.display_id as number;
     const dataSource = block.datasource ?? '';
 
+    let commands;
+    if (block.apl_commands && _.isString(block.apl_commands)) {
+      try {
+        commands = JSON.parse(block.apl_commands) as Command[];
+      } catch {
+        // invalid JSON
+      }
+    }
+
     const displayInfo: DisplayInfo = {
-      commands: block.apl_commands,
+      commands,
       dataSource,
+      playingVideos: {},
       shouldUpdate: true,
       currentDisplay: displayID,
       dataSourceVariables: utils.getVariables(dataSource),

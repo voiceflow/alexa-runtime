@@ -1,16 +1,13 @@
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 import { Intent, IntentRequest } from 'ask-sdk-model';
-import Promise from 'bluebird';
 
 import { IntentName } from '@/lib/services/voiceflow/types';
 
 import IntentHandler from '../intent';
 import { buildContext } from '../lifecycle';
 import { Command } from './types';
-import VideoControl from './videoControl';
 
 const utilsObj = {
-  MediaHandlers: [VideoControl],
   buildContext,
   IntentHandler,
 };
@@ -47,27 +44,7 @@ export const PlaybackControllerHandlerGenerator = (utils: typeof utilsObj): Requ
 
     request.intent = intent;
 
-    const context = await utils.buildContext(input);
-
-    input.context.context = context;
-
-    const MediaHandler = await Promise.reduce<RequestHandler, RequestHandler | null>(
-      utils.MediaHandlers,
-      async (result, handler) => {
-        if (result) {
-          return result;
-        }
-
-        if (await handler.canHandle(input)) {
-          return handler;
-        }
-
-        return null;
-      },
-      null
-    );
-
-    return MediaHandler ? MediaHandler.handle(input) : utils.IntentHandler.handle(input);
+    return utils.IntentHandler.handle(input);
   },
 });
 
