@@ -34,6 +34,9 @@ describe('test manager unit tests', () => {
 
       const services = {
         voiceflow: { client: sinon.stub().returns({ createContext }) },
+        utils: {
+          handlers: 'foo',
+        },
       };
 
       const config = {
@@ -52,6 +55,7 @@ describe('test manager unit tests', () => {
           request,
           {
             endpoint: `${config.VF_DATA_ENDPOINT}/test`,
+            handlers: 'foo',
           },
         ],
       ]);

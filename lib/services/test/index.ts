@@ -3,6 +3,7 @@ import { StreamAction as TraceStreamAction } from '@voiceflow/client/build/lib/C
 import { IntentRequest as AlexaIntentRequest } from 'ask-sdk-model';
 
 import { S, T, TEST_VERSION_ID } from '@/lib/constants';
+import { injectServices } from '@/lib/services/types';
 import { StreamAction, StreamPlay } from '@/lib/services/voiceflow/handlers/stream';
 import { RequestType } from '@/lib/services/voiceflow/types';
 
@@ -11,17 +12,19 @@ import handlers from './handlers';
 
 type Request = { type: RequestType; payload: AlexaIntentRequest };
 
-class TestManager extends AbstractManager {
+const utilsObj = {
+  handlers,
+};
+@injectServices({ utils: utilsObj })
+class TestManager extends AbstractManager<{ utils: typeof utilsObj }> {
   async invoke(state: State, request?: Request) {
     const { voiceflow } = this.services;
 
     const context = voiceflow.client().createContext(TEST_VERSION_ID, state as State, request, {
       endpoint: `${this.config.VF_DATA_ENDPOINT}/test`,
-      handlers,
+      handlers: this.services.utils.handlers,
     });
 
-    // eslint-disable-next-line no-console
-    context.setEvent(EventType.updateDidCatch, (event) => console.error(event.error));
     context.setEvent(EventType.handlerWillHandle, (event) => context.trace.block(event.block.blockID));
 
     context.turn.set(T.REQUEST, request);
