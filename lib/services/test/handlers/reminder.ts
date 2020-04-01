@@ -6,7 +6,7 @@ export const ReminderHandlerGenerator: Handler<ReminderBlock> = {
   canHandle: (block) => {
     return !!block.reminder;
   },
-  handle: async (block, context) => {
+  handle: (block, context) => {
     context.trace.debug('__Reminder__ - entered');
 
     if (block.success_id || block.fail_id) {
