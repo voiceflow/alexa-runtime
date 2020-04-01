@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import randomstring from 'randomstring';
 
 import { S } from '@/lib/constants';
@@ -112,7 +111,6 @@ export const CommandsResponseBuilder: ResponseBuilder = async (context, builder)
 
   context.storage.produce((state) => {
     const dInfo = state[S.DISPLAY_INFO] as DisplayInfo;
-
     delete dInfo.commands;
   });
 };

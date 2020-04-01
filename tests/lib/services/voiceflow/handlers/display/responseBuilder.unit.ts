@@ -41,8 +41,7 @@ describe('DisplayResponseBuilder unit tests', () => {
     });
 
     it('has commands', async () => {
-      const rawCommands = ['a', 'b'];
-      const commands = JSON.stringify(rawCommands);
+      const commands = ['a', 'b'];
       const context = { versionID: 'version-id', storage: { produce: sinon.stub(), get: sinon.stub().returns({ commands }) } };
       const builder = { addDirective: sinon.stub() };
       expect(await CommandsResponseBuilder(context as any, builder as any)).to.eql(undefined);
@@ -51,17 +50,10 @@ describe('DisplayResponseBuilder unit tests', () => {
           {
             type: 'Alexa.Presentation.APL.ExecuteCommands',
             token: context.versionID,
-            commands: rawCommands,
+            commands,
           },
         ],
       ]);
-    });
-
-    it('malformed json commands', async () => {
-      const rawCommands = '"{invalid}"';
-      const context = { storage: { get: sinon.stub().returns({ commands: '{"invalid"}' }) } };
-      const builder = { addDirective: sinon.stub() };
-      expect(await CommandsResponseBuilder(context as any, builder as any)).to.eql(undefined);
     });
   });
 

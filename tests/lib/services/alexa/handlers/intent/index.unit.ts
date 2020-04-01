@@ -26,6 +26,7 @@ describe('intent handler unit tests', () => {
         initialize: sinon.stub(),
         update: sinon.stub(),
         buildResponse: sinon.stub().resolves(output),
+        behavior: [],
       };
       const handler = IntentHandlerGenerator(utils);
 
@@ -47,6 +48,7 @@ describe('intent handler unit tests', () => {
         initialize: sinon.stub(),
         update: sinon.stub(),
         buildResponse: sinon.stub().resolves(output),
+        behavior: [],
       };
       const handler = IntentHandlerGenerator(utils);
 
@@ -54,6 +56,35 @@ describe('intent handler unit tests', () => {
 
       expect(await handler.handle(input as any)).to.eql(output);
       expect(utils.initialize.callCount).to.eql(0);
+    });
+
+    it('handles behavior', async () => {
+      const output = 'output';
+      const context = { stack: { isEmpty: sinon.stub().returns(false) } };
+
+      const utils = {
+        buildContext: sinon.stub().resolves(context),
+        initialize: sinon.stub(),
+        update: sinon.stub(),
+        buildResponse: sinon.stub(),
+        behavior: [
+          { canHandle: sinon.stub().returns(false), handle: sinon.stub() },
+          { canHandle: sinon.stub().returns(true), handle: sinon.stub().resolves(output) },
+          { canHandle: sinon.stub(), handle: sinon.stub() },
+        ],
+      };
+      const handler = IntentHandlerGenerator(utils);
+
+      const input = { foo: 'bar' };
+
+      expect(await handler.handle(input as any)).to.eql(output);
+      expect(utils.initialize.callCount).to.eql(0);
+      expect(utils.behavior[0].canHandle.callCount).to.eql(1);
+      expect(utils.behavior[0].handle.callCount).to.eql(0);
+      expect(utils.behavior[1].canHandle.callCount).to.eql(1);
+      expect(utils.behavior[1].handle.callCount).to.eql(1);
+      expect(utils.behavior[2].canHandle.callCount).to.eql(0);
+      expect(utils.behavior[2].handle.callCount).to.eql(0);
     });
   });
 });

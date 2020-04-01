@@ -2,7 +2,7 @@ import { HandlerInput, RequestHandler } from 'ask-sdk';
 import { SessionEndedRequest } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
-import { DisplayInfo } from '@/lib/services/voiceflow/handlers/display/responseBuilder';
+import { DisplayInfo } from '@/lib/services/voiceflow/handlers/display/types';
 
 import { updateContext } from '../utils';
 
@@ -55,7 +55,7 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
       }
 
       const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
-      if (displayInfo.playingVideos) {
+      if (displayInfo?.playingVideos) {
         context.storage.produce((state) => {
           const dInfo = state[S.DISPLAY_INFO] as DisplayInfo;
           dInfo.playingVideos = {};

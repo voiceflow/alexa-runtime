@@ -34,9 +34,8 @@ export const APLUserEventHandlerGenerator = (utils: typeof utilsObj): RequestHan
 
       context.storage.produce((state) => {
         let displayInfo = state[S.DISPLAY_INFO] as DisplayInfo | undefined;
-        if (!displayInfo) return;
 
-        if (source?.type === DOCUMENT_VIDEO_TYPE && source.handler === SourceHandler.END) {
+        if (source?.type === DOCUMENT_VIDEO_TYPE && source.handler === SourceHandler.END && displayInfo) {
           delete displayInfo.playingVideos[source.id];
         } else if (source?.type === DOCUMENT_VIDEO_TYPE && source.handler === SourceHandler.PLAY) {
           const videoId = source.id;
