@@ -2,7 +2,7 @@ import { EventCallback, EventType } from '@voiceflow/client';
 
 import { S } from '@/lib/constants';
 
-import { DisplayInfo } from './responseBuilder';
+import { DisplayInfo } from './types';
 import { shouldRebuildDisplay } from './utils';
 
 // eslint-disable-next-line import/prefer-default-export

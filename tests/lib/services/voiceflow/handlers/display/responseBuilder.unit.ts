@@ -4,6 +4,7 @@ import sinon from 'sinon';
 import { S } from '@/lib/constants';
 import { DOCUMENT_VIDEO_TYPE, RENDER_DOCUMENT_DIRECTIVE_TYPE } from '@/lib/services/voiceflow/handlers/display/constants';
 import DisplayResponseBuilder, { CommandsResponseBuilder, DocumentResponseBuilder } from '@/lib/services/voiceflow/handlers/display/responseBuilder';
+import { VideoCommand, VideoCommandType } from '@/lib/services/voiceflow/handlers/display/types';
 
 describe('DisplayResponseBuilder unit tests', () => {
   describe('DisplayResponseBuilder', () => {
@@ -41,8 +42,7 @@ describe('DisplayResponseBuilder unit tests', () => {
     });
 
     it('has commands', async () => {
-      const rawCommands = ['a', 'b'];
-      const commands = JSON.stringify(rawCommands);
+      const commands = ['a', 'b'];
       const context = { versionID: 'version-id', storage: { produce: sinon.stub(), get: sinon.stub().returns({ commands }) } };
       const builder = { addDirective: sinon.stub() };
       expect(await CommandsResponseBuilder(context as any, builder as any)).to.eql(undefined);
@@ -51,17 +51,39 @@ describe('DisplayResponseBuilder unit tests', () => {
           {
             type: 'Alexa.Presentation.APL.ExecuteCommands',
             token: context.versionID,
-            commands: rawCommands,
+            commands,
           },
         ],
       ]);
     });
 
-    it('malformed json commands', async () => {
-      const rawCommands = '"{invalid}"';
-      const context = { storage: { get: sinon.stub().returns({ commands: '{"invalid"}' }) } };
+    it('command updates playVideo', async () => {
+      const clock = sinon.useFakeTimers(Date.now()); // fake Date.now
+      const commands = [{ type: VideoCommandType.CONTROL_MEDIA, command: VideoCommand.PLAY, componentId: 'test' }];
+      const context = { versionID: 'version-id', storage: { produce: sinon.stub(), get: sinon.stub().returns({ commands }) } };
       const builder = { addDirective: sinon.stub() };
       expect(await CommandsResponseBuilder(context as any, builder as any)).to.eql(undefined);
+
+      const fn = context.storage.produce.args[0][0];
+      const state = { displayInfo: { playingVideos: {} } };
+      fn(state);
+      expect(state).to.eql({
+        displayInfo: {
+          playingVideos: {
+            test: { started: clock.now },
+          },
+        },
+      });
+
+      expect(builder.addDirective.args).to.eql([
+        [
+          {
+            type: 'Alexa.Presentation.APL.ExecuteCommands',
+            token: context.versionID,
+            commands,
+          },
+        ],
+      ]);
     });
   });
 

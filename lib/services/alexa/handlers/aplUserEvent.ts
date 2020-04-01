@@ -3,7 +3,7 @@ import { interfaces } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
 import { DOCUMENT_VIDEO_TYPE, ENDED_EVENT_PREFIX } from '@/lib/services/voiceflow/handlers/display/constants';
-import { DisplayInfo } from '@/lib/services/voiceflow/handlers/display/responseBuilder';
+import { DisplayInfo } from '@/lib/services/voiceflow/handlers/display/types';
 
 import { updateContext } from '../utils';
 import IntentHandler from './intent';
@@ -35,17 +35,15 @@ export const APLUserEventHandlerGenerator = (utils: typeof utilsObj): RequestHan
       context.storage.produce((state) => {
         let displayInfo = state[S.DISPLAY_INFO] as DisplayInfo | undefined;
 
-        if (source?.type === DOCUMENT_VIDEO_TYPE && source.handler === SourceHandler.END && displayInfo?.playingVideos) {
+        if (source?.type === DOCUMENT_VIDEO_TYPE && source.handler === SourceHandler.END && displayInfo) {
           delete displayInfo.playingVideos[source.id];
         } else if (source?.type === DOCUMENT_VIDEO_TYPE && source.handler === SourceHandler.PLAY) {
           const videoId = source.id;
 
           if (!displayInfo) {
-            displayInfo = {};
-          }
-
-          if (!displayInfo.playingVideos) {
-            displayInfo.playingVideos = {};
+            displayInfo = {
+              playingVideos: {},
+            };
           }
 
           displayInfo.playingVideos[videoId] = { started: Date.now() };

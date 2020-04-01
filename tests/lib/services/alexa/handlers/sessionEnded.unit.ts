@@ -66,13 +66,13 @@ describe('session ended handler unit tests', () => {
           const fn = utils.updateContext.args[0][1];
 
           // assert updateContext callback
-          const context = { storage: { get: sinon.stub().returns({ playingVideos: 'bar' }), produce: sinon.stub() } };
+          const context = { storage: { get: sinon.stub().returns({ playingVideos: { foo: 'bar' } }), produce: sinon.stub() } };
           fn(context);
           expect(context.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
           const fn2 = context.storage.produce.args[0][0];
-          const state = { [S.DISPLAY_INFO]: { playingVideos: 'random' } };
+          const state = { [S.DISPLAY_INFO]: { playingVideos: { foo: 'bar' } } };
           fn2(state);
-          expect(state).to.eql({ [S.DISPLAY_INFO]: {} });
+          expect(state).to.eql({ [S.DISPLAY_INFO]: { playingVideos: {} } });
         });
       });
     });
