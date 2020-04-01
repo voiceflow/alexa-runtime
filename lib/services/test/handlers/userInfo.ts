@@ -2,11 +2,11 @@ import { Handler } from '@voiceflow/client';
 
 import { UserInfo } from '@/lib/services/voiceflow/handlers/userInfo';
 
-const UserInfoHandlerGenerator: Handler<UserInfo> = {
+const UserInfoHandler: Handler<UserInfo> = {
   canHandle: (block) => {
     return !!block.permissions;
   },
-  handle: async (block, context) => {
+  handle: (block, context) => {
     context.trace.debug('__User Info__ - entered');
 
     if (block.success_id || block.fail_id) {
@@ -19,4 +19,4 @@ const UserInfoHandlerGenerator: Handler<UserInfo> = {
   },
 };
 
-export default UserInfoHandlerGenerator;
+export default UserInfoHandler;
