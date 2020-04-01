@@ -17,7 +17,7 @@ describe('permission card handler unit tests', () => {
 
   describe('handle', () => {
     it('works correctly', () => {
-      const context = { turn: { set: sinon.stub() } };
+      const context = { turn: { set: sinon.stub() }, trace: { debug: sinon.stub() } };
       const block = {
         nextId: 'next-id',
         permission_card: 'permission-card',
@@ -28,7 +28,7 @@ describe('permission card handler unit tests', () => {
     });
 
     it('no nextId', () => {
-      const context = { turn: { set: sinon.stub() } };
+      const context = { turn: { set: sinon.stub() }, trace: { debug: sinon.stub() } };
       const block = {
         permission_card: 'permission-card',
       };
