@@ -4,9 +4,9 @@
 import secretsProvider from '@voiceflow/secrets-provider';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { expect } from 'chai';
 import fetch from 'cross-fetch';
 import fs from 'fs';
-import path from 'path';
 import yargs from 'yargs';
 
 import { Config } from '../types';
@@ -14,14 +14,14 @@ import { SessionRecording } from './types';
 
 const SERVER_CONFIG: Config = {
   NODE_ENV: 'test',
-  PORT: '4040',
+  PORT: '4041',
 
-  AWS_ACCESS_KEY_ID: null,
-  AWS_SECRET_ACCESS_KEY: null,
-  AWS_REGION: null,
-  AWS_ENDPOINT: null,
+  AWS_ACCESS_KEY_ID: 'null',
+  AWS_SECRET_ACCESS_KEY: 'null',
+  AWS_REGION: 'localhost',
+  AWS_ENDPOINT: 'http://localhost:8000',
 
-  DYNAMO_ENDPOINT: null,
+  DYNAMO_ENDPOINT: 'http://localhost:8000',
 
   // Secrets configuration
   SECRETS_PROVIDER: 'test',
@@ -36,7 +36,7 @@ const SERVER_CONFIG: Config = {
   BUILD_URL: null,
 
   // diagrams table
-  SESSIONS_DYNAMO_TABLE: 'foo',
+  SESSIONS_DYNAMO_TABLE: 'com.getvoiceflow.test.sessions',
 
   VF_DATA_ENDPOINT: 'foo',
 };
@@ -74,7 +74,7 @@ const awaitServerHealthy = async (url: string) => {
 fs.promises
   .readFile(argv.f, 'utf-8')
   .then(async (rawData) => {
-    const { requests, fixtures }: SessionRecording = JSON.parse(rawData);
+    const { requests, fixtures, skillId }: SessionRecording = JSON.parse(rawData);
 
     const mock = new MockAdapter(axios);
 
@@ -83,6 +83,8 @@ fs.promises
 
       mock.onGet(`/diagrams/${diagramID}`).reply(200, diagram);
     });
+
+    mock.onGet(`/metadata/${skillId}`).reply(200, fixtures.metadata);
 
     await import('../envSetup');
     const { default: Server } = await import('../server');
@@ -107,20 +109,27 @@ fs.promises
     // eslint-disable-next-line no-restricted-syntax
     for (const { request, response } of requests) {
       try {
-        console.log('THE REQUEST', request);
+        // console.log('THE REQUEST', request);
 
-        const actualResponse = await fetch(`${serverURL}/state/skill/${path.basename(request.url)}`, {
-          method: 'post',
-          body: JSON.stringify(request.body),
-          headers: {
-            'content-type': 'application/json',
-          },
-        });
+        const actualResponse = await (
+          await fetch(`${serverURL}${request.url}`, {
+            method: request.method,
+            body: JSON.stringify(request.body),
+            headers: request.headers,
+          })
+        ).json();
 
-        console.log('THE ASSERTION:', response, actualResponse);
+        // console.log('EXPECTED RESPONSE:', response);
+        // console.log('ACTUAL RESPONSE:', actualResponse);
+        expect(response.body.response.outputSpeech.ssml).to.eql(actualResponse.response.outputSpeech.ssml);
+        // todo: fully compare response obj
+        console.log('correct');
       } catch (e) {
         console.error('THE ERROR', e);
       }
+
+      // eslint-disable-next-line no-process-exit
+      process.exit(0);
     }
   })
-  .catch((e) => console.error(e));
+  .catch((e) => console.error('THE ERROR', e));
