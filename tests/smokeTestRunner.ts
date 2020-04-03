@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
 /* eslint-disable promise/always-return, no-await-in-loop */
 
+import secretsProvider from '@voiceflow/secrets-provider';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import fetch from 'cross-fetch';
@@ -24,6 +26,8 @@ const SERVER_CONFIG: Config = {
   // Secrets configuration
   SECRETS_PROVIDER: 'test',
   API_KEYS_SECRET: null,
+  MAIN_DB_SECRET: null,
+  LOGGING_DB_SECRET: null,
 
   // Release information
   GIT_SHA: null,
@@ -31,9 +35,9 @@ const SERVER_CONFIG: Config = {
   SEM_VER: null,
   BUILD_URL: null,
 
+  // diagrams table
   SESSIONS_DYNAMO_TABLE: 'foo',
 
-  VF_DATA_SECRET: 'foo',
   VF_DATA_ENDPOINT: 'foo',
 };
 
@@ -84,6 +88,13 @@ fs.promises
     const { default: Server } = await import('../server');
     const { ServiceManager } = await import('../backend');
 
+    // eslint-disable-next-line promise/no-nesting
+    await secretsProvider.start(SERVER_CONFIG).catch((err: Error) => {
+      console.error(`Error while starting secretsProvider: ${err.stack}`);
+      // eslint-disable-next-line no-process-exit
+      process.exit(1);
+    });
+
     const serviceManager = new ServiceManager(SERVER_CONFIG);
     const server = new Server(serviceManager, SERVER_CONFIG);
 
@@ -96,7 +107,7 @@ fs.promises
     // eslint-disable-next-line no-restricted-syntax
     for (const { request, response } of requests) {
       try {
-        console.log(request);
+        console.log('THE REQUEST', request);
 
         const actualResponse = await fetch(`${serverURL}/state/skill/${path.basename(request.url)}`, {
           method: 'post',
@@ -106,9 +117,9 @@ fs.promises
           },
         });
 
-        console.log(response, actualResponse);
+        console.log('THE ASSERTION:', response, actualResponse);
       } catch (e) {
-        console.error(e);
+        console.error('THE ERROR', e);
       }
     }
   })
