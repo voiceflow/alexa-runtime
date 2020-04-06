@@ -4,6 +4,7 @@
 import secretsProvider from '@voiceflow/secrets-provider';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import Promise from 'bluebird';
 import { expect } from 'chai';
 import fetch from 'cross-fetch';
 import fs from 'fs';
@@ -37,7 +38,7 @@ const SERVER_CONFIG: Config = {
   BUILD_URL: null,
 
   // diagrams table
-  SESSIONS_DYNAMO_TABLE: 'com.getvoiceflow.test.sessions',
+  SESSIONS_DYNAMO_TABLE: 'test-runner-sessions',
 
   VF_DATA_ENDPOINT: 'http://localhost:8200',
 };
@@ -124,7 +125,7 @@ fs.promises
     await awaitServerHealthy(serverURL);
 
     // eslint-disable-next-line no-restricted-syntax
-    for (const { request, response } of requests) {
+    await Promise.each(requests, async ({ request, response }) => {
       try {
         const actualResponse = await (
           await fetch(`${serverURL}${request.url}`, {
@@ -148,7 +149,7 @@ fs.promises
         // eslint-disable-next-line no-process-exit
         process.exit(0);
       }
-    }
+    });
 
     console.log('correct');
     // eslint-disable-next-line no-process-exit
