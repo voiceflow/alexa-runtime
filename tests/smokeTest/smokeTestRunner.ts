@@ -39,7 +39,7 @@ const SERVER_CONFIG: Config = {
   // diagrams table
   SESSIONS_DYNAMO_TABLE: 'com.getvoiceflow.test.sessions',
 
-  VF_DATA_ENDPOINT: 'foo',
+  VF_DATA_ENDPOINT: 'http://localhost:8200',
 };
 
 const { argv } = yargs.option('f', {
@@ -85,17 +85,15 @@ const extractProperties = (obj: Record<string, any>, path: string, list: string[
 fs.promises
   .readFile(argv.f, 'utf-8')
   .then(async (rawData) => {
-    const { requests, fixtures, skillId }: SessionRecording = JSON.parse(rawData);
+    const { requests, httpCalls }: SessionRecording = JSON.parse(rawData);
 
     const mock = new MockAdapter(axios);
 
-    Object.keys(fixtures.diagrams).forEach((diagramID) => {
-      const diagram = fixtures.diagrams[diagramID];
-
-      mock.onGet(`/diagrams/${diagramID}`).reply(200, diagram);
+    httpCalls.forEach((call) => {
+      const { method } = call.request;
+      const mockFn = _.get(mock, `on${method[0].toUpperCase()}${method.slice(1)}`).bind(mock);
+      mockFn(call.request.url, call.request.data).reply(200, call.response.data);
     });
-
-    mock.onGet(`/metadata/${skillId}`).reply(200, fixtures.metadata);
 
     await import('../../envSetup');
     const { default: Server } = await import('../../server');
@@ -120,8 +118,6 @@ fs.promises
     // eslint-disable-next-line no-restricted-syntax
     for (const { request, response } of requests) {
       try {
-        console.log('request');
-
         const actualResponse = await (
           await fetch(`${serverURL}${request.url}`, {
             method: request.method,
@@ -139,13 +135,12 @@ fs.promises
           const path = prop.substr(1);
           expect(_.get(response.body, path)).to.eql(_.get(actualResponse, path));
         });
-
-        console.log('correct');
       } catch (e) {
         console.error('THE ERROR', e);
       }
     }
 
+    console.log('correct');
     // eslint-disable-next-line no-process-exit
     process.exit(0);
   })

@@ -1,10 +1,7 @@
 export interface SessionRecording {
   skillId: string;
   requests: { request: SessionRequest; response: SessionResponse }[];
-  fixtures: {
-    metadata: unknown;
-    diagrams: Record<string, unknown>;
-  };
+  httpCalls: Array<{ request: { url: string; method: string; data: any }; response: { data: any } }>;
 }
 
 export interface SessionRequest {
