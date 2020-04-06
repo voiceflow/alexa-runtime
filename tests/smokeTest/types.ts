@@ -1,7 +1,7 @@
 export interface SessionRecording {
   skillId: string;
   requests: { request: SessionRequest; response: SessionResponse }[];
-  httpCalls: Array<{ request: { url: string; method: string; data: any }; response: { data: any } }>;
+  httpCalls: Record<string, Record<string, any[]>>;
 }
 
 export interface SessionRequest {

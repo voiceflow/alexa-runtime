@@ -89,11 +89,19 @@ fs.promises
 
     const mock = new MockAdapter(axios);
 
-    httpCalls.forEach((call) => {
-      const { method } = call.request;
+    Object.keys(httpCalls).forEach((method) => {
+      const methodObj = httpCalls[method];
       const mockFn = _.get(mock, `on${method[0].toUpperCase()}${method.slice(1)}`).bind(mock);
-      mockFn(call.request.url, call.request.data).reply(200, call.response.data);
+
+      Object.keys(methodObj).forEach((url) => {
+        const urlResponsesArray = methodObj[url];
+        urlResponsesArray.forEach((response) => {
+          mockFn(url).replyOnce(200, response);
+        });
+      });
     });
+
+    // mock.onAny().passThrough();
 
     await import('../../envSetup');
     const { default: Server } = await import('../../server');
@@ -137,6 +145,8 @@ fs.promises
         });
       } catch (e) {
         console.error('THE ERROR', e);
+        // eslint-disable-next-line no-process-exit
+        process.exit(0);
       }
     }
 
