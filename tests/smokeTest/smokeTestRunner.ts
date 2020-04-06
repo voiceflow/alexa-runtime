@@ -7,9 +7,10 @@ import MockAdapter from 'axios-mock-adapter';
 import { expect } from 'chai';
 import fetch from 'cross-fetch';
 import fs from 'fs';
+import _ from 'lodash';
 import yargs from 'yargs';
 
-import { Config } from '../types';
+import { Config } from '../../types';
 import { SessionRecording } from './types';
 
 const SERVER_CONFIG: Config = {
@@ -70,7 +71,17 @@ const awaitServerHealthy = async (url: string) => {
   }
 };
 
-// eslint-disable-next-line promise/catch-or-return
+const extractProperties = (obj: Record<string, any>, path: string, list: string[]) => {
+  // eslint-disable-next-line no-restricted-syntax
+  Object.keys(obj).forEach((property) => {
+    if (typeof obj[property] === 'object') {
+      extractProperties(obj[property], `${path}.${property}`, list);
+    } else {
+      list.push(`${path}.${property}`);
+    }
+  });
+};
+
 fs.promises
   .readFile(argv.f, 'utf-8')
   .then(async (rawData) => {
@@ -86,9 +97,9 @@ fs.promises
 
     mock.onGet(`/metadata/${skillId}`).reply(200, fixtures.metadata);
 
-    await import('../envSetup');
-    const { default: Server } = await import('../server');
-    const { ServiceManager } = await import('../backend');
+    await import('../../envSetup');
+    const { default: Server } = await import('../../server');
+    const { ServiceManager } = await import('../../backend');
 
     // eslint-disable-next-line promise/no-nesting
     await secretsProvider.start(SERVER_CONFIG).catch((err: Error) => {
@@ -109,7 +120,7 @@ fs.promises
     // eslint-disable-next-line no-restricted-syntax
     for (const { request, response } of requests) {
       try {
-        // console.log('THE REQUEST', request);
+        console.log('request');
 
         const actualResponse = await (
           await fetch(`${serverURL}${request.url}`, {
@@ -119,17 +130,23 @@ fs.promises
           })
         ).json();
 
-        // console.log('EXPECTED RESPONSE:', response);
-        // console.log('ACTUAL RESPONSE:', actualResponse);
-        expect(response.body.response.outputSpeech.ssml).to.eql(actualResponse.response.outputSpeech.ssml);
-        // todo: fully compare response obj
+        // get response properties list
+        const properties: string[] = [];
+        extractProperties(response.body, '', properties);
+
+        // assert that all properties in expected response (old server) are equal in the actual response (new server)
+        properties.forEach((prop) => {
+          const path = prop.substr(1);
+          expect(_.get(response.body, path)).to.eql(_.get(actualResponse, path));
+        });
+
         console.log('correct');
       } catch (e) {
         console.error('THE ERROR', e);
       }
-
-      // eslint-disable-next-line no-process-exit
-      process.exit(0);
     }
+
+    // eslint-disable-next-line no-process-exit
+    process.exit(0);
   })
   .catch((e) => console.error('THE ERROR', e));

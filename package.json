@@ -150,6 +150,6 @@
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
     "test": "NODE_ENV=test nyc ts-mocha --paths --opts mocha.opts",
     "test:single": "NODE_ENV=test ts-mocha --paths --opts mocha-single.opts",
-    "test:smoke": "NODE_ENV=test ts-node --files -r tsconfig-paths/register tests/initSmokeTest.ts"
+    "test:smoke": "NODE_ENV=test ts-node --files -r tsconfig-paths/register tests/smokeTest/initSmokeTest.ts"
   }
 }
