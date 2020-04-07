@@ -1,3 +1,5 @@
+import { Method } from 'axios';
+
 export interface SessionRecording {
   skillId: string;
   requests: { request: SessionRequest; response: SessionResponse }[];
@@ -6,7 +8,7 @@ export interface SessionRecording {
 
 export interface SessionRequest {
   url: string;
-  method: string;
+  method: Method;
   headers: Record<string, string>;
   body: unknown;
 }

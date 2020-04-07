@@ -1,58 +1,70 @@
 /* eslint-disable no-console */
-/* eslint-disable promise/always-return, no-await-in-loop */
+import '../../envSetup';
 
 import secretsProvider from '@voiceflow/secrets-provider';
+import AWS from 'aws-sdk';
+import axios from 'axios';
 import Promise from 'bluebird';
 import { expect } from 'chai';
-import fetch from 'cross-fetch';
 import fs from 'fs';
 import _ from 'lodash';
 import nock from 'nock';
-import yargs from 'yargs';
+import path from 'path';
 
-import { Config } from '../../types';
+import { ServiceManager } from '../../backend';
+import config from '../../config';
+import Server from '../../server';
 import { SessionRecording } from './types';
 
-const SERVER_CONFIG: Config = {
-  NODE_ENV: 'test',
-  PORT: '4041',
+config.PORT = '4041';
+config.SESSIONS_DYNAMO_TABLE = 'test-runner-sessions';
 
-  AWS_ACCESS_KEY_ID: 'null',
-  AWS_SECRET_ACCESS_KEY: 'null',
-  AWS_REGION: 'localhost',
-  AWS_ENDPOINT: 'http://localhost:8000',
+const RECORDINGS_FOLDER = path.resolve(__dirname, 'recordedSessions');
+const SESSION_PREFIX = 'session-recording';
+const SERVER_URL = `http://localhost:${config.PORT}`;
 
-  DYNAMO_ENDPOINT: 'http://localhost:8000',
+AWS.config = new AWS.Config({
+  accessKeyId: config.AWS_ACCESS_KEY_ID,
+  secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
+  endpoint: config.AWS_ENDPOINT,
+  region: config.AWS_REGION,
+} as any);
 
-  // Secrets configuration
-  SECRETS_PROVIDER: 'test',
-  API_KEYS_SECRET: null,
-  MAIN_DB_SECRET: null,
-  LOGGING_DB_SECRET: null,
+const client = new AWS.DynamoDB();
 
-  // Release information
-  GIT_SHA: null,
-  BUILD_NUM: null,
-  SEM_VER: null,
-  BUILD_URL: null,
-
-  // diagrams table
-  SESSIONS_DYNAMO_TABLE: 'test-runner-sessions',
-
-  VF_DATA_ENDPOINT: 'http://localhost:8200',
+const createTable = async () => {
+  const params = {
+    AttributeDefinitions: [
+      {
+        AttributeName: 'id',
+        AttributeType: 'S',
+      },
+    ],
+    KeySchema: [
+      {
+        AttributeName: 'id',
+        KeyType: 'HASH',
+      },
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 5,
+      WriteCapacityUnits: 5,
+    },
+  };
+  const liveParams = { ...params, TableName: config.SESSIONS_DYNAMO_TABLE };
+  await client.createTable(liveParams).promise();
 };
 
-const { argv } = yargs.option('f', {
-  alias: 'file',
-  demandOption: true,
-  type: 'string',
-});
+const deleteTable = async () => {
+  await client.deleteTable({ TableName: config.SESSIONS_DYNAMO_TABLE }).promise();
+};
 
 const awaitServerHealthy = async (url: string) => {
   let count = 10;
   while (count-- > 0) {
     try {
-      const data = await (await fetch(`${url}/health`)).text();
+      // eslint-disable-next-line no-await-in-loop
+      const { data } = await axios(`${url}/health`);
 
       if (data === 'Healthy') {
         break;
@@ -67,26 +79,28 @@ const awaitServerHealthy = async (url: string) => {
       throw new Error('server is failing health check');
     }
 
+    // eslint-disable-next-line no-await-in-loop
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 };
 
-const extractProperties = (obj: Record<string, any>, path: string, list: string[]) => {
-  // eslint-disable-next-line no-restricted-syntax
+const extractProperties = (obj: Record<string, any>, propPath: string, list: string[]) => {
   Object.keys(obj).forEach((property) => {
     if (typeof obj[property] === 'object') {
-      extractProperties(obj[property], `${path}.${property}`, list);
+      extractProperties(obj[property], `${propPath}.${property}`, list);
     } else {
-      list.push(`${path}.${property}`);
+      list.push(`${propPath}.${property}`);
     }
   });
 };
 
-fs.promises
-  .readFile(argv.f, 'utf-8')
-  .then(async (rawData) => {
+const runTest = async (filePath: string) => {
+  try {
+    const rawData = await fs.promises.readFile(filePath, 'utf-8');
+
     const { requests, httpCalls }: SessionRecording = JSON.parse(rawData);
 
+    // mock http calls
     httpCalls.forEach((call) => {
       const method = call.method.toLowerCase();
 
@@ -101,38 +115,13 @@ fs.promises
       }
     });
 
-    // mock.onAny().passThrough();
-
-    await import('../../envSetup');
-    const { default: Server } = await import('../../server');
-    const { ServiceManager } = await import('../../backend');
-
-    // eslint-disable-next-line promise/no-nesting
-    await secretsProvider.start(SERVER_CONFIG).catch((err: Error) => {
-      console.error(`Error while starting secretsProvider: ${err.stack}`);
-      // eslint-disable-next-line no-process-exit
-      process.exit(1);
-    });
-
-    const serviceManager = new ServiceManager(SERVER_CONFIG);
-    const server = new Server(serviceManager, SERVER_CONFIG);
-
-    await server.start();
-
-    const serverURL = `http://localhost:${SERVER_CONFIG.PORT}`;
-
-    await awaitServerHealthy(serverURL);
-
-    // eslint-disable-next-line no-restricted-syntax
     await Promise.each(requests, async ({ request, response }) => {
       try {
-        const actualResponse = await (
-          await fetch(`${serverURL}${request.url}`, {
-            method: request.method,
-            body: JSON.stringify(request.body),
-            headers: request.headers,
-          })
-        ).json();
+        const { data: actualResponse } = await axios(`${SERVER_URL}${request.url}`, {
+          method: request.method,
+          data: JSON.stringify(request.body),
+          headers: request.headers,
+        });
 
         // get response properties list
         const properties: string[] = [];
@@ -140,8 +129,8 @@ fs.promises
 
         // assert that all properties in expected response (old server) are equal in the actual response (new server)
         properties.forEach((prop) => {
-          const path = prop.substr(1);
-          expect(_.get(response.body, path)).to.eql(_.get(actualResponse, path));
+          const propPath = prop.substr(1);
+          expect(_.get(response.body, propPath)).to.eql(_.get(actualResponse, propPath));
         });
       } catch (e) {
         console.error('THE ERROR', e);
@@ -151,7 +140,62 @@ fs.promises
     });
 
     console.log('correct');
+  } catch (err) {
+    console.log(`SINGLE FILE ${filePath} ERR:`, err);
+  }
+};
+
+const beforeAll = async () => {
+  // eslint-disable-next-line promise/no-nesting
+  await secretsProvider.start(config).catch((err: Error) => {
+    console.error(`Error while starting secretsProvider: ${err.stack}`);
     // eslint-disable-next-line no-process-exit
-    process.exit(0);
-  })
-  .catch((e) => console.error('THE ERROR', e));
+    process.exit(1);
+  });
+
+  const serviceManager = new ServiceManager(config);
+  const server = new Server(serviceManager, config);
+
+  await server.start();
+
+  await awaitServerHealthy(SERVER_URL);
+
+  return { server };
+};
+
+const afterAll = async ({ server }: { server: Server }) => {
+  await server.stop();
+};
+
+const beforeEach = async () => {
+  await createTable();
+};
+
+const afterEach = async () => {
+  nock.cleanAll();
+  await deleteTable();
+};
+
+(async () => {
+  try {
+    const files = await fs.promises.readdir(RECORDINGS_FOLDER);
+
+    const { server } = await beforeAll();
+
+    await Promise.each(files, async (file) => {
+      if (!file.startsWith(SESSION_PREFIX)) return;
+
+      await beforeEach();
+
+      const filePath = path.resolve(RECORDINGS_FOLDER, file);
+      console.log(`running test for session: ${file}`);
+      await runTest(filePath);
+
+      await afterEach();
+    });
+
+    await afterAll({ server });
+  } catch (err) {
+    console.log('FILES LOOP ERR: ', err);
+  }
+})();
