@@ -2,13 +2,12 @@
 /* eslint-disable promise/always-return, no-await-in-loop */
 
 import secretsProvider from '@voiceflow/secrets-provider';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import Promise from 'bluebird';
 import { expect } from 'chai';
 import fetch from 'cross-fetch';
 import fs from 'fs';
 import _ from 'lodash';
+import nock from 'nock';
 import yargs from 'yargs';
 
 import { Config } from '../../types';
@@ -88,18 +87,18 @@ fs.promises
   .then(async (rawData) => {
     const { requests, httpCalls }: SessionRecording = JSON.parse(rawData);
 
-    const mock = new MockAdapter(axios);
+    httpCalls.forEach((call) => {
+      const method = call.method.toLowerCase();
 
-    Object.keys(httpCalls).forEach((method) => {
-      const methodObj = httpCalls[method];
-      const mockFn = _.get(mock, `on${method[0].toUpperCase()}${method.slice(1)}`).bind(mock);
-
-      Object.keys(methodObj).forEach((url) => {
-        const urlResponsesArray = methodObj[url];
-        urlResponsesArray.forEach((response) => {
-          mockFn(url).replyOnce(200, response);
-        });
-      });
+      if (method === 'get') {
+        nock(call.scope)
+          .get(call.path)
+          .reply(call.status, call.response);
+      } else if (method === 'post') {
+        nock(call.scope)
+          .post(call.path)
+          .reply(call.status, call.response);
+      }
     });
 
     // mock.onAny().passThrough();
