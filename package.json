@@ -69,7 +69,6 @@
     "@types/pg": "^7.14.0",
     "@types/sinon": "^7.5.1",
     "@types/supertest": "^2.0.8",
-    "@types/yargs": "^15.0.3",
     "@typescript-eslint/eslint-plugin": "^2.14.0",
     "@typescript-eslint/parser": "^2.14.0",
     "@voiceflow/commitlint-config": "^1.0.1",
@@ -78,12 +77,10 @@
     "@voiceflow/git-branch-check": "^1.0.6",
     "@voiceflow/prettier-config": "^1.0.4",
     "@zerollup/ts-transform-paths": "^1.7.9",
-    "axios-mock-adapter": "^1.17.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "codacy-coverage": "^3.4.0",
     "commitizen": "^4.0.3",
-    "cross-fetch": "^3.0.4",
     "cz-conventional-changelog": "^3.0.2",
     "eslint": "^6.7.2",
     "eslint-plugin-mocha": "^6.2.2",
@@ -109,8 +106,7 @@
     "ts-node": "^8.5.4",
     "tsconfig-paths": "^3.9.0",
     "ttypescript": "^1.5.8",
-    "typescript": "^3.7.4",
-    "yargs": "^15.1.0"
+    "typescript": "^3.7.4"
   },
   "homepage": "https://github.com/voiceflow/backend-template#readme",
   "husky": {

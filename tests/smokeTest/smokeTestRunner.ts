@@ -17,6 +17,12 @@ import config from '../../config';
 import Server from '../../server';
 import { SessionRecording } from './types';
 
+const LOG = {
+  ERROR: '\x1b[31m%s\x1b[0m',
+  DEFAULT: '\x1b[36m%s\x1b[0m',
+  SUCCESS: '\x1b[32m%s\x1b[0m',
+};
+
 config.PORT = '4041';
 config.SESSIONS_DYNAMO_TABLE = 'test-runner-sessions';
 
@@ -126,21 +132,21 @@ const runTest = async (filePath: string) => {
           expect(_.get(response.body, propPath)).to.eql(_.get(actualResponse, propPath));
         });
       } catch (e) {
-        console.error(`Request ${request.url} err: `, e);
+        console.error(LOG.ERROR, `Request ${request.url} err: `, e);
         process.exit(1);
       }
     });
 
-    console.log('correct');
+    console.log(LOG.SUCCESS, 'correct');
   } catch (err) {
-    console.error(`FILE ${filePath} ERR:`, err);
+    console.error(LOG.ERROR, `FILE ${filePath} ERR:`, err);
     process.exit(1);
   }
 };
 
 const beforeAll = async () => {
   await secretsProvider.start(config).catch((err: Error) => {
-    console.error(`Error while starting secretsProvider: ${err.stack}`);
+    console.error(LOG.ERROR, `Error while starting secretsProvider: ${err.stack}`);
     process.exit(1);
   });
 
@@ -186,7 +192,7 @@ const afterEach = async () => {
       await beforeEach();
 
       const filePath = path.resolve(RECORDINGS_FOLDER, file);
-      console.log(`running test for session: ${file}`);
+      console.log(LOG.DEFAULT, `running test for session: ${file}`);
       await runTest(filePath);
 
       await afterEach();
@@ -194,7 +200,7 @@ const afterEach = async () => {
 
     await afterAll({ server });
   } catch (err) {
-    console.error('FILES LOOP ERR: ', err);
+    console.error(LOG.ERROR, 'FILES LOOP ERR: ', err);
     process.exit(1);
   }
 })();
