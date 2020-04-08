@@ -1,3 +1,4 @@
+/* eslint-disable no-process-exit */
 /* eslint-disable no-console */
 import '../../envSetup';
 
@@ -126,21 +127,20 @@ const runTest = async (filePath: string) => {
         });
       } catch (e) {
         console.error(`Request ${request.url} err: `, e);
-        // eslint-disable-next-line no-process-exit
-        process.exit(0);
+        process.exit(1);
       }
     });
 
     console.log('correct');
   } catch (err) {
-    console.log(`SINGLE FILE ${filePath} ERR:`, err);
+    console.error(`FILE ${filePath} ERR:`, err);
+    process.exit(1);
   }
 };
 
 const beforeAll = async () => {
   await secretsProvider.start(config).catch((err: Error) => {
     console.error(`Error while starting secretsProvider: ${err.stack}`);
-    // eslint-disable-next-line no-process-exit
     process.exit(1);
   });
 
@@ -194,6 +194,7 @@ const afterEach = async () => {
 
     await afterAll({ server });
   } catch (err) {
-    console.log('FILES LOOP ERR: ', err);
+    console.error('FILES LOOP ERR: ', err);
+    process.exit(1);
   }
 })();
