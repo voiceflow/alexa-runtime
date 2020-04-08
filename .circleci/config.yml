@@ -61,10 +61,6 @@ jobs:
             yarn test
       - codecov/upload:
           file: nyc_coverage/lcov.info
-      - run:
-          name: "Run smoke tests"
-          command: |
-            yarn test:smoke
 
   build-push-image:
     executor: build-executor
