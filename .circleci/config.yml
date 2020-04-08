@@ -59,6 +59,10 @@ jobs:
           name: "Run tests"
           command: |
             yarn test
+      - run:
+          name: "Smoke tests"
+          command: |
+            yarn test:smoke
       - codecov/upload:
           file: nyc_coverage/lcov.info
 

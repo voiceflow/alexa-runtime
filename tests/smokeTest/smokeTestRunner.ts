@@ -129,7 +129,16 @@ const runTest = async (filePath: string) => {
         // assert that all properties in expected response (old server) are equal in the actual response (new server)
         properties.forEach((prop) => {
           const propPath = prop.substr(1);
-          expect(_.get(response.body, propPath)).to.eql(_.get(actualResponse, propPath));
+          let actual = _.get(actualResponse, propPath);
+          let expected = _.get(response.body, propPath);
+
+          if (propPath === 'userAgent') {
+            // trim Node version, doesn't need to be the same
+            actual = actual.substr(0, 21);
+            expected = expected.substr(0, 21);
+          }
+
+          expect(actual).to.eql(expected);
         });
       } catch (e) {
         console.error(LOG.ERROR, `Request ${request.url} err: `, e);
