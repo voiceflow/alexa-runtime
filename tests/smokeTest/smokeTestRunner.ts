@@ -102,24 +102,16 @@ const runTest = async (filePath: string) => {
 
     // mock http calls
     httpCalls.forEach((call) => {
-      const method = call.method.toLowerCase();
-
-      if (method === 'get') {
-        nock(call.scope)
-          .get(call.path)
-          .reply(call.status, call.response);
-      } else if (method === 'post') {
-        nock(call.scope)
-          .post(call.path)
-          .reply(call.status, call.response);
-      }
+      nock(call.scope)
+        .intercept(call.path, call.method)
+        .reply(call.status, call.response);
     });
 
     await Promise.each(requests, async ({ request, response }) => {
       try {
         const { data: actualResponse } = await axios(`${SERVER_URL}${request.url}`, {
           method: request.method,
-          data: JSON.stringify(request.body),
+          data: request.body,
           headers: request.headers,
         });
 
@@ -133,7 +125,7 @@ const runTest = async (filePath: string) => {
           expect(_.get(response.body, propPath)).to.eql(_.get(actualResponse, propPath));
         });
       } catch (e) {
-        console.error('THE ERROR', e);
+        console.error(`Request ${request.url} err: `, e);
         // eslint-disable-next-line no-process-exit
         process.exit(0);
       }
@@ -146,7 +138,6 @@ const runTest = async (filePath: string) => {
 };
 
 const beforeAll = async () => {
-  // eslint-disable-next-line promise/no-nesting
   await secretsProvider.start(config).catch((err: Error) => {
     console.error(`Error while starting secretsProvider: ${err.stack}`);
     // eslint-disable-next-line no-process-exit
@@ -159,6 +150,13 @@ const beforeAll = async () => {
   await server.start();
 
   await awaitServerHealthy(SERVER_URL);
+
+  try {
+    // try deleting table, just in case it already exists
+    await deleteTable();
+  } catch (err) {
+    // ignore this failing. means table does not exist
+  }
 
   return { server };
 };
