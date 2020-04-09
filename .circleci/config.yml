@@ -33,13 +33,13 @@ commands:
           name: Install AWS CLI
           command: pip3 install awscli
 
-  clone_s3_assets: 
-    steps: 
-      - run: 
+  clone_s3_assets:
+    steps:
+      - run:
           name: Clone s3 assets
           command: |
-          mkdir /ci-assets
-          aws s3 sync s3://com.voiceflow.ci.assets /ci-assets
+            mkdir /ci-assets
+            aws s3 sync s3://com.voiceflow.ci.assets /ci-assets
 
   setup_test_env:
     steps:
@@ -170,13 +170,13 @@ workflows:
               ignore:
                 - /ephemeral.*/
 
-      - smoke-test: 
+      - smoke-test:
           context: dev-test
           filters:
             branches:
               only:
                 - frank/smoke-test/CORE-2972
-      
+
       - build-push-image:
           context: dev-test
           filters:
