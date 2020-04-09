@@ -28,7 +28,7 @@ commands:
     steps:
       - run:
           name: Install pip3
-          command: apt update && apt install -y python3-pip
+          command: sudo apt update && sudo apt install -y python3-pip
       - run:
           name: Install AWS CLI
           command: pip3 install awscli
@@ -38,8 +38,8 @@ commands:
       - run:
           name: Clone s3 assets
           command: |
-            mkdir /ci-assets
-            aws s3 sync s3://com.voiceflow.ci.assets /ci-assets
+            mkdir ~/ci-assets
+            aws s3 sync s3://com.voiceflow.ci.assets ~/ci-assets
 
   setup_test_env:
     steps:
