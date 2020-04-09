@@ -39,7 +39,7 @@ commands:
           name: Clone s3 assets
           command: |
             mkdir ~/ci-assets
-            aws s3 sync s3://com.voiceflow.ci.assets ~/ci-assets
+            aws s3 sync s3://com.voiceflow.ci.assets/alexa ~/ci-assets/
 
   setup_test_env:
     steps:
