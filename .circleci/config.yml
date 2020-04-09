@@ -38,8 +38,7 @@ commands:
       - run:
           name: Clone s3 assets
           command: |
-            mkdir ~/ci-assets
-            aws s3 sync s3://com.voiceflow.ci.assets/alexa ~/ci-assets/
+            aws s3 sync s3://com.voiceflow.ci.assets/alexa ~/project/tests/smokeTest/recordedSessions
 
   setup_test_env:
     steps:
@@ -80,12 +79,14 @@ jobs:
           name: "Run tests"
           command: |
             yarn test
-      - run:
-          name: "Smoke tests"
-          command: |
-            yarn test:smoke
       - codecov/upload:
           file: nyc_coverage/lcov.info
+      # temp steps
+      - install_aws_cli
+      - clone_s3_assets
+      - run:
+          name: Run smoke tests
+          command: yarn test:smoke
 
   smoke-test:
     executor: smoke-test-executor
