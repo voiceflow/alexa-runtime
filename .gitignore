@@ -46,3 +46,7 @@ local_secrets.yaml
 
 # build folder
 build
+
+
+/tests/smokeTest/recordedSessions/*
+!/tests/smokeTest/recordedSessions/readme.md
