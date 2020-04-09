@@ -175,7 +175,7 @@ workflows:
           filters:
             branches:
               only:
-                - frank/smoke-test/CORE-2972
+                - master
 
       - build-push-image:
           context: dev-test
