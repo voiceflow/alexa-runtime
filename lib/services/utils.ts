@@ -10,3 +10,5 @@ export abstract class AbstractManager<T = {}> {
     this.services = services as FullServiceMap & T;
   }
 }
+
+export { FullServiceMap as Services, Config };

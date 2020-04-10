@@ -1,4 +1,4 @@
-import { Handler, HandlerFactory } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { T } from '@/lib/constants';
 

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S, T } from '@/lib/constants';
-import buildContext from '@/lib/services/alexa/handlers/lifecycle/context';
+import buildContext from '@/lib/services/alexa/request/lifecycle/context';
 import { RequestType } from '@/lib/services/voiceflow/types';
 
 describe('context lifecycle unit tests', () => {

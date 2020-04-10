@@ -27,7 +27,7 @@ export const StreamFailPhrase: Record<string, string> = {
 };
 
 const utilsObj = {
-  CommandHandler,
+  commandHandler: CommandHandler(),
   regexVariables,
 };
 
@@ -97,11 +97,11 @@ export const StreamStateHandler: HandlerFactory<any, typeof utilsObj> = (utils) 
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
       context.end();
-    } else if (utils.CommandHandler.canHandle(context)) {
+    } else if (utils.commandHandler.canHandle(context)) {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
-      return utils.CommandHandler.handle(context, variables);
+      return utils.commandHandler.handle(context, variables);
     } else {
       context.storage.produce((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.NOEFFECT;

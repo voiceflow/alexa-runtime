@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import PlaybackControllerHandler, { PlaybackControllerHandlerGenerator } from '@/lib/services/alexa/handlers/playback';
-import { Command } from '@/lib/services/alexa/handlers/playback/types';
+import PlaybackControllerHandler, { PlaybackControllerHandlerGenerator } from '@/lib/services/alexa/request/playback';
+import { Command } from '@/lib/services/alexa/request/playback/types';
 import { IntentName } from '@/lib/services/voiceflow/types';
 
 describe('playback controller handler unit tests', () => {

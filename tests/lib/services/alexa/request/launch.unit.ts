@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import LaunchHandler, { LaunchHandlerGenerator, Request } from '@/lib/services/alexa/handlers/launch';
+import LaunchHandler, { LaunchHandlerGenerator, Request } from '@/lib/services/alexa/request/launch';
 
 describe('launch handler unit tests', () => {
   describe('canHandle', () => {

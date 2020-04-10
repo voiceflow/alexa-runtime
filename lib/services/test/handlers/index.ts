@@ -18,7 +18,7 @@ import PaymentHandler from './payment';
 import ReminderHandler from './reminder';
 import UserInfoHandler from './userInfo';
 
-export default ({}: Config) => [
+export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HANDLER_ENDPOINT }: Config) => [
   StreamStateHandler(),
   SpeakHandler(),
   InteractionHandler(),
@@ -34,11 +34,11 @@ export default ({}: Config) => [
   DisplayHandler(),
   StreamHandler(),
   ChoiceHandler(),
-  CodeHandler({ endpoint }),
+  CodeHandler({ endpoint: CODE_HANDLER_ENDPOINT }),
   EndHandler(),
   FlowHandler(),
   IfHandler(),
-  IntegrationsHandler({ customAPIEndpoint, integrationsLambdaEndpoint }),
+  IntegrationsHandler({ customAPIEndpoint: API_HANDLER_ENDPOINT, integrationsLambdaEndpoint: INTEGRATIONS_HANDLER_ENDPOINT }),
   RandomHandler(),
   SetHandler(),
   StartHandler(),

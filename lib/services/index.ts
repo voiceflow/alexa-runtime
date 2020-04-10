@@ -8,9 +8,9 @@ import Test from './test';
 import Voiceflow from './voiceflow';
 
 export interface ServiceMap {
-  alexa: Alexa;
-  voiceflow: Voiceflow;
-  test: Test;
+  alexa: ReturnType<typeof Alexa>;
+  voiceflow: ReturnType<typeof Voiceflow>;
+  test: ReturnType<typeof Test>;
 }
 
 export interface FullServiceMap extends ClientMap, ServiceMap {
@@ -26,9 +26,9 @@ const buildServices = (config: Config, clients: ClientMap): FullServiceMap => {
   } as FullServiceMap;
 
   services.secretsProvider = secretsProvider;
-  services.voiceflow = new Voiceflow(services, config);
-  services.alexa = new Alexa(services, config);
-  services.test = new Test(services, config);
+  services.voiceflow = Voiceflow(services, config);
+  services.alexa = Alexa(services, config);
+  services.test = Test(services, config);
 
   return services;
 };
