@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { S, T } from '@/lib/constants';
 
@@ -31,7 +31,7 @@ const utilsObj = {
   regexVariables,
 };
 
-export const streamStateHandlerGenerator = (utils: typeof utilsObj): Handler<any> => ({
+export const StreamStateHandler: HandlerFactory<any, typeof utilsObj> = (utils) => ({
   canHandle: (_, context) => {
     return !!(context.storage.get(S.STREAM_PLAY) && context.storage.get(S.STREAM_PLAY).action !== StreamAction.END);
   },
@@ -128,4 +128,4 @@ export const streamStateHandlerGenerator = (utils: typeof utilsObj): Handler<any
   },
 });
 
-export default streamStateHandlerGenerator(utilsObj);
+export default () => StreamStateHandler(utilsObj);

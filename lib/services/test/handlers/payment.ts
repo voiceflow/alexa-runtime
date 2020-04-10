@@ -1,8 +1,8 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { PaymentsBlock } from '@/lib/services/voiceflow/handlers/payment';
 
-const PaymentHandler: Handler<PaymentsBlock> = {
+const PaymentHandler: HandlerFactory<PaymentsBlock> = () => ({
   canHandle: (block) => {
     return !!block.product_id;
   },
@@ -17,6 +17,6 @@ const PaymentHandler: Handler<PaymentsBlock> = {
 
     return block.success_id ?? block.fail_id ?? null;
   },
-};
+});
 
 export default PaymentHandler;

@@ -1,8 +1,8 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { ReminderBlock } from '@/lib/services/voiceflow/handlers/reminder';
 
-export const ReminderHandlerGenerator: Handler<ReminderBlock> = {
+export const ReminderHandlerGenerator: HandlerFactory<ReminderBlock> = () => ({
   canHandle: (block) => {
     return !!block.reminder;
   },
@@ -17,6 +17,6 @@ export const ReminderHandlerGenerator: Handler<ReminderBlock> = {
 
     return block.success_id ?? block.fail_id ?? null;
   },
-};
+});
 
 export default ReminderHandlerGenerator;

@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 export type ResetBlock = {
   reset?: boolean;
@@ -7,7 +7,7 @@ export type ResetBlock = {
 /**
  * reset the entire stack to the first flow and it's first block
  */
-const ResetHandler: Handler<ResetBlock> = {
+const ResetHandler: HandlerFactory<ResetBlock> = () => ({
   canHandle: (block) => {
     return !!block.reset;
   },
@@ -16,6 +16,6 @@ const ResetHandler: Handler<ResetBlock> = {
     context.stack.top().setBlockID(null);
     return null;
   },
-};
+});
 
 export default ResetHandler;

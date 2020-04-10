@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { S } from '@/lib/constants';
 import { ResponseBuilder } from '@/lib/services/voiceflow/types';
@@ -31,7 +31,7 @@ export const CancelPaymentResponseBuilder: ResponseBuilder = (context, builder) 
   }
 };
 
-const CancelPaymentHandler: Handler<PaymentsBlock> = {
+const CancelPaymentHandler: HandlerFactory<PaymentsBlock> = () => ({
   canHandle: (block) => {
     return !!block.cancel_product_id;
   },
@@ -46,6 +46,6 @@ const CancelPaymentHandler: Handler<PaymentsBlock> = {
     // stop on itself and wait for paymentStateHandler to determine next path
     return block.blockID;
   },
-};
+});
 
 export default CancelPaymentHandler;
