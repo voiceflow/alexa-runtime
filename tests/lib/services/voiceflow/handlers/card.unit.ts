@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T } from '@/lib/constants';
-import CardHandler, { addVariables, CardHandlerGenerator, CardResponseBuilder, CardType } from '@/lib/services/voiceflow/handlers/card';
+import { addVariables, CardHandler, CardResponseBuilder, CardType } from '@/lib/services/voiceflow/handlers/card';
 
 describe('card handler unit tests', async () => {
   afterEach(() => sinon.restore());
@@ -11,7 +11,7 @@ describe('card handler unit tests', async () => {
     it('false', async () => {
       const block = {};
 
-      const result = CardHandler.canHandle(block as any, null as any, null as any, null as any);
+      const result = CardHandler(null as any).canHandle(block as any, null as any, null as any, null as any);
 
       expect(result).to.eql(false);
     });
@@ -19,7 +19,7 @@ describe('card handler unit tests', async () => {
     it('true', async () => {
       const block = { card: { foo: 'bar' } };
 
-      const result = CardHandler.canHandle(block as any, null as any, null as any, null as any);
+      const result = CardHandler(null as any).canHandle(block as any, null as any, null as any, null as any);
 
       expect(result).to.eql(true);
     });
@@ -38,7 +38,7 @@ describe('card handler unit tests', async () => {
           .returns('CONTENT'),
       };
 
-      const cardHandler = CardHandlerGenerator(utils);
+      const cardHandler = CardHandler(utils);
 
       const block = {
         card: {
@@ -79,7 +79,7 @@ describe('card handler unit tests', async () => {
         addVariables: sinon.stub().returns(''),
       };
 
-      const cardHandler = CardHandlerGenerator(utils);
+      const cardHandler = CardHandler(utils);
 
       const block = {
         card: {
@@ -101,7 +101,7 @@ describe('card handler unit tests', async () => {
         addVariables: sinon.stub().returns(''),
       };
 
-      const cardHandler = CardHandlerGenerator(utils);
+      const cardHandler = CardHandler(utils);
 
       const block = {
         card: {
@@ -123,7 +123,7 @@ describe('card handler unit tests', async () => {
         addVariables: sinon.stub().returns('url'),
       };
 
-      const cardHandler = CardHandlerGenerator(utils);
+      const cardHandler = CardHandler(utils);
 
       const block = {
         card: {

@@ -33,17 +33,17 @@ describe('test manager unit tests', () => {
       const createContext = sinon.stub().returns(context);
 
       const services = {
-        voiceflow: { client: sinon.stub().returns({ createContext }) },
-        utils: {
-          handlers: 'foo',
-        },
+        voiceflow: { client: { createContext } },
+      };
+      const utils = {
+        Handlers: () => 'foo',
       };
 
       const config = {
         VF_DATA_ENDPOINT: 'random-endpoint',
       };
 
-      const testManager = new TestManager(services as any, config as any);
+      const testManager = TestManager(services as any, config as any, utils as any);
 
       const state = { foo2: 'bar2' };
       const request = { foo3: 'bar3' };
@@ -91,16 +91,20 @@ describe('test manager unit tests', () => {
       const createContext = sinon.stub().returns(context);
 
       const services = {
-        voiceflow: { client: sinon.stub().returns({ createContext }) },
+        voiceflow: { client: { createContext } },
+      };
+      const utils = {
+        Handlers: sinon.stub().returns([]),
       };
 
       const config = {
         VF_DATA_ENDPOINT: 'random-endpoint',
       };
 
-      const testManager = new TestManager(services as any, config as any);
+      const testManager = TestManager(services as any, config as any, utils as any);
 
       expect(await testManager.invoke({} as any, {} as any)).to.eql({ ...rawState, trace });
+      expect(utils.Handlers.callCount).to.eql(1);
       expect(context.trace.end.callCount).to.eql(1);
     });
 
@@ -129,16 +133,21 @@ describe('test manager unit tests', () => {
         const createContext = sinon.stub().returns(context);
 
         const services = {
-          voiceflow: { client: sinon.stub().returns({ createContext }) },
+          voiceflow: { client: { createContext } },
         };
 
         const config = {
           VF_DATA_ENDPOINT: 'random-endpoint',
         };
 
-        const testManager = new TestManager(services as any, config as any);
+        const utils = {
+          Handlers: sinon.stub().returns([]),
+        };
+
+        const testManager = TestManager(services as any, config as any, utils as any);
 
         expect(await testManager.invoke({} as any, {} as any)).to.eql({ ...rawState, trace });
+        expect(utils.Handlers.callCount).to.eql(1);
         expect(context.trace.stream.args).to.eql([[stream.url, stream.token, TraceStreamAction.LOOP]]);
       });
 
@@ -166,16 +175,21 @@ describe('test manager unit tests', () => {
         const createContext = sinon.stub().returns(context);
 
         const services = {
-          voiceflow: { client: sinon.stub().returns({ createContext }) },
+          voiceflow: { client: { createContext } },
         };
 
         const config = {
           VF_DATA_ENDPOINT: 'random-endpoint',
         };
 
-        const testManager = new TestManager(services as any, config as any);
+        const utils = {
+          Handlers: sinon.stub().returns([]),
+        };
+
+        const testManager = TestManager(services as any, config as any, utils as any);
 
         expect(await testManager.invoke({} as any, {} as any)).to.eql({ ...rawState, trace });
+        expect(utils.Handlers.callCount).to.eql(1);
         expect(context.trace.stream.args).to.eql([[stream.url, stream.token, TraceStreamAction.PLAY]]);
       });
 
@@ -203,14 +217,18 @@ describe('test manager unit tests', () => {
         const createContext = sinon.stub().returns(context);
 
         const services = {
-          voiceflow: { client: sinon.stub().returns({ createContext }) },
+          voiceflow: { client: { createContext } },
         };
 
         const config = {
           VF_DATA_ENDPOINT: 'random-endpoint',
         };
 
-        const testManager = new TestManager(services as any, config as any);
+        const utils = {
+          Handlers: sinon.stub().returns([]),
+        };
+
+        const testManager = TestManager(services as any, config as any, utils as any);
 
         expect(await testManager.invoke({} as any, {} as any)).to.eql({ ...rawState, trace });
         expect(context.trace.stream.args).to.eql([[stream.url, stream.token, TraceStreamAction.PAUSE]]);

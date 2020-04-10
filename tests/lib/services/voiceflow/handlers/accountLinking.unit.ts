@@ -5,13 +5,15 @@ import { S, T } from '@/lib/constants';
 import AccountLinkingHandler, { AccountLinkingResponseBuilder } from '@/lib/services/voiceflow/handlers/accountLinking';
 
 describe('permission card handler unit tests', () => {
+  const accountLinkingHandler = AccountLinkingHandler();
+
   describe('canHandle', () => {
     it('false', () => {
-      expect(AccountLinkingHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
+      expect(accountLinkingHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
     });
 
     it('true', () => {
-      expect(AccountLinkingHandler.canHandle({ link_account: true } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(accountLinkingHandler.canHandle({ link_account: true } as any, null as any, null as any, null as any)).to.eql(true);
     });
   });
 
@@ -22,7 +24,7 @@ describe('permission card handler unit tests', () => {
         nextId: 'next-id',
       };
 
-      expect(AccountLinkingHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.nextId);
+      expect(accountLinkingHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.nextId);
       expect(context.turn.set.args).to.eql([[T.ACCOUNT_LINKING, true]]);
     });
 
@@ -30,7 +32,7 @@ describe('permission card handler unit tests', () => {
       const context = { turn: { set: sinon.stub() } };
       const block = {};
 
-      expect(AccountLinkingHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
+      expect(accountLinkingHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
       expect(context.turn.set.args).to.eql([[T.ACCOUNT_LINKING, true]]);
     });
   });

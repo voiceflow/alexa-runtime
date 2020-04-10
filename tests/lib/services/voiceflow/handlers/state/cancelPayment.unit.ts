@@ -2,9 +2,11 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import cancelPaymentStateHandler, { PaymentStatus } from '@/lib/services/voiceflow/handlers/state/cancelPayment';
+import CancelPaymentStateHandler, { PaymentStatus } from '@/lib/services/voiceflow/handlers/state/cancelPayment';
 
 describe('cancelPayment state handler unit tests', () => {
+  const cancelPaymentStateHandler = CancelPaymentStateHandler();
+
   describe('canHandle', () => {
     it('false', () => {
       const context = { storage: { get: sinon.stub().returns(null) } };

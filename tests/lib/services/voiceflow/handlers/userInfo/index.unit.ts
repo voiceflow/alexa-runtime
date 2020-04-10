@@ -1,16 +1,16 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import userInfoHandler, { UserInfoHandlerGenerator } from '@/lib/services/voiceflow/handlers/userInfo';
+import { UserInfoHandler } from '@/lib/services/voiceflow/handlers/userInfo';
 
 describe('user info handler unit test', () => {
   describe('canHandle', () => {
     it('false', () => {
-      expect(userInfoHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
+      expect(UserInfoHandler(null as any).canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
     });
 
     it('true', () => {
-      expect(userInfoHandler.canHandle({ permissions: {} } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(UserInfoHandler(null as any).canHandle({ permissions: {} } as any, null as any, null as any, null as any)).to.eql(true);
     });
   });
 
@@ -18,12 +18,12 @@ describe('user info handler unit test', () => {
     describe('no permissions in array', () => {
       it('with success_id', async () => {
         const block = { success_id: 'success-id', permissions: [] };
-        expect(await userInfoHandler.handle(block as any, null as any, null as any, null as any)).to.eql(block.success_id);
+        expect(await UserInfoHandler(null as any).handle(block as any, null as any, null as any, null as any)).to.eql(block.success_id);
       });
 
       it('without success_id', async () => {
         const block = { permissions: [] };
-        expect(await userInfoHandler.handle(block as any, null as any, null as any, null as any)).to.eql(null);
+        expect(await UserInfoHandler(null as any).handle(block as any, null as any, null as any, null as any)).to.eql(null);
       });
     });
 
@@ -31,7 +31,7 @@ describe('user info handler unit test', () => {
       describe('has all permissions', () => {
         it('with success id', async () => {
           const utils = { isPermissionGranted: sinon.stub().resolves(true) };
-          const handler = UserInfoHandlerGenerator(utils);
+          const handler = UserInfoHandler(utils);
 
           const block = { permissions: ['permission1', 'permission2', 'permission3'], success_id: 'success-id' };
           const context = 'context';
@@ -47,7 +47,7 @@ describe('user info handler unit test', () => {
 
         it('without success id', async () => {
           const utils = { isPermissionGranted: sinon.stub().resolves(true) };
-          const handler = UserInfoHandlerGenerator(utils);
+          const handler = UserInfoHandler(utils);
 
           const block = { permissions: ['permission1', 'permission2', 'permission3'] };
 
@@ -61,7 +61,7 @@ describe('user info handler unit test', () => {
           isPermissionGranted.onSecondCall().returns(false);
 
           const utils = { isPermissionGranted };
-          const handler = UserInfoHandlerGenerator(utils);
+          const handler = UserInfoHandler(utils);
 
           const block = { permissions: ['permission1', 'permission2', 'permission3'], fail_id: 'fail-id' };
 
@@ -73,7 +73,7 @@ describe('user info handler unit test', () => {
           isPermissionGranted.onSecondCall().returns(false);
 
           const utils = { isPermissionGranted };
-          const handler = UserInfoHandlerGenerator(utils);
+          const handler = UserInfoHandler(utils);
 
           const block = { permissions: ['permission1', 'permission2', 'permission3'] };
 

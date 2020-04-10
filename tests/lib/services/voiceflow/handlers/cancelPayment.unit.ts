@@ -5,13 +5,15 @@ import { S } from '@/lib/constants';
 import CancelPaymentHandler, { CancelPaymentResponseBuilder } from '@/lib/services/voiceflow/handlers/cancelPayment';
 
 describe('cancel payment handler unit tests', () => {
+  const cancelPaymentHandler = CancelPaymentHandler();
+
   describe('canHandle', () => {
     it('false', () => {
-      expect(CancelPaymentHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
+      expect(cancelPaymentHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
     });
 
     it('true', () => {
-      expect(CancelPaymentHandler.canHandle({ cancel_product_id: '1' } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(cancelPaymentHandler.canHandle({ cancel_product_id: '1' } as any, null as any, null as any, null as any)).to.eql(true);
     });
   });
 
@@ -25,7 +27,7 @@ describe('cancel payment handler unit tests', () => {
         blockID: 'block-id',
       };
 
-      expect(CancelPaymentHandler.handle(block, context as any, null as any, null as any)).to.eql(block.blockID);
+      expect(cancelPaymentHandler.handle(block, context as any, null as any, null as any)).to.eql(block.blockID);
       expect(context.storage.set.args).to.eql([
         [
           S.CANCEL_PAYMENT,

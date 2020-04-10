@@ -5,13 +5,15 @@ import { S, T } from '@/lib/constants';
 import PermissionCardHandler, { PermissionCardResponseBuilder } from '@/lib/services/voiceflow/handlers/permissionCard';
 
 describe('permission card handler unit tests', () => {
+  const permissionCardHandler = PermissionCardHandler();
+
   describe('canHandle', () => {
     it('false', () => {
-      expect(PermissionCardHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
+      expect(permissionCardHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
     });
 
     it('true', () => {
-      expect(PermissionCardHandler.canHandle({ permission_card: {} } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(permissionCardHandler.canHandle({ permission_card: {} } as any, null as any, null as any, null as any)).to.eql(true);
     });
   });
 
@@ -23,7 +25,7 @@ describe('permission card handler unit tests', () => {
         permission_card: 'permission-card',
       };
 
-      expect(PermissionCardHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.nextId);
+      expect(permissionCardHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.nextId);
       expect(context.turn.set.args).to.eql([[T.PERMISSION_CARD, block.permission_card]]);
     });
 
@@ -33,7 +35,7 @@ describe('permission card handler unit tests', () => {
         permission_card: 'permission-card',
       };
 
-      expect(PermissionCardHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
+      expect(permissionCardHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
       expect(context.turn.set.args).to.eql([[T.PERMISSION_CARD, block.permission_card]]);
     });
   });

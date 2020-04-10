@@ -12,17 +12,17 @@ describe('alexa controller unit tests', () => {
       const output = 'output';
 
       const client = { foo: 'bar' };
-      const alexaSkill = { invoke: sinon.stub().resolves(output) };
+      const skill = { invoke: sinon.stub().resolves(output) };
       const services = {
-        alexa: { skill: sinon.stub().returns(alexaSkill) },
-        voiceflow: { client: sinon.stub().returns(client) },
+        alexa: { skill },
+        voiceflow: { client },
       };
 
       const alexaController = new Alexa(services as any, null as any);
 
       const req = { body: { var1: 'val1' }, params: { versionID: 'version-id' } };
       expect(await alexaController.handler(req as any)).to.eql(output);
-      expect(alexaSkill.invoke.args).to.eql([[req.body, { versionID: req.params.versionID, voiceflow: client }]]);
+      expect(skill.invoke.args).to.eql([[req.body, { versionID: req.params.versionID, voiceflow: client }]]);
     });
   });
 

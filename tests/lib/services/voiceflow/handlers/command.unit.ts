@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { F, T } from '@/lib/constants';
-import CommandHandler, { CommandHandlerGenerator, getCommand } from '@/lib/services/voiceflow/handlers/command';
+import DefaultCommandHandler, { CommandHandler, getCommand } from '@/lib/services/voiceflow/handlers/command';
 import { IntentName, RequestType } from '@/lib/services/voiceflow/types';
 
 describe('capture handler unit tests', async () => {
@@ -95,22 +95,22 @@ describe('capture handler unit tests', async () => {
 
   describe('canHandle', () => {
     it('false', () => {
-      expect(CommandHandlerGenerator({ getCommand: sinon.stub().returns(null) } as any).canHandle(null as any)).to.eql(false);
+      expect(CommandHandler({ getCommand: sinon.stub().returns(null) } as any).canHandle(null as any)).to.eql(false);
     });
     it('true', () => {
-      expect(CommandHandlerGenerator({ getCommand: sinon.stub().returns({ foo: 'bar' }) } as any).canHandle(null as any)).to.eql(true);
+      expect(CommandHandler({ getCommand: sinon.stub().returns({ foo: 'bar' }) } as any).canHandle(null as any)).to.eql(true);
     });
   });
 
   describe('handle', () => {
     it('no command obj', () => {
-      const commandHandler = CommandHandlerGenerator({ getCommand: sinon.stub().returns(null) } as any);
+      const commandHandler = CommandHandler({ getCommand: sinon.stub().returns(null) } as any);
 
       expect(commandHandler.handle(null as any, null as any)).to.eql(null);
     });
 
     it('no command', () => {
-      const commandHandler = CommandHandlerGenerator({ getCommand: sinon.stub().returns({}) } as any);
+      const commandHandler = CommandHandler({ getCommand: sinon.stub().returns({}) } as any);
 
       const context = { turn: { delete: sinon.stub() } };
 
@@ -120,7 +120,7 @@ describe('capture handler unit tests', async () => {
 
     describe('has command', () => {
       it('no diagram_id or next', () => {
-        const commandHandler = CommandHandlerGenerator({ getCommand: sinon.stub().returns({ command: {} }) } as any);
+        const commandHandler = CommandHandler({ getCommand: sinon.stub().returns({ command: {} }) } as any);
 
         const context = { turn: { delete: sinon.stub() } };
 
@@ -128,7 +128,7 @@ describe('capture handler unit tests', async () => {
       });
 
       it('mappings but no slots', () => {
-        const commandHandler = CommandHandlerGenerator({ getCommand: sinon.stub().returns({ command: { mappings: {} }, intent: {} }) } as any);
+        const commandHandler = CommandHandler({ getCommand: sinon.stub().returns({ command: { mappings: {} }, intent: {} }) } as any);
 
         const context = { turn: { delete: sinon.stub() } };
 
@@ -136,7 +136,7 @@ describe('capture handler unit tests', async () => {
       });
 
       it('slots but no mappings', () => {
-        const commandHandler = CommandHandlerGenerator({ getCommand: sinon.stub().returns({ command: { intent: { slots: {} } } }) } as any);
+        const commandHandler = CommandHandler({ getCommand: sinon.stub().returns({ command: { intent: { slots: {} } } }) } as any);
 
         const context = { turn: { delete: sinon.stub() } };
 
@@ -151,7 +151,7 @@ describe('capture handler unit tests', async () => {
           getCommand: sinon.stub().returns(res),
         };
 
-        const commandHandler = CommandHandlerGenerator(utils as any);
+        const commandHandler = CommandHandler(utils as any);
 
         const context = { turn: { delete: sinon.stub() } };
         const variables = { merge: sinon.stub() };
@@ -165,7 +165,7 @@ describe('capture handler unit tests', async () => {
         const res = { command: { diagram_id: 'diagram-id', intent: 'intent' } };
         const utils = { getCommand: sinon.stub().returns(res), Frame: sinon.stub() };
 
-        const commandHandler = CommandHandlerGenerator(utils as any);
+        const commandHandler = CommandHandler(utils as any);
 
         const topFrame = { storage: { set: sinon.stub() } };
         const context = {
@@ -187,7 +187,7 @@ describe('capture handler unit tests', async () => {
 
           const res = { command: { next: 'next-id', intent: 'intent' }, index: stackSize - 1 };
           const utils = { getCommand: sinon.stub().returns(res) };
-          const commandHandler = CommandHandlerGenerator(utils as any);
+          const commandHandler = CommandHandler(utils as any);
 
           const context = {
             trace: { debug: sinon.stub() },
@@ -203,7 +203,7 @@ describe('capture handler unit tests', async () => {
           const index = 1;
           const res = { command: { next: 'next-id', intent: 'intent' }, index };
           const utils = { getCommand: sinon.stub().returns(res) };
-          const commandHandler = CommandHandlerGenerator(utils as any);
+          const commandHandler = CommandHandler(utils as any);
 
           const topFrame = { setBlockID: sinon.stub() };
           const context = {
@@ -221,7 +221,7 @@ describe('capture handler unit tests', async () => {
         it('index bigger than stack size', () => {
           const res = { command: { next: 'next-id' }, index: 4 };
           const utils = { getCommand: sinon.stub().returns(res) };
-          const commandHandler = CommandHandlerGenerator(utils as any);
+          const commandHandler = CommandHandler(utils as any);
 
           const context = {
             turn: { delete: sinon.stub() },
@@ -237,7 +237,7 @@ describe('capture handler unit tests', async () => {
   describe('generation', () => {
     it('works correctly', () => {
       const context = { turn: { get: sinon.stub().returns(null) } };
-      expect(CommandHandler.canHandle(context as any)).to.eql(false);
+      expect(DefaultCommandHandler().canHandle(context as any)).to.eql(false);
     });
   });
 });
