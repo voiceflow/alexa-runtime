@@ -21,7 +21,7 @@ const TestManager = (services: Services, config: Config, utils = utilsObj) => {
   const invoke = async (state: State, request?: Request) => {
     const { voiceflow } = services;
 
-    const context = voiceflow.client().createContext(TEST_VERSION_ID, state as State, request, {
+    const context = voiceflow.client.createContext(TEST_VERSION_ID, state as State, request, {
       endpoint: `${config.VF_DATA_ENDPOINT}/test`,
       handlers,
     });

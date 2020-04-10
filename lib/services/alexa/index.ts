@@ -1,6 +1,5 @@
-import ASK, { HandlerInput, SkillBuilders } from 'ask-sdk';
+import { HandlerInput, SkillBuilders } from 'ask-sdk';
 
-import { injectServices } from '../types';
 import { Config, Services } from '../utils';
 import {
   APLUserEventHandler,
