@@ -95,6 +95,7 @@ jobs:
       - install_aws_cli
       - clone_s3_assets
       - install_node_modules
+      - setup_test_env
       - run:
           name: Run smoke tests
           command: yarn test:smoke
