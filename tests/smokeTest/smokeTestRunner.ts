@@ -111,7 +111,8 @@ const runTest = async (filePath: string) => {
     httpCalls.forEach((call) => {
       nock(call.scope)
         .intercept(call.path, call.method)
-        .reply(call.status, call.response);
+        .reply(call.status, call.response)
+        .persist();
     });
 
     await Promise.each(requests, async ({ request, response }) => {
