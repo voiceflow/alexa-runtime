@@ -20,6 +20,22 @@ executors:
     resource_class: small
 
 commands:
+  install_aws_cli:
+    steps:
+      - run:
+          name: Install pip3
+          command: sudo apt update && sudo apt install -y python3-pip
+      - run:
+          name: Install AWS CLI
+          command: pip3 install awscli
+
+  clone_s3_assets:
+    steps:
+      - run:
+          name: Clone s3 assets
+          command: |
+            aws s3 sync s3://com.voiceflow.ci.assets/alexa ~/project/tests/smokeTest/recordedSessions
+
   setup_test_env:
     steps:
       - run:
@@ -61,6 +77,12 @@ jobs:
             yarn test
       - codecov/upload:
           file: nyc_coverage/lcov.info
+      # temp steps
+      - install_aws_cli
+      - clone_s3_assets
+      - run:
+          name: Run smoke tests
+          command: yarn test:smoke
 
   build-push-image:
     executor: build-executor
@@ -138,6 +160,7 @@ workflows:
             branches:
               ignore:
                 - /ephemeral.*/
+
       - build-push-image:
           context: dev-test
           filters:
