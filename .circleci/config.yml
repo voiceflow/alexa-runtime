@@ -9,11 +9,6 @@ executors:
       - image: circleci/node:12
       - image: circleci/dynamodb:13-oracle # DynamoDB service container
     resource_class: medium
-  smoke-test-executor:
-    docker:
-      - image: circleci/node:12
-      - image: circleci/dynamodb:13-oracle # DynamoDB service container
-    resource_class: medium
   build-executor:
     working_directory: /tmp/vf-build
     docker:
@@ -85,18 +80,6 @@ jobs:
       # temp steps
       - install_aws_cli
       - clone_s3_assets
-      - run:
-          name: Run smoke tests
-          command: yarn test:smoke
-
-  smoke-test:
-    executor: smoke-test-executor
-    steps:
-      - checkout
-      - install_aws_cli
-      - clone_s3_assets
-      - install_node_modules
-      - setup_test_env
       - run:
           name: Run smoke tests
           command: yarn test:smoke
@@ -177,13 +160,6 @@ workflows:
             branches:
               ignore:
                 - /ephemeral.*/
-
-      - smoke-test:
-          context: dev-test
-          filters:
-            branches:
-              only:
-                - master
 
       - build-push-image:
           context: dev-test
