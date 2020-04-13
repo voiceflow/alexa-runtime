@@ -1,8 +1,8 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { Display } from '@/lib/services/voiceflow/handlers/display';
 
-const DisplayHandler: Handler<Display> = {
+const DisplayHandler: HandlerFactory<Display> = () => ({
   canHandle: (block) => {
     return !!block.display_id;
   },
@@ -15,6 +15,6 @@ const DisplayHandler: Handler<Display> = {
 
     return block.nextId ?? null;
   },
-};
+});
 
 export default DisplayHandler;

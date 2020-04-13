@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { F, S } from '@/lib/constants';
-import { initializeGenerator, VAR_VF } from '@/lib/services/alexa/handlers/lifecycle/initialize';
+import { initializeGenerator, VAR_VF } from '@/lib/services/alexa/request/lifecycle/initialize';
 import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 
 describe('initialize lifecycle unit tests', async () => {

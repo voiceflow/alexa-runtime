@@ -14,14 +14,6 @@ describe('voiceflowManager unit tests', async () => {
         setEvent: sinon.stub(),
       };
       const services = {
-        utils: {
-          resume: {
-            ResumeDiagram: { foo: 'bar' },
-            RESUME_DIAGRAM_ID: 'diagram-id',
-          },
-          Client: sinon.stub().returns(clientObj),
-          executeEvents: sinon.stub(),
-        },
         secretsProvider: {
           get: sinon.stub().returns('random-secret'),
         },
@@ -29,23 +21,33 @@ describe('voiceflowManager unit tests', async () => {
       const config = {
         VF_DATA_ENDPOINT: 'random-endpoint',
       };
+      const utils = {
+        resume: {
+          ResumeDiagram: { foo: 'bar' },
+          RESUME_DIAGRAM_ID: 'diagram-id',
+        },
+        Client: sinon.stub().returns(clientObj),
+        executeEvents: sinon.stub(),
+        Handlers: () => [],
+      };
 
       return {
-        clientObj,
         services,
         config,
+        utils,
+        clientObj,
       };
     };
 
     it('works correctly', async () => {
-      const { clientObj, services, config } = generateFakes();
+      const { clientObj, services, config, utils } = generateFakes();
 
       const executeEventsOutput = { foo: 'bar' };
-      services.utils.executeEvents = sinon.stub().returns(executeEventsOutput);
+      utils.executeEvents = sinon.stub().returns(executeEventsOutput);
 
-      const voiceflowManager = new VoiceflowManager(services as any, config as any);
+      const voiceflowManager = VoiceflowManager(services as any, config as any, utils as any);
 
-      const client = voiceflowManager.client();
+      const { client } = voiceflowManager;
 
       expect(client).to.eql(clientObj);
       expect(clientObj.setEvent.callCount).to.eql(5);
@@ -54,16 +56,14 @@ describe('voiceflowManager unit tests', async () => {
       expect(clientObj.setEvent.args[2][0]).to.eql(EventType.frameDidFinish);
       expect(clientObj.setEvent.args[3][0]).to.eql(EventType.diagramWillFetch);
       expect(clientObj.setEvent.args[4]).to.eql([EventType.stateDidExecute, executeEventsOutput]);
-      expect(services.utils.executeEvents.args).to.eql([[EventType.stateDidExecute]]);
+      expect(utils.executeEvents.args).to.eql([[EventType.stateDidExecute]]);
     });
 
     describe('traceWillAdd', () => {
       it('not test id', () => {
-        const { clientObj, services, config } = generateFakes();
+        const { clientObj, services, config, utils } = generateFakes();
 
-        const voiceflowManager = new VoiceflowManager(services as any, config as any);
-
-        voiceflowManager.client();
+        VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[0][1];
 
@@ -76,11 +76,9 @@ describe('voiceflowManager unit tests', async () => {
       });
 
       it('test id', () => {
-        const { clientObj, services, config } = generateFakes();
+        const { clientObj, services, config, utils } = generateFakes();
 
-        const voiceflowManager = new VoiceflowManager(services as any, config as any);
-
-        voiceflowManager.client();
+        VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[0][1];
 
@@ -95,11 +93,9 @@ describe('voiceflowManager unit tests', async () => {
 
     describe('stackDidChange', () => {
       it('no top frame', () => {
-        const { clientObj, services, config } = generateFakes();
+        const { clientObj, services, config, utils } = generateFakes();
 
-        const voiceflowManager = new VoiceflowManager(services as any, config as any);
-
-        voiceflowManager.client();
+        VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[1][1];
 
@@ -111,11 +107,9 @@ describe('voiceflowManager unit tests', async () => {
       });
 
       it('with top frame', () => {
-        const { clientObj, services, config } = generateFakes();
+        const { clientObj, services, config, utils } = generateFakes();
 
-        const voiceflowManager = new VoiceflowManager(services as any, config as any);
-
-        voiceflowManager.client();
+        VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[1][1];
 
@@ -130,14 +124,11 @@ describe('voiceflowManager unit tests', async () => {
 
     describe('frameDidFinish', () => {
       it('no top frame', async () => {
-        const { clientObj, services, config } = generateFakes();
+        const { clientObj, services, config, utils } = generateFakes();
 
-        const voiceflowManager = new VoiceflowManager(services as any, config as any);
-
-        voiceflowManager.client();
+        VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[2][1];
-
         const context = {
           stack: {
             top: sinon.stub().returns(null),
@@ -150,11 +141,9 @@ describe('voiceflowManager unit tests', async () => {
       });
 
       it('called command false', async () => {
-        const { clientObj, services, config } = generateFakes();
+        const { clientObj, services, config, utils } = generateFakes();
 
-        const voiceflowManager = new VoiceflowManager(services as any, config as any);
-
-        voiceflowManager.client();
+        VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[2][1];
 
@@ -173,11 +162,9 @@ describe('voiceflowManager unit tests', async () => {
       });
 
       it('called command true but no output', async () => {
-        const { clientObj, services, config } = generateFakes();
+        const { clientObj, services, config, utils } = generateFakes();
 
-        const voiceflowManager = new VoiceflowManager(services as any, config as any);
-
-        voiceflowManager.client();
+        VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[2][1];
 
@@ -203,11 +190,9 @@ describe('voiceflowManager unit tests', async () => {
       });
 
       it('called command true with output', async () => {
-        const { clientObj, services, config } = generateFakes();
+        const { clientObj, services, config, utils } = generateFakes();
 
-        const voiceflowManager = new VoiceflowManager(services as any, config as any);
-
-        voiceflowManager.client();
+        VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[2][1];
 
@@ -252,13 +237,11 @@ describe('voiceflowManager unit tests', async () => {
 
     describe('diagramWillFetch', () => {
       it('diagramID is eql to RESUME_DIAGRAM_ID', async () => {
-        const { clientObj, services, config } = generateFakes();
+        const { clientObj, services, config, utils } = generateFakes();
 
-        services.utils.resume.RESUME_DIAGRAM_ID = 'different-id';
+        utils.resume.RESUME_DIAGRAM_ID = 'different-id';
 
-        const voiceflowManager = new VoiceflowManager(services as any, config as any);
-
-        voiceflowManager.client();
+        VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[3][1];
 
@@ -271,13 +254,11 @@ describe('voiceflowManager unit tests', async () => {
       });
 
       it('diagramID is not eql to RESUME_DIAGRAM_ID', async () => {
-        const { clientObj, services, config } = generateFakes();
+        const { clientObj, services, config, utils } = generateFakes();
 
-        services.utils.resume.RESUME_DIAGRAM_ID = 'diagram-id';
+        utils.resume.RESUME_DIAGRAM_ID = 'diagram-id';
 
-        const voiceflowManager = new VoiceflowManager(services as any, config as any);
-
-        voiceflowManager.client();
+        VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[3][1];
 
@@ -286,7 +267,7 @@ describe('voiceflowManager unit tests', async () => {
 
         fn({ diagramID, override });
 
-        expect(override.args[0]).to.eql([services.utils.resume.ResumeDiagram]);
+        expect(override.args[0]).to.eql([utils.resume.ResumeDiagram]);
       });
     });
   });

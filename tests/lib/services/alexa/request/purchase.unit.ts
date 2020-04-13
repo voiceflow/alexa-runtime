@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import PurchaseHandler, { PurchaseHandlerGenerator, Request } from '@/lib/services/alexa/handlers/purchase';
+import PurchaseHandler, { PurchaseHandlerGenerator, Request } from '@/lib/services/alexa/request/purchase';
 
 describe('purchase handler unit tests', () => {
   describe('canHandle', () => {

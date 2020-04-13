@@ -1,8 +1,8 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { UserInfo } from '@/lib/services/voiceflow/handlers/userInfo';
 
-const UserInfoHandler: Handler<UserInfo> = {
+const UserInfoHandler: HandlerFactory<UserInfo> = () => ({
   canHandle: (block) => {
     return !!block.permissions;
   },
@@ -17,6 +17,6 @@ const UserInfoHandler: Handler<UserInfo> = {
 
     return block.success_id ?? block.fail_id ?? null;
   },
-};
+});
 
 export default UserInfoHandler;

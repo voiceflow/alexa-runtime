@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { Permission } from './constants';
 import isPermissionGranted from './utils';
@@ -13,7 +13,7 @@ const utilsObj = {
   isPermissionGranted,
 };
 
-export const UserInfoHandlerGenerator = (utils: typeof utilsObj): Handler<UserInfo> => ({
+export const UserInfoHandler: HandlerFactory<UserInfo, typeof utilsObj> = (utils) => ({
   canHandle: (block) => {
     return !!block.permissions;
   },
@@ -35,4 +35,4 @@ export const UserInfoHandlerGenerator = (utils: typeof utilsObj): Handler<UserIn
   },
 });
 
-export default UserInfoHandlerGenerator(utilsObj);
+export default () => UserInfoHandler(utilsObj);

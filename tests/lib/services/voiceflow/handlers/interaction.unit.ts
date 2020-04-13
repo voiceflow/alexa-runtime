@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T } from '@/lib/constants';
-import InteractionHandler, { InteractionHandlerGenerator } from '@/lib/services/voiceflow/handlers/interaction';
+import { InteractionHandler } from '@/lib/services/voiceflow/handlers/interaction';
 import { RequestType } from '@/lib/services/voiceflow/types';
 
 describe('interaction handler unit tests', async () => {
@@ -10,11 +10,11 @@ describe('interaction handler unit tests', async () => {
 
   describe('canHandle', () => {
     it('false', async () => {
-      expect(InteractionHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
+      expect(InteractionHandler(null as any).canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
     });
 
     it('true', async () => {
-      expect(InteractionHandler.canHandle({ interactions: { foo: 'bar' } } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(InteractionHandler(null as any).canHandle({ interactions: { foo: 'bar' } } as any, null as any, null as any, null as any)).to.eql(true);
     });
   });
 
@@ -24,7 +24,7 @@ describe('interaction handler unit tests', async () => {
         addRepromptIfExists: sinon.stub(),
       };
 
-      const interactionHandler = InteractionHandlerGenerator(utils as any);
+      const interactionHandler = InteractionHandler(utils as any);
 
       const block = { blockID: 'block-id', interactions: [{ intent: 'one' }, { intent: 'two' }] };
       const context = { trace: { choice: sinon.stub() }, turn: { get: sinon.stub().returns(null) } };
@@ -40,7 +40,7 @@ describe('interaction handler unit tests', async () => {
         addRepromptIfExists: sinon.stub(),
       };
 
-      const captureHandler = InteractionHandlerGenerator(utils as any);
+      const captureHandler = InteractionHandler(utils as any);
 
       const block = { blockID: 'block-id', interactions: [] };
       const context = { trace: { choice: sinon.stub() }, turn: { get: sinon.stub().returns({ type: 'random' }) } };
@@ -56,33 +56,33 @@ describe('interaction handler unit tests', async () => {
         const output = 'bar';
 
         const utils = {
-          CommandHandler: {
+          commandHandler: {
             canHandle: sinon.stub().returns(true),
             handle: sinon.stub().returns(output),
           },
         };
 
-        const interactionHandler = InteractionHandlerGenerator(utils as any);
+        const interactionHandler = InteractionHandler(utils as any);
 
         const block = { blockID: 'block-id', interactions: [] };
         const context = { turn: { get: sinon.stub().returns({ type: RequestType.INTENT, payload: {} }) } };
         const variables = { foo: 'bar' };
 
         expect(interactionHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(output);
-        expect(utils.CommandHandler.canHandle.args).to.eql([[context]]);
-        expect(utils.CommandHandler.handle.args).to.eql([[context, variables]]);
+        expect(utils.commandHandler.canHandle.args).to.eql([[context]]);
+        expect(utils.commandHandler.handle.args).to.eql([[context, variables]]);
       });
 
       describe('command cant handle', () => {
         it('no choice', () => {
           const utils = {
             formatName: sinon.stub().returns(false),
-            CommandHandler: {
+            commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
           };
 
-          const interactionHandler = InteractionHandlerGenerator(utils as any);
+          const interactionHandler = InteractionHandler(utils as any);
 
           const block = { blockID: 'block-id', interactions: [{ intent: 'intent1' }, { intent: 'intent2' }] };
           const request = { type: RequestType.INTENT, payload: { intent: { name: 'random-intent' } } };
@@ -97,12 +97,12 @@ describe('interaction handler unit tests', async () => {
         it('no choice with elseId', () => {
           const utils = {
             formatName: sinon.stub().returns(false),
-            CommandHandler: {
+            commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
           };
 
-          const interactionHandler = InteractionHandlerGenerator(utils as any);
+          const interactionHandler = InteractionHandler(utils as any);
 
           const block = { blockID: 'block-id', elseId: 'else-id', interactions: [{ intent: 'intent1' }, { intent: 'intent2' }] };
           const request = { type: RequestType.INTENT, payload: { intent: { name: 'random-intent' } } };
@@ -117,12 +117,12 @@ describe('interaction handler unit tests', async () => {
 
           const utils = {
             formatName: sinon.stub().returns(intentName),
-            CommandHandler: {
+            commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
           };
 
-          const interactionHandler = InteractionHandlerGenerator(utils as any);
+          const interactionHandler = InteractionHandler(utils as any);
 
           const block = { blockID: 'block-id', elseId: 'else-id', interactions: [{ intent: 'random-intent  ' }], nextIds: ['id-one'] };
           const request = { type: RequestType.INTENT, payload: { intent: { name: intentName } } };
@@ -138,12 +138,12 @@ describe('interaction handler unit tests', async () => {
 
           const utils = {
             formatName: sinon.stub().returns(intentName),
-            CommandHandler: {
+            commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
           };
 
-          const interactionHandler = InteractionHandlerGenerator(utils as any);
+          const interactionHandler = InteractionHandler(utils as any);
 
           const block = {
             blockID: 'block-id',
@@ -165,13 +165,13 @@ describe('interaction handler unit tests', async () => {
 
           const utils = {
             formatName: sinon.stub().returns(intentName),
-            CommandHandler: {
+            commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
             mapSlots: sinon.stub().returns(mappedSlots),
           };
 
-          const interactionHandler = InteractionHandlerGenerator(utils as any);
+          const interactionHandler = InteractionHandler(utils as any);
 
           const block = {
             blockID: 'block-id',

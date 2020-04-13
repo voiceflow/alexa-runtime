@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import APLUserEventHandler, { APLUserEventHandlerGenerator, Request, SourceHandler } from '@/lib/services/alexa/handlers/aplUserEvent';
+import APLUserEventHandler, { APLUserEventHandlerGenerator, Request, SourceHandler } from '@/lib/services/alexa/request/aplUserEvent';
 import { updateContext } from '@/lib/services/alexa/utils';
 import { DOCUMENT_VIDEO_TYPE, ENDED_EVENT_PREFIX } from '@/lib/services/voiceflow/handlers/display/constants';
 

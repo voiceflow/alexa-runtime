@@ -5,13 +5,15 @@ import { S } from '@/lib/constants';
 import PaymentHandler, { PaymentResponseBuilder } from '@/lib/services/voiceflow/handlers/payment';
 
 describe('payment handler unit tests', () => {
+  const paymentHandler = PaymentHandler();
+
   describe('canHandle', () => {
     it('false', () => {
-      expect(PaymentHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
+      expect(paymentHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
     });
 
     it('true', () => {
-      expect(PaymentHandler.canHandle({ product_id: '1' } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(paymentHandler.canHandle({ product_id: '1' } as any, null as any, null as any, null as any)).to.eql(true);
     });
   });
 
@@ -25,7 +27,7 @@ describe('payment handler unit tests', () => {
         blockID: 'block-id',
       };
 
-      expect(PaymentHandler.handle(block, context as any, null as any, null as any)).to.eql(block.blockID);
+      expect(paymentHandler.handle(block, context as any, null as any, null as any)).to.eql(block.blockID);
       expect(context.storage.set.args).to.eql([
         [
           S.PAYMENT,

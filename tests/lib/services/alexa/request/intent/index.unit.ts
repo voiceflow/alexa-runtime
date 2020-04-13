@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import IntentHandler, { IntentHandlerGenerator, Request } from '@/lib/services/alexa/handlers/intent';
+import IntentHandler, { IntentHandlerGenerator, Request } from '@/lib/services/alexa/request/intent';
 
 describe('intent handler unit tests', () => {
   describe('canHandle', () => {

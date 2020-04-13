@@ -3,29 +3,31 @@ import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '@/lib/services/voiceflow/handlers/display/constants';
-import DisplayHandler, { DisplayHandlerGerator, getVariables } from '@/lib/services/voiceflow/handlers/display/index';
+import DefaultDisplayHandler, { DisplayHandler, getVariables } from '@/lib/services/voiceflow/handlers/display/index';
 
-describe('DisplayHandler unit tests', () => {
+describe('displayHandler.unit tests', () => {
+  const displayHandler = DefaultDisplayHandler();
+
   describe('canHandle', () => {
     it('false', () => {
-      expect(DisplayHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
+      expect(displayHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
     });
 
     it('true', () => {
-      expect(DisplayHandler.canHandle({ display_id: 'id' } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(displayHandler.canHandle({ display_id: 'id' } as any, null as any, null as any, null as any)).to.eql(true);
     });
   });
 
   describe('handle', () => {
     it('supportedInterfaces is null', async () => {
       const context = { storage: { get: sinon.stub().returns(null) } };
-      expect(await DisplayHandler.handle({} as any, context as any, null as any, null as any)).to.eql(null);
+      expect(await displayHandler.handle({} as any, context as any, null as any, null as any)).to.eql(null);
     });
 
     it('supportedInterfaces does not have APL_INTERFACE_NAME', async () => {
       const context = { storage: { get: sinon.stub().returns({}) } };
       const nextId = 'next-id';
-      expect(await DisplayHandler.handle({ nextId } as any, context as any, null as any, null as any)).to.eql(nextId);
+      expect(await displayHandler.handle({ nextId } as any, context as any, null as any, null as any)).to.eql(nextId);
     });
 
     it('no document', async () => {
@@ -34,7 +36,7 @@ describe('DisplayHandler unit tests', () => {
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
       };
       const block = { display_id: 'display-id', apl_commands: 'commands', datasource: '{hello} there, {name}' };
-      expect(await DisplayHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
+      expect(await displayHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
       expect(context.storage.set.args).to.eql([
         [
           S.DISPLAY_INFO,
@@ -58,7 +60,7 @@ describe('DisplayHandler unit tests', () => {
       };
       const rawCommand = ['a', 'b'];
       const block = { display_id: 'display-id', apl_commands: JSON.stringify(rawCommand), datasource: '{hello} there, {name}' };
-      expect(await DisplayHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
+      expect(await displayHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
       expect(context.storage.set.args).to.eql([
         [
           S.DISPLAY_INFO,
@@ -82,7 +84,7 @@ describe('DisplayHandler unit tests', () => {
       };
 
       const block = { display_id: 'display-id', datasource: '{hello} there, {name}' };
-      expect(await DisplayHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
+      expect(await displayHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
       expect(context.storage.set.args).to.eql([
         [
           S.DISPLAY_INFO,
@@ -103,7 +105,7 @@ describe('DisplayHandler unit tests', () => {
       it('no hasOnEndEvent', async () => {
         const results = {};
         const utils = { deepFindVideos: sinon.stub().returns(results), getVariables };
-        const handler = DisplayHandlerGerator(utils as any);
+        const handler = DisplayHandler(utils as any);
 
         const document = 'document';
         const context = {
@@ -154,7 +156,7 @@ describe('DisplayHandler unit tests', () => {
         ];
 
         const utils = { deepFindVideos: sinon.stub().returns(results), getVariables: sinon.stub().returns('') };
-        const handler = DisplayHandlerGerator(utils as any);
+        const handler = DisplayHandler(utils as any);
 
         const document = 'document';
         const setBlockID = sinon.stub();
@@ -184,7 +186,7 @@ describe('DisplayHandler unit tests', () => {
         ];
 
         const utils = { deepFindVideos: sinon.stub().returns(results), getVariables: sinon.stub().returns('') };
-        const handler = DisplayHandlerGerator(utils as any);
+        const handler = DisplayHandler(utils as any);
 
         const document = 'document';
         const setBlockID = sinon.stub();

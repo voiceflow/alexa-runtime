@@ -3,16 +3,16 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S, T } from '@/lib/constants';
-import ReminderHandler, { _createReminderObject, ReminderHandlerGenerator, ReminderType } from '@/lib/services/voiceflow/handlers/reminder';
+import { _createReminderObject, ReminderHandler, ReminderType } from '@/lib/services/voiceflow/handlers/reminder';
 
 describe('reminder handler unit test', () => {
   describe('canHandle', () => {
     it('false', () => {
-      expect(ReminderHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
+      expect(ReminderHandler(null as any).canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
     });
 
     it('true', () => {
-      expect(ReminderHandler.canHandle({ reminder: {} } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(ReminderHandler(null as any).canHandle({ reminder: {} } as any, null as any, null as any, null as any)).to.eql(true);
     });
   });
 
@@ -22,7 +22,7 @@ describe('reminder handler unit test', () => {
       const context = { turn: { get: sinon.stub().returns(input) } };
 
       const block = { fail_id: 'fail-id' };
-      expect(await ReminderHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.fail_id);
+      expect(await ReminderHandler(null as any).handle(block as any, context as any, null as any, null as any)).to.eql(block.fail_id);
       expect(context.turn.get.args).to.eql([[T.HANDLER_INPUT]]);
     });
 
@@ -31,13 +31,13 @@ describe('reminder handler unit test', () => {
       const context = { turn: { get: sinon.stub().returns(input) } };
 
       const block = { fail_id: 'fail-id' };
-      expect(await ReminderHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.fail_id);
+      expect(await ReminderHandler(null as any).handle(block as any, context as any, null as any, null as any)).to.eql(block.fail_id);
     });
 
     it('works correctly', async () => {
       const reminderObject = { foo: 'bar' };
       const utils = { _createReminderObject: sinon.stub().returns(reminderObject), axios: { post: sinon.stub() } };
-      const handler = ReminderHandlerGenerator(utils as any);
+      const handler = ReminderHandler(utils as any);
 
       const apiEndpoint = 'apiEndpoint';
       const apiAccessToken = 'apiAccessToken';
