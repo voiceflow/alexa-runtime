@@ -15,45 +15,45 @@ describe('alexa manager unit tests', () => {
       const addErrorHandlers = sinon.stub().returns({ addResponseInterceptors });
       const addRequestHandlers = sinon.stub().returns({ addErrorHandlers });
       const services = {
-        utils: {
-          handlers: {
-            LaunchHandler: 'LaunchHandler',
-            IntentHandler: 'IntentHandler',
-            SessionEndedHandler: 'SessionEndedHandler',
-            PlaybackControllerHandler: 'PlaybackControllerHandler',
-            AudioPlayerEventHandler: 'AudioPlayerEventHandler',
-            EventHandler: 'EventHandler',
-            PurchaseHandler: 'PurchaseHandler',
-            APLUserEventHandler: 'APLUserEventHandler',
-            CancelPurchaseHandler: 'CancelPurchaseHandler',
-            ErrorHandler: 'ErrorHandler',
-          },
-          interceptors: { ResponseInterceptor: 'ResponseInterceptor' },
-          builder: { standard: sinon.stub().returns({ addRequestHandlers }) },
-        },
         dynamo: 'dynamo',
+      };
+      const utils = {
+        handlers: {
+          LaunchHandler: 'LaunchHandler',
+          IntentHandler: 'IntentHandler',
+          SessionEndedHandler: 'SessionEndedHandler',
+          PlaybackControllerHandler: 'PlaybackControllerHandler',
+          AudioPlayerEventHandler: 'AudioPlayerEventHandler',
+          EventHandler: 'EventHandler',
+          PurchaseHandler: 'PurchaseHandler',
+          APLUserEventHandler: 'APLUserEventHandler',
+          CancelPurchaseHandler: 'CancelPurchaseHandler',
+          ErrorHandler: 'ErrorHandler',
+        },
+        interceptors: { ResponseInterceptor: 'ResponseInterceptor' },
+        builder: { standard: sinon.stub().returns({ addRequestHandlers }) },
       };
       const config = { SESSIONS_DYNAMO_TABLE: 'SESSIONS_DYNAMO_TABLE' };
 
-      const alexaManager = new AlexaManager(services as any, config as any);
+      const alexaManager = AlexaManager(services as any, config as any, utils as any);
 
-      expect(alexaManager.skill()).to.eql(output);
-      expect(services.utils.builder.standard.callCount).to.eql(1);
+      expect(alexaManager.skill).to.eql(output);
+      expect(utils.builder.standard.callCount).to.eql(1);
       expect(addRequestHandlers.args).to.eql([
         [
-          services.utils.handlers.LaunchHandler,
-          services.utils.handlers.IntentHandler,
-          services.utils.handlers.SessionEndedHandler,
-          services.utils.handlers.PlaybackControllerHandler,
-          services.utils.handlers.AudioPlayerEventHandler,
-          services.utils.handlers.EventHandler,
-          services.utils.handlers.PurchaseHandler,
-          services.utils.handlers.APLUserEventHandler,
-          services.utils.handlers.CancelPurchaseHandler,
+          utils.handlers.LaunchHandler,
+          utils.handlers.IntentHandler,
+          utils.handlers.SessionEndedHandler,
+          utils.handlers.PlaybackControllerHandler,
+          utils.handlers.AudioPlayerEventHandler,
+          utils.handlers.EventHandler,
+          utils.handlers.PurchaseHandler,
+          utils.handlers.APLUserEventHandler,
+          utils.handlers.CancelPurchaseHandler,
         ],
       ]);
-      expect(addErrorHandlers.args).to.eql([[services.utils.handlers.ErrorHandler]]);
-      expect(addResponseInterceptors.args).to.eql([[services.utils.interceptors.ResponseInterceptor]]);
+      expect(addErrorHandlers.args).to.eql([[utils.handlers.ErrorHandler]]);
+      expect(addResponseInterceptors.args).to.eql([[utils.interceptors.ResponseInterceptor]]);
       expect(withDynamoDbClient.args).to.eql([[services.dynamo]]);
       expect(withTableName.args).to.eql([[config.SESSIONS_DYNAMO_TABLE]]);
       expect(withAutoCreateTable.args).to.eql([[false]]);

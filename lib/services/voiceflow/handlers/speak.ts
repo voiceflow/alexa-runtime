@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 import _ from 'lodash';
 
 import { F, S } from '@/lib/constants';
@@ -13,7 +13,7 @@ export type Speak = {
   random_speak?: string[];
 };
 
-const SpeakHandler: Handler<Speak> = {
+const SpeakHandler: HandlerFactory<Speak> = () => ({
   canHandle: (block) => {
     return !!block.random_speak || !!block.audio || (_.isString(block.prompt) && block.prompt !== 'true') || !!block.speak;
   },
@@ -49,6 +49,6 @@ const SpeakHandler: Handler<Speak> = {
 
     return block.nextId ?? null;
   },
-};
+});
 
 export default SpeakHandler;

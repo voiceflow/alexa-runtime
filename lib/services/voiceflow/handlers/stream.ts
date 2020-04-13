@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 import { utils } from '@voiceflow/common';
 import { HandlerInput } from 'ask-sdk';
 import _ from 'lodash';
@@ -140,7 +140,7 @@ const handlerUtils = {
   regexVariables,
 };
 
-export const StreamHandlerGenerator = (u: typeof handlerUtils): Handler<StreamBlock> => ({
+export const StreamHandler: HandlerFactory<StreamBlock, typeof handlerUtils> = (u) => ({
   canHandle: (block) => {
     return !!block.play;
   },
@@ -183,4 +183,4 @@ export const StreamHandlerGenerator = (u: typeof handlerUtils): Handler<StreamBl
   },
 });
 
-export default StreamHandlerGenerator(handlerUtils);
+export default () => StreamHandler(handlerUtils);

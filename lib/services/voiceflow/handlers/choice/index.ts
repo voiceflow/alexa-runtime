@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { T } from '@/lib/constants';
 
@@ -18,11 +18,11 @@ type Choice = {
 const utilsObj = {
   addRepromptIfExists,
   getBestScore,
-  CommandHandler,
+  commandHandler: CommandHandler(),
 };
 
 // THIS HANDLER IS USED PURELY FOR THE TESTING TOOL, NOT FOR ALEXA
-export const ChoiceHandlerGenerator = (utils: typeof utilsObj): Handler<Choice> => ({
+export const ChoiceHandler: HandlerFactory<Choice, typeof utilsObj> = (utils) => ({
   canHandle: (block) => {
     return !!block.choices;
   },
@@ -60,8 +60,8 @@ export const ChoiceHandlerGenerator = (utils: typeof utilsObj): Handler<Choice> 
     }
 
     // check if there is a command in the stack that fulfills intent
-    if (!nextId && utils.CommandHandler.canHandle(context)) {
-      return utils.CommandHandler.handle(context, variables);
+    if (!nextId && utils.commandHandler.canHandle(context)) {
+      return utils.commandHandler.handle(context, variables);
     }
 
     // request for this turn has been processed, delete request
@@ -71,4 +71,4 @@ export const ChoiceHandlerGenerator = (utils: typeof utilsObj): Handler<Choice> 
   },
 });
 
-export default ChoiceHandlerGenerator(utilsObj);
+export default () => ChoiceHandler(utilsObj);

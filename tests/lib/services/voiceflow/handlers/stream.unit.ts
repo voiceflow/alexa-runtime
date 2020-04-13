@@ -2,11 +2,11 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S, T } from '@/lib/constants';
-import StreamHandler, {
+import {
   _streamMetaData,
   AudioDirective,
   StreamAction,
-  StreamHandlerGenerator,
+  StreamHandler,
   StreamResponseBuilder,
   StreamResponseBuilderGenerator,
 } from '@/lib/services/voiceflow/handlers/stream';
@@ -14,11 +14,11 @@ import StreamHandler, {
 describe('stream handler unit tests', () => {
   describe('canHandle', () => {
     it('false', () => {
-      expect(StreamHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
+      expect(StreamHandler(null as any).canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
     });
 
     it('true', () => {
-      expect(StreamHandler.canHandle({ play: {} } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(StreamHandler(null as any).canHandle({ play: {} } as any, null as any, null as any, null as any)).to.eql(true);
     });
   });
 
@@ -38,7 +38,7 @@ describe('stream handler unit tests', () => {
         regexVariables.onCall(4).returns(background_img);
 
         const utils = { regexVariables };
-        const handler = StreamHandlerGenerator(utils);
+        const handler = StreamHandler(utils);
 
         const variablesMap = 'variables-map';
         const variables = { getState: sinon.stub().returns(variablesMap) };
@@ -96,7 +96,7 @@ describe('stream handler unit tests', () => {
     describe('with pause', () => {
       it('different pause ids', () => {
         const utils = { regexVariables: sinon.stub().returns('') };
-        const handler = StreamHandlerGenerator(utils);
+        const handler = StreamHandler(utils);
 
         const variables = { getState: sinon.stub().returns({}) };
         const streamPause = { id: 'random' };
@@ -116,7 +116,7 @@ describe('stream handler unit tests', () => {
 
       it('equal pause ids', () => {
         const utils = { regexVariables: sinon.stub().returns('') };
-        const handler = StreamHandlerGenerator(utils);
+        const handler = StreamHandler(utils);
 
         const variables = { getState: sinon.stub().returns({}) };
         const streamPause = { id: 'PAUSE_ID', offset: 100 };

@@ -2,16 +2,20 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S, T } from '@/lib/constants';
-import StreamHandler, { StreamFailPhrase, streamStateHandlerGenerator } from '@/lib/services/voiceflow/handlers/state/stream';
+import DefaultStreamStateHandler, { StreamFailPhrase, StreamStateHandler } from '@/lib/services/voiceflow/handlers/state/stream';
 import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 import { IntentName } from '@/lib/services/voiceflow/types';
 
 describe('stream state handler unit tests', () => {
+  const streamStateHandler = DefaultStreamStateHandler();
+
   describe('canHandle', () => {
     it('false', () => {
-      expect(StreamHandler.canHandle(null as any, { storage: { get: sinon.stub().returns(null) } } as any, null as any, null as any)).to.eql(false);
+      expect(streamStateHandler.canHandle(null as any, { storage: { get: sinon.stub().returns(null) } } as any, null as any, null as any)).to.eql(
+        false
+      );
       expect(
-        StreamHandler.canHandle(
+        streamStateHandler.canHandle(
           null as any,
           { storage: { get: sinon.stub().returns({ action: StreamAction.END }) } } as any,
           null as any,
@@ -22,7 +26,7 @@ describe('stream state handler unit tests', () => {
 
     it('true', () => {
       expect(
-        StreamHandler.canHandle(
+        streamStateHandler.canHandle(
           null as any,
           { storage: { get: sinon.stub().returns({ action: StreamAction.START }) } } as any,
           null as any,
@@ -61,7 +65,7 @@ describe('stream state handler unit tests', () => {
           turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
         };
         const variables = { getState: sinon.stub().returns(variablesMap) };
-        expect(StreamHandler.handle(null as any, context as any, variables as any, null as any)).to.eql(undefined);
+        expect(streamStateHandler.handle(null as any, context as any, variables as any, null as any)).to.eql(undefined);
         expect(context.turn.get.args[0]).to.eql([T.REQUEST]);
         expect(storageGet.args).to.eql([[S.STREAM_PLAY], [S.STREAM_PLAY]]);
         expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
@@ -90,12 +94,12 @@ describe('stream state handler unit tests', () => {
       it('command can handle', () => {
         const output = 'output';
         const utils = {
-          CommandHandler: {
+          commandHandler: {
             canHandle: sinon.stub().returns(true),
             handle: sinon.stub().returns(output),
           },
         };
-        const handler = streamStateHandlerGenerator(utils as any);
+        const handler = StreamStateHandler(utils as any);
 
         const request = null;
         const context = {
@@ -124,7 +128,7 @@ describe('stream state handler unit tests', () => {
           end: sinon.stub(),
           turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
         };
-        expect(StreamHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
+        expect(streamStateHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
       });
 
       it('no request payload intent', () => {
@@ -141,7 +145,7 @@ describe('stream state handler unit tests', () => {
           end: sinon.stub(),
           turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
         };
-        expect(StreamHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
+        expect(streamStateHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
       });
     });
 
@@ -159,7 +163,7 @@ describe('stream state handler unit tests', () => {
         end: sinon.stub(),
         turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
       };
-      expect(StreamHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
+      expect(streamStateHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
 
       const fn = context.storage.produce.args[0][0];
       const draft = { [S.STREAM_PLAY]: { action: 'random' } };
@@ -182,7 +186,7 @@ describe('stream state handler unit tests', () => {
         end: sinon.stub(),
         turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
       };
-      expect(StreamHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
+      expect(streamStateHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
 
       const fn = context.storage.produce.args[0][0];
       const draft = { [S.STREAM_PLAY]: { action: 'random' } };
@@ -205,7 +209,7 @@ describe('stream state handler unit tests', () => {
         end: sinon.stub(),
         turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
       };
-      expect(StreamHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
+      expect(streamStateHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
 
       const fn = context.storage.produce.args[0][0];
       const draft = { [S.STREAM_PLAY]: { action: 'random', offset: null } };
@@ -230,7 +234,7 @@ describe('stream state handler unit tests', () => {
           },
           turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
         };
-        expect(StreamHandler.handle(null as any, context as any, null as any, null as any)).to.eql(NEXT);
+        expect(streamStateHandler.handle(null as any, context as any, null as any, null as any)).to.eql(NEXT);
         expect(context.storage.delete.args).to.eql([[S.STREAM_TEMP]]);
 
         const fn = context.storage.produce.args[0][0];
@@ -253,7 +257,7 @@ describe('stream state handler unit tests', () => {
           },
           turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
         };
-        expect(StreamHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
+        expect(streamStateHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
         expect(context.storage.delete.args).to.eql([[S.STREAM_TEMP]]);
 
         const fn = context.storage.produce.args[0][0];
@@ -279,7 +283,7 @@ describe('stream state handler unit tests', () => {
           },
           turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
         };
-        expect(StreamHandler.handle(null as any, context as any, null as any, null as any)).to.eql(PREVIOUS);
+        expect(streamStateHandler.handle(null as any, context as any, null as any, null as any)).to.eql(PREVIOUS);
         expect(context.storage.delete.args).to.eql([[S.STREAM_TEMP]]);
 
         const fn = context.storage.produce.args[0][0];
@@ -302,7 +306,7 @@ describe('stream state handler unit tests', () => {
           },
           turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
         };
-        expect(StreamHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
+        expect(streamStateHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
         expect(context.storage.delete.args).to.eql([[S.STREAM_TEMP]]);
 
         const fn = context.storage.produce.args[0][0];
@@ -333,7 +337,7 @@ describe('stream state handler unit tests', () => {
           },
           turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
         };
-        expect(StreamHandler.handle(null as any, context as any, null as any, null as any)).to.eql(streamPlay.nextId);
+        expect(streamStateHandler.handle(null as any, context as any, null as any, null as any)).to.eql(streamPlay.nextId);
         expect(context.storage.set.args).to.eql([
           [
             S.STREAM_PAUSE,
@@ -365,7 +369,7 @@ describe('stream state handler unit tests', () => {
           turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
           end: sinon.stub(),
         };
-        expect(StreamHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
+        expect(streamStateHandler.handle(null as any, context as any, null as any, null as any)).to.eql(undefined);
         expect(context.end.callCount).to.eql(1);
 
         const fn = context.storage.produce.args[0][0];

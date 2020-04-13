@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T } from '@/lib/constants';
-import CaptureHandler, { CaptureHandlerGenerator } from '@/lib/services/voiceflow/handlers/capture';
+import { CaptureHandler } from '@/lib/services/voiceflow/handlers/capture';
 import { RequestType } from '@/lib/services/voiceflow/types';
 
 describe('capture handler unit tests', async () => {
@@ -10,11 +10,11 @@ describe('capture handler unit tests', async () => {
 
   describe('canHandle', () => {
     it('false', async () => {
-      expect(CaptureHandler.canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
+      expect(CaptureHandler(null as any).canHandle({} as any, null as any, null as any, null as any)).to.eql(false);
     });
 
     it('true', async () => {
-      expect(CaptureHandler.canHandle({ variable: 'var1' } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(CaptureHandler(null as any).canHandle({ variable: 'var1' } as any, null as any, null as any, null as any)).to.eql(true);
     });
   });
 
@@ -24,7 +24,7 @@ describe('capture handler unit tests', async () => {
         addRepromptIfExists: sinon.stub(),
       };
 
-      const captureHandler = CaptureHandlerGenerator(utils as any);
+      const captureHandler = CaptureHandler(utils as any);
 
       const block = { blockID: 'block-id' };
       const context = { turn: { get: sinon.stub().returns(null) } };
@@ -39,7 +39,7 @@ describe('capture handler unit tests', async () => {
         addRepromptIfExists: sinon.stub(),
       };
 
-      const captureHandler = CaptureHandlerGenerator(utils as any);
+      const captureHandler = CaptureHandler(utils as any);
 
       const block = { blockID: 'block-id' };
       const context = { turn: { get: sinon.stub().returns({ type: 'random' }) } };
@@ -54,32 +54,32 @@ describe('capture handler unit tests', async () => {
         const output = 'bar';
 
         const utils = {
-          CommandHandler: {
+          commandHandler: {
             canHandle: sinon.stub().returns(true),
             handle: sinon.stub().returns(output),
           },
         };
 
-        const captureHandler = CaptureHandlerGenerator(utils as any);
+        const captureHandler = CaptureHandler(utils as any);
 
         const block = { blockID: 'block-id' };
         const context = { turn: { get: sinon.stub().returns({ type: RequestType.INTENT }) } };
         const variables = { foo: 'bar' };
 
         expect(captureHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(output);
-        expect(utils.CommandHandler.canHandle.args).to.eql([[context]]);
-        expect(utils.CommandHandler.handle.args).to.eql([[context, variables]]);
+        expect(utils.commandHandler.canHandle.args).to.eql([[context]]);
+        expect(utils.commandHandler.handle.args).to.eql([[context, variables]]);
       });
 
       describe('command cant handle', () => {
         it('no input', () => {
           const utils = {
-            CommandHandler: {
+            commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
           };
 
-          const captureHandler = CaptureHandlerGenerator(utils as any);
+          const captureHandler = CaptureHandler(utils as any);
 
           const block = { nextId: 'next-id' };
           const request = { type: RequestType.INTENT, payload: { intent: { slots: [] } } };
@@ -92,12 +92,12 @@ describe('capture handler unit tests', async () => {
 
         it('no slot', () => {
           const utils = {
-            CommandHandler: {
+            commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
           };
 
-          const captureHandler = CaptureHandlerGenerator(utils as any);
+          const captureHandler = CaptureHandler(utils as any);
 
           const block = { nextId: 'next-id' };
           const request = { type: RequestType.INTENT, payload: { intent: { slots: [null] } } };
@@ -112,13 +112,13 @@ describe('capture handler unit tests', async () => {
           const word = 'not number';
 
           const utils = {
-            CommandHandler: {
+            commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
             wordsToNumbers: sinon.stub().returns(word),
           };
 
-          const captureHandler = CaptureHandlerGenerator(utils as any);
+          const captureHandler = CaptureHandler(utils as any);
 
           const block = { nextId: 'next-id', variable: 'var' };
           const input = 'input';
@@ -136,13 +136,13 @@ describe('capture handler unit tests', async () => {
           const word = 1;
 
           const utils = {
-            CommandHandler: {
+            commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
             wordsToNumbers: sinon.stub().returns(word),
           };
 
-          const captureHandler = CaptureHandlerGenerator(utils as any);
+          const captureHandler = CaptureHandler(utils as any);
 
           const block = { variable: 'var' };
           const input = 'input';

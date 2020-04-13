@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 import { SupportedInterfaces } from 'ask-sdk-model';
 import _ from 'lodash';
 
@@ -30,7 +30,7 @@ const utilsObj = {
   getVariables,
 };
 
-export const DisplayHandlerGerator = (utils: typeof utilsObj): Handler<Display> => ({
+export const DisplayHandler: HandlerFactory<Display, typeof utilsObj> = (utils) => ({
   canHandle: (block) => {
     return !!block.display_id;
   },
@@ -89,4 +89,4 @@ export const DisplayHandlerGerator = (utils: typeof utilsObj): Handler<Display> 
   },
 });
 
-export default DisplayHandlerGerator(utilsObj);
+export default () => DisplayHandler(utilsObj);

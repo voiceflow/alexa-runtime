@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { S, T } from '@/lib/constants';
 
@@ -18,7 +18,7 @@ export const PermissionCardResponseBuilder: ResponseBuilder = (context, builder)
   }
 };
 
-const PermissionCardHandler: Handler<PermissionCard> = {
+const PermissionCardHandler: HandlerFactory<PermissionCard> = () => ({
   canHandle: (block) => {
     return !!block.permission_card;
   },
@@ -33,6 +33,6 @@ const PermissionCardHandler: Handler<PermissionCard> = {
 
     return block.nextId ?? null;
   },
-};
+});
 
 export default PermissionCardHandler;

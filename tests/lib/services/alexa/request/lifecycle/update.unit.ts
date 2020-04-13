@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T } from '@/lib/constants';
-import update from '@/lib/services/alexa/handlers/lifecycle/update';
+import update from '@/lib/services/alexa/request/lifecycle/update';
 
 describe('update lifecycle unit tests', () => {
   describe('update', () => {

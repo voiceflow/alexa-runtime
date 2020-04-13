@@ -1,3 +1,7 @@
+import { CodeHandler, EndHandler, FlowHandler, IfHandler, IntegrationsHandler, RandomHandler, SetHandler, StartHandler } from '@voiceflow/client';
+
+import { Config } from '@/types';
+
 import AccountLinkingHandler, { AccountLinkingResponseBuilder } from './accountLinking';
 import CancelPaymentHandler, { CancelPaymentResponseBuilder } from './cancelPayment';
 import CaptureHandler from './capture';
@@ -24,20 +28,28 @@ export const responseHandlers = [
   StreamResponseBuilder,
 ];
 
-export default [
-  ...StateHandlers,
-  SpeakHandler,
-  InteractionHandler,
-  CaptureHandler,
-  AccountLinkingHandler,
-  PermissionCardHandler,
-  UserInfoHandler,
-  CardHandler,
-  PaymentHandler,
-  CancelPaymentHandler,
-  ReminderHandler,
-  ResetHandler,
-  DisplayHandler,
-  StreamHandler,
-  ChoiceHandler,
+export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HANDLER_ENDPOINT }: Config) => [
+  ...StateHandlers(),
+  SpeakHandler(),
+  InteractionHandler(),
+  CaptureHandler(),
+  AccountLinkingHandler(),
+  PermissionCardHandler(),
+  UserInfoHandler(),
+  CardHandler(),
+  PaymentHandler(),
+  CancelPaymentHandler(),
+  ReminderHandler(),
+  ResetHandler(),
+  DisplayHandler(),
+  StreamHandler(),
+  ChoiceHandler(),
+  CodeHandler({ endpoint: CODE_HANDLER_ENDPOINT }),
+  EndHandler(),
+  FlowHandler(),
+  IfHandler(),
+  IntegrationsHandler({ customAPIEndpoint: API_HANDLER_ENDPOINT, integrationsLambdaEndpoint: INTEGRATIONS_HANDLER_ENDPOINT }),
+  RandomHandler(),
+  SetHandler(),
+  StartHandler(),
 ];

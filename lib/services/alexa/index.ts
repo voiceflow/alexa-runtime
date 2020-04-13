@@ -1,7 +1,6 @@
-import ASK, { HandlerInput, SkillBuilders } from 'ask-sdk';
+import { HandlerInput, SkillBuilders } from 'ask-sdk';
 
-import { injectServices } from '../types';
-import { AbstractManager } from '../utils';
+import { Config, Services } from '../utils';
 import {
   APLUserEventHandler,
   AudioPlayerEventHandler,
@@ -13,7 +12,7 @@ import {
   PlaybackControllerHandler,
   PurchaseHandler,
   SessionEndedHandler,
-} from './handlers';
+} from './request';
 
 export const ResponseInterceptor = {
   async process(handlerInput: HandlerInput) {
@@ -39,34 +38,31 @@ const utilsObj = {
   builder: SkillBuilders,
 };
 
-@injectServices({ utils: utilsObj })
-class AlexaManager extends AbstractManager<{ utils: typeof utilsObj }> {
-  skill(): ASK.Skill {
-    const { handlers, interceptors, builder } = this.services.utils;
+const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
+  const { handlers, interceptors, builder } = utils;
 
-    return (
-      builder
-        .standard()
-        .addRequestHandlers(
-          handlers.LaunchHandler,
-          handlers.IntentHandler,
-          handlers.SessionEndedHandler,
-          handlers.PlaybackControllerHandler,
-          handlers.AudioPlayerEventHandler,
-          handlers.EventHandler,
-          handlers.PurchaseHandler,
-          handlers.APLUserEventHandler,
-          handlers.CancelPurchaseHandler
-        )
-        .addErrorHandlers(handlers.ErrorHandler)
-        // .addRequestInterceptors(RequestInterceptor)
-        .addResponseInterceptors(interceptors.ResponseInterceptor)
-        .withDynamoDbClient(this.services.dynamo)
-        .withTableName(this.config.SESSIONS_DYNAMO_TABLE)
-        .withAutoCreateTable(false)
-        .create()
-    );
-  }
-}
+  const skill = builder
+    .standard()
+    .addRequestHandlers(
+      handlers.LaunchHandler,
+      handlers.IntentHandler,
+      handlers.SessionEndedHandler,
+      handlers.PlaybackControllerHandler,
+      handlers.AudioPlayerEventHandler,
+      handlers.EventHandler,
+      handlers.PurchaseHandler,
+      handlers.APLUserEventHandler,
+      handlers.CancelPurchaseHandler
+    )
+    .addErrorHandlers(handlers.ErrorHandler)
+    // .addRequestInterceptors(RequestInterceptor)
+    .addResponseInterceptors(interceptors.ResponseInterceptor)
+    .withDynamoDbClient(services.dynamo)
+    .withTableName(config.SESSIONS_DYNAMO_TABLE)
+    .withAutoCreateTable(false)
+    .create();
+
+  return { skill };
+};
 
 export default AlexaManager;

@@ -18,6 +18,10 @@ export interface Config {
   MAIN_DB_SECRET: string | null;
   LOGGING_DB_SECRET: string | null;
 
+  CODE_HANDLER_ENDPOINT: string;
+  INTEGRATIONS_HANDLER_ENDPOINT: string;
+  API_HANDLER_ENDPOINT: string;
+
   // Release information
   GIT_SHA: string | null;
   BUILD_NUM: string | null;

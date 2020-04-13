@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import ErrorHandler from '@/lib/services/alexa/handlers/error';
+import ErrorHandler from '@/lib/services/alexa/request/error';
 
 describe('error handler unit tests', () => {
   describe('canHandle', () => {

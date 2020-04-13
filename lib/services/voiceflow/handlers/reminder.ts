@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 import axios from 'axios';
 import moment from 'moment';
@@ -107,7 +107,7 @@ const utilsObj = {
   axios,
 };
 
-export const ReminderHandlerGenerator = (utils: typeof utilsObj): Handler<ReminderBlock> => ({
+export const ReminderHandler: HandlerFactory<ReminderBlock, typeof utilsObj> = (utils) => ({
   canHandle: (block) => {
     return !!block.reminder;
   },
@@ -138,4 +138,4 @@ export const ReminderHandlerGenerator = (utils: typeof utilsObj): Handler<Remind
   },
 });
 
-export default ReminderHandlerGenerator(utilsObj);
+export default () => ReminderHandler(utilsObj);

@@ -47,7 +47,7 @@ const utilsObj = {
 /**
  * The Command Handler is meant to be used inside other handlers, and should never handle blocks directly
  */
-export const CommandHandlerGenerator = (utils: typeof utilsObj) => ({
+export const CommandHandler = (utils: typeof utilsObj) => ({
   canHandle: (context: Context): boolean => {
     return !!utils.getCommand(context);
   },
@@ -98,4 +98,4 @@ export const CommandHandlerGenerator = (utils: typeof utilsObj) => ({
   },
 });
 
-export default CommandHandlerGenerator(utilsObj);
+export default () => CommandHandler(utilsObj);

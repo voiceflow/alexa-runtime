@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import SessionEndedHandler, { ErrorType, Request, RequestReason, SessionEndedHandlerGenerator } from '@/lib/services/alexa/handlers/sessionEnded';
+import SessionEndedHandler, { ErrorType, Request, RequestReason, SessionEndedHandlerGenerator } from '@/lib/services/alexa/request/sessionEnded';
 
 describe('session ended handler unit tests', () => {
   describe('canHandle', () => {

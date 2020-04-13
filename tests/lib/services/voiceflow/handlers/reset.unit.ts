@@ -4,13 +4,15 @@ import sinon from 'sinon';
 import ResetHandler from '@/lib/services/voiceflow/handlers/reset';
 
 describe('reset handler unit tests', async () => {
+  const resetHandler = ResetHandler();
+
   afterEach(() => sinon.restore());
 
   describe('canHandle', () => {
     it('false', async () => {
       const block = {};
 
-      const result = ResetHandler.canHandle(block as any, null as any, null as any, null as any);
+      const result = resetHandler.canHandle(block as any, null as any, null as any, null as any);
 
       expect(result).to.eql(false);
     });
@@ -18,7 +20,7 @@ describe('reset handler unit tests', async () => {
     it('true', async () => {
       const block = { reset: { foo: 'bar' } };
 
-      const result = ResetHandler.canHandle(block as any, null as any, null as any, null as any);
+      const result = resetHandler.canHandle(block as any, null as any, null as any, null as any);
 
       expect(result).to.eql(true);
     });
@@ -37,7 +39,7 @@ describe('reset handler unit tests', async () => {
         },
       };
 
-      expect(ResetHandler.handle(null as any, context as any, null as any, null as any)).to.eql(null);
+      expect(resetHandler.handle(null as any, context as any, null as any, null as any)).to.eql(null);
       expect(context.stack.popTo.args).to.eql([[1]]);
       expect(topFrame.setBlockID.args).to.eql([[null]]);
     });

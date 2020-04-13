@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import EventHandler, { EventHandlerGenerator, Request } from '@/lib/services/alexa/handlers/event';
+import EventHandler, { EventHandlerGenerator, Request } from '@/lib/services/alexa/request/event';
 
 describe('event handler unit test', () => {
   describe('canHandle', () => {

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import VideoControlHandler from '@/lib/services/alexa/handlers/intent/behavior/videoControl';
+import VideoControlHandler from '@/lib/services/alexa/request/intent/behavior/videoControl';
 import { VideoCommand, VideoCommandType } from '@/lib/services/voiceflow/handlers/display/types';
 import { IntentName } from '@/lib/services/voiceflow/types';
 

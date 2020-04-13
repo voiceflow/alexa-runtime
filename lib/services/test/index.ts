@@ -3,26 +3,27 @@ import { StreamAction as TraceStreamAction } from '@voiceflow/client/build/lib/C
 import { IntentRequest as AlexaIntentRequest } from 'ask-sdk-model';
 
 import { S, T, TEST_VERSION_ID } from '@/lib/constants';
-import { injectServices } from '@/lib/services/types';
 import { StreamAction, StreamPlay } from '@/lib/services/voiceflow/handlers/stream';
 import { RequestType } from '@/lib/services/voiceflow/types';
 
-import { AbstractManager } from '../utils';
-import handlers from './handlers';
+import { Config, Services } from '../utils';
+import Handlers from './handlers';
 
 type Request = { type: RequestType; payload: AlexaIntentRequest };
 
 const utilsObj = {
-  handlers,
+  Handlers,
 };
-@injectServices({ utils: utilsObj })
-class TestManager extends AbstractManager<{ utils: typeof utilsObj }> {
-  async invoke(state: State, request?: Request) {
-    const { voiceflow } = this.services;
 
-    const context = voiceflow.client().createContext(TEST_VERSION_ID, state as State, request, {
-      endpoint: `${this.config.VF_DATA_ENDPOINT}/test`,
-      handlers: this.services.utils.handlers,
+const TestManager = (services: Services, config: Config, utils = utilsObj) => {
+  const handlers = utils.Handlers(config);
+
+  const invoke = async (state: State, request?: Request) => {
+    const { voiceflow } = services;
+
+    const context = voiceflow.client.createContext(TEST_VERSION_ID, state as State, request, {
+      endpoint: `${config.VF_DATA_ENDPOINT}/test`,
+      handlers,
     });
 
     context.setEvent(EventType.handlerWillHandle, (event) => context.trace.block(event.block.blockID));
@@ -56,7 +57,9 @@ class TestManager extends AbstractManager<{ utils: typeof utilsObj }> {
       ...context.getRawState(),
       trace: context.trace.get(),
     };
-  }
-}
+  };
+
+  return { invoke };
+};
 
 export default TestManager;

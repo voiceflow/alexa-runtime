@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { S } from '@/lib/constants';
 
@@ -8,7 +8,7 @@ export enum PaymentStatus {
   PENDING = 'PENDING_PURCHASE',
 }
 
-const paymentStateHandler: Handler<any> = {
+const paymentStateHandler: HandlerFactory<any> = () => ({
   canHandle: (_, context) => {
     return !!context.storage.get(S.PAYMENT);
   },
@@ -20,6 +20,6 @@ const paymentStateHandler: Handler<any> = {
     }
     return payment.failPath;
   },
-};
+});
 
 export default paymentStateHandler;

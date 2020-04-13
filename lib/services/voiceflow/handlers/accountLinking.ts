@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { T } from '@/lib/constants';
 
@@ -16,7 +16,7 @@ export type AccountLinking = {
   nextId: string;
 };
 
-const AccountLinkingHandler: Handler<AccountLinking> = {
+const AccountLinkingHandler: HandlerFactory<AccountLinking> = () => ({
   canHandle: (block) => {
     return !!block.link_account;
   },
@@ -25,6 +25,6 @@ const AccountLinkingHandler: Handler<AccountLinking> = {
 
     return block.nextId ?? null;
   },
-};
+});
 
 export default AccountLinkingHandler;

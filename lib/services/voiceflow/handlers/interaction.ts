@@ -1,4 +1,4 @@
-import { Handler } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/client';
 
 import { T } from '@/lib/constants';
 
@@ -23,10 +23,10 @@ const utilsObj = {
   addRepromptIfExists,
   formatName,
   mapSlots,
-  CommandHandler,
+  commandHandler: CommandHandler(),
 };
 
-export const InteractionHandlerGenerator = (utils: typeof utilsObj): Handler<Interaction> => ({
+export const InteractionHandler: HandlerFactory<Interaction, typeof utilsObj> = (utils) => ({
   canHandle: (block) => {
     return !!block.interactions;
   },
@@ -62,8 +62,8 @@ export const InteractionHandlerGenerator = (utils: typeof utilsObj): Handler<Int
     }
 
     // check if there is a command in the stack that fulfills intent
-    if (!nextId && utils.CommandHandler.canHandle(context)) {
-      return utils.CommandHandler.handle(context, variables);
+    if (!nextId && utils.commandHandler.canHandle(context)) {
+      return utils.commandHandler.handle(context, variables);
     }
 
     // request for this turn has been processed, delete request
@@ -73,4 +73,4 @@ export const InteractionHandlerGenerator = (utils: typeof utilsObj): Handler<Int
   },
 });
 
-export default InteractionHandlerGenerator(utilsObj);
+export default () => InteractionHandler(utilsObj);

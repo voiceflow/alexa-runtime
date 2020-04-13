@@ -23,6 +23,10 @@ const CONFIG: Config = {
   MAIN_DB_SECRET: optionalProcessEnv('MAIN_DB_SECRET'),
   LOGGING_DB_SECRET: optionalProcessEnv('LOGGING_DB_SECRET'),
 
+  CODE_HANDLER_ENDPOINT: getProcessEnv('CODE_HANDLER_ENDPOINT'),
+  INTEGRATIONS_HANDLER_ENDPOINT: getProcessEnv('INTEGRATIONS_HANDLER_ENDPOINT'),
+  API_HANDLER_ENDPOINT: getProcessEnv('INTEGRATIONS_HANDLER_ENDPOINT'),
+
   // Release information
   GIT_SHA: optionalProcessEnv('GIT_SHA'),
   BUILD_NUM: optionalProcessEnv('BUILD_NUM'),

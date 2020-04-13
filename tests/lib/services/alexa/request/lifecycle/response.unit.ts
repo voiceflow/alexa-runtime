@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S, T } from '@/lib/constants';
-import { responseGenerator } from '@/lib/services/alexa/handlers/lifecycle/response';
+import { responseGenerator } from '@/lib/services/alexa/request/lifecycle/response';
 
 describe('response lifecycle unit tests', () => {
   it('works correctly', async () => {
