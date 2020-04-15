@@ -11,10 +11,7 @@ const utilsObj = {
 
 export const responseGenerator = (utils: typeof utilsObj) => async (context: Context, input: HandlerInput): Promise<Response> => {
   const { storage, turn } = context;
-  const { responseBuilder, requestEnvelope, attributesManager } = input;
-
-  // store access token
-  storage.set(S.ACCESS_TOKEN, requestEnvelope.context.System.user.accessToken);
+  const { responseBuilder, attributesManager } = input;
 
   if (context.stack.isEmpty()) {
     turn.set(T.END, true);

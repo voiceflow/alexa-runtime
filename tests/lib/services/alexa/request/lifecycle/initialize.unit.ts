@@ -79,7 +79,7 @@ describe('initialize lifecycle unit tests', async () => {
           request: {
             locale: 'en',
           },
-          context: { System: { user: { userId: 'user-id' }, device: { supportedInterfaces: 'supported-interfaces' } } },
+          context: { System: { user: { userId: 'user-id', accessToken: undefined }, device: { supportedInterfaces: 'supported-interfaces' } } },
         },
       };
 
@@ -116,6 +116,9 @@ describe('initialize lifecycle unit tests', async () => {
 
       context.storage.get = storageGet;
 
+      const accessToken = 'access-token-random';
+      input.requestEnvelope.context.System.user.accessToken = accessToken as any;
+
       const initialize = initializeGenerator(utils as any);
 
       await initialize(context as any, input as any);
@@ -125,8 +128,9 @@ describe('initialize lifecycle unit tests', async () => {
       expect(context.storage.set.args[1]).to.eql([S.LOCALE, input.requestEnvelope.request.locale]);
       expect(context.storage.set.args[2]).to.eql([S.USER, userId]);
       expect(context.storage.set.args[3]).to.eql([S.SUPPORTED_INTERFACES, input.requestEnvelope.context.System.device?.supportedInterfaces]);
-      expect(context.storage.set.args[4]).to.eql([S.ALEXA_PERMISSIONS, metaObj.alexa_permissions]);
-      expect(context.storage.set.args[5]).to.eql([S.REPEAT, metaObj.repeat]);
+      expect(context.storage.set.args[4]).to.eql([S.ACCESS_TOKEN, accessToken]);
+      expect(context.storage.set.args[5]).to.eql([S.ALEXA_PERMISSIONS, metaObj.alexa_permissions]);
+      expect(context.storage.set.args[6]).to.eql([S.REPEAT, metaObj.repeat]);
       expect(context.variables.merge.args[0]).to.eql([
         {
           timestamp: Math.floor(clock.now / 1000),
@@ -183,7 +187,7 @@ describe('initialize lifecycle unit tests', async () => {
       delete input.requestEnvelope.context.System.device;
       await fn(context as any, input as any);
 
-      expect(context.storage.set.args[4]).to.eql([S.REPEAT, 100]);
+      expect(context.storage.set.args[5]).to.eql([S.REPEAT, 100]);
       expect(context.storage.set.args[2]).to.eql([S.SUPPORTED_INTERFACES, undefined]);
     });
 
@@ -302,7 +306,7 @@ describe('initialize lifecycle unit tests', async () => {
 
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
-          expect(context.storage.set.args[5]).to.eql([S.OUTPUT, '']);
+          expect(context.storage.set.args[6]).to.eql([S.OUTPUT, '']);
           expect(context.trace.speak.args).to.eql([['']]);
         });
 
@@ -320,7 +324,7 @@ describe('initialize lifecycle unit tests', async () => {
 
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
-          expect(context.storage.set.args[5]).to.eql([S.OUTPUT, lastSpeak]);
+          expect(context.storage.set.args[6]).to.eql([S.OUTPUT, lastSpeak]);
           expect(context.trace.speak.args).to.eql([[lastSpeak]]);
         });
       });

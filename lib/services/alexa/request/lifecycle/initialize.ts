@@ -43,6 +43,8 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
   storage.set(S.LOCALE, requestEnvelope.request.locale);
   storage.set(S.USER, requestEnvelope.context.System.user.userId);
   storage.set(S.SUPPORTED_INTERFACES, requestEnvelope.context.System.device?.supportedInterfaces);
+  // store access token
+  storage.set(S.ACCESS_TOKEN, requestEnvelope.context.System.user.accessToken);
 
   // set based on metadata
   storage.set(S.ALEXA_PERMISSIONS, meta.alexa_permissions ?? []);
