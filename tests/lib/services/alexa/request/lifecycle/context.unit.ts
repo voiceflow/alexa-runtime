@@ -13,9 +13,10 @@ describe('context lifecycle unit tests', () => {
       turn: { set: sinon.stub() },
     };
 
+    const accessToken = 'access-token';
     const input = {
       attributesManager: { getPersistentAttributes: sinon.stub().returns(rawState) },
-      requestEnvelope: { request: null },
+      requestEnvelope: { request: null, context: { System: { user: { accessToken } } } },
       context: {
         versionID: 'version-id',
         voiceflow: { createContext: sinon.stub().returns(context) },
@@ -29,7 +30,10 @@ describe('context lifecycle unit tests', () => {
       [T.PREVIOUS_OUTPUT, 'output'],
     ]);
     expect(context.storage.get.args).to.eql([[S.OUTPUT]]);
-    expect(context.storage.set.args).to.eql([[S.OUTPUT, '']]);
+    expect(context.storage.set.args).to.eql([
+      [S.OUTPUT, ''],
+      [S.ACCESS_TOKEN, accessToken],
+    ]);
   });
 
   it('no intent', async () => {
@@ -41,7 +45,7 @@ describe('context lifecycle unit tests', () => {
 
     const input = {
       attributesManager: { getPersistentAttributes: sinon.stub().returns(rawState) },
-      requestEnvelope: { request: {} },
+      requestEnvelope: { request: {}, context: { System: { user: {} } } },
       context: {
         versionID: 'version-id',
         voiceflow: { createContext: sinon.stub().returns(context) },
@@ -61,7 +65,7 @@ describe('context lifecycle unit tests', () => {
 
     const input = {
       attributesManager: { getPersistentAttributes: sinon.stub().returns(rawState) },
-      requestEnvelope: { request: { intent: 'intent' } },
+      requestEnvelope: { request: { intent: 'intent' }, context: { System: { user: {} } } },
       context: {
         versionID: 'version-id',
         voiceflow: { createContext: sinon.stub().returns(context) },

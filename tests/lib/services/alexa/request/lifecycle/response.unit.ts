@@ -20,7 +20,7 @@ describe('response lifecycle unit tests', () => {
     turnGet.onSecondCall().returns(true);
 
     const context = {
-      storage: { set: sinon.stub(), get: storageGet },
+      storage: { get: storageGet },
       turn: { get: turnGet, set: sinon.stub() },
       stack: { isEmpty: sinon.stub().returns(true) },
       getFinalState: sinon.stub().returns(finalState),
@@ -37,7 +37,6 @@ describe('response lifecycle unit tests', () => {
     };
 
     expect(await response(context as any, input as any)).to.eql(output);
-    expect(context.storage.set.args).to.eql([[S.ACCESS_TOKEN, accessToken]]);
     expect(context.turn.set.args).to.eql([[T.END, true]]);
     expect(context.storage.get.args).to.eql([[S.OUTPUT], [S.OUTPUT]]);
     expect(input.responseBuilder.speak.args).to.eql([['speak']]);
