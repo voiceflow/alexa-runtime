@@ -24,6 +24,7 @@ const context = async (input: HandlerInput): Promise<Context> => {
   newContext.turn.set(T.HANDLER_INPUT, input);
   newContext.turn.set(T.PREVIOUS_OUTPUT, newContext.storage.get(S.OUTPUT));
   newContext.storage.set(S.OUTPUT, '');
+  newContext.storage.set(S.ACCESS_TOKEN, requestEnvelope.context.System.user.accessToken);
 
   return newContext;
 };
