@@ -8,7 +8,7 @@ executors:
     docker:
       - image: circleci/node:12
       - image: circleci/dynamodb:13-oracle # DynamoDB service container
-    resource_class: medium
+    resource_class: large
   build-executor:
     working_directory: /tmp/vf-build
     docker:
