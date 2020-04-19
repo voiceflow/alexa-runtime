@@ -20,14 +20,14 @@ describe('Test userInfoHandler unit tests', () => {
     it('no success_id or fail_id', () => {
       const context = { trace: { debug: sinon.stub() } };
       expect(userInfoHandler.handle({} as any, context as any, null as any, null as any)).to.eql(null);
-      expect(context.trace.debug.args).to.eql([['__User Info__ - entered']]);
+      expect(context.trace.debug.args).to.eql([['__user info__ - entered']]);
     });
 
     it('success_id', () => {
       const block = { success_id: 'success-id' };
       const context = { trace: { debug: sinon.stub() } };
       expect(userInfoHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.success_id);
-      expect(context.trace.debug.args).to.eql([['__User Info__ - entered'], ['User Info - redirecting to the success block']]);
+      expect(context.trace.debug.args).to.eql([['__user info__ - entered'], ['__user info__ - success path triggered']]);
     });
 
     it('fail_id', () => {
@@ -35,8 +35,8 @@ describe('Test userInfoHandler unit tests', () => {
       const context = { trace: { debug: sinon.stub() } };
       expect(userInfoHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.fail_id);
       expect(context.trace.debug.args).to.eql([
-        ['__User Info__ - entered'],
-        ['User Info - success link is not provided, redirecting to the fail block'],
+        ['__user info__ - entered'],
+        ['__user info__ - success path not provided, redirecting to the fail path'],
       ]);
     });
   });

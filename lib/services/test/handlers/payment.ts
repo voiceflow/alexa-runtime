@@ -7,11 +7,11 @@ const PaymentHandler: HandlerFactory<PaymentsBlock> = () => ({
     return !!block.product_id;
   },
   handle: (block, context) => {
-    context.trace.debug('__Payment__ - entered');
+    context.trace.debug('__payment__ - entered');
 
     if (block.success_id || block.fail_id) {
       context.trace.debug(
-        block.success_id ? 'Payment - redirecting to the success block' : 'Payment - success link is not provided, redirecting to the fail block'
+        block.success_id ? '__payment__ - success path triggered' : '__payment__ - success path not provided, redirecting to the fail path'
       );
     }
 
