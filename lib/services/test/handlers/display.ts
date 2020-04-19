@@ -7,10 +7,10 @@ const DisplayHandler: HandlerFactory<Display> = () => ({
     return !!block.display_id;
   },
   handle: (block, context) => {
-    context.trace.debug('__Display__ - entered');
+    context.trace.debug('__display__ - entered');
 
     if (block.nextId) {
-      context.trace.debug('__Display__ - redirecting to the next block');
+      context.trace.debug('__display__ - redirecting to the next step');
     }
 
     return block.nextId ?? null;
