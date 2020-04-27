@@ -2,9 +2,9 @@ import { HandlerFactory } from '@voiceflow/client';
 
 import { T } from '@/lib/constants';
 
-import { IntentRequest, RequestType } from '../../types';
-import { addRepromptIfExists } from '../../utils';
-import CommandHandler from '../command';
+import CommandHandler from '../../../voiceflow/handlers/command';
+import { IntentRequest, RequestType } from '../../../voiceflow/types';
+import { addRepromptIfExists } from '../../../voiceflow/utils';
 import getBestScore from './score';
 
 type Choice = {
