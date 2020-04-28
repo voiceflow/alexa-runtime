@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import getBestScore, { Choice } from '@/lib/services/voiceflow/handlers/choice/score';
+import getBestScore, { Choice } from '@/lib/services/test/handlers/choice/score';
 
 describe('score utils', () => {
   describe('getBestScore', () => {
