@@ -34,10 +34,7 @@ describe('Test paymentHandler unit tests', () => {
       const block = { fail_id: 'fail-id' };
       const context = { trace: { debug: sinon.stub() } };
       expect(paymentHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.fail_id);
-      expect(context.trace.debug.args).to.eql([
-        ['__payment__ - entered'],
-        ['__payment__ - success link is not provided, redirecting to the fail block'],
-      ]);
+      expect(context.trace.debug.args).to.eql([['__payment__ - entered'], ['__payment__ - success path not provided, redirecting to the fail path']]);
     });
   });
 });
