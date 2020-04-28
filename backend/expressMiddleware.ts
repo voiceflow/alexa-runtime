@@ -13,14 +13,12 @@ import { ControllerMap, MiddlewareMap } from '@/lib';
 import pjson from '@/package.json';
 
 import api from './api';
+import { ERROR_RESPONSE_MS, WARN_RESPONSE_MS } from './constants';
 
 const name = pjson.name.replace(/^@[a-zA-Z0-9-]+\//g, '');
 
 const prettyStdOut = new PrettyStream({ mode: 'dev' });
 prettyStdOut.pipe(process.stdout);
-
-const ERROR_RESPONSE_MS = 10000;
-const WARN_RESPONSE_MS = 5000;
 
 /**
  * @class
