@@ -36,7 +36,7 @@ describe('Test reminderHandler unit tests', () => {
       expect(reminderHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.fail_id);
       expect(context.trace.debug.args).to.eql([
         ['__reminder__ - entered'],
-        ['__reminder__ - success link is not provided, redirecting to the fail block'],
+        ['__reminder__ - success path not provided, redirecting to the fail path'],
       ]);
     });
   });

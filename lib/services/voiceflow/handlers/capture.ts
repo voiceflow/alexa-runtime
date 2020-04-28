@@ -40,16 +40,17 @@ export const CaptureHandler: HandlerFactory<Capture, typeof utilsObj> = (utils) 
       return utils.commandHandler.handle(context, variables);
     }
 
-    const { intent } = request.payload;
+    // "input" is only passed through the prototype tool
+    const { intent, input } = request.payload;
 
     // try to match the first slot of the intent to the variable
-    const input = _.keys(intent.slots).length === 1 ? _.values(intent.slots)[0]?.value : null;
+    const value = (_.keys(intent.slots).length === 1 && _.values(intent.slots)[0]?.value) || input;
 
-    if (input) {
-      const num = utils.wordsToNumbers(input);
+    if (value) {
+      const num = utils.wordsToNumbers(value);
 
       if (typeof num !== 'number' || Number.isNaN(num)) {
-        variables.set(block.variable, input);
+        variables.set(block.variable, value);
       } else {
         variables.set(block.variable, num);
       }

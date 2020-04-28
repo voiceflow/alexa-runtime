@@ -3,7 +3,6 @@ import { CodeHandler, EndHandler, FlowHandler, IfHandler, IntegrationsHandler, R
 import AccountLinkingHandler from '@/lib/services/voiceflow/handlers/accountLinking';
 import CaptureHandler from '@/lib/services/voiceflow/handlers/capture';
 import CardHandler from '@/lib/services/voiceflow/handlers/card';
-import ChoiceHandler from '@/lib/services/voiceflow/handlers/choice';
 import InteractionHandler from '@/lib/services/voiceflow/handlers/interaction';
 import PermissionCardHandler from '@/lib/services/voiceflow/handlers/permissionCard';
 import ResetHandler from '@/lib/services/voiceflow/handlers/reset';
@@ -13,6 +12,7 @@ import StreamHandler from '@/lib/services/voiceflow/handlers/stream';
 import { Config } from '@/types';
 
 import CancelPaymentHandler from './cancelPayment';
+import ChoiceHandler from './choice';
 import DisplayHandler from './display';
 import PaymentHandler from './payment';
 import ReminderHandler from './reminder';

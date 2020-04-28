@@ -27,7 +27,7 @@ describe('Test displayHandler unit tests', () => {
       const block = { nextId: 'next-id' };
       const context = { trace: { debug: sinon.stub() } };
       expect(displayHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.nextId);
-      expect(context.trace.debug.args).to.eql([['__display__ - entered'], ['__display__ - redirecting to the next block']]);
+      expect(context.trace.debug.args).to.eql([['__display__ - entered'], ['__display__ - redirecting to the next step']]);
     });
   });
 });
