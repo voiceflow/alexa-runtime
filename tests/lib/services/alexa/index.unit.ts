@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import AlexaManager, { ResponseInterceptor } from '@/lib/services/alexa';
+import AlexaManager, { RequestInterceptorGenerator, ResponseInterceptor } from '@/lib/services/alexa';
 
 describe('alexa manager unit tests', () => {
   describe('skill', () => {
@@ -64,6 +64,24 @@ describe('alexa manager unit tests', () => {
 
       expect(utils.handlers.ErrorHandlerGenerator.args[0]).to.eql([services.metrics]);
       expect(utils.interceptors.RequestInterceptorGenerator.args[0]).to.eql([services.metrics]);
+    });
+  });
+
+  describe('RequestInterceptor', () => {
+    describe('process', () => {
+      it('works correctly', async () => {
+        const decodedVersionID = 1;
+
+        const input = {
+          context: { decodedVersionID },
+        };
+
+        const metrics = { increment: sinon.stub() };
+
+        await RequestInterceptorGenerator(metrics as any).process(input as any);
+
+        expect(metrics.increment.args).to.eql([['alexa.invocation', 1, [`skill_id:${decodedVersionID}`]]]);
+      });
     });
   });
 
