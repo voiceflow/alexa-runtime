@@ -1,11 +1,13 @@
 import { HandlerInput, SkillBuilders } from 'ask-sdk';
 
+import { MetricsType } from '@/lib/clients/metrics';
+
 import { Config, Services } from '../utils';
 import {
   APLUserEventHandler,
   AudioPlayerEventHandler,
   CancelPurchaseHandler,
-  ErrorHandler,
+  ErrorHandlerGenerator,
   EventHandler,
   IntentHandler,
   LaunchHandler,
@@ -21,12 +23,19 @@ export const ResponseInterceptor = {
   },
 };
 
+export const RequestInterceptorGenerator = (metrics: MetricsType) => ({
+  async process(handlerInput: HandlerInput) {
+    const { decodedVersionID } = handlerInput.context as { decodedVersionID: string };
+    metrics.increment('alexa.invocation', 1, [`skill_id:${decodedVersionID}`]);
+  },
+});
+
 const utilsObj = {
   handlers: {
     APLUserEventHandler,
     AudioPlayerEventHandler,
     CancelPurchaseHandler,
-    ErrorHandler,
+    ErrorHandlerGenerator,
     EventHandler,
     IntentHandler,
     LaunchHandler,
@@ -34,12 +43,13 @@ const utilsObj = {
     PurchaseHandler,
     SessionEndedHandler,
   },
-  interceptors: { ResponseInterceptor },
+  interceptors: { RequestInterceptorGenerator, ResponseInterceptor },
   builder: SkillBuilders,
 };
 
 const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
   const { handlers, interceptors, builder } = utils;
+  const { metrics } = services;
 
   const skill = builder
     .standard()
@@ -54,8 +64,8 @@ const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
       handlers.APLUserEventHandler,
       handlers.CancelPurchaseHandler
     )
-    .addErrorHandlers(handlers.ErrorHandler)
-    // .addRequestInterceptors(RequestInterceptor)
+    .addErrorHandlers(handlers.ErrorHandlerGenerator(metrics))
+    .addRequestInterceptors(interceptors.RequestInterceptorGenerator(metrics))
     .addResponseInterceptors(interceptors.ResponseInterceptor)
     .withDynamoDbClient(services.dynamo)
     .withTableName(config.SESSIONS_DYNAMO_TABLE)
