@@ -1,11 +1,9 @@
 import secretsProvider from '@voiceflow/secrets-provider';
 import { expect } from 'chai';
-import * as Datadog from 'datadog-metrics';
-import * as Hashids from 'hashids';
 import _ from 'lodash';
 import sinon from 'sinon';
 
-import Metrics from '@/lib/clients/metrics';
+import MetricsClient, { Metrics } from '@/lib/clients/metrics';
 
 describe('metrics client unit tests', () => {
   before(async () => {
@@ -18,21 +16,40 @@ describe('metrics client unit tests', () => {
     sinon.restore();
   });
 
-  describe('new', () => {
-    it('works correctly', () => {
-      const NODE_ENV = 'test';
-      const hashidsStub = sinon.stub(Hashids, 'default');
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const metrics = new Metrics({ NODE_ENV } as any);
-
-      expect(hashidsStub.calledWithNew()).to.eql(true);
-      expect(hashidsStub.args).to.eql([[secretsProvider.get('CONFIG_ID_HASH'), 10]]);
+  it('new', () => {
+    const NODE_ENV = 'test';
+    const hashidsStub = sinon.stub().returns({
+      decode: () => {
+        //
+      },
     });
+    const loggerStub = sinon.stub().returns({
+      increment: () => {
+        //
+      },
+    });
+
+    const metrics = new Metrics({ NODE_ENV } as any, loggerStub as any, hashidsStub as any);
+
+    expect(typeof _.get(metrics, 'client.increment')).to.eql('function');
+    expect(typeof _.get(metrics, 'hashids.decode')).to.eql('function');
+
+    expect(loggerStub.calledWithNew()).to.eql(true);
+    expect(loggerStub.args).to.eql([
+      [
+        {
+          apiKey: secretsProvider.get('DATADOG_API_KEY'),
+          prefix: `vf-server.${NODE_ENV}`,
+          flushIntervalSeconds: 5,
+        },
+      ],
+    ]);
+    expect(hashidsStub.calledWithNew()).to.eql(true);
+    expect(hashidsStub.args).to.eql([[secretsProvider.get('CONFIG_ID_HASH'), 10]]);
   });
 
   it('request', () => {
-    const metrics = new Metrics({} as any);
+    const metrics = MetricsClient({} as any);
     const increment = sinon.stub();
     _.set(metrics, 'client', { increment });
 
@@ -41,7 +58,7 @@ describe('metrics client unit tests', () => {
   });
 
   it('testRequest', () => {
-    const metrics = new Metrics({} as any);
+    const metrics = MetricsClient({} as any);
     const increment = sinon.stub();
     _.set(metrics, 'client', { increment });
 
@@ -50,7 +67,7 @@ describe('metrics client unit tests', () => {
   });
 
   it('error', () => {
-    const metrics = new Metrics({} as any);
+    const metrics = MetricsClient({} as any);
     const increment = sinon.stub();
     _.set(metrics, 'client', { increment });
 
@@ -61,7 +78,7 @@ describe('metrics client unit tests', () => {
   });
 
   it('invocation', () => {
-    const metrics = new Metrics({} as any);
+    const metrics = MetricsClient({} as any);
     const increment = sinon.stub();
     _.set(metrics, 'client', { increment });
 

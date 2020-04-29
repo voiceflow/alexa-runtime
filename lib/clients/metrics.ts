@@ -1,16 +1,16 @@
 import secretsProvider from '@voiceflow/secrets-provider';
 import { BufferedMetricsLogger } from 'datadog-metrics';
-import Hashids from 'hashids';
+import HashidsClass from 'hashids';
 
 import { Config } from '@/types';
 
-class Metrics {
+export class Metrics {
   private client: BufferedMetricsLogger;
 
-  private hashids: Hashids;
+  private hashids: HashidsClass;
 
-  constructor(config: Config) {
-    this.client = new BufferedMetricsLogger({
+  constructor(config: Config, Logger: typeof BufferedMetricsLogger, Hashids: typeof HashidsClass) {
+    this.client = new Logger({
       apiKey: secretsProvider.get('DATADOG_API_KEY'),
       prefix: `vf-server.${config.NODE_ENV}`,
       flushIntervalSeconds: 5,
@@ -37,6 +37,8 @@ class Metrics {
   }
 }
 
-export type MetricsType = BufferedMetricsLogger;
+const MetricsClient = (config: Config) => new Metrics(config, BufferedMetricsLogger, HashidsClass);
 
-export default Metrics;
+export type MetricsType = Metrics;
+
+export default MetricsClient;

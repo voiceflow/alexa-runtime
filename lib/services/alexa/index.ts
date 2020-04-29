@@ -1,6 +1,6 @@
 import { HandlerInput, SkillBuilders } from 'ask-sdk';
 
-import Metrics from '@/lib/clients/metrics';
+import { MetricsType } from '@/lib/clients/metrics';
 
 import { Config, Services } from '../utils';
 import {
@@ -23,7 +23,7 @@ export const ResponseInterceptor = {
   },
 };
 
-export const RequestInterceptorGenerator = (metrics: Metrics) => ({
+export const RequestInterceptorGenerator = (metrics: MetricsType) => ({
   async process(handlerInput: HandlerInput) {
     const { versionID } = handlerInput.context as { versionID: string };
     metrics.invocation(versionID);
