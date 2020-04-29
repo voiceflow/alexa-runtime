@@ -1,6 +1,6 @@
 import { HandlerInput, SkillBuilders } from 'ask-sdk';
 
-import { MetricsType } from '@/lib/clients/metrics';
+import Metrics from '@/lib/clients/metrics';
 
 import { Config, Services } from '../utils';
 import {
@@ -23,10 +23,10 @@ export const ResponseInterceptor = {
   },
 };
 
-export const RequestInterceptorGenerator = (metrics: MetricsType) => ({
+export const RequestInterceptorGenerator = (metrics: Metrics) => ({
   async process(handlerInput: HandlerInput) {
-    const { decodedVersionID } = handlerInput.context as { decodedVersionID: number };
-    metrics.increment('alexa.invocation', 1, [`skill_id:${decodedVersionID}`]);
+    const { versionID } = handlerInput.context as { versionID: string };
+    metrics.invocation(versionID);
   },
 });
 

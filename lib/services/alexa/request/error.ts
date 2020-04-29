@@ -1,10 +1,10 @@
 import { ErrorHandler as ErrorHandlerType, HandlerInput } from 'ask-sdk';
 
-import { MetricsType } from '@/lib/clients/metrics';
+import Metrics from '@/lib/clients/metrics';
 
 const ERROR_MESSAGE = 'something went wrong with this skill, please check again later';
 
-const ErrorHandlerGenerator = (metrics: MetricsType): ErrorHandlerType => ({
+const ErrorHandlerGenerator = (metrics: Metrics): ErrorHandlerType => ({
   canHandle: (): boolean => true,
   handle: (input: HandlerInput, error: Error) => {
     // TODO: fully implement error handler
@@ -12,8 +12,8 @@ const ErrorHandlerGenerator = (metrics: MetricsType): ErrorHandlerType => ({
     // eslint-disable-next-line no-console
     console.error(input.requestEnvelope.request.type, error);
 
-    const { decodedVersionID } = input.context as { decodedVersionID: number };
-    metrics.increment('alexa.request.error', 1, [`skill_id:${decodedVersionID}`]);
+    const { versionID } = input.context as { versionID: string };
+    metrics.error(versionID);
 
     return input.responseBuilder
       .speak(ERROR_MESSAGE)

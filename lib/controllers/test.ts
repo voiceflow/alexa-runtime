@@ -6,7 +6,7 @@ class TestController extends AbstractController {
   async handler(req: { body: { state: State; request?: any } }) {
     const { test, metrics } = this.services;
 
-    metrics.increment('test.request');
+    metrics.testRequest();
 
     return test.invoke(req.body.state, req.body.request);
   }

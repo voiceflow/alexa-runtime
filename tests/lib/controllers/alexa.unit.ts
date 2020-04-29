@@ -10,23 +10,21 @@ describe('alexa controller unit tests', () => {
   describe('handler', () => {
     it('works correctly', async () => {
       const output = 'output';
-      const decodedVersionID = 1;
 
       const client = { foo: 'bar' };
       const skill = { invoke: sinon.stub().resolves(output) };
       const services = {
         alexa: { skill },
         voiceflow: { client },
-        metrics: { increment: sinon.stub() },
-        hashids: { decode: sinon.stub().returns([decodedVersionID]) },
+        metrics: { request: sinon.stub() },
       };
 
       const alexaController = new Alexa(services as any, null as any);
 
       const req = { body: { var1: 'val1' }, params: { versionID: 'version-id' } };
       expect(await alexaController.handler(req as any)).to.eql(output);
-      expect(skill.invoke.args).to.eql([[req.body, { versionID: req.params.versionID, decodedVersionID, voiceflow: client }]]);
-      expect(services.metrics.increment.args).to.eql([['alexa.request']]);
+      expect(skill.invoke.args).to.eql([[req.body, { versionID: req.params.versionID, voiceflow: client }]]);
+      expect(services.metrics.request.callCount).to.eql(1);
     });
   });
 

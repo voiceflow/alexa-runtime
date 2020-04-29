@@ -70,17 +70,17 @@ describe('alexa manager unit tests', () => {
   describe('RequestInterceptor', () => {
     describe('process', () => {
       it('works correctly', async () => {
-        const decodedVersionID = 1;
+        const versionID = '1';
 
         const input = {
-          context: { decodedVersionID },
+          context: { versionID },
         };
 
-        const metrics = { increment: sinon.stub() };
+        const metrics = { invocation: sinon.stub() };
 
         await RequestInterceptorGenerator(metrics as any).process(input as any);
 
-        expect(metrics.increment.args).to.eql([['alexa.invocation', 1, [`skill_id:${decodedVersionID}`]]]);
+        expect(metrics.invocation.args).to.eql([[versionID]]);
       });
     });
   });
