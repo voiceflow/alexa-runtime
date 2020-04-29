@@ -20,10 +20,7 @@ class AlexaController extends AbstractController {
 
     metrics.request();
 
-    return alexa.skill.invoke(req.body, {
-      versionID: req.params.versionID,
-      voiceflow: voiceflow.client,
-    });
+    return alexa.skill.invoke(req.body, { versionID: req.params.versionID, voiceflow: voiceflow.client });
   }
 }
 
