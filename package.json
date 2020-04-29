@@ -115,20 +115,20 @@
   "homepage": "https://github.com/voiceflow/backend-template#readme",
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-push": "git-branch-check"
     }
   },
   "license": "ISC",
   "lint-staged": {
-    "package.json": [
-      "fixpack",
-      "git add"
-    ],
     "**/*.{js,ts}": [
       "eslint --fix",
       "prettier-eslint --write",
+      "git add"
+    ],
+    "package.json": [
+      "fixpack",
       "git add"
     ]
   },
