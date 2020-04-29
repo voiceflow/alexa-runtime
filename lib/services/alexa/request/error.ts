@@ -12,7 +12,7 @@ const ErrorHandlerGenerator = (metrics: MetricsType): ErrorHandlerType => ({
     // eslint-disable-next-line no-console
     console.error(input.requestEnvelope.request.type, error);
 
-    const { decodedVersionID } = input.context as { decodedVersionID: string };
+    const { decodedVersionID } = input.context as { decodedVersionID: number };
     metrics.increment('alexa.request.error', 1, [`skill_id:${decodedVersionID}`]);
 
     return input.responseBuilder

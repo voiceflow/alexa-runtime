@@ -25,7 +25,7 @@ export const ResponseInterceptor = {
 
 export const RequestInterceptorGenerator = (metrics: MetricsType) => ({
   async process(handlerInput: HandlerInput) {
-    const { decodedVersionID } = handlerInput.context as { decodedVersionID: string };
+    const { decodedVersionID } = handlerInput.context as { decodedVersionID: number };
     metrics.increment('alexa.invocation', 1, [`skill_id:${decodedVersionID}`]);
   },
 });
