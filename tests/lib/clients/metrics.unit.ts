@@ -18,21 +18,15 @@ describe('metrics client unit tests', () => {
 
   it('new', () => {
     const NODE_ENV = 'test';
-    const hashidsStub = sinon.stub().returns({
-      decode: () => {
-        //
-      },
-    });
     const loggerStub = sinon.stub().returns({
       increment: () => {
         //
       },
     });
 
-    const metrics = new Metrics({ NODE_ENV } as any, loggerStub as any, hashidsStub as any);
+    const metrics = new Metrics({ NODE_ENV } as any, loggerStub as any);
 
     expect(typeof _.get(metrics, 'client.increment')).to.eql('function');
-    expect(typeof _.get(metrics, 'hashids.decode')).to.eql('function');
 
     expect(loggerStub.calledWithNew()).to.eql(true);
     expect(loggerStub.args).to.eql([
@@ -44,8 +38,6 @@ describe('metrics client unit tests', () => {
         },
       ],
     ]);
-    expect(hashidsStub.calledWithNew()).to.eql(true);
-    expect(hashidsStub.args).to.eql([[secretsProvider.get('CONFIG_ID_HASH'), 10]]);
   });
 
   it('request', () => {
@@ -71,9 +63,8 @@ describe('metrics client unit tests', () => {
     const increment = sinon.stub();
     _.set(metrics, 'client', { increment });
 
-    const versionID = 1;
-    const encodedVersionID = _.get(metrics, 'hashids').encode(versionID);
-    metrics.error(encodedVersionID);
+    const versionID = 'version_id';
+    metrics.error(versionID);
     expect(increment.args).to.eql([['alexa.request.error', 1, [`skill_id:${versionID}`]]]);
   });
 
@@ -82,9 +73,8 @@ describe('metrics client unit tests', () => {
     const increment = sinon.stub();
     _.set(metrics, 'client', { increment });
 
-    const versionID = 1;
-    const encodedVersionID = _.get(metrics, 'hashids').encode(versionID);
-    metrics.invocation(encodedVersionID);
+    const versionID = 'version_id';
+    metrics.invocation(versionID);
     expect(increment.args).to.eql([['alexa.invocation', 1, [`skill_id:${versionID}`]]]);
   });
 });
