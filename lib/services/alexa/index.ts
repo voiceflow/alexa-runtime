@@ -27,6 +27,29 @@ export const RequestInterceptorGenerator = (metrics: MetricsType) => ({
   async process(handlerInput: HandlerInput) {
     const { versionID } = handlerInput.context as { versionID: string };
     metrics.invocation(versionID);
+
+    // getPersistentAttributes hits dynamo only once during a TURN. the results from dynamo are cached
+    // and used for sequent calls to getPersistentAttributes
+    const state = await handlerInput.attributesManager.getPersistentAttributes();
+    // console.log('rawState', rawState);
+    if (!state.stack) {
+      const updatedState = {
+        stack: [],
+        variables: state.globals[0],
+        storage: {
+          output: state.output,
+          sessions: state.sessions,
+          repeat: state.repeat,
+          alexa_permissions: state.alexa_permissions,
+          locale: state.locale,
+          user: state.user,
+          supported_interfaces: state.supported_interfaces,
+        },
+      };
+      // eslint-disable-next-line no-console
+      console.log('updatedState', updatedState);
+      handlerInput.attributesManager.setPersistentAttributes(updatedState);
+    }
   },
 });
 
