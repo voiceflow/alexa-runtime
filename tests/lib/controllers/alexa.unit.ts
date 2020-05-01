@@ -16,6 +16,7 @@ describe('alexa controller unit tests', () => {
       const services = {
         alexa: { skill },
         voiceflow: { client },
+        metrics: { request: sinon.stub() },
       };
 
       const alexaController = new Alexa(services as any, null as any);
@@ -23,6 +24,7 @@ describe('alexa controller unit tests', () => {
       const req = { body: { var1: 'val1' }, params: { versionID: 'version-id' } };
       expect(await alexaController.handler(req as any)).to.eql(output);
       expect(skill.invoke.args).to.eql([[req.body, { versionID: req.params.versionID, voiceflow: client }]]);
+      expect(services.metrics.request.callCount).to.eql(1);
     });
   });
 

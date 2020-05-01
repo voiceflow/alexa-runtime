@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import AlexaManager, { ResponseInterceptor } from '@/lib/services/alexa';
+import AlexaManager, { RequestInterceptorGenerator, ResponseInterceptor } from '@/lib/services/alexa';
 
 describe('alexa manager unit tests', () => {
   describe('skill', () => {
@@ -12,10 +12,12 @@ describe('alexa manager unit tests', () => {
       const withTableName = sinon.stub().returns({ withAutoCreateTable });
       const withDynamoDbClient = sinon.stub().returns({ withTableName });
       const addResponseInterceptors = sinon.stub().returns({ withDynamoDbClient });
-      const addErrorHandlers = sinon.stub().returns({ addResponseInterceptors });
+      const addRequestInterceptors = sinon.stub().returns({ addResponseInterceptors });
+      const addErrorHandlers = sinon.stub().returns({ addRequestInterceptors });
       const addRequestHandlers = sinon.stub().returns({ addErrorHandlers });
       const services = {
         dynamo: 'dynamo',
+        metrics: 'metrics',
       };
       const utils = {
         handlers: {
@@ -28,9 +30,9 @@ describe('alexa manager unit tests', () => {
           PurchaseHandler: 'PurchaseHandler',
           APLUserEventHandler: 'APLUserEventHandler',
           CancelPurchaseHandler: 'CancelPurchaseHandler',
-          ErrorHandler: 'ErrorHandler',
+          ErrorHandlerGenerator: sinon.stub().returns('ErrorHandler'),
         },
-        interceptors: { ResponseInterceptor: 'ResponseInterceptor' },
+        interceptors: { ResponseInterceptor: 'ResponseInterceptor', RequestInterceptorGenerator: sinon.stub().returns('RequestInterceptor') },
         builder: { standard: sinon.stub().returns({ addRequestHandlers }) },
       };
       const config = { SESSIONS_DYNAMO_TABLE: 'SESSIONS_DYNAMO_TABLE' };
@@ -52,12 +54,34 @@ describe('alexa manager unit tests', () => {
           utils.handlers.CancelPurchaseHandler,
         ],
       ]);
-      expect(addErrorHandlers.args).to.eql([[utils.handlers.ErrorHandler]]);
+      expect(addErrorHandlers.args).to.eql([[utils.handlers.ErrorHandlerGenerator()]]);
+      expect(addRequestInterceptors.args).to.eql([[utils.interceptors.RequestInterceptorGenerator()]]);
       expect(addResponseInterceptors.args).to.eql([[utils.interceptors.ResponseInterceptor]]);
       expect(withDynamoDbClient.args).to.eql([[services.dynamo]]);
       expect(withTableName.args).to.eql([[config.SESSIONS_DYNAMO_TABLE]]);
       expect(withAutoCreateTable.args).to.eql([[false]]);
       expect(create.callCount).to.eql(1);
+
+      expect(utils.handlers.ErrorHandlerGenerator.args[0]).to.eql([services.metrics]);
+      expect(utils.interceptors.RequestInterceptorGenerator.args[0]).to.eql([services.metrics]);
+    });
+  });
+
+  describe('RequestInterceptor', () => {
+    describe('process', () => {
+      it('works correctly', async () => {
+        const versionID = '1';
+
+        const input = {
+          context: { versionID },
+        };
+
+        const metrics = { invocation: sinon.stub() };
+
+        await RequestInterceptorGenerator(metrics as any).process(input as any);
+
+        expect(metrics.invocation.args).to.eql([[versionID]]);
+      });
     });
   });
 
