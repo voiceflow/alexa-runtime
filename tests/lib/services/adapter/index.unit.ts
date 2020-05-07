@@ -15,7 +15,7 @@ describe('adapterManager unit tests', async () => {
       it(test.text, async () => {
         const adapter = new AdapterManager(null as any, null as any);
 
-        expect(await adapter.context(test.old as any, test.new.variables._system)).to.deep.eq(test.new);
+        expect(await adapter.context(test.old as any, test.new.variables._system)).to.deep.equalInAnyOrder(test.new);
       });
     });
   });

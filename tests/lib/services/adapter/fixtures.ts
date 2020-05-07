@@ -75,30 +75,17 @@ export const newInteraction = {
       },
       diagramID: 'wNt8ySvDY8TcYnKNWX00Nzdx8q97C7KZ',
       commands: [
-        // {
-        //   diagram_id: 'nfJFGM0yhDHLmne2gf9A8GcTsillWS04',
-        //   mappings: [],
-        //   end: false,
-        //   intent: 'AMAZON.StopIntent',
-        // },
-        // {
-        //   diagram_id: '3qVXWc9dmUqiakpZpSnAw49OfmmTpXmG',
-        //   mappings: [],
-        //   end: false,
-        //   intent: 'AMAZON.HelpIntent',
-        // },
-        // todo: figure out a way for this to be matched in any order
-        {
-          diagram_id: '3qVXWc9dmUqiakpZpSnAw49OfmmTpXmG',
-          mappings: [],
-          end: false,
-          intent: 'AMAZON.HelpIntent',
-        },
         {
           diagram_id: 'nfJFGM0yhDHLmne2gf9A8GcTsillWS04',
           mappings: [],
           end: false,
           intent: 'AMAZON.StopIntent',
+        },
+        {
+          diagram_id: '3qVXWc9dmUqiakpZpSnAw49OfmmTpXmG',
+          mappings: [],
+          end: false,
+          intent: 'AMAZON.HelpIntent',
         },
       ],
     },
