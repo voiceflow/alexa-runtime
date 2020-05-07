@@ -8,8 +8,8 @@ export enum Storage {
   SUPPORTED_INTERFACES = 'supported_interfaces',
   ACCESS_TOKEN = 'accessToken',
   PERMISSIONS = 'permissions',
-  // -- todo
   PAYMENT = 'payment',
+  // -- todo
   CANCEL_PAYMENT = 'cancelPayment',
   DISPLAY_INFO = 'displayInfo',
   NEXT_ID = 'next_id',
