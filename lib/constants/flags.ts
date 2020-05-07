@@ -5,6 +5,7 @@ export enum Storage {
   REPEAT = 'repeat',
   LOCALE = 'locale',
   USER = 'user',
+  // -- todo
   ACCESS_TOKEN = 'accessToken',
   PERMISSIONS = 'permissions',
   PAYMENT = 'payment',

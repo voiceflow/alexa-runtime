@@ -47,6 +47,8 @@ export const storageAdapter = (oldContext: OldContextRaw): NewContextStorage => 
   repeat: oldContext.repeat,
   locale: oldContext.locale,
   user: oldContext.user,
+  alexa_permissions: oldContext.alexa_permissions,
+  supported_interfaces: oldContext.supported_interfaces,
   ...(oldContext.randoms && { randoms: oldContext.randoms }), // conditionally add randoms
 });
 
@@ -56,12 +58,16 @@ export const variablesAdapter = (oldContext: OldContextRaw): NewContextVariables
         // everything in variables
         ...oldContext.globals[0],
         // filter out deprecated vars in vf specific variables
-        voiceflow: Object.keys(oldContext.globals[0].voiceflow).reduce((acc, key) => {
-          if (['events'].includes(key)) {
-            acc[key] = oldContext.globals[0].voiceflow[key];
-          }
+        voiceflow: Object.keys(oldContext.globals[0].voiceflow).reduce(
+          (acc, key) => {
+            if (['events'].includes(key)) {
+              acc[key] = oldContext.globals[0].voiceflow[key];
+            }
 
-          return acc;
-        }, {} as NewVoiceflowVars),
+            return acc;
+          },
+          // initial object
+          { permissions: oldContext.alexa_permissions, capabilities: oldContext.supported_interfaces } as NewVoiceflowVars
+        ),
       }
-    : { voiceflow: { events: [] } };
+    : { voiceflow: { events: [], permissions: [], capabilities: {} } }; // default

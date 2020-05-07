@@ -1,3 +1,5 @@
+import { SupportedInterfaces } from 'ask-sdk-model';
+
 export type OldCommands = {
   [key: string]: {
     mappings: Array<{ variable: string; slot: string }>;
@@ -15,6 +17,8 @@ export type OldContextRaw = {
   repeat: number;
   locale: string;
   user: string;
+  alexa_permissions: string[];
+  supported_interfaces: SupportedInterfaces;
   randoms?: Record<string, string[]>;
   globals: [
     {
@@ -61,12 +65,16 @@ export type NewContextStorage = {
   repeat: number;
   locale: string;
   user: string;
+  alexa_permissions: string[];
+  supported_interfaces: SupportedInterfaces;
   randoms?: Record<string, string[]>;
 };
 
 export type NewVoiceflowVars = {
   [key: string]: any;
+  permissions: string[]; // alexa_permissions
   events: any[];
+  capabilities: SupportedInterfaces; // supported_interfaces
 };
 
 export type NewContextVariables = {
