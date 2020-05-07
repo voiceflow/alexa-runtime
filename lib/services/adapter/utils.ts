@@ -64,6 +64,14 @@ export const storageAdapter = (oldContext: OldContextRaw, input: HandlerInput): 
       status: oldContext.payment.result || null,
     },
   }),
+  ...(oldContext.cancel_payment && {
+    cancelPayment: {
+      productId: oldContext.cancel_payment.productId,
+      successPath: oldContext.cancel_payment.success,
+      failPath: oldContext.cancel_payment.fail,
+      status: oldContext.cancel_payment.result || null,
+    },
+  }),
 });
 
 export const variablesAdapter = (oldContext: OldContextRaw, system: interfaces.system.SystemState): NewContextVariables =>

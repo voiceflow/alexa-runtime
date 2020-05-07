@@ -9,8 +9,8 @@ export enum Storage {
   ACCESS_TOKEN = 'accessToken',
   PERMISSIONS = 'permissions',
   PAYMENT = 'payment',
-  // -- todo
   CANCEL_PAYMENT = 'cancelPayment',
+  // -- todo
   DISPLAY_INFO = 'displayInfo',
   NEXT_ID = 'next_id',
   STREAM_PLAY = 'streamPlay',

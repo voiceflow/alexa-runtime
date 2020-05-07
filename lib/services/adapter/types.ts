@@ -27,6 +27,12 @@ export type OldContextRaw = {
     fail: string;
     result?: string;
   };
+  cancel_payment: {
+    productId: string;
+    success: string;
+    fail: string;
+    result?: string;
+  };
   globals: [
     {
       [key: string]: any;
@@ -78,6 +84,12 @@ export type NewContextStorage = {
   randoms?: Record<string, string[]>;
   permissions?: string[];
   payment?: {
+    productId: string;
+    successPath: string;
+    failPath: string;
+    status: string | null;
+  };
+  cancelPayment?: {
     productId: string;
     successPath: string;
     failPath: string;
