@@ -7,8 +7,8 @@ export enum Storage {
   USER = 'user',
   SUPPORTED_INTERFACES = 'supported_interfaces',
   ACCESS_TOKEN = 'accessToken',
-  // -- todo
   PERMISSIONS = 'permissions',
+  // -- todo
   PAYMENT = 'payment',
   CANCEL_PAYMENT = 'cancelPayment',
   DISPLAY_INFO = 'displayInfo',

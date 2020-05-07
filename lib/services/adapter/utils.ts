@@ -52,8 +52,10 @@ export const storageAdapter = (oldContext: OldContextRaw, input: HandlerInput): 
   user: oldContext.user,
   alexa_permissions: oldContext.alexa_permissions,
   supported_interfaces: oldContext.supported_interfaces,
+  // conditionally add attributes
   ...(input.requestEnvelope.context.System.user.accessToken && { accessToken: input.requestEnvelope.context.System.user.accessToken }),
-  ...(oldContext.randoms && { randoms: oldContext.randoms }), // conditionally add randoms
+  ...(oldContext.randoms && { randoms: oldContext.randoms }),
+  ...(oldContext.permissions && { permissions: oldContext.permissions }),
 });
 
 export const variablesAdapter = (oldContext: OldContextRaw, system: interfaces.system.SystemState): NewContextVariables =>

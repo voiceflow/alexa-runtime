@@ -20,6 +20,7 @@ export type OldContextRaw = {
   alexa_permissions: string[];
   supported_interfaces: SupportedInterfaces;
   randoms?: Record<string, string[]>;
+  permissions?: string[];
   globals: [
     {
       [key: string]: any;
@@ -69,6 +70,7 @@ export type NewContextStorage = {
   supported_interfaces: SupportedInterfaces;
   accessToken?: string | undefined;
   randoms?: Record<string, string[]>;
+  permissions?: string[];
 };
 
 export type NewVoiceflowVars = {
