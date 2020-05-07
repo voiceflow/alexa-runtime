@@ -1,3 +1,5 @@
+import { interfaces } from 'ask-sdk-model';
+
 import { Commands, NewContextStack, NewContextStorage, NewContextVariables, NewVoiceflowVars, OldCommands, OldContextRaw } from './types';
 
 export const commandAdapter = (oldCommands: OldCommands): Commands =>
@@ -52,11 +54,12 @@ export const storageAdapter = (oldContext: OldContextRaw): NewContextStorage => 
   ...(oldContext.randoms && { randoms: oldContext.randoms }), // conditionally add randoms
 });
 
-export const variablesAdapter = (oldContext: OldContextRaw): NewContextVariables =>
+export const variablesAdapter = (oldContext: OldContextRaw, system: interfaces.system.SystemState): NewContextVariables =>
   oldContext.globals[0]
     ? {
         // everything in variables
         ...oldContext.globals[0],
+        _system: system,
         // filter out deprecated vars in vf specific variables
         voiceflow: Object.keys(oldContext.globals[0].voiceflow).reduce(
           (acc, key) => {
@@ -70,4 +73,4 @@ export const variablesAdapter = (oldContext: OldContextRaw): NewContextVariables
           { permissions: oldContext.alexa_permissions, capabilities: oldContext.supported_interfaces } as NewVoiceflowVars
         ),
       }
-    : { voiceflow: { events: [], permissions: [], capabilities: {} } }; // default
+    : { voiceflow: { events: [], permissions: [], capabilities: {} }, _system: system }; // default

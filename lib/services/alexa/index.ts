@@ -49,7 +49,7 @@ export const RequestInterceptorGenerator = (metrics: MetricsType, adapter: Adapt
       //     supported_interfaces: state.supported_interfaces,
       //   },
       // };
-      const updatedState = adapter.context(state as OldContextRaw);
+      const updatedState = adapter.context(state as OldContextRaw, handlerInput.requestEnvelope.context.System);
       // eslint-disable-next-line no-console
       console.log('updatedState', updatedState);
       handlerInput.attributesManager.setPersistentAttributes(updatedState);

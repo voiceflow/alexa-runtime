@@ -1,4 +1,4 @@
-import { SupportedInterfaces } from 'ask-sdk-model';
+import { interfaces, SupportedInterfaces } from 'ask-sdk-model';
 
 export type OldCommands = {
   [key: string]: {
@@ -80,6 +80,7 @@ export type NewVoiceflowVars = {
 export type NewContextVariables = {
   [key: string]: any;
   voiceflow: NewVoiceflowVars;
+  _system: interfaces.system.SystemState;
 };
 
 export type NewContextRaw = {
