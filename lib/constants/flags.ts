@@ -5,12 +5,12 @@ export enum Storage {
   REPEAT = 'repeat',
   LOCALE = 'locale',
   USER = 'user',
-  // -- todo
+  SUPPORTED_INTERFACES = 'supported_interfaces',
   ACCESS_TOKEN = 'accessToken',
+  // -- todo
   PERMISSIONS = 'permissions',
   PAYMENT = 'payment',
   CANCEL_PAYMENT = 'cancelPayment',
-  SUPPORTED_INTERFACES = 'supported_interfaces',
   DISPLAY_INFO = 'displayInfo',
   NEXT_ID = 'next_id',
   STREAM_PLAY = 'streamPlay',

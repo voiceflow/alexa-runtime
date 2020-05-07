@@ -1,4 +1,4 @@
-import { interfaces } from 'ask-sdk-model';
+import { HandlerInput } from 'ask-sdk';
 
 import { AbstractManager } from '../utils';
 import { NewContextRaw, OldContextRaw } from './types';
@@ -9,12 +9,13 @@ import { stackAdapter, storageAdapter, variablesAdapter } from './utils';
  * The intention is to remove this adapter once we switch all users over
  */
 class AdapterManager extends AbstractManager {
-  async context(state: OldContextRaw, system: interfaces.system.SystemState): Promise<NewContextRaw | {}> {
+  // todo: better way to pass around this state & input obj
+  async context(state: OldContextRaw, input: HandlerInput): Promise<NewContextRaw | {}> {
     try {
       return {
         stack: stackAdapter(state),
-        storage: storageAdapter(state),
-        variables: variablesAdapter(state, system), // todo: better way to pass around this system obj
+        storage: storageAdapter(state, input),
+        variables: variablesAdapter(state, input.requestEnvelope.context.System),
       };
     } catch (err) {
       // eslint-disable-next-line no-console

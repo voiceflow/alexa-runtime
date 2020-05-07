@@ -67,6 +67,7 @@ export type NewContextStorage = {
   user: string;
   alexa_permissions: string[];
   supported_interfaces: SupportedInterfaces;
+  accessToken?: string | undefined;
   randoms?: Record<string, string[]>;
 };
 

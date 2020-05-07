@@ -1,3 +1,4 @@
+import { HandlerInput } from 'ask-sdk';
 import { interfaces } from 'ask-sdk-model';
 
 import { Commands, NewContextStack, NewContextStorage, NewContextVariables, NewVoiceflowVars, OldCommands, OldContextRaw } from './types';
@@ -43,7 +44,7 @@ export const stackAdapter = (oldContext: OldContextRaw): NewContextStack =>
     return acc;
   }, [] as NewContextStack) || [];
 
-export const storageAdapter = (oldContext: OldContextRaw): NewContextStorage => ({
+export const storageAdapter = (oldContext: OldContextRaw, input: HandlerInput): NewContextStorage => ({
   output: oldContext.output,
   sessions: oldContext.sessions,
   repeat: oldContext.repeat,
@@ -51,6 +52,7 @@ export const storageAdapter = (oldContext: OldContextRaw): NewContextStorage => 
   user: oldContext.user,
   alexa_permissions: oldContext.alexa_permissions,
   supported_interfaces: oldContext.supported_interfaces,
+  ...(input.requestEnvelope.context.System.user.accessToken && { accessToken: input.requestEnvelope.context.System.user.accessToken }),
   ...(oldContext.randoms && { randoms: oldContext.randoms }), // conditionally add randoms
 });
 
