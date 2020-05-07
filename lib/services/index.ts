@@ -3,11 +3,13 @@ import secretsProvider, { SecretsProvider } from '@voiceflow/secrets-provider';
 import { Config } from '@/types';
 
 import { ClientMap } from '../clients';
+import Adapter from './adapter';
 import Alexa from './alexa';
 import Test from './test';
 import Voiceflow from './voiceflow';
 
 export interface ServiceMap {
+  adapter: Adapter;
   alexa: ReturnType<typeof Alexa>;
   voiceflow: ReturnType<typeof Voiceflow>;
   test: ReturnType<typeof Test>;
@@ -27,6 +29,7 @@ const buildServices = (config: Config, clients: ClientMap): FullServiceMap => {
 
   services.secretsProvider = secretsProvider;
   services.voiceflow = Voiceflow(services, config);
+  services.adapter = new Adapter(services, config);
   services.alexa = Alexa(services, config);
   services.test = Test(services, config);
 
