@@ -56,6 +56,14 @@ export const storageAdapter = (oldContext: OldContextRaw, input: HandlerInput): 
   ...(input.requestEnvelope.context.System.user.accessToken && { accessToken: input.requestEnvelope.context.System.user.accessToken }),
   ...(oldContext.randoms && { randoms: oldContext.randoms }),
   ...(oldContext.permissions && { permissions: oldContext.permissions }),
+  ...(oldContext.payment && {
+    payment: {
+      productId: oldContext.payment.productId,
+      successPath: oldContext.payment.success,
+      failPath: oldContext.payment.fail,
+      status: oldContext.payment.result || null,
+    },
+  }),
 });
 
 export const variablesAdapter = (oldContext: OldContextRaw, system: interfaces.system.SystemState): NewContextVariables =>

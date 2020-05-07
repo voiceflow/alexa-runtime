@@ -21,6 +21,12 @@ export type OldContextRaw = {
   supported_interfaces: SupportedInterfaces;
   randoms?: Record<string, string[]>;
   permissions?: string[];
+  payment?: {
+    productId: string;
+    success: string;
+    fail: string;
+    result?: string;
+  };
   globals: [
     {
       [key: string]: any;
@@ -71,6 +77,12 @@ export type NewContextStorage = {
   accessToken?: string | undefined;
   randoms?: Record<string, string[]>;
   permissions?: string[];
+  payment?: {
+    productId: string;
+    successPath: string;
+    failPath: string;
+    status: string | null;
+  };
 };
 
 export type NewVoiceflowVars = {
