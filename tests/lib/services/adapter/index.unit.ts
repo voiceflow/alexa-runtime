@@ -4,7 +4,20 @@ import sinon from 'sinon';
 
 import AdapterManager from '@/lib/services/adapter';
 
-import { newInteraction, newMalformed, oldInteraction, oldMalformed } from './fixtures';
+import {
+  newBasic,
+  newCommandCalled,
+  newInteraction,
+  newMalformed,
+  newMissing,
+  newOutputMap,
+  oldBasic,
+  oldCommandCalled,
+  oldInteraction,
+  oldMalformed,
+  oldMissing,
+  oldOutputMap,
+} from './fixtures';
 
 describe('adapterManager unit tests', async () => {
   afterEach(() => sinon.restore());
@@ -46,7 +59,11 @@ describe('adapterManager unit tests', async () => {
   describe('transformContext', () => {
     const tests = [
       { text: 'malformed', old: oldMalformed, new: newMalformed },
+      { text: 'hello world', old: oldBasic, new: newBasic },
       { text: 'wait on interaction', old: oldInteraction, new: newInteraction },
+      { text: 'missing attributes', old: oldMissing, new: newMissing },
+      { text: 'outputmap', old: oldOutputMap, new: newOutputMap },
+      { text: 'command called', old: oldCommandCalled, new: newCommandCalled },
     ];
 
     tests.forEach((test) => {
