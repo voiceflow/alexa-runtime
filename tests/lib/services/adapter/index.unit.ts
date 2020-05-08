@@ -7,16 +7,24 @@ import AdapterManager from '@/lib/services/adapter';
 import {
   newBasic,
   newCommandCalled,
+  newDisplay,
   newInteraction,
   newMalformed,
   newMissing,
   newOutputMap,
+  newStreamOne,
+  newStreamTwo,
+  newStreamTwoNoLine,
   oldBasic,
   oldCommandCalled,
+  oldDisplay,
   oldInteraction,
   oldMalformed,
   oldMissing,
   oldOutputMap,
+  oldStreamOne,
+  oldStreamTwo,
+  oldStreamTwoNoLine,
 } from './fixtures';
 
 describe('adapterManager unit tests', async () => {
@@ -64,6 +72,10 @@ describe('adapterManager unit tests', async () => {
       { text: 'missing attributes', old: oldMissing, new: newMissing },
       { text: 'outputmap', old: oldOutputMap, new: newOutputMap },
       { text: 'command called', old: oldCommandCalled, new: newCommandCalled },
+      { text: 'stream one block', old: oldStreamOne, new: newStreamOne },
+      { text: 'stream two blocks', old: oldStreamTwo, new: newStreamTwo },
+      { text: 'stream two blocks no next_line', old: oldStreamTwoNoLine, new: newStreamTwoNoLine },
+      { text: 'display', old: oldDisplay, new: newDisplay },
     ];
 
     tests.forEach((test) => {

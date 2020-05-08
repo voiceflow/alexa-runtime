@@ -228,7 +228,6 @@ export const oldInteraction = {
     'amzn1.ask.account.AEWTGTJ3JEG7M35VTSK6GFE3VMMHHDG7FM2BFAHY2JFA2S2I2UZIMLWMUG53WDXTDVOHDVKO7ERVDK3NROVGHBSYMH63FYEGTP3YXMHA352S4R3ZWCCIODI35IRAINYF4R4VO3IVBSMWFLDV62ASKII7E7GDCP2ZMFN4CILSFF5YWUQYPDEPN7KIB3Q2GMGT367IFFH4C3CFA2A',
   timestamp: '2020-05-07T15:35:30Z',
 };
-
 export const newInteraction = {
   stack: [
     {
@@ -325,7 +324,6 @@ export const oldMissing = {
     'amzn1.ask.account.AEWTGTJ3JEG7M35VTSK6GFE3VMMHHDG7FM2BFAHY2JFA2S2I2UZIMLWMUG53WDXTDVOHDVKO7ERVDK3NROVGHBSYMH63FYEGTP3YXMHA352S4R3ZWCCIODI35IRAINYF4R4VO3IVBSMWFLDV62ASKII7E7GDCP2ZMFN4CILSFF5YWUQYPDEPN7KIB3Q2GMGT367IFFH4C3CFA2A',
   timestamp: '2020-05-07T15:35:30Z',
 };
-
 export const newMissing = {
   stack: [],
   variables: {
@@ -444,7 +442,6 @@ export const oldOutputMap = {
     'amzn1.ask.account.AEVTIKDZWMWATTQRX2C5HZ7E7OIHZT5L7SA46LLFXNQOJQIFFEGHR4LF4KRPSO7WQWBIKDTQS6PVN4PAZKGX6XVH2N6JHUNEJGPJ3RYFBJD2ASSS6FO2VANKR3D3WCPEXC3V2P54E7Z763X6TRDDWY2H77L6H6F2UHN4FFKJANP76KKEOAE44IZRMNDSAHZU3SUUGUDOFS4QPWI',
   timestamp: '2020-05-08T20:32:49Z',
 };
-
 export const newOutputMap = {
   stack: [
     {
@@ -598,7 +595,6 @@ export const oldCommandCalled = {
     'amzn1.ask.account.AHE75ZP2ES2UNTZ6UCWBKC5RLZKQSEQKEK6ZFNU2ROYKGLLG5G6ZH5TMAFHTK4ND6DAJ4CHGS4QM5SB3CPE2VY3IUMKEC7W3XNY7F5VATNRKKDSUOVQBQNN45LGXVIPNJ7LDATOXQVPJ6W3MRUGDEXXHTEWZ3GMISDWECOZGWNFTSIUZWBBB47PMA2IZSV7J4EMGCJPEHB4DMZI',
   timestamp: '2020-05-08T20:42:44Z',
 };
-
 export const newCommandCalled = {
   stack: [
     {
@@ -670,6 +666,785 @@ export const newCommandCalled = {
     locale: 'en-US',
     user:
       'amzn1.ask.account.AHE75ZP2ES2UNTZ6UCWBKC5RLZKQSEQKEK6ZFNU2ROYKGLLG5G6ZH5TMAFHTK4ND6DAJ4CHGS4QM5SB3CPE2VY3IUMKEC7W3XNY7F5VATNRKKDSUOVQBQNN45LGXVIPNJ7LDATOXQVPJ6W3MRUGDEXXHTEWZ3GMISDWECOZGWNFTSIUZWBBB47PMA2IZSV7J4EMGCJPEHB4DMZI',
+    supported_interfaces: {},
+  },
+};
+
+// stream one block
+export const oldStreamOne = {
+  last_speak: 'here we go',
+  play: {
+    regex_description: 'desc text',
+    offset: 0,
+    background_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974203560-random.png',
+    description: 'desc text',
+    title: 'title text',
+    regex_title: 'title text',
+    url: 'https://file-examples.com/wp-content/uploads/2017/11/file_example_MP3_700KB.mp3',
+    token: '788568040',
+    nextId: null,
+    icon_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974199894-random.png',
+    PAUSE_ID: 'ck9yq4f4200mc3h5sf0p8y1nh',
+    loop: false,
+    NEXT: 'ck9yq4f4200mh3h5swudgtyp2',
+    action: 'START',
+  },
+  sessions: 1,
+  reprompt: 0,
+  globals: [
+    {
+      sessions: 1,
+      voiceflow: {
+        permissions: [],
+        events: [],
+        capabilities: {
+          AudioPlayer: {},
+        },
+      },
+      locale: 'en-US',
+      user_id:
+        'amzn1.ask.account.AELO2ZZEHDWEURIMHER4CSGQW2SAXQFRIOUMCK4GN6NTTFHWS3MHHPLNG5CI3VUEAB2NQI7D7LCOHUQJEFEAGP7ETCGKYRCNP2M57ZNCXYQZD2DKMNKVH5DEYICJQTWYFRN2Y6D6KYTOPRQ5WKTKJOQCJDK4K63VPXJ3KG6OMQM4SNT4PYEH523MWHMIM3B7R4SCUYIOAS3PIBY',
+      platform: 'alexa',
+      timestamp: 1588974282,
+    },
+  ],
+  active: false,
+  transformed_input: null,
+  diagrams: [
+    {
+      variable_state: {},
+      commands: {
+        'AMAZON.HelpIntent': {
+          diagram_id: '7xudV7pwXYzrfwRaEYymxvo6yPYthjRu',
+          mappings: [],
+        },
+        'AMAZON.StopIntent': {
+          diagram_id: 'CAdIIh4VFxe6JQBTbFryExHEwfFCM6o0',
+          mappings: [],
+        },
+      },
+      id: '3LZN29uAfSqEolxwRZfpTrXA0ycBM3pH',
+    },
+  ],
+  enteringNewDiagram: false,
+  locale: 'en-US',
+  amzn_api_info: {
+    api_endpoint: 'https://api.amazonalexa.com',
+    api_access_token:
+      'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjY2M2VlNjk3LTdjMGEtNDZlMi05Y2JlLWU5N2U2ODUzMTZhZCIsImV4cCI6MTU4ODk3NDU4MiwiaWF0IjoxNTg4OTc0MjgyLCJuYmYiOjE1ODg5NzQyODIsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFDR0JIKy92d0V5WVl2NE1oUGZ4ME1ES2dFQUFBQUFBQUExZmpMWnFyU0VtK2JkZnRaZ2hMQXE5V2xCK2w1dXVyMFlUQUtUOEhudlNuSHlQa25tTVV4STlzK0tjaXNRZmVGQyswZjREckJEUXNCM3AvOXE0RjUwYUNLcGlHcm53UlJmbUdIbnlYeGJNNVNiNGxTaURacDZOU2tybGtua3pUb1JGVmdydlVTRmNtZWZMdW5Ld2hwKzROTjlSU1RXVXJZZTV1bHdjMHc3WGhRbzBVR0JVRUEwU3p6R2NWNGRDZUJrcVU0VUN6OU9lVDlxU0dGQUh3VDU0anNGbmNwWUVTa2hxMXA4WVRXcjRUcStabUhmaWtNMmVvQmNHTmlTa3VBdzNRVTAvcmExeEtEUncxbTdVTzA3UGlVWVkwdE5RYTBFdGlwdzgreE83QlNzUDVqWmFzRFVEWkZocFBQTDZqNE9MVUU0QWJMSmRmZ2VqbVJZaU1nWmo5OG9sNkFtdUIyZE5OZXNaRUhSc3hpU1NqTjJvZnprbEx5SVRNYitvWC9NN2FQM1MvUVVFYkFZIiwiY29uc2VudFRva2VuIjpudWxsLCJkZXZpY2VJZCI6ImFtem4xLmFzay5kZXZpY2UuQUhWSlROUEFIV0NBWlFVNUxDRlFKNDJONDJWN1dVNzUzVklOUFRCRURKSUJBNUNYU1JaNlpJRFMzNkhNQkdaQ1o2T1lOVFNMV1NNNkhUVTc2S1lORlQ1WVZKV0tCUFRTUEtFQVJRUjJQR0xOWFJDU1BET09RMklHUUFQQ1M2UFM1T0g0UkIzWlA2REdZUldQV1hKSkk2NEI3UVlPUDRLN1VFUk1RSTNHV0kzRE83UUJMV1lINCIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFFTE8yWlpFSERXRVVSSU1IRVI0Q1NHUVcyU0FYUUZSSU9VTUNLNEdONk5UVEZIV1MzTUhIUExORzVDSTNWVUVBQjJOUUk3RDdMQ09IVVFKRUZFQUdQN0VUQ0dLWVJDTlAyTTU3Wk5DWFlRWkQyREtNTktWSDVERVlJQ0pRVFdZRlJOMlk2RDZLWVRPUFJRNVdLVEtKT1FDSkRLNEs2M1ZQWEozS0c2T01RTTRTTlQ0UFlFSDUyM01XSE1JTTNCN1I0U0NVWUlPQVMzUElCWSJ9fQ.gxFAw1jxEJz1lY9OEgYeHj1afUXjsKtUR8AwNDk5sM58aWfv2BFLryldvREO4hT9B4TEdWBE2459-kN7wvappH9Rr05mRNN8DlsHL5KxrCEAX1OelWTWH5NLAoJ_xsYrySaxzJQiCuF4ZSY8yD30r6BwdXvDXQpDBmz1uo8ed1p1D39XQXkK5Tht6xX4su92AWvwEZcZ5Oa-F2MMyy9sOo-jw50hVAC3EkeCd17H2IJMcCFVI5VcNJQw1-8jAr4r80KIx9q8rhHF9pVHz_tFNpARPvlmfjdJjLCXk2Aoq9yUBbZlJGIXELLm74daqNzlFKo5acj_LBVRc47s6-tKYg',
+  },
+  line_id: 'ck9yq4f4200mc3h5sf0p8y1nh',
+  platform: 'alexa',
+  output: 'here we go',
+  repeat: 100,
+  root_start: true,
+  customer_info: {},
+  skill_id: 51,
+  end: false,
+  alexa_permissions: [],
+  supported_interfaces: {
+    AudioPlayer: {},
+  },
+  user:
+    'amzn1.ask.account.AELO2ZZEHDWEURIMHER4CSGQW2SAXQFRIOUMCK4GN6NTTFHWS3MHHPLNG5CI3VUEAB2NQI7D7LCOHUQJEFEAGP7ETCGKYRCNP2M57ZNCXYQZD2DKMNKVH5DEYICJQTWYFRN2Y6D6KYTOPRQ5WKTKJOQCJDK4K63VPXJ3KG6OMQM4SNT4PYEH523MWHMIM3B7R4SCUYIOAS3PIBY',
+  timestamp: '2020-05-08T21:44:42Z',
+};
+export const newStreamOne = {
+  stack: [
+    {
+      blockID: 'ck9yq4f4200mc3h5sf0p8y1nh',
+      variables: {},
+      storage: {
+        speak: 'here we go',
+      },
+      diagramID: '3LZN29uAfSqEolxwRZfpTrXA0ycBM3pH',
+      commands: [
+        {
+          diagram_id: 'CAdIIh4VFxe6JQBTbFryExHEwfFCM6o0',
+          intent: 'AMAZON.StopIntent',
+          mappings: [],
+        },
+        {
+          diagram_id: '7xudV7pwXYzrfwRaEYymxvo6yPYthjRu',
+          intent: 'AMAZON.HelpIntent',
+          mappings: [],
+        },
+      ],
+    },
+  ],
+  variables: {
+    sessions: 1,
+    _system: {
+      apiEndpoint: 'https://api.amazonalexa.com',
+      application: {
+        applicationId: 'amzn1.ask.skill.663ee697-7c0a-46e2-9cbe-e97e685316ad',
+      },
+      user: {
+        userId:
+          'amzn1.ask.account.AELO2ZZEHDWEURIMHER4CSGQW2SAXQFRIOUMCK4GN6NTTFHWS3MHHPLNG5CI3VUEAB2NQI7D7LCOHUQJEFEAGP7ETCGKYRCNP2M57ZNCXYQZD2DKMNKVH5DEYICJQTWYFRN2Y6D6KYTOPRQ5WKTKJOQCJDK4K63VPXJ3KG6OMQM4SNT4PYEH523MWHMIM3B7R4SCUYIOAS3PIBY',
+      },
+      device: {
+        supportedInterfaces: {
+          AudioPlayer: {},
+        },
+        deviceId:
+          'amzn1.ask.device.AHVJTNPAHWCAZQU5LCFQJ42N42V7WU753VINPTBEDJIBA5CXSRZ6ZIDS36HMBGZCZ6OYNTSLWSM6HTU76KYNFT5YVJWKBPTSPKEARQR2PGLNXRCSPDOOQ2IGQAPCS6PS5OH4RB3ZP6DGYRWPWXJJI64B7QYOP4K7UERMQI3GWI3DO7QBLWYH4',
+      },
+      apiAccessToken:
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjY2M2VlNjk3LTdjMGEtNDZlMi05Y2JlLWU5N2U2ODUzMTZhZCIsImV4cCI6MTU4ODk3NDY5NCwiaWF0IjoxNTg4OTc0Mzk0LCJuYmYiOjE1ODg5NzQzOTQsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFDR0JIKy92d0V5WVl2NE1oUGZ4ME1ES2dFQUFBQUFBQUFLZkVrM1NVTEJidUtwdmZYZElGZ21vOUxIUktzSG0xdjhhWlRYQzdKY2hCZllRaEhuTTVLZHFvVTAwd3lFNVRCL3UrZjRITE9RMVRUVE0rNU12bVlTa2l6MFRHYy8zMFNkU1Zva1RDR0FQR0pwcmZ4NHd6cURoMDBHUmZTalZSQ0tibHhuOEhlSkpzd0pTMWRVdzRxc3N4YTJUWExTb0RwaEtVVW5NZGhvSno2dmRPSEFTaWhvQ2FHQys0RmsvYldDUnRVOTFFU040ZFFsdkhlaTU5U1ZrQVh4NXhyYVM2R1ZHdmU4WW9TQ0lRVTI0VXo5cE1CdHNYZlpYeWdkOGlxck16Z3Jlb2NoNUZkNlBmSnNWaW94d0tXeFBoY205RUdTSnBWV0hKYys2YUlDSjhCWmFRZ2JuREJLdzhzL20yZGFuS0IzUEhwaEVGcDZyZ0VzaHQrTmpONDhBMWxtNVJrSUxpRHVjUHM5ZmFjQVZmTlRDcndkYTNGeVZ3MVQ1dEpYemJDQVpmVFJmNi80IiwiY29uc2VudFRva2VuIjpudWxsLCJkZXZpY2VJZCI6ImFtem4xLmFzay5kZXZpY2UuQUhWSlROUEFIV0NBWlFVNUxDRlFKNDJONDJWN1dVNzUzVklOUFRCRURKSUJBNUNYU1JaNlpJRFMzNkhNQkdaQ1o2T1lOVFNMV1NNNkhUVTc2S1lORlQ1WVZKV0tCUFRTUEtFQVJRUjJQR0xOWFJDU1BET09RMklHUUFQQ1M2UFM1T0g0UkIzWlA2REdZUldQV1hKSkk2NEI3UVlPUDRLN1VFUk1RSTNHV0kzRE83UUJMV1lINCIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFFTE8yWlpFSERXRVVSSU1IRVI0Q1NHUVcyU0FYUUZSSU9VTUNLNEdONk5UVEZIV1MzTUhIUExORzVDSTNWVUVBQjJOUUk3RDdMQ09IVVFKRUZFQUdQN0VUQ0dLWVJDTlAyTTU3Wk5DWFlRWkQyREtNTktWSDVERVlJQ0pRVFdZRlJOMlk2RDZLWVRPUFJRNVdLVEtKT1FDSkRLNEs2M1ZQWEozS0c2T01RTTRTTlQ0UFlFSDUyM01XSE1JTTNCN1I0U0NVWUlPQVMzUElCWSJ9fQ.kNktdeP8I5aNENmNuhTkyGeL7E4lgKABW2eRdJsqbhglg5iEHYQCp4bpZmAAuLH7VP1Vfw8e-Wne3nrUSY7cr97rqyNVCgVz8_nF4vkkCUKuAc5mLJyMdfF-WE5X_yKTJ7w3mMhakvPSKuhcBs1IeLL9T8c4Boi8WVeFD9hDmMjXK0dNdumSrtoCW3XJmG5iFKkZzxO5Dj5f0Tv0xT5VPJeXh-ZtG1JHNdtyMmVIFRjVmTZnJoR3GZctmqcwCvMaiW61TOK3Gtt863-nAEGe-TkA0cNJCPS6r7UMR4bbNDzHS71fS88IamN8LIxptAi4HKVSX5T4P0C5_Uv8BSwz_Q',
+    },
+    user_id:
+      'amzn1.ask.account.AELO2ZZEHDWEURIMHER4CSGQW2SAXQFRIOUMCK4GN6NTTFHWS3MHHPLNG5CI3VUEAB2NQI7D7LCOHUQJEFEAGP7ETCGKYRCNP2M57ZNCXYQZD2DKMNKVH5DEYICJQTWYFRN2Y6D6KYTOPRQ5WKTKJOQCJDK4K63VPXJ3KG6OMQM4SNT4PYEH523MWHMIM3B7R4SCUYIOAS3PIBY',
+    voiceflow: {
+      permissions: [],
+      events: [],
+      capabilities: {
+        AudioPlayer: {},
+      },
+    },
+    locale: 'en-US',
+    platform: 'alexa',
+    timestamp: 1588974282,
+  },
+  storage: {
+    output: 'here we go',
+    sessions: 1,
+    streamPlay: {
+      regex_description: 'desc text',
+      offset: 0,
+      background_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974203560-random.png',
+      description: 'desc text',
+      title: 'title text',
+      regex_title: 'title text',
+      url: 'https://file-examples.com/wp-content/uploads/2017/11/file_example_MP3_700KB.mp3',
+      token: '788568040',
+      nextId: null,
+      icon_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974199894-random.png',
+      PAUSE_ID: 'ck9yq4f4200mc3h5sf0p8y1nh',
+      loop: false,
+      NEXT: 'ck9yq4f4200mh3h5swudgtyp2',
+      PREVIOUS: undefined,
+      action: 'START',
+    },
+    repeat: 100,
+    alexa_permissions: [],
+    locale: 'en-US',
+    user:
+      'amzn1.ask.account.AELO2ZZEHDWEURIMHER4CSGQW2SAXQFRIOUMCK4GN6NTTFHWS3MHHPLNG5CI3VUEAB2NQI7D7LCOHUQJEFEAGP7ETCGKYRCNP2M57ZNCXYQZD2DKMNKVH5DEYICJQTWYFRN2Y6D6KYTOPRQ5WKTKJOQCJDK4K63VPXJ3KG6OMQM4SNT4PYEH523MWHMIM3B7R4SCUYIOAS3PIBY',
+    supported_interfaces: {
+      AudioPlayer: {},
+    },
+  },
+};
+
+// stream two blocks
+export const oldStreamTwo = {
+  play: {
+    regex_description: 'desc text',
+    offset: 0,
+    background_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974203560-random.png',
+    description: 'desc text',
+    title: 'title text',
+    regex_title: 'title text',
+    url: 'https://file-examples.com/wp-content/uploads/2017/11/file_example_MP3_700KB.mp3',
+    PREVIOUS: 'ck9yqm50q00r83h5scsnmdhzz',
+    token: '788568040',
+    nextId: null,
+    icon_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974199894-random.png',
+    PAUSE_ID: 'ck9yqluc200q93h5szgn6yddn',
+    loop: false,
+    NEXT: 'ck9yqmd0200st3h5sigsp4803',
+    action: 'START',
+  },
+  globals: [
+    {
+      sessions: 1,
+      voiceflow: {
+        permissions: [],
+        events: [],
+        capabilities: {
+          AudioPlayer: {},
+        },
+      },
+      locale: 'en-US',
+      user_id:
+        'amzn1.ask.account.AFNIO4WHA2E6J27MCPUJVY7GGBEJQNDUQNHT32NM6VKCU3HIGMVK3CVMR6VR3F6OCSDCCK6YRWFQE4EQXIGK6D73J5X5X475BFKRTN5PICJU5CLWX34KGFEAB3BNGCL6WB5VJRD4AOOLXVLPTH72U6JATC4QB77IUDE6QYD2GKWW5WY7HD42KPBAX6DAJYFP66MQM3YFOSKTLLQ',
+      platform: 'alexa',
+      timestamp: 1588975232,
+    },
+  ],
+  transformed_input: null,
+  next_line: 'ck9yqmd0200st3h5sigsp4803',
+  diagrams: [
+    {
+      variable_state: {},
+      commands: {
+        'AMAZON.HelpIntent': {
+          diagram_id: 'iNZPTqed1rnQPeQYwjiAe9mVPQ0jvnTZ',
+          mappings: [],
+        },
+        'AMAZON.StopIntent': {
+          diagram_id: 'XrORmu9S7PdWrU5h0aEBjNbTAf98lwp8',
+          mappings: [],
+        },
+      },
+      id: 'RWGouz4Wa5SkYC7C9ebVbnfqjLtoetPN',
+    },
+  ],
+  enteringNewDiagram: false,
+  next_play: {
+    regex_description: 'desc text 2',
+    offset: 0,
+    background_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974203560-random.png',
+    description: 'desc text 2',
+    title: 'title text 2',
+    regex_title: 'title text 2',
+    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+    PREVIOUS: 'ck9yqmj3e00uj3h5sre35vlc3',
+    token: '2136030208',
+    nextId: null,
+    icon_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974199894-random.png',
+    PAUSE_ID: 'ck9yqmd0200st3h5sigsp4803',
+    loop: false,
+    NEXT: 'ck9yqluc200q33h5swxgzlonn',
+    action: 'START',
+  },
+  locale: 'en-US',
+  line_id: 'ck9yqluc200q93h5szgn6yddn',
+  platform: 'alexa',
+  output: 'here we go',
+  repeat: 100,
+  customer_info: {},
+  end: false,
+  alexa_permissions: [],
+  supported_interfaces: {
+    AudioPlayer: {},
+  },
+  timestamp: '2020-05-08T22:00:31Z',
+  last_speak: 'here we go',
+  sessions: 1,
+  temp: {
+    diagrams: [
+      {
+        variable_state: {},
+        commands: {
+          'AMAZON.HelpIntent': {
+            diagram_id: 'iNZPTqed1rnQPeQYwjiAe9mVPQ0jvnTZ',
+            mappings: [],
+          },
+          'AMAZON.StopIntent': {
+            diagram_id: 'XrORmu9S7PdWrU5h0aEBjNbTAf98lwp8',
+            mappings: [],
+          },
+        },
+        id: 'RWGouz4Wa5SkYC7C9ebVbnfqjLtoetPN',
+      },
+    ],
+    globals: [
+      {
+        sessions: 1,
+        voiceflow: {
+          permissions: [],
+          events: [],
+          capabilities: {
+            AudioPlayer: {},
+          },
+        },
+        locale: 'en-US',
+        user_id:
+          'amzn1.ask.account.AFNIO4WHA2E6J27MCPUJVY7GGBEJQNDUQNHT32NM6VKCU3HIGMVK3CVMR6VR3F6OCSDCCK6YRWFQE4EQXIGK6D73J5X5X475BFKRTN5PICJU5CLWX34KGFEAB3BNGCL6WB5VJRD4AOOLXVLPTH72U6JATC4QB77IUDE6QYD2GKWW5WY7HD42KPBAX6DAJYFP66MQM3YFOSKTLLQ',
+        platform: 'alexa',
+        timestamp: 1588975234,
+      },
+    ],
+  },
+  reprompt: 0,
+  active: false,
+  amzn_api_info: {
+    api_endpoint: 'https://api.amazonalexa.com',
+    api_access_token:
+      'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjA1M2Q2MTk2LTk4NmItNDJjMi04NDg2LTQxMjhiOTdhM2E5MyIsImV4cCI6MTU4ODk3NTUzMSwiaWF0IjoxNTg4OTc1MjMxLCJuYmYiOjE1ODg5NzUyMzEsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFDR0JIKy92d0V5WVl2NE1oUGZ4ME1ES2dFQUFBQUFBQURhUEwvNlVYSnRXT3ZwVE1KZFFFYzV3NEYwMnBEZ2ZudFRmQTRJVm1LMXR4a0dJMDh5WDFJdWdEamdsN0NFU2hmbENaMHIvOXNVR0VRTldZSlpaUTNMZjB3NXFTQ04veENaR2tSbmwzMVRIZmQ1TzJNZjkyWnZhemMzNHExajZETlB4VmNKT25Jc2hncGxodklWbGhNK1FodDE0WWtLdVJ0Y0lsWjRtY1NUUldKMFZDaU9UTlNZUmw0TmI0R3lSTEJYdHQrV0ZmSzZERDRkZ0pKTVBpbHhaYjJTNWYzVzErcEMrZUVVMlJ1MzlnYXBlWDZSM0ZTdDB4eU42UFBYbm9oUUR1aC8ySXlDWWFhbmEvWGh5VTFzVmg1bWxzQVNGVDVMQUd0MVFIbS9FRXZRc1JqY2lCU0REcCtWZVB1QTJwSmVLcjg2Qjd2MVVjQ3pUNWYxSnN4ZVczZlgwcGVEV1JrUVhSWnJkOVlEdDBmQkRhM0hpekdKVVpYem9EUWdua0dSQUdMODJVcGxKNXhXIiwiY29uc2VudFRva2VuIjpudWxsLCJkZXZpY2VJZCI6ImFtem4xLmFzay5kZXZpY2UuQUZNUkY2VU5LUk9KN1FKS0NKWEE3SEw1U1dLVVJXQlozTlFBTE0yS0RYSFgzS1lJQVRUNUhVUVJRR0g0NVUzQkpTQ09WVDVPQkpXR0VRUlNSWFRHNFUyNFBINkpCV0VIWjVIVVgyWlZBSTNBV0RTQ1RaSkdMQlVVQ09UUDdRUk1DVjM1TzJQWFBLRjVUR0FKSDdQNU4zRE4yM0dXS1JCUzNTRFlQSU9PM1FURVJWU05IWDVRNCIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFGTklPNFdIQTJFNkoyN01DUFVKVlk3R0dCRUpRTkRVUU5IVDMyTk02VktDVTNISUdNVkszQ1ZNUjZWUjNGNk9DU0RDQ0s2WVJXRlFFNEVRWElHSzZENzNKNVg1WDQ3NUJGS1JUTjVQSUNKVTVDTFdYMzRLR0ZFQUIzQk5HQ0w2V0I1VkpSRDRBT09MWFZMUFRINzJVNkpBVEM0UUI3N0lVREU2UVlEMkdLV1c1V1k3SEQ0MktQQkFYNkRBSllGUDY2TVFNM1lGT1NLVExMUSJ9fQ.hBHjIlM2t1z-s41C6E2aTLCUAqAy5FezS-QmXhbQ1GYuh_9prKlpBLxA9HII1av1gnZVGUZ9_7hWsABfWdzdwetTC5UiJfpi-UnArU43Ii_FT2vxbLixqrerAN_x15CzwPKjwBPRoHwBozXADSk0UlDSu5H3lMklMj2SMslWK2eLb9nQQVf-eIIzF27rjPHhm-u9121MRxaHi0fBZarWCxmvSvEhv-nB0PjoLD81fQ0eFKI7kqTFsrA5Q_0OxPyuckl9tdnxEhwU0x-mly3c64lYSCyKZtJg9AmfhTJJiED4bGR2GtHuTEJQ1LO8SGd5giYeCuCQQ6XSYiMO9GS6Hw',
+  },
+  root_start: true,
+  skill_id: 54,
+  user:
+    'amzn1.ask.account.AFNIO4WHA2E6J27MCPUJVY7GGBEJQNDUQNHT32NM6VKCU3HIGMVK3CVMR6VR3F6OCSDCCK6YRWFQE4EQXIGK6D73J5X5X475BFKRTN5PICJU5CLWX34KGFEAB3BNGCL6WB5VJRD4AOOLXVLPTH72U6JATC4QB77IUDE6QYD2GKWW5WY7HD42KPBAX6DAJYFP66MQM3YFOSKTLLQ',
+};
+export const newStreamTwo = {
+  stack: [
+    {
+      blockID: 'ck9yqmd0200st3h5sigsp4803',
+      variables: {},
+      storage: {
+        speak: 'here we go',
+      },
+      diagramID: 'RWGouz4Wa5SkYC7C9ebVbnfqjLtoetPN',
+      commands: [
+        {
+          diagram_id: 'XrORmu9S7PdWrU5h0aEBjNbTAf98lwp8',
+          intent: 'AMAZON.StopIntent',
+          mappings: [],
+        },
+        {
+          diagram_id: 'iNZPTqed1rnQPeQYwjiAe9mVPQ0jvnTZ',
+          intent: 'AMAZON.HelpIntent',
+          mappings: [],
+        },
+      ],
+    },
+  ],
+  variables: {
+    sessions: 1,
+    _system: {
+      apiEndpoint: 'https://api.amazonalexa.com',
+      application: {
+        applicationId: 'amzn1.ask.skill.053d6196-986b-42c2-8486-4128b97a3a93',
+      },
+      user: {
+        userId:
+          'amzn1.ask.account.AFNIO4WHA2E6J27MCPUJVY7GGBEJQNDUQNHT32NM6VKCU3HIGMVK3CVMR6VR3F6OCSDCCK6YRWFQE4EQXIGK6D73J5X5X475BFKRTN5PICJU5CLWX34KGFEAB3BNGCL6WB5VJRD4AOOLXVLPTH72U6JATC4QB77IUDE6QYD2GKWW5WY7HD42KPBAX6DAJYFP66MQM3YFOSKTLLQ',
+      },
+      device: {
+        supportedInterfaces: {
+          AudioPlayer: {},
+        },
+        deviceId:
+          'amzn1.ask.device.AFMRF6UNKROJ7QJKCJXA7HL5SWKURWBZ3NQALM2KDXHX3KYIATT5HUQRQGH45U3BJSCOVT5OBJWGEQRSRXTG4U24PH6JBWEHZ5HUX2ZVAI3AWDSCTZJGLBUUCOTP7QRMCV35O2PXPKF5TGAJH7P5N3DN23GWKRBS3SDYPIOO3QTERVSNHX5Q4',
+      },
+      apiAccessToken:
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjA1M2Q2MTk2LTk4NmItNDJjMi04NDg2LTQxMjhiOTdhM2E5MyIsImV4cCI6MTU4ODk3NTU5NywiaWF0IjoxNTg4OTc1Mjk3LCJuYmYiOjE1ODg5NzUyOTcsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFDR0JIKy92d0V5WVl2NE1oUGZ4ME1ES2dFQUFBQUFBQUErbkxFMEZYNThDdnlGNDAzNnZVN1lZT3ZRM3YzRFU1ZFFLeDNNQ1hOcGIydWQrekFiZUtqbFZPaVN6KzNzT0Y5Q2c0UW51QTNhaXdaQzhLUzcrVkRWdUxGNk9nbUpHVzdWVGo1LytZZ3lDTEFHKy9qSzAvaFFOeVNKQUlLL3VNaWQycURXUGRZSUNMUm1OMFlycjdSRzhqYXhZY1lPRTFZV25IMk02MjRtcXZlRW1ieURuOXg5T2dkQVRKVnl1VEc4ZHdVeWpKeHRyR0M3Z1lqYnhUSmhXeURqK3NzZmpDeWNQcHE5eUtqelB1S0FuVHpDZGFCTU44QWJJRGIvTlRYOXhmaG5CZDltajFXT3ZQS3kzU3BPaCtOWXRtUzYrbUxyTFRJbVNaWWVLemwvcEpxQlByZU9EWW5wODlPVTZndlVkVDZ5em9mNnpDUFA3a1E5cjFLc1BibFNjNkdTazJTS2R4MXJmSDBDZmRIWjc2ZmtnTlZZa3p3UlVHaXo4UTZvMksraVdwaHdZd2x3IiwiY29uc2VudFRva2VuIjpudWxsLCJkZXZpY2VJZCI6ImFtem4xLmFzay5kZXZpY2UuQUZNUkY2VU5LUk9KN1FKS0NKWEE3SEw1U1dLVVJXQlozTlFBTE0yS0RYSFgzS1lJQVRUNUhVUVJRR0g0NVUzQkpTQ09WVDVPQkpXR0VRUlNSWFRHNFUyNFBINkpCV0VIWjVIVVgyWlZBSTNBV0RTQ1RaSkdMQlVVQ09UUDdRUk1DVjM1TzJQWFBLRjVUR0FKSDdQNU4zRE4yM0dXS1JCUzNTRFlQSU9PM1FURVJWU05IWDVRNCIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFGTklPNFdIQTJFNkoyN01DUFVKVlk3R0dCRUpRTkRVUU5IVDMyTk02VktDVTNISUdNVkszQ1ZNUjZWUjNGNk9DU0RDQ0s2WVJXRlFFNEVRWElHSzZENzNKNVg1WDQ3NUJGS1JUTjVQSUNKVTVDTFdYMzRLR0ZFQUIzQk5HQ0w2V0I1VkpSRDRBT09MWFZMUFRINzJVNkpBVEM0UUI3N0lVREU2UVlEMkdLV1c1V1k3SEQ0MktQQkFYNkRBSllGUDY2TVFNM1lGT1NLVExMUSJ9fQ.JTK2Cbcl8Q4kmbwTpQRRSceWR4q0f2j9kGXxg_vZIEBWieE-A5eGaigE8uerCJSQqUn5lARbfyllMYMFNzoFTVXjrfWMcB7JidVxg3Y29X7Ur5I8d4uZXmB2JCtG7Y-ru8Ad7jHWxZHUOqb043jo5GZu-owXzFkRiUJdbbKnruaE1rABaPPK9ZgcvS1G-olbcCnuQEIrNZrbFCjBJDaN9pj33M1vg0W1mRl7E5nQmogCJ2xCBprjspCczNUSIAEaFFzgLb9oCKbFs0CPoJkUP6kC0-NIJJfRPcYafh5i_7RT1G7I3BEo49VgXE4WklI7BVAUgt-XvM9avlpe325l_w',
+    },
+    user_id:
+      'amzn1.ask.account.AFNIO4WHA2E6J27MCPUJVY7GGBEJQNDUQNHT32NM6VKCU3HIGMVK3CVMR6VR3F6OCSDCCK6YRWFQE4EQXIGK6D73J5X5X475BFKRTN5PICJU5CLWX34KGFEAB3BNGCL6WB5VJRD4AOOLXVLPTH72U6JATC4QB77IUDE6QYD2GKWW5WY7HD42KPBAX6DAJYFP66MQM3YFOSKTLLQ',
+    voiceflow: {
+      permissions: [],
+      events: [],
+      capabilities: {
+        AudioPlayer: {},
+      },
+    },
+    locale: 'en-US',
+    platform: 'alexa',
+    timestamp: 1588975234,
+  },
+  storage: {
+    output: 'here we go',
+    sessions: 1,
+    streamPlay: {
+      regex_description: 'desc text 2',
+      offset: 0,
+      background_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974203560-random.png',
+      description: 'desc text 2',
+      title: 'title text 2',
+      regex_title: 'title text 2',
+      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+      PREVIOUS: 'ck9yqmj3e00uj3h5sre35vlc3',
+      token: '2136030208',
+      nextId: null,
+      icon_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974199894-random.png',
+      PAUSE_ID: 'ck9yqmd0200st3h5sigsp4803',
+      loop: false,
+      NEXT: 'ck9yqluc200q33h5swxgzlonn',
+      action: 'START',
+    },
+    repeat: 100,
+    alexa_permissions: [],
+    locale: 'en-US',
+    user:
+      'amzn1.ask.account.AFNIO4WHA2E6J27MCPUJVY7GGBEJQNDUQNHT32NM6VKCU3HIGMVK3CVMR6VR3F6OCSDCCK6YRWFQE4EQXIGK6D73J5X5X475BFKRTN5PICJU5CLWX34KGFEAB3BNGCL6WB5VJRD4AOOLXVLPTH72U6JATC4QB77IUDE6QYD2GKWW5WY7HD42KPBAX6DAJYFP66MQM3YFOSKTLLQ',
+    supported_interfaces: {
+      AudioPlayer: {},
+    },
+  },
+};
+
+// stream two blocks without next_line
+export const oldStreamTwoNoLine = {
+  play: {
+    regex_description: 'desc text',
+    offset: 0,
+    background_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974203560-random.png',
+    description: 'desc text',
+    title: 'title text',
+    regex_title: 'title text',
+    url: 'https://file-examples.com/wp-content/uploads/2017/11/file_example_MP3_700KB.mp3',
+    PREVIOUS: 'ck9yqm50q00r83h5scsnmdhzz',
+    token: '788568040',
+    nextId: null,
+    icon_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974199894-random.png',
+    PAUSE_ID: 'ck9yqluc200q93h5szgn6yddn',
+    loop: false,
+    NEXT: 'ck9yqmd0200st3h5sigsp4803',
+    action: 'START',
+  },
+  globals: [
+    {
+      sessions: 1,
+      voiceflow: {
+        permissions: [],
+        events: [],
+        capabilities: {
+          AudioPlayer: {},
+        },
+      },
+      locale: 'en-US',
+      user_id:
+        'amzn1.ask.account.AFNIO4WHA2E6J27MCPUJVY7GGBEJQNDUQNHT32NM6VKCU3HIGMVK3CVMR6VR3F6OCSDCCK6YRWFQE4EQXIGK6D73J5X5X475BFKRTN5PICJU5CLWX34KGFEAB3BNGCL6WB5VJRD4AOOLXVLPTH72U6JATC4QB77IUDE6QYD2GKWW5WY7HD42KPBAX6DAJYFP66MQM3YFOSKTLLQ',
+      platform: 'alexa',
+      timestamp: 1588975232,
+    },
+  ],
+  transformed_input: null,
+  diagrams: [
+    {
+      variable_state: {},
+      commands: {
+        'AMAZON.HelpIntent': {
+          diagram_id: 'iNZPTqed1rnQPeQYwjiAe9mVPQ0jvnTZ',
+          mappings: [],
+        },
+        'AMAZON.StopIntent': {
+          diagram_id: 'XrORmu9S7PdWrU5h0aEBjNbTAf98lwp8',
+          mappings: [],
+        },
+      },
+      id: 'RWGouz4Wa5SkYC7C9ebVbnfqjLtoetPN',
+    },
+  ],
+  enteringNewDiagram: false,
+  next_play: {
+    regex_description: 'desc text 2',
+    offset: 0,
+    background_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974203560-random.png',
+    description: 'desc text 2',
+    title: 'title text 2',
+    regex_title: 'title text 2',
+    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+    PREVIOUS: 'ck9yqmj3e00uj3h5sre35vlc3',
+    token: '2136030208',
+    nextId: null,
+    icon_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974199894-random.png',
+    PAUSE_ID: 'ck9yqmd0200st3h5sigsp4803',
+    loop: false,
+    NEXT: 'ck9yqluc200q33h5swxgzlonn',
+    action: 'START',
+  },
+  locale: 'en-US',
+  line_id: 'ck9yqluc200q93h5szgn6yddn',
+  platform: 'alexa',
+  output: 'here we go',
+  repeat: 100,
+  customer_info: {},
+  end: false,
+  alexa_permissions: [],
+  supported_interfaces: {
+    AudioPlayer: {},
+  },
+  timestamp: '2020-05-08T22:00:31Z',
+  last_speak: 'here we go',
+  sessions: 1,
+  temp: {
+    diagrams: [
+      {
+        variable_state: {},
+        commands: {
+          'AMAZON.HelpIntent': {
+            diagram_id: 'iNZPTqed1rnQPeQYwjiAe9mVPQ0jvnTZ',
+            mappings: [],
+          },
+          'AMAZON.StopIntent': {
+            diagram_id: 'XrORmu9S7PdWrU5h0aEBjNbTAf98lwp8',
+            mappings: [],
+          },
+        },
+        id: 'RWGouz4Wa5SkYC7C9ebVbnfqjLtoetPN',
+      },
+    ],
+    globals: [
+      {
+        sessions: 1,
+        voiceflow: {
+          permissions: [],
+          events: [],
+          capabilities: {
+            AudioPlayer: {},
+          },
+        },
+        locale: 'en-US',
+        user_id:
+          'amzn1.ask.account.AFNIO4WHA2E6J27MCPUJVY7GGBEJQNDUQNHT32NM6VKCU3HIGMVK3CVMR6VR3F6OCSDCCK6YRWFQE4EQXIGK6D73J5X5X475BFKRTN5PICJU5CLWX34KGFEAB3BNGCL6WB5VJRD4AOOLXVLPTH72U6JATC4QB77IUDE6QYD2GKWW5WY7HD42KPBAX6DAJYFP66MQM3YFOSKTLLQ',
+        platform: 'alexa',
+        timestamp: 1588975234,
+      },
+    ],
+  },
+  reprompt: 0,
+  active: false,
+  amzn_api_info: {
+    api_endpoint: 'https://api.amazonalexa.com',
+    api_access_token:
+      'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjA1M2Q2MTk2LTk4NmItNDJjMi04NDg2LTQxMjhiOTdhM2E5MyIsImV4cCI6MTU4ODk3NTUzMSwiaWF0IjoxNTg4OTc1MjMxLCJuYmYiOjE1ODg5NzUyMzEsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFDR0JIKy92d0V5WVl2NE1oUGZ4ME1ES2dFQUFBQUFBQURhUEwvNlVYSnRXT3ZwVE1KZFFFYzV3NEYwMnBEZ2ZudFRmQTRJVm1LMXR4a0dJMDh5WDFJdWdEamdsN0NFU2hmbENaMHIvOXNVR0VRTldZSlpaUTNMZjB3NXFTQ04veENaR2tSbmwzMVRIZmQ1TzJNZjkyWnZhemMzNHExajZETlB4VmNKT25Jc2hncGxodklWbGhNK1FodDE0WWtLdVJ0Y0lsWjRtY1NUUldKMFZDaU9UTlNZUmw0TmI0R3lSTEJYdHQrV0ZmSzZERDRkZ0pKTVBpbHhaYjJTNWYzVzErcEMrZUVVMlJ1MzlnYXBlWDZSM0ZTdDB4eU42UFBYbm9oUUR1aC8ySXlDWWFhbmEvWGh5VTFzVmg1bWxzQVNGVDVMQUd0MVFIbS9FRXZRc1JqY2lCU0REcCtWZVB1QTJwSmVLcjg2Qjd2MVVjQ3pUNWYxSnN4ZVczZlgwcGVEV1JrUVhSWnJkOVlEdDBmQkRhM0hpekdKVVpYem9EUWdua0dSQUdMODJVcGxKNXhXIiwiY29uc2VudFRva2VuIjpudWxsLCJkZXZpY2VJZCI6ImFtem4xLmFzay5kZXZpY2UuQUZNUkY2VU5LUk9KN1FKS0NKWEE3SEw1U1dLVVJXQlozTlFBTE0yS0RYSFgzS1lJQVRUNUhVUVJRR0g0NVUzQkpTQ09WVDVPQkpXR0VRUlNSWFRHNFUyNFBINkpCV0VIWjVIVVgyWlZBSTNBV0RTQ1RaSkdMQlVVQ09UUDdRUk1DVjM1TzJQWFBLRjVUR0FKSDdQNU4zRE4yM0dXS1JCUzNTRFlQSU9PM1FURVJWU05IWDVRNCIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFGTklPNFdIQTJFNkoyN01DUFVKVlk3R0dCRUpRTkRVUU5IVDMyTk02VktDVTNISUdNVkszQ1ZNUjZWUjNGNk9DU0RDQ0s2WVJXRlFFNEVRWElHSzZENzNKNVg1WDQ3NUJGS1JUTjVQSUNKVTVDTFdYMzRLR0ZFQUIzQk5HQ0w2V0I1VkpSRDRBT09MWFZMUFRINzJVNkpBVEM0UUI3N0lVREU2UVlEMkdLV1c1V1k3SEQ0MktQQkFYNkRBSllGUDY2TVFNM1lGT1NLVExMUSJ9fQ.hBHjIlM2t1z-s41C6E2aTLCUAqAy5FezS-QmXhbQ1GYuh_9prKlpBLxA9HII1av1gnZVGUZ9_7hWsABfWdzdwetTC5UiJfpi-UnArU43Ii_FT2vxbLixqrerAN_x15CzwPKjwBPRoHwBozXADSk0UlDSu5H3lMklMj2SMslWK2eLb9nQQVf-eIIzF27rjPHhm-u9121MRxaHi0fBZarWCxmvSvEhv-nB0PjoLD81fQ0eFKI7kqTFsrA5Q_0OxPyuckl9tdnxEhwU0x-mly3c64lYSCyKZtJg9AmfhTJJiED4bGR2GtHuTEJQ1LO8SGd5giYeCuCQQ6XSYiMO9GS6Hw',
+  },
+  root_start: true,
+  skill_id: 54,
+  user:
+    'amzn1.ask.account.AFNIO4WHA2E6J27MCPUJVY7GGBEJQNDUQNHT32NM6VKCU3HIGMVK3CVMR6VR3F6OCSDCCK6YRWFQE4EQXIGK6D73J5X5X475BFKRTN5PICJU5CLWX34KGFEAB3BNGCL6WB5VJRD4AOOLXVLPTH72U6JATC4QB77IUDE6QYD2GKWW5WY7HD42KPBAX6DAJYFP66MQM3YFOSKTLLQ',
+};
+export const newStreamTwoNoLine = {
+  stack: [
+    {
+      blockID: null,
+      variables: {},
+      storage: {
+        speak: 'here we go',
+      },
+      diagramID: 'RWGouz4Wa5SkYC7C9ebVbnfqjLtoetPN',
+      commands: [
+        {
+          diagram_id: 'XrORmu9S7PdWrU5h0aEBjNbTAf98lwp8',
+          intent: 'AMAZON.StopIntent',
+          mappings: [],
+        },
+        {
+          diagram_id: 'iNZPTqed1rnQPeQYwjiAe9mVPQ0jvnTZ',
+          intent: 'AMAZON.HelpIntent',
+          mappings: [],
+        },
+      ],
+    },
+  ],
+  variables: {
+    sessions: 1,
+    _system: {
+      apiEndpoint: 'https://api.amazonalexa.com',
+      application: {
+        applicationId: 'amzn1.ask.skill.053d6196-986b-42c2-8486-4128b97a3a93',
+      },
+      user: {
+        userId:
+          'amzn1.ask.account.AFNIO4WHA2E6J27MCPUJVY7GGBEJQNDUQNHT32NM6VKCU3HIGMVK3CVMR6VR3F6OCSDCCK6YRWFQE4EQXIGK6D73J5X5X475BFKRTN5PICJU5CLWX34KGFEAB3BNGCL6WB5VJRD4AOOLXVLPTH72U6JATC4QB77IUDE6QYD2GKWW5WY7HD42KPBAX6DAJYFP66MQM3YFOSKTLLQ',
+      },
+      device: {
+        supportedInterfaces: {
+          AudioPlayer: {},
+        },
+        deviceId:
+          'amzn1.ask.device.AFMRF6UNKROJ7QJKCJXA7HL5SWKURWBZ3NQALM2KDXHX3KYIATT5HUQRQGH45U3BJSCOVT5OBJWGEQRSRXTG4U24PH6JBWEHZ5HUX2ZVAI3AWDSCTZJGLBUUCOTP7QRMCV35O2PXPKF5TGAJH7P5N3DN23GWKRBS3SDYPIOO3QTERVSNHX5Q4',
+      },
+      apiAccessToken:
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjA1M2Q2MTk2LTk4NmItNDJjMi04NDg2LTQxMjhiOTdhM2E5MyIsImV4cCI6MTU4ODk3NTU5NywiaWF0IjoxNTg4OTc1Mjk3LCJuYmYiOjE1ODg5NzUyOTcsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFDR0JIKy92d0V5WVl2NE1oUGZ4ME1ES2dFQUFBQUFBQUErbkxFMEZYNThDdnlGNDAzNnZVN1lZT3ZRM3YzRFU1ZFFLeDNNQ1hOcGIydWQrekFiZUtqbFZPaVN6KzNzT0Y5Q2c0UW51QTNhaXdaQzhLUzcrVkRWdUxGNk9nbUpHVzdWVGo1LytZZ3lDTEFHKy9qSzAvaFFOeVNKQUlLL3VNaWQycURXUGRZSUNMUm1OMFlycjdSRzhqYXhZY1lPRTFZV25IMk02MjRtcXZlRW1ieURuOXg5T2dkQVRKVnl1VEc4ZHdVeWpKeHRyR0M3Z1lqYnhUSmhXeURqK3NzZmpDeWNQcHE5eUtqelB1S0FuVHpDZGFCTU44QWJJRGIvTlRYOXhmaG5CZDltajFXT3ZQS3kzU3BPaCtOWXRtUzYrbUxyTFRJbVNaWWVLemwvcEpxQlByZU9EWW5wODlPVTZndlVkVDZ5em9mNnpDUFA3a1E5cjFLc1BibFNjNkdTazJTS2R4MXJmSDBDZmRIWjc2ZmtnTlZZa3p3UlVHaXo4UTZvMksraVdwaHdZd2x3IiwiY29uc2VudFRva2VuIjpudWxsLCJkZXZpY2VJZCI6ImFtem4xLmFzay5kZXZpY2UuQUZNUkY2VU5LUk9KN1FKS0NKWEE3SEw1U1dLVVJXQlozTlFBTE0yS0RYSFgzS1lJQVRUNUhVUVJRR0g0NVUzQkpTQ09WVDVPQkpXR0VRUlNSWFRHNFUyNFBINkpCV0VIWjVIVVgyWlZBSTNBV0RTQ1RaSkdMQlVVQ09UUDdRUk1DVjM1TzJQWFBLRjVUR0FKSDdQNU4zRE4yM0dXS1JCUzNTRFlQSU9PM1FURVJWU05IWDVRNCIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFGTklPNFdIQTJFNkoyN01DUFVKVlk3R0dCRUpRTkRVUU5IVDMyTk02VktDVTNISUdNVkszQ1ZNUjZWUjNGNk9DU0RDQ0s2WVJXRlFFNEVRWElHSzZENzNKNVg1WDQ3NUJGS1JUTjVQSUNKVTVDTFdYMzRLR0ZFQUIzQk5HQ0w2V0I1VkpSRDRBT09MWFZMUFRINzJVNkpBVEM0UUI3N0lVREU2UVlEMkdLV1c1V1k3SEQ0MktQQkFYNkRBSllGUDY2TVFNM1lGT1NLVExMUSJ9fQ.JTK2Cbcl8Q4kmbwTpQRRSceWR4q0f2j9kGXxg_vZIEBWieE-A5eGaigE8uerCJSQqUn5lARbfyllMYMFNzoFTVXjrfWMcB7JidVxg3Y29X7Ur5I8d4uZXmB2JCtG7Y-ru8Ad7jHWxZHUOqb043jo5GZu-owXzFkRiUJdbbKnruaE1rABaPPK9ZgcvS1G-olbcCnuQEIrNZrbFCjBJDaN9pj33M1vg0W1mRl7E5nQmogCJ2xCBprjspCczNUSIAEaFFzgLb9oCKbFs0CPoJkUP6kC0-NIJJfRPcYafh5i_7RT1G7I3BEo49VgXE4WklI7BVAUgt-XvM9avlpe325l_w',
+    },
+    user_id:
+      'amzn1.ask.account.AFNIO4WHA2E6J27MCPUJVY7GGBEJQNDUQNHT32NM6VKCU3HIGMVK3CVMR6VR3F6OCSDCCK6YRWFQE4EQXIGK6D73J5X5X475BFKRTN5PICJU5CLWX34KGFEAB3BNGCL6WB5VJRD4AOOLXVLPTH72U6JATC4QB77IUDE6QYD2GKWW5WY7HD42KPBAX6DAJYFP66MQM3YFOSKTLLQ',
+    voiceflow: {
+      permissions: [],
+      events: [],
+      capabilities: {
+        AudioPlayer: {},
+      },
+    },
+    locale: 'en-US',
+    platform: 'alexa',
+    timestamp: 1588975234,
+  },
+  storage: {
+    output: 'here we go',
+    sessions: 1,
+    streamPlay: {
+      regex_description: 'desc text 2',
+      offset: 0,
+      background_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974203560-random.png',
+      description: 'desc text 2',
+      title: 'title text 2',
+      regex_title: 'title text 2',
+      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+      PREVIOUS: 'ck9yqmj3e00uj3h5sre35vlc3',
+      token: '2136030208',
+      nextId: null,
+      icon_img: 'https://s3.amazonaws.com/com.voiceflow.dev.api.images/1588974199894-random.png',
+      PAUSE_ID: 'ck9yqmd0200st3h5sigsp4803',
+      loop: false,
+      NEXT: 'ck9yqluc200q33h5swxgzlonn',
+      action: 'START',
+    },
+    repeat: 100,
+    alexa_permissions: [],
+    locale: 'en-US',
+    user:
+      'amzn1.ask.account.AFNIO4WHA2E6J27MCPUJVY7GGBEJQNDUQNHT32NM6VKCU3HIGMVK3CVMR6VR3F6OCSDCCK6YRWFQE4EQXIGK6D73J5X5X475BFKRTN5PICJU5CLWX34KGFEAB3BNGCL6WB5VJRD4AOOLXVLPTH72U6JATC4QB77IUDE6QYD2GKWW5WY7HD42KPBAX6DAJYFP66MQM3YFOSKTLLQ',
+    supported_interfaces: {
+      AudioPlayer: {},
+    },
+  },
+};
+
+// display
+export const oldDisplay = {
+  globals: [
+    {
+      sessions: 1,
+      _system: {
+        apiEndpoint: 'https://api.amazonalexa.com',
+        application: {
+          applicationId: 'amzn1.ask.skill.3b4f7392-6e35-4ef4-86fb-f3792d817688',
+        },
+        user: {
+          userId:
+            'amzn1.ask.account.AG2H4NZRLOS74CFCJANITQYH7IVLIGNBU26GDSJALY63MVNLMSSRMUAHJ4WV4MF2IE42PFGKMRLSMUAW2M3TRXWJKWH6DO6CXQ2SOEJNE2GS2DCQITGAJRLZBEJKRKXSQN6FMHMLJSPPAKSYYH72RHA77NFR5554NIKXJLJJCVX3LOEZCY35G5XBYBX36KB26SFWWH5BPEEDMCA',
+        },
+        device: {
+          supportedInterfaces: {},
+          deviceId:
+            'amzn1.ask.device.AHBOCZAB2ME6GYEW6SWR2ZDPYJI7BST7HPK6XATK6SY6FPJVTKOFZL4PM327VBGBRWQOG34NFWT7Y7UPP62O6RBJ2YH64TMQKNIEV2M3ZFHWTPOIR4VXV23FMF6X2RBNRQLYYPLNMLEQOV3PIEW4NCWX5SASV2ZWBABRYNR66H3SRRZQ7H4NI',
+        },
+        apiAccessToken:
+          'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjNiNGY3MzkyLTZlMzUtNGVmNC04NmZiLWYzNzkyZDgxNzY4OCIsImV4cCI6MTU4ODk2NzYyNiwiaWF0IjoxNTg4OTY3MzI2LCJuYmYiOjE1ODg5NjczMjYsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFDR0JIKy92d0V5WVl2NE1oUGZ4ME1ES2dFQUFBQUFBQUFPY0MwUzB0RGpzaVVxaU4rUU1MdGgwUHFqWVd1YkhYeldoaTBzWnZNQkEvd0NzM2J0UjlOeTFoVEttVWV0VFJsem9CcGxBK1VGNm43S1lqejI5YnIvNFdHcUNEUjdvblErVERZTC9BY0IvNzNySTZSQVpaRFlxWjAvdzJTQUhnOFdrWkJyY3FpNmVXaHNJam4vMmNsc1cyQVJNck5lVVZQazNRUk5TYTVnRzJZbkZkQ0hYcEFnbWM5VkRyaTBaZFpLc2hoNU1xR2U0cFBDSlI0N3loSkdKNUY1UytJTXlacUhkaHVnWC9aWHhVUDRMbkQvWWh0N21mSUZ0N2kvWVkzaWJzeFp5VURWRmVGN1pGSmF5NUZGS1JNWkVkbzFpNzZqR2xHYVNCaVZBYUlKREc4LzRUV2ZsUGNvaVlqZVFHbGFhVE5YRCtUUnZZZ2ZPc2RYMG9DNWM1R1pSS2x6N0F5NHd4cjNLT0Z2WlhiMnV0NjBVMkdoWlcvTVZFL21GYVdVa1Q2cHZ0UkQ5YStNIiwiY29uc2VudFRva2VuIjpudWxsLCJkZXZpY2VJZCI6ImFtem4xLmFzay5kZXZpY2UuQUhCT0NaQUIyTUU2R1lFVzZTV1IyWkRQWUpJN0JTVDdIUEs2WEFUSzZTWTZGUEpWVEtPRlpMNFBNMzI3VkJHQlJXUU9HMzRORldUN1k3VVBQNjJPNlJCSjJZSDY0VE1RS05JRVYyTTNaRkhXVFBPSVI0VlhWMjNGTUY2WDJSQk5SUUxZWVBMTk1MRVFPVjNQSUVXNE5DV1g1U0FTVjJaV0JBQlJZTlI2NkgzU1JSWlE3SDROSSIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFHMkg0TlpSTE9TNzRDRkNKQU5JVFFZSDdJVkxJR05CVTI2R0RTSkFMWTYzTVZOTE1TU1JNVUFISjRXVjRNRjJJRTQyUEZHS01STFNNVUFXMk0zVFJYV0pLV0g2RE82Q1hRMlNPRUpORTJHUzJEQ1FJVEdBSlJMWkJFSktSS1hTUU42Rk1ITUxKU1BQQUtTWVlINzJSSEE3N05GUjU1NTROSUtYSkxKSkNWWDNMT0VaQ1kzNUc1WEJZQlgzNktCMjZTRldXSDVCUEVFRE1DQSJ9fQ.jhmuenpOYPHwQgyeQHUP49oC48XVzrkBOTYL4iJK2067EVcUs-i01g-H7YMERrc0e3AoJ416amROY33TVUCezTl7UT4JxbHOTDSxEVERILLgZ6ugQ7Shb7zw23yGTZVX_7sGsvrSdAphD0ht17E80Iy04GndMhPqoCxkwP-lRk1F8HXXuCLEHF_ljFC8mEwlAir0DP-gHmSITLbpDfrDfm6-Jv9Ja9dDmoaDfZTKGfZvPS1FEsSoqYxyPJQndyZivpz-p_Q1ZmPS_WknyoiAuaxYhQQPC1j6YfXkZRgnmKZGbAZgqY7f-RzYOH77x95qXRakaGPZ9tHrODLi7vULCQ',
+      },
+      user_id:
+        'amzn1.ask.account.AG2H4NZRLOS74CFCJANITQYH7IVLIGNBU26GDSJALY63MVNLMSSRMUAHJ4WV4MF2IE42PFGKMRLSMUAW2M3TRXWJKWH6DO6CXQ2SOEJNE2GS2DCQITGAJRLZBEJKRKXSQN6FMHMLJSPPAKSYYH72RHA77NFR5554NIKXJLJJCVX3LOEZCY35G5XBYBX36KB26SFWWH5BPEEDMCA',
+      voiceflow: {
+        permissions: [],
+        events: [],
+        capabilities: {},
+      },
+      locale: 'en-US',
+      platform: 'alexa',
+      timestamp: 1588967326,
+    },
+  ],
+  transformed_input: null,
+  diagrams: [],
+  enteringNewDiagram: false,
+  locale: 'en-US',
+  line_id: null,
+  platform: 'alexa',
+  output: 'HELLO WORLD',
+  display_info: {
+    playing_videos: { display1: { started: 1 } },
+    datasource: 'datasource',
+    commands: [],
+    should_update: true,
+    current_display: 1,
+    last_datasource: 'last_datasource',
+    datasource_variables: ['var1', 'var2'],
+    should_update_on_resume: false,
+  },
+  pop: {
+    variable_state: {},
+    commands: {
+      'AMAZON.HelpIntent': {
+        diagram_id: 'WfjA8GCSEpAdFkNIhi9gktyTA3DhPmNW',
+        mappings: [],
+      },
+      'AMAZON.StopIntent': {
+        diagram_id: 'yxLFk52qc8a2kUgx0kwulhqqA7Lo2pwr',
+        mappings: [],
+      },
+    },
+    id: 'KdsSIFAUVf9orNLbQwJmGmNNQu7b2f6G',
+  },
+  repeat: 100,
+  customer_info: {},
+  end: true,
+  alexa_permissions: [],
+  supported_interfaces: {},
+  timestamp: '2020-05-08T19:48:46Z',
+  last_speak: 'HELLO WORLD',
+  sessions: 1,
+  reprompt: 0,
+  active: false,
+  amzn_api_info: {
+    api_endpoint: 'https://api.amazonalexa.com',
+    api_access_token:
+      'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjNiNGY3MzkyLTZlMzUtNGVmNC04NmZiLWYzNzkyZDgxNzY4OCIsImV4cCI6MTU4ODk2NzYyNiwiaWF0IjoxNTg4OTY3MzI2LCJuYmYiOjE1ODg5NjczMjYsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFDR0JIKy92d0V5WVl2NE1oUGZ4ME1ES2dFQUFBQUFBQUFPY0MwUzB0RGpzaVVxaU4rUU1MdGgwUHFqWVd1YkhYeldoaTBzWnZNQkEvd0NzM2J0UjlOeTFoVEttVWV0VFJsem9CcGxBK1VGNm43S1lqejI5YnIvNFdHcUNEUjdvblErVERZTC9BY0IvNzNySTZSQVpaRFlxWjAvdzJTQUhnOFdrWkJyY3FpNmVXaHNJam4vMmNsc1cyQVJNck5lVVZQazNRUk5TYTVnRzJZbkZkQ0hYcEFnbWM5VkRyaTBaZFpLc2hoNU1xR2U0cFBDSlI0N3loSkdKNUY1UytJTXlacUhkaHVnWC9aWHhVUDRMbkQvWWh0N21mSUZ0N2kvWVkzaWJzeFp5VURWRmVGN1pGSmF5NUZGS1JNWkVkbzFpNzZqR2xHYVNCaVZBYUlKREc4LzRUV2ZsUGNvaVlqZVFHbGFhVE5YRCtUUnZZZ2ZPc2RYMG9DNWM1R1pSS2x6N0F5NHd4cjNLT0Z2WlhiMnV0NjBVMkdoWlcvTVZFL21GYVdVa1Q2cHZ0UkQ5YStNIiwiY29uc2VudFRva2VuIjpudWxsLCJkZXZpY2VJZCI6ImFtem4xLmFzay5kZXZpY2UuQUhCT0NaQUIyTUU2R1lFVzZTV1IyWkRQWUpJN0JTVDdIUEs2WEFUSzZTWTZGUEpWVEtPRlpMNFBNMzI3VkJHQlJXUU9HMzRORldUN1k3VVBQNjJPNlJCSjJZSDY0VE1RS05JRVYyTTNaRkhXVFBPSVI0VlhWMjNGTUY2WDJSQk5SUUxZWVBMTk1MRVFPVjNQSUVXNE5DV1g1U0FTVjJaV0JBQlJZTlI2NkgzU1JSWlE3SDROSSIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFHMkg0TlpSTE9TNzRDRkNKQU5JVFFZSDdJVkxJR05CVTI2R0RTSkFMWTYzTVZOTE1TU1JNVUFISjRXVjRNRjJJRTQyUEZHS01STFNNVUFXMk0zVFJYV0pLV0g2RE82Q1hRMlNPRUpORTJHUzJEQ1FJVEdBSlJMWkJFSktSS1hTUU42Rk1ITUxKU1BQQUtTWVlINzJSSEE3N05GUjU1NTROSUtYSkxKSkNWWDNMT0VaQ1kzNUc1WEJZQlgzNktCMjZTRldXSDVCUEVFRE1DQSJ9fQ.jhmuenpOYPHwQgyeQHUP49oC48XVzrkBOTYL4iJK2067EVcUs-i01g-H7YMERrc0e3AoJ416amROY33TVUCezTl7UT4JxbHOTDSxEVERILLgZ6ugQ7Shb7zw23yGTZVX_7sGsvrSdAphD0ht17E80Iy04GndMhPqoCxkwP-lRk1F8HXXuCLEHF_ljFC8mEwlAir0DP-gHmSITLbpDfrDfm6-Jv9Ja9dDmoaDfZTKGfZvPS1FEsSoqYxyPJQndyZivpz-p_Q1ZmPS_WknyoiAuaxYhQQPC1j6YfXkZRgnmKZGbAZgqY7f-RzYOH77x95qXRakaGPZ9tHrODLi7vULCQ',
+  },
+  intent: null,
+  ending: true,
+  root_start: true,
+  skill_id: 40,
+  user:
+    'amzn1.ask.account.AG2H4NZRLOS74CFCJANITQYH7IVLIGNBU26GDSJALY63MVNLMSSRMUAHJ4WV4MF2IE42PFGKMRLSMUAW2M3TRXWJKWH6DO6CXQ2SOEJNE2GS2DCQITGAJRLZBEJKRKXSQN6FMHMLJSPPAKSYYH72RHA77NFR5554NIKXJLJJCVX3LOEZCY35G5XBYBX36KB26SFWWH5BPEEDMCA',
+};
+export const newDisplay = {
+  stack: [],
+  variables: {
+    sessions: 1,
+    _system: {
+      apiEndpoint: 'https://api.amazonalexa.com',
+      application: {
+        applicationId: 'amzn1.ask.skill.3b4f7392-6e35-4ef4-86fb-f3792d817688',
+      },
+      user: {
+        userId:
+          'amzn1.ask.account.AG2H4NZRLOS74CFCJANITQYH7IVLIGNBU26GDSJALY63MVNLMSSRMUAHJ4WV4MF2IE42PFGKMRLSMUAW2M3TRXWJKWH6DO6CXQ2SOEJNE2GS2DCQITGAJRLZBEJKRKXSQN6FMHMLJSPPAKSYYH72RHA77NFR5554NIKXJLJJCVX3LOEZCY35G5XBYBX36KB26SFWWH5BPEEDMCA',
+      },
+      device: {
+        supportedInterfaces: {},
+        deviceId:
+          'amzn1.ask.device.AHBOCZAB2ME6GYEW6SWR2ZDPYJI7BST7HPK6XATK6SY6FPJVTKOFZL4PM327VBGBRWQOG34NFWT7Y7UPP62O6RBJ2YH64TMQKNIEV2M3ZFHWTPOIR4VXV23FMF6X2RBNRQLYYPLNMLEQOV3PIEW4NCWX5SASV2ZWBABRYNR66H3SRRZQ7H4NI',
+      },
+      apiAccessToken:
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjNiNGY3MzkyLTZlMzUtNGVmNC04NmZiLWYzNzkyZDgxNzY4OCIsImV4cCI6MTU4ODk2ODIzMywiaWF0IjoxNTg4OTY3OTMzLCJuYmYiOjE1ODg5Njc5MzMsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFDR0JIKy92d0V5WVl2NE1oUGZ4ME1ES2dFQUFBQUFBQUNPTzlMcERwZGVEcEVtS3ptL1p3Y0xwZkEraCtkMDBremE5dENYc0k1SVN6d2ZyTDlXR2taOWFHREY0elZJRENBelRXY04zdE81NU5YUlV4dVdXY2hUVWdOckd2bFpZOE9YZXhnTUdGUEl6b01FbXc5eXRtTUVpNittK0loMjhHM1YzdElONkZ5V2p2SncrbDBJWFhnQ1dsTEdPeVVVZld6WUtZdkZPU2x5ZlNzYnhsN2dLalpBNUtEbFVxSlYrN3JlZk16eTN2a0hmbWk1QnJvSlVTa1Rxa1pGMHhiUFE3SVVUeGdocVV0c053ZWNJTVdEK0dnMjRJdVRzUlVUYjgxalFDVkJlVHBCSzRDRjgxKzYvTC91ZVNMYkMyVU9Pdisyc1VYNW5XTnlySUp2dHhCZnYrRUl1NUVLemdvMkJWRTFwZERpWTZ2RFlsZFJCSGF6QnNYckNhenp4UkVkYTVzUXRXd1g1K2JSRm1QUFcwWElNRG05WW8yUGRHakFOalZkUCt6bkZZd01VOXQrIiwiY29uc2VudFRva2VuIjpudWxsLCJkZXZpY2VJZCI6ImFtem4xLmFzay5kZXZpY2UuQUhCT0NaQUIyTUU2R1lFVzZTV1IyWkRQWUpJN0JTVDdIUEs2WEFUSzZTWTZGUEpWVEtPRlpMNFBNMzI3VkJHQlJXUU9HMzRORldUN1k3VVBQNjJPNlJCSjJZSDY0VE1RS05JRVYyTTNaRkhXVFBPSVI0VlhWMjNGTUY2WDJSQk5SUUxZWVBMTk1MRVFPVjNQSUVXNE5DV1g1U0FTVjJaV0JBQlJZTlI2NkgzU1JSWlE3SDROSSIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFHMkg0TlpSTE9TNzRDRkNKQU5JVFFZSDdJVkxJR05CVTI2R0RTSkFMWTYzTVZOTE1TU1JNVUFISjRXVjRNRjJJRTQyUEZHS01STFNNVUFXMk0zVFJYV0pLV0g2RE82Q1hRMlNPRUpORTJHUzJEQ1FJVEdBSlJMWkJFSktSS1hTUU42Rk1ITUxKU1BQQUtTWVlINzJSSEE3N05GUjU1NTROSUtYSkxKSkNWWDNMT0VaQ1kzNUc1WEJZQlgzNktCMjZTRldXSDVCUEVFRE1DQSJ9fQ.OAzylsfyiusfZxkSIdBK0U4Jtu-lkk5U3c0l5JTe_Wbc0GNS7cZ6-Fz74TfqQe9tj-5a7znvFry3pRDIXiOJzWPqzGvQaqC8kF2iTV1r0rnpsTqoFLcZfROQ2rLhUJAIs6RW4KHgIC6POnX3zvN-X_R1uXIMc_8UHRV0Kjwlmjey97ypTFwYStQcWMmBQZ50_j2Dv4Qvc1YuSB5eVL7cfqtIM1RNuznNBXx7vU5CzjpGXOAZr62rSZWKf9JR5DoG2KxafPRmxM25BYKYALb2WNUWkBvqEZaRzTtBuFoavMqNzQT-ryAwVqE6DLaBfKvLYJ1kqqGxa5Nl5ttzEzjWWg',
+    },
+    user_id:
+      'amzn1.ask.account.AG2H4NZRLOS74CFCJANITQYH7IVLIGNBU26GDSJALY63MVNLMSSRMUAHJ4WV4MF2IE42PFGKMRLSMUAW2M3TRXWJKWH6DO6CXQ2SOEJNE2GS2DCQITGAJRLZBEJKRKXSQN6FMHMLJSPPAKSYYH72RHA77NFR5554NIKXJLJJCVX3LOEZCY35G5XBYBX36KB26SFWWH5BPEEDMCA',
+    voiceflow: {
+      permissions: [],
+      events: [],
+      capabilities: {},
+    },
+    locale: 'en-US',
+    platform: 'alexa',
+    timestamp: 1588967326,
+  },
+  storage: {
+    output: 'HELLO WORLD',
+    displayInfo: {
+      playingVideos: { display1: { started: 1 } },
+      dataSource: 'datasource',
+      commands: [],
+      shouldUpdate: true,
+      currentDisplay: 1,
+      lastDataSource: 'last_datasource',
+      dataSourceVariables: ['var1', 'var2'],
+      shouldUpdateOnResume: false,
+      lastVariables: {
+        sessions: 1,
+        _system: {
+          apiEndpoint: 'https://api.amazonalexa.com',
+          application: {
+            applicationId: 'amzn1.ask.skill.3b4f7392-6e35-4ef4-86fb-f3792d817688',
+          },
+          user: {
+            userId:
+              'amzn1.ask.account.AG2H4NZRLOS74CFCJANITQYH7IVLIGNBU26GDSJALY63MVNLMSSRMUAHJ4WV4MF2IE42PFGKMRLSMUAW2M3TRXWJKWH6DO6CXQ2SOEJNE2GS2DCQITGAJRLZBEJKRKXSQN6FMHMLJSPPAKSYYH72RHA77NFR5554NIKXJLJJCVX3LOEZCY35G5XBYBX36KB26SFWWH5BPEEDMCA',
+          },
+          device: {
+            supportedInterfaces: {},
+            deviceId:
+              'amzn1.ask.device.AHBOCZAB2ME6GYEW6SWR2ZDPYJI7BST7HPK6XATK6SY6FPJVTKOFZL4PM327VBGBRWQOG34NFWT7Y7UPP62O6RBJ2YH64TMQKNIEV2M3ZFHWTPOIR4VXV23FMF6X2RBNRQLYYPLNMLEQOV3PIEW4NCWX5SASV2ZWBABRYNR66H3SRRZQ7H4NI',
+          },
+          apiAccessToken:
+            'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjNiNGY3MzkyLTZlMzUtNGVmNC04NmZiLWYzNzkyZDgxNzY4OCIsImV4cCI6MTU4ODk2ODIzMywiaWF0IjoxNTg4OTY3OTMzLCJuYmYiOjE1ODg5Njc5MzMsInByaXZhdGVDbGFpbXMiOnsiY29udGV4dCI6IkFBQUFBQUFBQUFDR0JIKy92d0V5WVl2NE1oUGZ4ME1ES2dFQUFBQUFBQUNPTzlMcERwZGVEcEVtS3ptL1p3Y0xwZkEraCtkMDBremE5dENYc0k1SVN6d2ZyTDlXR2taOWFHREY0elZJRENBelRXY04zdE81NU5YUlV4dVdXY2hUVWdOckd2bFpZOE9YZXhnTUdGUEl6b01FbXc5eXRtTUVpNittK0loMjhHM1YzdElONkZ5V2p2SncrbDBJWFhnQ1dsTEdPeVVVZld6WUtZdkZPU2x5ZlNzYnhsN2dLalpBNUtEbFVxSlYrN3JlZk16eTN2a0hmbWk1QnJvSlVTa1Rxa1pGMHhiUFE3SVVUeGdocVV0c053ZWNJTVdEK0dnMjRJdVRzUlVUYjgxalFDVkJlVHBCSzRDRjgxKzYvTC91ZVNMYkMyVU9Pdisyc1VYNW5XTnlySUp2dHhCZnYrRUl1NUVLemdvMkJWRTFwZERpWTZ2RFlsZFJCSGF6QnNYckNhenp4UkVkYTVzUXRXd1g1K2JSRm1QUFcwWElNRG05WW8yUGRHakFOalZkUCt6bkZZd01VOXQrIiwiY29uc2VudFRva2VuIjpudWxsLCJkZXZpY2VJZCI6ImFtem4xLmFzay5kZXZpY2UuQUhCT0NaQUIyTUU2R1lFVzZTV1IyWkRQWUpJN0JTVDdIUEs2WEFUSzZTWTZGUEpWVEtPRlpMNFBNMzI3VkJHQlJXUU9HMzRORldUN1k3VVBQNjJPNlJCSjJZSDY0VE1RS05JRVYyTTNaRkhXVFBPSVI0VlhWMjNGTUY2WDJSQk5SUUxZWVBMTk1MRVFPVjNQSUVXNE5DV1g1U0FTVjJaV0JBQlJZTlI2NkgzU1JSWlE3SDROSSIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFHMkg0TlpSTE9TNzRDRkNKQU5JVFFZSDdJVkxJR05CVTI2R0RTSkFMWTYzTVZOTE1TU1JNVUFISjRXVjRNRjJJRTQyUEZHS01STFNNVUFXMk0zVFJYV0pLV0g2RE82Q1hRMlNPRUpORTJHUzJEQ1FJVEdBSlJMWkJFSktSS1hTUU42Rk1ITUxKU1BQQUtTWVlINzJSSEE3N05GUjU1NTROSUtYSkxKSkNWWDNMT0VaQ1kzNUc1WEJZQlgzNktCMjZTRldXSDVCUEVFRE1DQSJ9fQ.OAzylsfyiusfZxkSIdBK0U4Jtu-lkk5U3c0l5JTe_Wbc0GNS7cZ6-Fz74TfqQe9tj-5a7znvFry3pRDIXiOJzWPqzGvQaqC8kF2iTV1r0rnpsTqoFLcZfROQ2rLhUJAIs6RW4KHgIC6POnX3zvN-X_R1uXIMc_8UHRV0Kjwlmjey97ypTFwYStQcWMmBQZ50_j2Dv4Qvc1YuSB5eVL7cfqtIM1RNuznNBXx7vU5CzjpGXOAZr62rSZWKf9JR5DoG2KxafPRmxM25BYKYALb2WNUWkBvqEZaRzTtBuFoavMqNzQT-ryAwVqE6DLaBfKvLYJ1kqqGxa5Nl5ttzEzjWWg',
+        },
+        user_id:
+          'amzn1.ask.account.AG2H4NZRLOS74CFCJANITQYH7IVLIGNBU26GDSJALY63MVNLMSSRMUAHJ4WV4MF2IE42PFGKMRLSMUAW2M3TRXWJKWH6DO6CXQ2SOEJNE2GS2DCQITGAJRLZBEJKRKXSQN6FMHMLJSPPAKSYYH72RHA77NFR5554NIKXJLJJCVX3LOEZCY35G5XBYBX36KB26SFWWH5BPEEDMCA',
+        voiceflow: {
+          permissions: [],
+          events: [],
+          capabilities: {},
+        },
+        locale: 'en-US',
+        platform: 'alexa',
+        timestamp: 1588967326,
+      },
+    },
+    sessions: 1,
+    repeat: 100,
+    alexa_permissions: [],
+    locale: 'en-US',
+    user:
+      'amzn1.ask.account.AG2H4NZRLOS74CFCJANITQYH7IVLIGNBU26GDSJALY63MVNLMSSRMUAHJ4WV4MF2IE42PFGKMRLSMUAW2M3TRXWJKWH6DO6CXQ2SOEJNE2GS2DCQITGAJRLZBEJKRKXSQN6FMHMLJSPPAKSYYH72RHA77NFR5554NIKXJLJJCVX3LOEZCY35G5XBYBX36KB26SFWWH5BPEEDMCA',
     supported_interfaces: {},
   },
 };

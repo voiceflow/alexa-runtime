@@ -24,13 +24,13 @@ class AdapterManager extends AbstractManager {
 
   async transformContext(context: OldContextRaw, input: HandlerInput): Promise<NewContextRaw | {}> {
     try {
-      beforeContextModifier(context);
+      context = beforeContextModifier(context);
 
       const stack = stackAdapter(context);
       const variables = variablesAdapter(context, { system: input.requestEnvelope.context.System });
-      const storage = storageAdapter(context, { accessToken: input.requestEnvelope.context.System.user.accessToken });
+      let storage = storageAdapter(context, { accessToken: input.requestEnvelope.context.System.user.accessToken });
 
-      afterStorageModifier(storage, variables);
+      storage = afterStorageModifier(storage, variables);
 
       return {
         stack,

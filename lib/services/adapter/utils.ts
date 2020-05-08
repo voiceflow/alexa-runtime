@@ -124,7 +124,7 @@ export const variablesAdapter = (oldContext: OldContextRaw, { system }: Variable
     : { voiceflow: { events: [], permissions: [], capabilities: {} }, _system: system };
 
 // modify context before running adapters
-export const beforeContextModifier = (context: OldContextRaw) => {
+export const beforeContextModifier = ({ ...context }: OldContextRaw) => {
   // modifier when old context has temp
   if (context.temp) {
     const { temp, next_line, next_play, ...tempState } = context;
@@ -135,10 +135,14 @@ export const beforeContextModifier = (context: OldContextRaw) => {
     tempState.randoms = temp.randoms;
     context = tempState;
   }
+
+  return context;
 };
 
 // modify storage after running adapters
-export const afterStorageModifier = (storage: NewContextStorage, variables: NewContextVariables) => {
+export const afterStorageModifier = ({ ...storage }: NewContextStorage, { ...variables }: NewContextVariables) => {
   // modifier when new storage has displayInfo
   if (storage.displayInfo) storage.displayInfo.lastVariables = variables;
+
+  return storage;
 };
