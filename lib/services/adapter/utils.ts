@@ -72,6 +72,19 @@ export const storageAdapter = (oldContext: OldContextRaw, input: HandlerInput): 
       status: oldContext.cancel_payment.result || null,
     },
   }),
+  ...(oldContext.display_info && {
+    displayInfo: {
+      playingVideos: oldContext.display_info.playing_videos,
+      dataSource: oldContext.display_info.datasource,
+      commands: oldContext.display_info.commands,
+      shouldUpdate: oldContext.display_info.should_update,
+      currentDisplay: oldContext.display_info.current_display,
+      lastDataSource: oldContext.display_info.last_datasource,
+      dataSourceVariables: oldContext.display_info.datasource_variables,
+      shouldUpdateOnResume: oldContext.display_info.should_update_on_resume,
+      // lastVariables -> to populate with variables
+    },
+  }),
 });
 
 export const variablesAdapter = (oldContext: OldContextRaw, system: interfaces.system.SystemState): NewContextVariables =>

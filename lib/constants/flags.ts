@@ -10,8 +10,8 @@ export enum Storage {
   PERMISSIONS = 'permissions',
   PAYMENT = 'payment',
   CANCEL_PAYMENT = 'cancelPayment',
-  // -- todo
   DISPLAY_INFO = 'displayInfo',
+  // -- todo
   STREAM_PLAY = 'streamPlay',
   STREAM_PAUSE = 'streamPause',
   STREAM_FINISHED = 'streamFinished',

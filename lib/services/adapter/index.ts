@@ -12,10 +12,16 @@ class AdapterManager extends AbstractManager {
   // todo: better way to pass around this state & input obj
   async context(state: OldContextRaw, input: HandlerInput): Promise<NewContextRaw | {}> {
     try {
+      const stack = stackAdapter(state);
+      const variables = variablesAdapter(state, input.requestEnvelope.context.System);
+      const storage = storageAdapter(state, input);
+
+      if (storage.displayInfo) storage.displayInfo.lastVariables = variables;
+
       return {
-        stack: stackAdapter(state),
-        storage: storageAdapter(state, input),
-        variables: variablesAdapter(state, input.requestEnvelope.context.System),
+        stack,
+        storage,
+        variables,
       };
     } catch (err) {
       // eslint-disable-next-line no-console

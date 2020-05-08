@@ -1,5 +1,7 @@
 import { interfaces, SupportedInterfaces } from 'ask-sdk-model';
 
+import { Command as DisplayCommand, DisplayInfo } from '../voiceflow/handlers/display/types';
+
 export type OldCommands = {
   [key: string]: {
     mappings: Array<{ variable: string; slot: string }>;
@@ -27,11 +29,22 @@ export type OldContextRaw = {
     fail: string;
     result?: string;
   };
-  cancel_payment: {
+  cancel_payment?: {
     productId: string;
     success: string;
     fail: string;
     result?: string;
+  };
+  display_info?: {
+    playing_videos: Record<string, { started: number }>;
+    datasource?: string;
+    commands?: DisplayCommand[];
+    should_update?: boolean;
+    current_display?: number;
+    last_datasource?: string;
+    datasource_variables?: string[];
+    should_update_on_resume?: boolean;
+    // no lastVariables in old server. can get this from variables
   };
   globals: [
     {
@@ -96,6 +109,7 @@ export type NewContextStorage = {
     failPath: string;
     status: string | null;
   };
+  displayInfo?: DisplayInfo;
 };
 
 export type NewVoiceflowVars = {
