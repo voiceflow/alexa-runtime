@@ -1,4 +1,3 @@
-import { HandlerInput } from 'ask-sdk';
 import { interfaces } from 'ask-sdk-model';
 
 import { Commands, NewContextStack, NewContextStorage, NewContextVariables, OldCommands, OldContextRaw } from './types';
@@ -32,8 +31,8 @@ export const stackAdapter = (oldContext: OldContextRaw): NewContextStack =>
       commands: commandAdapter(d.commands),
     };
 
-    // blockID for top of the stack frame is kept in line_id in old context
     if (index === oldContext.diagrams.length - 1) {
+      // blockID for top of the stack frame is kept in line_id in old context
       frame.blockID = oldContext.line_id;
       // old server only keeps what the last diagram spoke
       if (oldContext.last_speak) frame.storage.speak = oldContext.last_speak;
@@ -44,7 +43,9 @@ export const stackAdapter = (oldContext: OldContextRaw): NewContextStack =>
     return acc;
   }, [] as NewContextStack) || [];
 
-export const storageAdapter = (oldContext: OldContextRaw, input: HandlerInput): NewContextStorage => ({
+type StorageAdapterOptions = { accessToken: string | undefined };
+
+export const storageAdapter = (oldContext: OldContextRaw, { accessToken }: StorageAdapterOptions): NewContextStorage => ({
   output: oldContext.output,
   sessions: oldContext.sessions,
   repeat: oldContext.repeat,
@@ -53,7 +54,7 @@ export const storageAdapter = (oldContext: OldContextRaw, input: HandlerInput): 
   alexa_permissions: oldContext.alexa_permissions,
   supported_interfaces: oldContext.supported_interfaces,
   // conditionally add attributes
-  ...(input.requestEnvelope.context.System.user.accessToken && { accessToken: input.requestEnvelope.context.System.user.accessToken }),
+  ...(accessToken && { accessToken }),
   ...(oldContext.randoms && { randoms: oldContext.randoms }),
   ...(oldContext.permissions && { permissions: oldContext.permissions }),
   ...(oldContext.payment && {
@@ -115,7 +116,29 @@ export const storageAdapter = (oldContext: OldContextRaw, input: HandlerInput): 
   }),
 });
 
-export const variablesAdapter = (oldContext: OldContextRaw, system: interfaces.system.SystemState): NewContextVariables =>
+type VariablesAdapterOptions = { system: interfaces.system.SystemState };
+
+export const variablesAdapter = (oldContext: OldContextRaw, { system }: VariablesAdapterOptions): NewContextVariables =>
   oldContext.globals[0]
     ? { ...oldContext.globals[0], _system: system }
     : { voiceflow: { events: [], permissions: [], capabilities: {} }, _system: system };
+
+// modify context before running adapters
+export const beforeContextModifier = (context: OldContextRaw) => {
+  // modifier when old context has temp
+  if (context.temp) {
+    const { temp, next_line, next_play, ...tempState } = context;
+    tempState.play = next_play;
+    tempState.line_id = next_line || null;
+    tempState.diagrams = temp.diagrams;
+    tempState.globals = temp.globals;
+    tempState.randoms = temp.randoms;
+    context = tempState;
+  }
+};
+
+// modify storage after running adapters
+export const afterStorageModifier = (storage: NewContextStorage, variables: NewContextVariables) => {
+  // modifier when new storage has displayInfo
+  if (storage.displayInfo) storage.displayInfo.lastVariables = variables;
+};

@@ -1,10 +1,8 @@
 import { HandlerInput, SkillBuilders } from 'ask-sdk';
-import _ from 'lodash';
 
 import { MetricsType } from '@/lib/clients/metrics';
 
 import AdapterManager from '../adapter';
-import { OldContextRaw } from '../adapter/types';
 import { Config, Services } from '../utils';
 import {
   APLUserEventHandler,
@@ -31,29 +29,7 @@ export const RequestInterceptorGenerator = (metrics: MetricsType, adapter: Adapt
     const { versionID } = handlerInput.context as { versionID: string };
     metrics.invocation(versionID);
 
-    // getPersistentAttributes hits dynamo only once during a TURN. the results from dynamo are cached
-    // and used for sequent calls to getPersistentAttributes
-    const state = await handlerInput.attributesManager.getPersistentAttributes();
-    // console.log('rawState', rawState);
-    if (!_.isEmpty(state) && !state.stack) {
-      // const updatedState = {
-      //   stack: [],
-      //   variables: state.globals[0],
-      //   storage: {
-      //     output: state.output,
-      //     sessions: state.sessions,
-      //     repeat: state.repeat,
-      //     alexa_permissions: state.alexa_permissions,
-      //     locale: state.locale,
-      //     user: state.user,
-      //     supported_interfaces: state.supported_interfaces,
-      //   },
-      // };
-      const updatedState = adapter.context(state as OldContextRaw, handlerInput);
-      // eslint-disable-next-line no-console
-      console.log('updatedState', updatedState);
-      handlerInput.attributesManager.setPersistentAttributes(updatedState);
-    }
+    await adapter.context(handlerInput);
   },
 });
 

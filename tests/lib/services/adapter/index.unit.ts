@@ -16,7 +16,7 @@ describe('adapterManager unit tests', async () => {
         const adapter = new AdapterManager(null as any, null as any);
 
         expect(
-          await adapter.context(test.old as any, { requestEnvelope: { context: { System: test.new.variables._system } } } as any)
+          await adapter.transformContext(test.old as any, { requestEnvelope: { context: { System: test.new.variables._system } } } as any)
         ).to.deep.equalInAnyOrder(test.new);
       });
     });

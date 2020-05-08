@@ -1,32 +1,36 @@
 import { HandlerInput } from 'ask-sdk';
+import _ from 'lodash';
 
 import { AbstractManager } from '../utils';
 import { NewContextRaw, OldContextRaw } from './types';
-import { stackAdapter, storageAdapter, variablesAdapter } from './utils';
+import { afterStorageModifier, beforeContextModifier, stackAdapter, storageAdapter, variablesAdapter } from './utils';
 
 /**
  * Adapter to transform old vf-server sessions into the new format
  * The intention is to remove this adapter once we switch all users over
  */
 class AdapterManager extends AbstractManager {
-  // todo: better way to pass around this state & input obj
-  async context(state: OldContextRaw, input: HandlerInput): Promise<NewContextRaw | {}> {
+  async context(input: HandlerInput) {
+    // getPersistentAttributes hits dynamo only once during a TURN. the results from dynamo are cached
+    // and used for sequent calls to getPersistentAttributes
+    const context = await input.attributesManager.getPersistentAttributes();
+    if (!_.isEmpty(context) && !context.stack) {
+      const transformedContext = this.transformContext(context as OldContextRaw, input);
+
+      // set transformed context
+      input.attributesManager.setPersistentAttributes(transformedContext);
+    }
+  }
+
+  async transformContext(context: OldContextRaw, input: HandlerInput): Promise<NewContextRaw | {}> {
     try {
-      if (state.temp) {
-        const { temp, next_line, next_play, ...tempState } = state;
-        tempState.play = next_play;
-        tempState.line_id = next_line || null;
-        tempState.diagrams = temp.diagrams;
-        tempState.globals = temp.globals;
-        tempState.randoms = temp.randoms;
-        state = tempState;
-      }
+      beforeContextModifier(context);
 
-      const stack = stackAdapter(state);
-      const variables = variablesAdapter(state, input.requestEnvelope.context.System);
-      const storage = storageAdapter(state, input);
+      const stack = stackAdapter(context);
+      const variables = variablesAdapter(context, { system: input.requestEnvelope.context.System });
+      const storage = storageAdapter(context, { accessToken: input.requestEnvelope.context.System.user.accessToken });
 
-      if (storage.displayInfo) storage.displayInfo.lastVariables = variables;
+      afterStorageModifier(storage, variables);
 
       return {
         stack,

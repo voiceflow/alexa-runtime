@@ -81,7 +81,7 @@ export type OldContextRaw = {
     last_datasource?: string;
     datasource_variables?: string[];
     should_update_on_resume?: boolean;
-    // no lastVariables in old server. can get this from variables
+    // no lastVariables in old server. can get this from variables -> handled in afterStorageModifier
   };
   play?: OldPlay;
   pause?: {
@@ -89,7 +89,7 @@ export type OldContextRaw = {
     offset: number;
   };
   finished?: true;
-  // stream play temp vars
+  // stream play temp vars -> handled in beforeContextModifier
   next_play?: OldPlay;
   next_line?: string;
   temp?: {
