@@ -64,6 +64,10 @@ export type OldContextRaw = {
     icon_img: string;
     background_img: string;
   };
+  pause?: {
+    id: string;
+    offset: number;
+  };
   globals: [
     {
       [key: string]: any;
@@ -129,6 +133,10 @@ export type NewContextStorage = {
   };
   displayInfo?: DisplayInfo;
   streamPlay?: StreamPlay;
+  streamPause?: {
+    id: string;
+    offset: number;
+  };
 };
 
 export type NewVoiceflowVars = {

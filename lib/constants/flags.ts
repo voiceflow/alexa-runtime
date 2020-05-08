@@ -12,8 +12,8 @@ export enum Storage {
   CANCEL_PAYMENT = 'cancelPayment',
   DISPLAY_INFO = 'displayInfo',
   STREAM_PLAY = 'streamPlay',
-  // -- todo
   STREAM_PAUSE = 'streamPause',
+  // -- todo
   STREAM_FINISHED = 'streamFinished',
   STREAM_TEMP = 'streamTemp',
 }

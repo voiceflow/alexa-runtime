@@ -104,6 +104,12 @@ export const storageAdapter = (oldContext: OldContextRaw, input: HandlerInput): 
       background_img: oldContext.play.background_img,
     },
   }),
+  ...(oldContext.pause && {
+    streamPause: {
+      id: oldContext.pause.id,
+      offset: oldContext.pause.offset,
+    },
+  }),
 });
 
 export const variablesAdapter = (oldContext: OldContextRaw, system: interfaces.system.SystemState): NewContextVariables =>
