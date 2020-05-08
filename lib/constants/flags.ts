@@ -14,7 +14,6 @@ export enum Storage {
   STREAM_PLAY = 'streamPlay',
   STREAM_PAUSE = 'streamPause',
   STREAM_FINISHED = 'streamFinished',
-  // -- todo
   STREAM_TEMP = 'streamTemp',
 }
 

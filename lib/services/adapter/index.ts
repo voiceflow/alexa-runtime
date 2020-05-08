@@ -12,6 +12,16 @@ class AdapterManager extends AbstractManager {
   // todo: better way to pass around this state & input obj
   async context(state: OldContextRaw, input: HandlerInput): Promise<NewContextRaw | {}> {
     try {
+      if (state.temp) {
+        const { temp, next_line, next_play, ...tempState } = state;
+        tempState.play = next_play;
+        tempState.line_id = next_line || null;
+        tempState.diagrams = temp.diagrams;
+        tempState.globals = temp.globals;
+        tempState.randoms = temp.randoms;
+        state = tempState;
+      }
+
       const stack = stackAdapter(state);
       const variables = variablesAdapter(state, input.requestEnvelope.context.System);
       const storage = storageAdapter(state, input);

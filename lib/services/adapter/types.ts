@@ -12,8 +12,44 @@ export type OldCommands = {
   };
 };
 
+type OldPlay = {
+  action: StreamAction;
+  url: string;
+  loop: boolean;
+  offset: number;
+  nextId: string;
+  token: string;
+  PAUSE_ID: string;
+  NEXT: string;
+  PREVIOUS: string;
+  title: string;
+  description: string;
+  regex_title: string;
+  regex_description: string;
+  icon_img: string;
+  background_img: string;
+};
+
+type OldRandoms = Record<string, string[]>;
+
+type OldGlobals = [
+  {
+    [key: string]: any;
+    voiceflow: { [key: string]: any; events: any[]; permissions: string[]; capabilities: SupportedInterfaces };
+  }
+];
+
+type OldDiagrams = Array<{
+  line: string | false;
+  id: string;
+  variable_state: Record<string, any>;
+  output_map?: Array<[string, string]>;
+  commands: OldCommands;
+  speak: string;
+}>;
+
 export type OldContextRaw = {
-  line_id: string;
+  line_id: string | null;
   output: string;
   last_speak?: string;
   sessions: number;
@@ -22,7 +58,7 @@ export type OldContextRaw = {
   user: string;
   alexa_permissions: string[];
   supported_interfaces: SupportedInterfaces;
-  randoms?: Record<string, string[]>;
+  randoms?: OldRandoms;
   permissions?: string[];
   payment?: {
     productId: string;
@@ -47,42 +83,23 @@ export type OldContextRaw = {
     should_update_on_resume?: boolean;
     // no lastVariables in old server. can get this from variables
   };
-  play?: {
-    action: StreamAction;
-    url: string;
-    loop: boolean;
-    offset: number;
-    nextId: string;
-    token: string;
-    PAUSE_ID: string;
-    NEXT: string;
-    PREVIOUS: string;
-    title: string;
-    description: string;
-    regex_title: string;
-    regex_description: string;
-    icon_img: string;
-    background_img: string;
-  };
+  play?: OldPlay;
   pause?: {
     id: string;
     offset: number;
   };
   finished?: true;
-  globals: [
-    {
-      [key: string]: any;
-      voiceflow: { [key: string]: any; events: any[]; permissions: string[]; capabilities: SupportedInterfaces };
-    }
-  ];
-  diagrams: Array<{
-    line: string | false;
-    id: string;
-    variable_state: Record<string, any>;
-    output_map?: Array<[string, string]>;
-    commands: OldCommands;
-    speak: string;
-  }>;
+  // stream play temp vars
+  next_play?: OldPlay;
+  next_line?: string;
+  temp?: {
+    diagrams: OldDiagrams;
+    globals: OldGlobals;
+    randoms?: OldRandoms;
+  };
+  // end of play temp vars
+  globals: OldGlobals;
+  diagrams: OldDiagrams;
 };
 
 export type Command = {
@@ -139,6 +156,7 @@ export type NewContextStorage = {
     offset: number;
   };
   streamFinished?: true;
+  streamTemp?: NewContextRaw;
 };
 
 export type NewVoiceflowVars = {
