@@ -1,6 +1,7 @@
 import { interfaces, SupportedInterfaces } from 'ask-sdk-model';
 
 import { Command as DisplayCommand, DisplayInfo } from '../voiceflow/handlers/display/types';
+import { StreamAction, StreamPlay } from '../voiceflow/handlers/stream';
 
 export type OldCommands = {
   [key: string]: {
@@ -45,6 +46,23 @@ export type OldContextRaw = {
     datasource_variables?: string[];
     should_update_on_resume?: boolean;
     // no lastVariables in old server. can get this from variables
+  };
+  play?: {
+    action: StreamAction;
+    url: string;
+    loop: boolean;
+    offset: number;
+    nextId: string;
+    token: string;
+    PAUSE_ID: string;
+    NEXT: string;
+    PREVIOUS: string;
+    title: string;
+    description: string;
+    regex_title: string;
+    regex_description: string;
+    icon_img: string;
+    background_img: string;
   };
   globals: [
     {
@@ -110,6 +128,7 @@ export type NewContextStorage = {
     status: string | null;
   };
   displayInfo?: DisplayInfo;
+  streamPlay?: StreamPlay;
 };
 
 export type NewVoiceflowVars = {

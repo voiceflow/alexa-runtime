@@ -85,6 +85,25 @@ export const storageAdapter = (oldContext: OldContextRaw, input: HandlerInput): 
       // lastVariables -> to populate with variables
     },
   }),
+  ...(oldContext.play && {
+    streamPlay: {
+      action: oldContext.play.action,
+      url: oldContext.play.url,
+      loop: oldContext.play.loop,
+      offset: oldContext.play.offset,
+      nextId: oldContext.play.nextId,
+      token: oldContext.play.token,
+      PAUSE_ID: oldContext.play.PAUSE_ID,
+      NEXT: oldContext.play.NEXT,
+      PREVIOUS: oldContext.play.PREVIOUS,
+      title: oldContext.play.title,
+      description: oldContext.play.description,
+      regex_title: oldContext.play.regex_title,
+      regex_description: oldContext.play.regex_description,
+      icon_img: oldContext.play.icon_img,
+      background_img: oldContext.play.background_img,
+    },
+  }),
 });
 
 export const variablesAdapter = (oldContext: OldContextRaw, system: interfaces.system.SystemState): NewContextVariables =>
