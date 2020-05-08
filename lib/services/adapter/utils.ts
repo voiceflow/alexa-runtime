@@ -1,7 +1,7 @@
 import { HandlerInput } from 'ask-sdk';
 import { interfaces } from 'ask-sdk-model';
 
-import { Commands, NewContextStack, NewContextStorage, NewContextVariables, NewVoiceflowVars, OldCommands, OldContextRaw } from './types';
+import { Commands, NewContextStack, NewContextStorage, NewContextVariables, OldCommands, OldContextRaw } from './types';
 
 export const commandAdapter = (oldCommands: OldCommands): Commands =>
   Object.keys(oldCommands).reduce((commandsAcc, key) => {
@@ -10,7 +10,6 @@ export const commandAdapter = (oldCommands: OldCommands): Commands =>
       mappings: oldCommand.mappings,
       intent: key,
       ...(oldCommand.diagram_id && { diagram_id: oldCommand.diagram_id }), // command
-      ...(oldCommand.end !== undefined && { end: oldCommand.end }), // command
       ...(oldCommand.next && { next: oldCommand.next }), // intent
     };
     commandsAcc.push(command);
@@ -25,9 +24,10 @@ export const stackAdapter = (oldContext: OldContextRaw): NewContextStack =>
       diagramID: d.id,
       variables: d.variable_state,
       storage: {
+        // speak is only added in the old server during commands
+        ...(d.speak && { speak: d.speak, calledCommand: true }),
         // output map is stored in previous frame in old server
         ...(oldContext.diagrams[index - 1]?.output_map && { outputMap: oldContext.diagrams[index - 1].output_map }),
-        // speak: stores the output each frame produces. we dont keep track of this in old server
       } as any,
       commands: commandAdapter(d.commands),
     };
@@ -76,21 +76,5 @@ export const storageAdapter = (oldContext: OldContextRaw, input: HandlerInput): 
 
 export const variablesAdapter = (oldContext: OldContextRaw, system: interfaces.system.SystemState): NewContextVariables =>
   oldContext.globals[0]
-    ? {
-        // everything in variables
-        ...oldContext.globals[0],
-        _system: system,
-        // filter out deprecated vars in vf specific variables
-        voiceflow: Object.keys(oldContext.globals[0].voiceflow).reduce(
-          (acc, key) => {
-            if (['events'].includes(key)) {
-              acc[key] = oldContext.globals[0].voiceflow[key];
-            }
-
-            return acc;
-          },
-          // initial object
-          { permissions: oldContext.alexa_permissions, capabilities: oldContext.supported_interfaces } as NewVoiceflowVars
-        ),
-      }
-    : { voiceflow: { events: [], permissions: [], capabilities: {} }, _system: system }; // default
+    ? { ...oldContext.globals[0], _system: system }
+    : { voiceflow: { events: [], permissions: [], capabilities: {} }, _system: system };

@@ -36,7 +36,7 @@ export type OldContextRaw = {
   globals: [
     {
       [key: string]: any;
-      voiceflow: { [key: string]: any; events: any[] };
+      voiceflow: { [key: string]: any; events: any[]; permissions: string[]; capabilities: SupportedInterfaces };
     }
   ];
   diagrams: Array<{
@@ -45,6 +45,7 @@ export type OldContextRaw = {
     variable_state: Record<string, any>;
     output_map?: Array<[string, string]>;
     commands: OldCommands;
+    speak: string;
   }>;
 };
 
