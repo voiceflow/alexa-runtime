@@ -110,6 +110,9 @@ export const storageAdapter = (oldContext: OldContextRaw, input: HandlerInput): 
       offset: oldContext.pause.offset,
     },
   }),
+  ...(oldContext.finished !== undefined && {
+    streamFinished: oldContext.finished,
+  }),
 });
 
 export const variablesAdapter = (oldContext: OldContextRaw, system: interfaces.system.SystemState): NewContextVariables =>

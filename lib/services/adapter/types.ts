@@ -68,6 +68,7 @@ export type OldContextRaw = {
     id: string;
     offset: number;
   };
+  finished?: true;
   globals: [
     {
       [key: string]: any;
@@ -137,6 +138,7 @@ export type NewContextStorage = {
     id: string;
     offset: number;
   };
+  streamFinished?: true;
 };
 
 export type NewVoiceflowVars = {

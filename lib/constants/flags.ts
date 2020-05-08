@@ -13,8 +13,8 @@ export enum Storage {
   DISPLAY_INFO = 'displayInfo',
   STREAM_PLAY = 'streamPlay',
   STREAM_PAUSE = 'streamPause',
-  // -- todo
   STREAM_FINISHED = 'streamFinished',
+  // -- todo
   STREAM_TEMP = 'streamTemp',
 }
 
