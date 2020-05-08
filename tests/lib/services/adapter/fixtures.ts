@@ -64,6 +64,21 @@ export const oldBasic = {
     ck9vee27700063h5sg24qb4xy: ['ck9vee820000l3h5sxpy0xbac'],
   },
   permissions: ['alexa::profile:email:read', 'alexa::profile:mobile_number:read'],
+  payment: {
+    productId: 'product-id',
+    success: 'success-id',
+    fail: 'fail-id',
+  },
+  cancel_payment: {
+    productId: 'product-id',
+    success: 'success-id',
+    fail: 'fail-id',
+  },
+  pause: {
+    id: 'stream-id',
+    offset: 0,
+  },
+  finished: true,
   customer_info: {},
   end: true,
   alexa_permissions: [],
@@ -123,6 +138,23 @@ export const newBasic = {
       ck9vee27700063h5sg24qb4xy: ['ck9vee820000l3h5sxpy0xbac'],
     },
     permissions: ['alexa::profile:email:read', 'alexa::profile:mobile_number:read'],
+    payment: {
+      productId: 'product-id',
+      successPath: 'success-id',
+      failPath: 'fail-id',
+      status: null,
+    },
+    cancelPayment: {
+      productId: 'product-id',
+      successPath: 'success-id',
+      failPath: 'fail-id',
+      status: null,
+    },
+    streamPause: {
+      id: 'stream-id',
+      offset: 0,
+    },
+    streamFinished: true,
     sessions: 1,
     repeat: 100,
     alexa_permissions: [],
@@ -135,7 +167,7 @@ export const newBasic = {
 
 // state when waiting on interaction block
 export const oldInteraction = {
-  last_speak: 'where are you from?',
+  // last_speak: 'where are you from?',
   sessions: 1,
   globals: [
     {
@@ -203,7 +235,7 @@ export const newInteraction = {
       blockID: 'ck9wxfxb5004z3h5saskt2eg8',
       variables: {},
       storage: {
-        speak: 'where are you from?',
+        // speak: 'where are you from?',
       },
       diagramID: 'wNt8ySvDY8TcYnKNWX00Nzdx8q97C7KZ',
       commands: [
