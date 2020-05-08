@@ -15,7 +15,7 @@ class AdapterManager extends AbstractManager {
     // and used for sequent calls to getPersistentAttributes
     const context = await input.attributesManager.getPersistentAttributes();
     if (!_.isEmpty(context) && !context.stack) {
-      const transformedContext = this.transformContext(context as OldContextRaw, input);
+      const transformedContext = await this.transformContext(context as OldContextRaw, input);
 
       // set transformed context
       input.attributesManager.setPersistentAttributes(transformedContext);
