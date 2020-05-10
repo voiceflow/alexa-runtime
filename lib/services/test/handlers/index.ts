@@ -3,6 +3,7 @@ import { CodeHandler, EndHandler, FlowHandler, IfHandler, IntegrationsHandler, R
 import AccountLinkingHandler from '@/lib/services/voiceflow/handlers/accountLinking';
 import CaptureHandler from '@/lib/services/voiceflow/handlers/capture';
 import CardHandler from '@/lib/services/voiceflow/handlers/card';
+import DirectiveHandler from '@/lib/services/voiceflow/handlers/directive';
 import InteractionHandler from '@/lib/services/voiceflow/handlers/interaction';
 import PermissionCardHandler from '@/lib/services/voiceflow/handlers/permissionCard';
 import ResetHandler from '@/lib/services/voiceflow/handlers/reset';
@@ -27,6 +28,7 @@ export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HAND
   PermissionCardHandler(),
   UserInfoHandler(),
   CardHandler(),
+  DirectiveHandler(),
   PaymentHandler(),
   CancelPaymentHandler(),
   ReminderHandler(),
