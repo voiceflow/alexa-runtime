@@ -1,42 +1,43 @@
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 
-import { S } from '@/lib/constants';
-
-import { updateContext } from '../utils';
+import behavior from './intent/behavior';
+import { buildContext, buildResponse, initialize, update } from './lifecycle';
 
 export enum Request {
-  EVENT_ROOT = 'AlexaSkillEvent.',
-  ACCEPTED = 'AlexaSkillEvent.SkillPermissionAccepted',
-  CHANGED = 'AlexaSkillEvent.SkillPermissionChanged',
+  INTENT = 'IntentRequest',
 }
 
 const utilsObj = {
-  updateContext,
+  buildContext,
+  initialize,
+  update,
+  buildResponse,
+  behavior,
 };
 
 export const EventHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
-  canHandle(input: HandlerInput): boolean {
-    const { type } = input.requestEnvelope.request;
-    return type.startsWith(Request.EVENT_ROOT);
+  async canHandle(input: HandlerInput): Promise<boolean> {
+    const context = await utils.buildContext(input);
+
+    return type === Request.INTENT;
   },
   async handle(input: HandlerInput) {
-    const { request } = input.requestEnvelope;
+    const context = await utils.buildContext(input);
 
-    if ((request.type === Request.ACCEPTED || request.type === Request.CHANGED) && request.body && Array.isArray(request.body.acceptedPermissions)) {
-      const permissions = request.body.acceptedPermissions.reduce((acc: string[], permission) => {
-        if (permission.scope) {
-          acc.push(permission.scope);
-        }
-
-        return acc;
-      }, []);
-
-      await utils.updateContext(input, (context) => {
-        context.storage.set(S.PERMISSIONS, permissions);
-      });
+    if (context.stack.isEmpty()) {
+      await utils.initialize(context, input);
     }
 
-    return input.responseBuilder.getResponse();
+    // eslint-disable-next-line no-restricted-syntax
+    for (const handler of utils.behavior) {
+      if (handler.canHandle(input, context)) {
+        return handler.handle(input, context);
+      }
+    }
+
+    await utils.update(context);
+
+    return utils.buildResponse(context, input);
   },
 });
 

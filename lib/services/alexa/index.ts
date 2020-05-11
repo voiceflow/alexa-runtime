@@ -11,6 +11,7 @@ import {
   EventHandler,
   IntentHandler,
   LaunchHandler,
+  PermissionHandler,
   PlaybackControllerHandler,
   PurchaseHandler,
   SessionEndedHandler,
@@ -36,6 +37,7 @@ const utilsObj = {
     AudioPlayerEventHandler,
     CancelPurchaseHandler,
     ErrorHandlerGenerator,
+    PermissionHandler,
     EventHandler,
     IntentHandler,
     LaunchHandler,
@@ -55,11 +57,12 @@ const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
     .standard()
     .addRequestHandlers(
       handlers.LaunchHandler,
+      handlers.EventHandler,
       handlers.IntentHandler,
       handlers.SessionEndedHandler,
       handlers.PlaybackControllerHandler,
       handlers.AudioPlayerEventHandler,
-      handlers.EventHandler,
+      handlers.PermissionHandler,
       handlers.PurchaseHandler,
       handlers.APLUserEventHandler,
       handlers.CancelPurchaseHandler

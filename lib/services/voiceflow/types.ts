@@ -6,6 +6,7 @@ export type Mapping = { variable: string; slot: string };
 
 export enum RequestType {
   INTENT = 'INTENT',
+  EVENT = 'EVENT',
 }
 
 export enum IntentName {
@@ -35,6 +36,16 @@ export interface IntentRequestPayload {
 export interface IntentRequest extends Request {
   type: RequestType.INTENT;
   payload: IntentRequestPayload;
+}
+
+export interface EventRequestPayload {
+  event: string;
+  data?: object;
+}
+
+export interface EventRequest extends Request {
+  type: RequestType.EVENT;
+  payload: EventRequestPayload;
 }
 
 export type ResponseBuilder = (context: Context, builder: ASKResponseBuilder) => void | boolean | Promise<void | boolean>;

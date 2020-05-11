@@ -2,18 +2,18 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import EventHandler, { EventHandlerGenerator, Request } from '@/lib/services/alexa/request/event';
+import PermissionHandler, { PermissionHandlerGenerator, Request } from '@/lib/services/alexa/request/permission';
 
 describe('event handler unit test', () => {
   describe('canHandle', () => {
     it('false', () => {
       const input = { requestEnvelope: { request: { type: 'random-type' } } };
-      expect(EventHandler.canHandle(input as any)).to.eql(false);
+      expect(PermissionHandler.canHandle(input as any)).to.eql(false);
     });
 
     it('true', () => {
       const input = { requestEnvelope: { request: { type: `${Request.EVENT_ROOT}Skill` } } };
-      expect(EventHandler.canHandle(input as any)).to.eql(true);
+      expect(PermissionHandler.canHandle(input as any)).to.eql(true);
     });
   });
 
@@ -22,13 +22,13 @@ describe('event handler unit test', () => {
       it('wrong type', async () => {
         const output = 'output';
         const input = { requestEnvelope: { request: { type: 'random-type' } }, responseBuilder: { getResponse: sinon.stub().returns(output) } };
-        expect(await EventHandler.handle(input as any)).to.eql(output);
+        expect(await PermissionHandler.handle(input as any)).to.eql(output);
       });
 
       it('no request body', async () => {
         const output = 'output';
         const input = { requestEnvelope: { request: { type: Request.ACCEPTED } }, responseBuilder: { getResponse: sinon.stub().returns(output) } };
-        expect(await EventHandler.handle(input as any)).to.eql(output);
+        expect(await PermissionHandler.handle(input as any)).to.eql(output);
       });
 
       it('accepted permissions is not array', async () => {
@@ -37,7 +37,7 @@ describe('event handler unit test', () => {
           requestEnvelope: { request: { type: Request.ACCEPTED, body: { acceptedPermissions: null } } },
           responseBuilder: { getResponse: sinon.stub().returns(output) },
         };
-        expect(await EventHandler.handle(input as any)).to.eql(output);
+        expect(await PermissionHandler.handle(input as any)).to.eql(output);
       });
     });
 
@@ -47,7 +47,7 @@ describe('event handler unit test', () => {
           updateContext: sinon.stub(),
         };
 
-        const handler = EventHandlerGenerator(utils);
+        const handler = PermissionHandlerGenerator(utils);
 
         const output = 'output';
         const permissions = [{ scope: 'p1' }, { scope: 'p2' }, {}, { scope: 'p3' }];
