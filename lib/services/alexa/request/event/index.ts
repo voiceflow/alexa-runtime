@@ -1,7 +1,9 @@
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 
-import behavior from './intent/behavior';
-import { buildContext, buildResponse, initialize, update } from './lifecycle';
+import IntentHandler from '../intent';
+import behavior from '../intent/behavior';
+import { buildContext, buildResponse, initialize, update } from '../lifecycle';
+import handleEvent, { getEvent } from './context';
 
 export enum Request {
   INTENT = 'IntentRequest',
@@ -13,31 +15,23 @@ const utilsObj = {
   update,
   buildResponse,
   behavior,
+  getEvent,
+  handleEvent,
+  IntentHandler,
 };
 
 export const EventHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
   async canHandle(input: HandlerInput): Promise<boolean> {
     const context = await utils.buildContext(input);
-
-    return type === Request.INTENT;
+    return !!getEvent(context);
   },
   async handle(input: HandlerInput) {
     const context = await utils.buildContext(input);
+    // based on the event, modify the context
+    await handleEvent(context);
+    input.attributesManager.setPersistentAttributes(context.getRawState());
 
-    if (context.stack.isEmpty()) {
-      await utils.initialize(context, input);
-    }
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const handler of utils.behavior) {
-      if (handler.canHandle(input, context)) {
-        return handler.handle(input, context);
-      }
-    }
-
-    await utils.update(context);
-
-    return utils.buildResponse(context, input);
+    return IntentHandler.handle(input);
   },
 });
 

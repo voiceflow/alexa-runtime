@@ -56,8 +56,8 @@ const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
   const skill = builder
     .standard()
     .addRequestHandlers(
-      handlers.LaunchHandler,
       handlers.EventHandler,
+      handlers.LaunchHandler,
       handlers.IntentHandler,
       handlers.SessionEndedHandler,
       handlers.PlaybackControllerHandler,
