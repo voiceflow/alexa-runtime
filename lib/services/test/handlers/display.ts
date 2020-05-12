@@ -4,7 +4,7 @@ import { Display } from '@/lib/services/voiceflow/handlers/display';
 
 const DisplayHandler: HandlerFactory<Display> = () => ({
   canHandle: (block) => {
-    return !!block.display_id;
+    return !!block.display_id || Object.keys(block).includes('datasource');
   },
   handle: (block, context) => {
     context.trace.debug('__display__ - entered');
