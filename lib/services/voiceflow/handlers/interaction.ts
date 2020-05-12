@@ -78,13 +78,14 @@ export const InteractionHandler: HandlerFactory<Interaction, typeof utilsObj> = 
       return nextId;
     }
 
+    // todo: wrap in new handler? (like commands)
     if (block.noMatches && block.noMatches?.length > (context.storage.get(S.NO_MATCHES_COUNTER) ?? 0)) {
       context.storage.produce((draft) => {
         draft[S.NO_MATCHES_COUNTER] = draft[S.NO_MATCHES_COUNTER] ?? 0;
         draft[S.NO_MATCHES_COUNTER]++;
       });
 
-      // handle speak - todo: wrap in func
+      // handle speak - todo: wrap in func and handle all speak cases
       const output = block.noMatches[context.storage.get(S.NO_MATCHES_COUNTER) - 1];
       context.storage.produce((draft) => {
         draft[S.OUTPUT] += output;
