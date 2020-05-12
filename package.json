@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@voiceflow/backend-utils": "2.0.0",
-    "@voiceflow/client": "^1.6.3",
+    "@voiceflow/client": "^1.7.0",
     "@voiceflow/common": "^6.2.0",
     "@voiceflow/logger": "^1.1.0",
     "@voiceflow/secrets-provider": "^1.6.2",
