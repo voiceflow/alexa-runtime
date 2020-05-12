@@ -1,4 +1,14 @@
-import { CodeHandler, EndHandler, FlowHandler, IfHandler, IntegrationsHandler, RandomHandler, SetHandler, StartHandler } from '@voiceflow/client';
+import {
+  CodeHandler,
+  EndHandler,
+  FlowHandler,
+  IfHandler,
+  IntegrationsHandler,
+  NextHandler,
+  RandomHandler,
+  SetHandler,
+  StartHandler,
+} from '@voiceflow/client';
 
 import { Config } from '@/types';
 
@@ -50,4 +60,5 @@ export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HAND
   RandomHandler(),
   SetHandler(),
   StartHandler(),
+  NextHandler(),
 ];
