@@ -6,7 +6,7 @@ import { NoMatchHandler } from '@/lib/services/voiceflow/handlers/noMatch';
 
 describe('noMatch handler unit tests', () => {
   describe('canHandle', () => {
-    describe('it', () => {
+    it('false', () => {
       expect(NoMatchHandler().canHandle({} as any, { storage: { get: sinon.stub().returns(null) } } as any)).to.eql(false);
     });
     it('true', () => {
