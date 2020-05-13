@@ -25,7 +25,6 @@ const SpeakHandler: HandlerFactory<Speak> = () => ({
       speak = _.sample(block.random_speak);
     }
 
-    // turn float variables to 2 decimal places
     const sanitizedVars = sanitizeVariables(variables.getState());
 
     if (_.isString(speak)) {
