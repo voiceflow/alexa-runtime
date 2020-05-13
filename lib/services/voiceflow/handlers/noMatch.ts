@@ -20,7 +20,6 @@ export const NoMatchHandler = () => ({
 
     const speak = block.noMatches?.[context.storage.get(S.NO_MATCHES_COUNTER) - 1] || '';
 
-    // turn float variables to 2 decimal places
     const sanitizedVars = sanitizeVariables(variables.getState());
     // replaces var values
     const output = regexVariables(speak, sanitizedVars);
