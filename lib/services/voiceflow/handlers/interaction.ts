@@ -1,10 +1,11 @@
 import { HandlerFactory } from '@voiceflow/client';
 
-import { F, S, T } from '@/lib/constants';
+import { S, T } from '@/lib/constants';
 
 import { IntentRequest, Mapping, RequestType } from '../types';
 import { addRepromptIfExists, formatName, mapSlots } from '../utils';
 import CommandHandler from './command';
+import NoMatchHandler from './noMatch';
 
 type Choice = {
   intent: string;
@@ -25,6 +26,7 @@ const utilsObj = {
   formatName,
   mapSlots,
   commandHandler: CommandHandler(),
+  noMatchHandler: NoMatchHandler(),
 };
 
 export const InteractionHandler: HandlerFactory<Interaction, typeof utilsObj> = (utils) => ({
@@ -38,6 +40,7 @@ export const InteractionHandler: HandlerFactory<Interaction, typeof utilsObj> = 
       utils.addRepromptIfExists(block, context, variables);
       context.trace.choice(block.interactions.map(({ intent }) => ({ name: intent })));
 
+      // clean up no matches counter on new interaction
       context.storage.delete(S.NO_MATCHES_COUNTER);
 
       // quit cycleStack without ending session by stopping on itself
@@ -72,34 +75,15 @@ export const InteractionHandler: HandlerFactory<Interaction, typeof utilsObj> = 
     // request for this turn has been processed, delete request
     context.turn.delete(T.REQUEST);
 
-    if (nextId) {
-      // intent hit
-      context.storage.delete(S.NO_MATCHES_COUNTER);
-      return nextId;
+    // check for noMatches to handle
+    if (!nextId && utils.noMatchHandler.canHandle(block, context)) {
+      return utils.noMatchHandler.handle(block, context, variables);
     }
 
-    // todo: wrap in new handler? (like commands)
-    if (block.noMatches && block.noMatches?.length > (context.storage.get(S.NO_MATCHES_COUNTER) ?? 0)) {
-      context.storage.produce((draft) => {
-        draft[S.NO_MATCHES_COUNTER] = draft[S.NO_MATCHES_COUNTER] ?? 0;
-        draft[S.NO_MATCHES_COUNTER]++;
-      });
-
-      // handle speak - todo: wrap in func and handle all speak cases
-      const output = block.noMatches[context.storage.get(S.NO_MATCHES_COUNTER) - 1];
-      context.storage.produce((draft) => {
-        draft[S.OUTPUT] += output;
-      });
-
-      context.stack.top().storage.set(F.SPEAK, output);
-      context.trace.speak(output);
-      // end handle speak
-
-      return block.blockID; // stay on interaction block
-    }
+    // clean up no matches counter
     context.storage.delete(S.NO_MATCHES_COUNTER);
 
-    return block.elseId ?? null;
+    return (nextId || block.elseId) ?? null;
   },
 });
 
