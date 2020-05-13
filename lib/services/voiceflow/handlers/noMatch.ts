@@ -11,7 +11,7 @@ type Block = {
 
 export const NoMatchHandler = () => ({
   canHandle: (block: Block, context: Context) => {
-    return (block.noMatches?.length ?? 0) > (context.storage.get(S.NO_MATCHES_COUNTER) ?? 0);
+    return Array.isArray(block.noMatches) && block.noMatches.length > (context.storage.get(S.NO_MATCHES_COUNTER) ?? 0);
   },
   handle: (block: Block, context: Context, variables: Store) => {
     context.storage.produce((draft) => {
