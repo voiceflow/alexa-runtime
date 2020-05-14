@@ -147,7 +147,7 @@ jobs:
           name: "Build dev environment image"
           command: |
             SEM_VER=$CIRCLE_BRANCH-$CIRCLE_SHA1
-            IMAGE_TAG=$CIRCLE_SHA1
+            IMAGE_TAG=k8s-$CIRCLE_SHA1
             IMAGE_NAME="168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$IMAGE_TAG"
             ENV_NAME=$CIRCLE_BRANCH
             set +e
