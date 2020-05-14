@@ -199,11 +199,13 @@ workflows:
   build-deploy-staging:
     jobs:
       - build-push-image:
+          context: dev-test
           filters:
             branches:
               only:
                 - staging
       - deploy-image:
+          context: dev-test
           requires:
             - build-push-image
           filters:
