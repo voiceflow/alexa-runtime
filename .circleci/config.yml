@@ -140,7 +140,7 @@ jobs:
     steps:
       - checkout # special step to check out source code to working directory
       - setup_remote_docker # Need this to run DinD
-      - add_ssh_keys: # To enable write access to repository for removing ephemeral branches
+      - add_ssh_keys: # To enable write access to repository for removing development environment branches
           fingerprints:
             - "31:42:5a:4e:ee:42:40:e6:77:fc:d4:1b:9f:4e:ca:46"
       - run:
@@ -215,6 +215,7 @@ workflows:
             branches:
               ignore:
                 - /env-.*/
+                - staging
       - build-push-image:
           context: dev-test
           filters:
