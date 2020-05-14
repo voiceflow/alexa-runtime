@@ -114,12 +114,12 @@ jobs:
               --build-arg build_BUILD_URL=${CIRCLE_BUILD_URL}	\
               --build-arg build_GIT_SHA=${CIRCLE_SHA1} \
               --build-arg build_SEM_VER=${SEM_VER} \
-              -t 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$CIRCLE_SHA1 .
+              -t 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_SHA1 .
       - run:
           name: "Push docker images"
           command: |
-            docker push 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$CIRCLE_SHA1
-            docker tag 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$CIRCLE_SHA1 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:latest-$CIRCLE_BRANCH
+            docker push 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_SHA1
+            docker tag 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_SHA1 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:latest-$CIRCLE_BRANCH
             docker push 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:latest-$CIRCLE_BRANCH
 
   deploy-image:
@@ -129,10 +129,10 @@ jobs:
           name: Update kubernetes image
           command: |
             aws eks --region us-east-1 update-kubeconfig --name development
-            kubectl set image --namespace voiceflow-v1 deployment/alexa-$CIRCLE_BRANCH app=168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$CIRCLE_SHA1
+            kubectl set image --namespace voiceflow-v1 deployment/alexa-$CIRCLE_BRANCH app=168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_SHA1
             if [ "$CIRCLE_BRANCH" == "master" ]; then
               aws eks --region us-east-1 update-kubeconfig --name production
-              kubectl set image --namespace voiceflow-v1 deployment/alexa-production app=168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$CIRCLE_SHA1
+              kubectl set image --namespace voiceflow-v1 deployment/alexa-production app=168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_SHA1
             fi
 
   build-deploy-dev-env:
