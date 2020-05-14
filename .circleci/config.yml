@@ -130,7 +130,7 @@ jobs:
     executor: build-executor
     environment:
       IMAGE_TAG: "k8s-$CIRCLE_SHA1"
-      IMAGE_REPO: "168387678261.dkr.ecr.us-east-1.amazonaws.com/google"
+      IMAGE_REPO: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
       IMAGE_NAME: "$IMAGE_REPO:$IMAGE_TAG"
     steps:
       - run:
@@ -147,7 +147,7 @@ jobs:
     executor: build-executor
     environment:
       IMAGE_TAG: "k8s-$CIRCLE_SHA1"
-      IMAGE_REPO: "168387678261.dkr.ecr.us-east-1.amazonaws.com/google"
+      IMAGE_REPO: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
       IMAGE_NAME: "$IMAGE_REPO:$IMAGE_TAG"
       ENV_NAME: "$CIRCLE_BRANCH"
       SEM_VER: "$CIRCLE_BRANCH-$CIRCLE_SHA1"
