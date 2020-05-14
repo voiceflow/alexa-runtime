@@ -68,11 +68,11 @@ jobs:
       - install_node_modules
       - setup_test_env
       - run:
-          name: 'Build package'
+          name: "Build package"
           command: |
             yarn build
       - run:
-          name: 'Run tests'
+          name: "Run tests"
           command: |
             yarn test
       - codecov/upload:
@@ -90,9 +90,8 @@ jobs:
       - checkout # special step to check out source code to working directory
       - setup_remote_docker
       - run:
-          name: 'Build docker image'
+          name: "Build docker image"
           command: |
-            mkdir -p /tmp/vf-build/vars
             # Fix semantic versioning 
             if [ "$CIRCLE_BRANCH" == "master" ]; then
               npm config set unsafe-perm true # needed for npx to work
@@ -115,34 +114,63 @@ jobs:
               --build-arg build_BUILD_URL=${CIRCLE_BUILD_URL}	\
               --build-arg build_GIT_SHA=${CIRCLE_SHA1} \
               --build-arg build_SEM_VER=${SEM_VER} \
-              -t 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM . 
-            echo $CIRCLE_BUILD_NUM > /tmp/vf-build/vars/build_num
+              -t 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$CIRCLE_SHA1 .
       - run:
-          name: 'Push docker images'
+          name: "Push docker images"
           command: |
-            docker push 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
-            docker tag 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_BRANCH-$CIRCLE_BUILD_NUM 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:latest-$CIRCLE_BRANCH
+            docker push 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$CIRCLE_SHA1
+            docker tag 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$CIRCLE_SHA1 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:latest-$CIRCLE_BRANCH
             docker push 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:latest-$CIRCLE_BRANCH
-      - persist_to_workspace:
-          root: vars
-          paths:
-            - build_num
 
   deploy-image:
     executor: build-executor
     steps:
-      - attach_workspace:
-          at: /tmp/vf-build/vars
       - run:
           name: Update kubernetes image
           command: |
             aws eks --region us-east-1 update-kubeconfig --name development
-            BUILD_NUM=$(cat /tmp/vf-build/vars/build_num)
-            kubectl set image --namespace voiceflow-v1 deployment/alexa-$CIRCLE_BRANCH app=168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_BRANCH-$BUILD_NUM
+            kubectl set image --namespace voiceflow-v1 deployment/alexa-$CIRCLE_BRANCH app=168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$CIRCLE_SHA1
             if [ "$CIRCLE_BRANCH" == "master" ]; then
               aws eks --region us-east-1 update-kubeconfig --name production
-              kubectl set image --namespace voiceflow-v1 deployment/alexa-production app=168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_BRANCH-$BUILD_NUM
+              kubectl set image --namespace voiceflow-v1 deployment/alexa-production app=168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$CIRCLE_SHA1
             fi
+
+  build-deploy-dev-env:
+    executor: build-executor
+    steps:
+      - checkout # special step to check out source code to working directory
+      - setup_remote_docker # Need this to run DinD
+      - add_ssh_keys: # To enable write access to repository for removing ephemeral branches
+          fingerprints:
+            - "31:42:5a:4e:ee:42:40:e6:77:fc:d4:1b:9f:4e:ca:46"
+      - run:
+          name: "Build dev environment image"
+          command: |
+            SEM_VER=$CIRCLE_BRANCH-$CIRCLE_SHA1
+            IMAGE_TAG=$CIRCLE_SHA1
+            IMAGE_NAME="168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$IMAGE_TAG"
+            ENV_NAME=$CIRCLE_BRANCH
+            set +e
+            DOCKER_CLI_EXPERIMENTAL=enabled docker manifest inspect $IMAGE_NAME > /dev/null 2>&1
+            SEARCH_IMAGE_RESULT=$?
+            set -e
+            if [[ $SEARCH_IMAGE_RESULT -ne 0 ]]; then   # Only build the image if there are no existing images 
+              $(aws ecr get-login --no-include-email --region us-east-1)
+              docker build \
+                --build-arg NPM_TOKEN=//registry.npmjs.org/:_authToken=${NPM_TOKEN} \
+                --build-arg build_BUILD_NUM=${CIRCLE_BUILD_NUM} \
+                --build-arg build_BUILD_URL=${CIRCLE_BUILD_URL}	\
+                --build-arg build_GIT_SHA=${CIRCLE_SHA1} \
+                --build-arg build_SEM_VER=${SEM_VER} \
+                -t $IMAGE_NAME . 
+              docker push $IMAGE_NAME
+            fi
+            git push origin --delete $CIRCLE_BRANCH --no-verify # Clean up git branch
+      - run:
+          name: "Deploy dev environment image"
+          command: |
+            aws eks --region us-east-1 update-kubeconfig --name development
+            kubectl set image --namespace $ENV_NAME deployment/alexa app=$IMAGE_NAME
 
   release:
     executor: default-executor
@@ -152,22 +180,47 @@ jobs:
 
 # When should each job run and what are their dependencies?
 workflows:
-  build-deploy:
+  # Staging
+  build-deploy-staging:
+    jobs:
+      - build-push-image:
+          filters:
+            branches:
+              only:
+                - staging
+      - deploy-image:
+          requires:
+            - build-push-image
+          filters:
+            branches:
+              only:
+                - staging
+
+  # Development environments
+  build-deploy-environment:
+    jobs:
+      - build-deploy-dev-env:
+          context: dev-test
+          filters:
+            branches:
+              only:
+                - /env-.*/
+
+  # Master (production)
+  build-deploy-app:
     jobs:
       - test:
           context: dev-test
           filters:
             branches:
               ignore:
-                - /ephemeral.*/
-
+                - /env-.*/
       - build-push-image:
           context: dev-test
           filters:
             branches:
               only:
                 - master
-                - staging
       - deploy-image:
           context: dev-test
           requires:
@@ -177,7 +230,6 @@ workflows:
             branches:
               only:
                 - master
-                - staging
       - release:
           context: dev-test
           requires:
