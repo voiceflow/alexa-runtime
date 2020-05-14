@@ -86,6 +86,10 @@ jobs:
 
   build-push-image:
     executor: build-executor
+    environment:
+      IMAGE_TAG: "k8s-$CIRCLE_SHA1"
+      IMAGE_REPO: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
+      IMAGE_NAME: "$IMAGE_REPO:$IMAGE_TAG"
     steps:
       - checkout # special step to check out source code to working directory
       - setup_remote_docker
@@ -114,29 +118,39 @@ jobs:
               --build-arg build_BUILD_URL=${CIRCLE_BUILD_URL}	\
               --build-arg build_GIT_SHA=${CIRCLE_SHA1} \
               --build-arg build_SEM_VER=${SEM_VER} \
-              -t 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_SHA1 .
+              -t $IMAGE_NAME .
       - run:
           name: "Push docker images"
           command: |
-            docker push 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_SHA1
-            docker tag 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_SHA1 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:latest-$CIRCLE_BRANCH
-            docker push 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:latest-$CIRCLE_BRANCH
+            docker push $IMAGE_NAME
+            docker tag $IMAGE_NAME $IMAGE_REPO:latest-$CIRCLE_BRANCH
+            docker push $IMAGE_REPO:latest-$CIRCLE_BRANCH
 
   deploy-image:
     executor: build-executor
+    environment:
+      IMAGE_TAG: "k8s-$CIRCLE_SHA1"
+      IMAGE_REPO: "168387678261.dkr.ecr.us-east-1.amazonaws.com/google"
+      IMAGE_NAME: "$IMAGE_REPO:$IMAGE_TAG"
     steps:
       - run:
           name: Update kubernetes image
           command: |
             aws eks --region us-east-1 update-kubeconfig --name development
-            kubectl set image --namespace voiceflow-v1 deployment/alexa-$CIRCLE_BRANCH app=168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_SHA1
+            kubectl set image --namespace voiceflow-v1 deployment/alexa-$CIRCLE_BRANCH app=$IMAGE_NAME
             if [ "$CIRCLE_BRANCH" == "master" ]; then
               aws eks --region us-east-1 update-kubeconfig --name production
-              kubectl set image --namespace voiceflow-v1 deployment/alexa-production app=168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:k8s-$CIRCLE_SHA1
+              kubectl set image --namespace voiceflow-v1 deployment/alexa-production app=$IMAGE_NAME
             fi
 
   build-deploy-dev-env:
     executor: build-executor
+    environment:
+      IMAGE_TAG: "k8s-$CIRCLE_SHA1"
+      IMAGE_REPO: "168387678261.dkr.ecr.us-east-1.amazonaws.com/google"
+      IMAGE_NAME: "$IMAGE_REPO:$IMAGE_TAG"
+      ENV_NAME: "$CIRCLE_BRANCH"
+      SEM_VER: "$CIRCLE_BRANCH-$CIRCLE_SHA1"
     steps:
       - checkout # special step to check out source code to working directory
       - setup_remote_docker # Need this to run DinD
@@ -146,10 +160,6 @@ jobs:
       - run:
           name: "Build dev environment image"
           command: |
-            SEM_VER=$CIRCLE_BRANCH-$CIRCLE_SHA1
-            IMAGE_TAG=k8s-$CIRCLE_SHA1
-            IMAGE_NAME="168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa:$IMAGE_TAG"
-            ENV_NAME=$CIRCLE_BRANCH
             set +e
             DOCKER_CLI_EXPERIMENTAL=enabled docker manifest inspect $IMAGE_NAME > /dev/null 2>&1
             SEARCH_IMAGE_RESULT=$?
