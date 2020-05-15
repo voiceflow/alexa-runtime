@@ -9,7 +9,7 @@ fi
 
 ENV_NAME=$1
 CURRENT_BRANCH=$(git branch --show-current)
-DEV_BRANCH_NAME=$ENV_NAME # Simply use the env-adjective-noun as the branch name
+DEV_BRANCH_NAME="${ENV_NAME}_$(date +%s)" # Simply use the env-adjective-noun_epoch as the branch name
 
 echo -e "Pushing your code to CD pipeline..."
 { # Suppress command outputs since it's not relevant for the end-user
@@ -27,4 +27,4 @@ echo -e "Pushing your code to CD pipeline..."
   git branch -D $DEV_BRANCH_NAME # Force delete the ephemeral branch to prevent direct user modification
 } &> /dev/null  
 
-echo -e "Your code has been pushed! Please check CircleCI for deployment details: https://app.circleci.com/pipelines/github/voiceflow/alexa?branch=$ENV_NAME"
+echo -e "Your code has been pushed! Please check CircleCI for deployment details: https://app.circleci.com/pipelines/github/voiceflow/alexa?branch=$DEV_BRANCH_NAME"

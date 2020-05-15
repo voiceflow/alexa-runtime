@@ -160,14 +160,13 @@ jobs:
           command: |
             IMAGE_TAG="k8s-$CIRCLE_SHA1"
             IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
-            ENV_NAME="$CIRCLE_BRANCH"
             SEM_VER="$CIRCLE_BRANCH-$CIRCLE_SHA1"
+            $(aws ecr get-login --no-include-email --region us-east-1)
             set +e
             DOCKER_CLI_EXPERIMENTAL=enabled docker manifest inspect $IMAGE_NAME > /dev/null 2>&1
             SEARCH_IMAGE_RESULT=$?
             set -e
             if [[ $SEARCH_IMAGE_RESULT -ne 0 ]]; then   # Only build the image if there are no existing images 
-              $(aws ecr get-login --no-include-email --region us-east-1)
               docker build \
                 --build-arg NPM_TOKEN=//registry.npmjs.org/:_authToken=${NPM_TOKEN} \
                 --build-arg build_BUILD_NUM=${CIRCLE_BUILD_NUM} \
@@ -183,7 +182,7 @@ jobs:
           command: |
             IMAGE_TAG="k8s-$CIRCLE_SHA1"
             IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
-            ENV_NAME="$CIRCLE_BRANCH"
+            ENV_NAME="${CIRCLE_BRANCH%%_*}"
             aws eks --region us-east-1 update-kubeconfig --name development
             kubectl set image --namespace $ENV_NAME deployment/alexa app=$IMAGE_NAME
 
