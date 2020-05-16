@@ -178,13 +178,20 @@ jobs:
             fi
             git push origin --delete $CIRCLE_BRANCH --no-verify # Clean up git branch
       - run:
+          name: Install latest envcli utility
+          command: |
+            API_URL="https://$GITHUB_TOKEN:@api.github.com/repos/voiceflow/envcli"
+            ASSET_ID=$(curl $API_URL/releases/latest | jq -r '.assets[2].id')
+            curl -J -L -H "Accept: application/octet-stream" "$API_URL/releases/assets/$ASSET_ID" --output envcli.tar.gz
+            tar -xf envcli.tar.gz
+      - run:
           name: "Deploy dev environment image"
           command: |
             IMAGE_TAG="k8s-$CIRCLE_SHA1"
             IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
             ENV_NAME="${CIRCLE_BRANCH%%_*}"
             aws eks --region us-east-1 update-kubeconfig --name development
-            kubectl set image --namespace $ENV_NAME deployment/alexa app=$IMAGE_NAME
+            ./envcli edit component alexa alexa -i $IMAGE_NAME
 
   release:
     executor: default-executor
