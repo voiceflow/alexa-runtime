@@ -184,7 +184,6 @@ jobs:
             ASSET_ID=$(curl $API_URL/releases/latest | jq -r '.assets[2].id')
             curl -J -L -H "Accept: application/octet-stream" "$API_URL/releases/assets/$ASSET_ID" --output envcli.tar.gz
             tar -xf envcli.tar.gz
-            ./envcli init --noninteractive
       - run:
           name: "Deploy dev environment image"
           command: |
