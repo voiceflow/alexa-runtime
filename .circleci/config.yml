@@ -191,7 +191,7 @@ jobs:
             IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
             ENV_NAME="${CIRCLE_BRANCH%%_*}"
             aws eks --region us-east-1 update-kubeconfig --name development
-            ./envcli edit component alexa alexa -i $IMAGE_NAME
+            ./envcli edit component alexa alexa -n $ENV_NAME -i $IMAGE_NAME
 
   release:
     executor: default-executor
