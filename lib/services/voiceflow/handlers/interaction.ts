@@ -19,6 +19,7 @@ type Interaction = {
   nextIds: string[];
   reprompt?: string;
   interactions: Choice[];
+  randomize?: boolean;
 };
 
 const utilsObj = {
