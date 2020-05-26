@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@voiceflow/backend-utils": "2.0.0",
-    "@voiceflow/client": "^1.7.1",
+    "@voiceflow/client": "^1.7.2",
     "@voiceflow/common": "^6.2.0",
     "@voiceflow/logger": "^1.1.0",
     "@voiceflow/secrets-provider": "^1.6.2",
@@ -146,8 +146,8 @@
     "lint": "eslint \"./**/*.{js,ts}\"",
     "local": "NODE_ENV=local ts-node --files -r tsconfig-paths/register start.ts",
     "local:watch": "NODE_ENV=local forever --watch -c \"ts-node --files -r tsconfig-paths/register\" start.ts",
-    "preview:new": "scripts/deploy_dev_environments.sh",
     "preview:check": "echo \"alexa\"",
+    "preview:new": "scripts/deploy_dev_environments.sh",
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
     "test": "NODE_ENV=test nyc ts-mocha --paths --opts mocha.opts",
     "test:single": "NODE_ENV=test ts-mocha --paths --opts mocha-single.opts",
