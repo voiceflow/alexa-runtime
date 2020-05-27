@@ -24,6 +24,7 @@ describe('noMatch handler unit tests', () => {
       const block = {
         blockID: 'block-id',
         noMatches: ['the counter is {counter}'],
+        randomize: false,
       };
       const context = {
         storage: {
