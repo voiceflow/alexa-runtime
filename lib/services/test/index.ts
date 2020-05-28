@@ -2,7 +2,7 @@ import { EventType, State } from '@voiceflow/client';
 import { StreamAction as TraceStreamAction } from '@voiceflow/client/build/lib/Context/Trace';
 import { IntentRequest as AlexaIntentRequest } from 'ask-sdk-model';
 
-import { S, T, TEST_VERSION_ID } from '@/lib/constants';
+import { S, T, TEST_VERSION_ID, V } from '@/lib/constants';
 import { StreamAction, StreamPlay } from '@/lib/services/voiceflow/handlers/stream';
 import { RequestType } from '@/lib/services/voiceflow/types';
 
@@ -29,6 +29,7 @@ const TestManager = (services: Services, config: Config, utils = utilsObj) => {
     context.setEvent(EventType.handlerWillHandle, (event) => context.trace.block(event.block.blockID));
 
     context.turn.set(T.REQUEST, request);
+    context.variables.set(V.TIMESTAMP, Math.floor(Date.now() / 1000));
 
     await context.update();
 
