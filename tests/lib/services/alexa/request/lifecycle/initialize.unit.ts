@@ -6,16 +6,6 @@ import { initializeGenerator, VAR_VF } from '@/lib/services/alexa/request/lifecy
 import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 
 describe('initialize lifecycle unit tests', async () => {
-  let clock: sinon.SinonFakeTimers;
-
-  beforeEach(() => {
-    clock = sinon.useFakeTimers(Date.now()); // fake Date.now
-  });
-  afterEach(() => {
-    clock.restore(); // restore Date.now
-    sinon.restore();
-  });
-
   describe('initialize', () => {
     const generateFakes = () => {
       const resumeFrame = { foo: 'bar' };
@@ -129,7 +119,7 @@ describe('initialize lifecycle unit tests', async () => {
       expect(context.storage.set.args[5]).to.eql([S.REPEAT, metaObj.repeat]);
       expect(context.variables.merge.args[0]).to.eql([
         {
-          timestamp: Math.floor(clock.now / 1000),
+          timestamp: 0,
           locale,
           user_id: userId,
           sessions: 1,
