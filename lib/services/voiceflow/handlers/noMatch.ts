@@ -1,4 +1,5 @@
 import { Context, Store } from '@voiceflow/client';
+import _ from 'lodash';
 
 import { S } from '@/lib/constants';
 
@@ -7,6 +8,7 @@ import { regexVariables, sanitizeVariables } from '../utils';
 type Block = {
   blockID: string;
   noMatches?: string[];
+  randomize?: boolean;
 };
 
 export const NoMatchHandler = () => ({
@@ -18,7 +20,7 @@ export const NoMatchHandler = () => ({
       draft[S.NO_MATCHES_COUNTER] = draft[S.NO_MATCHES_COUNTER] ? draft[S.NO_MATCHES_COUNTER] + 1 : 1;
     });
 
-    const speak = block.noMatches?.[context.storage.get(S.NO_MATCHES_COUNTER) - 1] || '';
+    const speak = (block.randomize ? _.sample(block.noMatches) : block.noMatches?.[context.storage.get(S.NO_MATCHES_COUNTER) - 1]) || '';
 
     const sanitizedVars = sanitizeVariables(variables.getState());
     // replaces var values

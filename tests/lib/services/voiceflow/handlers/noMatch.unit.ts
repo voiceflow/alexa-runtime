@@ -80,5 +80,29 @@ describe('noMatch handler unit tests', () => {
       expect(noMatchHandler.handle(block as any, context as any, variables as any)).to.eql(block.blockID);
       expect(context.trace.speak.args).to.eql([['']]);
     });
+
+    it('with noMatch randomized', () => {
+      const block = {
+        blockID: 'block-id',
+        noMatches: ['A', 'B', 'C'],
+        randomize: true,
+      };
+      const context = {
+        storage: {
+          produce: sinon.stub(),
+          get: sinon.stub().returns(1),
+        },
+        trace: {
+          speak: sinon.stub(),
+        },
+      };
+      const variables = {
+        getState: sinon.stub().returns({}),
+      };
+
+      const noMatchHandler = NoMatchHandler();
+      expect(noMatchHandler.handle(block as any, context as any, variables as any)).to.eql(block.blockID);
+      expect(block.noMatches.includes(context.trace.speak.args[0][0])).to.eql(true);
+    });
   });
 });
