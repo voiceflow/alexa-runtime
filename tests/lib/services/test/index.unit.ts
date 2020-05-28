@@ -3,11 +3,21 @@ import { StreamAction as TraceStreamAction } from '@voiceflow/client/build/lib/C
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { T, TEST_VERSION_ID } from '@/lib/constants';
+import { T, TEST_VERSION_ID, V } from '@/lib/constants';
 import TestManager from '@/lib/services/test';
 import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 
 describe('test manager unit tests', () => {
+  let clock: sinon.SinonFakeTimers;
+
+  beforeEach(() => {
+    clock = sinon.useFakeTimers(Date.now()); // fake Date.now
+  });
+  afterEach(() => {
+    clock.restore(); // restore Date.now
+    sinon.restore();
+  });
+
   describe('invoke', () => {
     it('works correctly', async () => {
       const rawState = { foo: 'bar' };
@@ -25,6 +35,7 @@ describe('test manager unit tests', () => {
         stack: {
           isEmpty: sinon.stub().returns(false), // stack no empty
         },
+        variables: { set: sinon.stub() },
         update: sinon.stub(),
         getRawState: sinon.stub().returns(rawState),
         trace: { get: sinon.stub().returns(trace), block: sinon.stub() },
@@ -65,6 +76,7 @@ describe('test manager unit tests', () => {
       fn(event);
       expect(context.trace.block.args).to.eql([[event.block.blockID]]);
       expect(context.turn.set.args).to.eql([[T.REQUEST, request]]);
+      expect(context.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
       expect(context.update.callCount).to.eql(1);
     });
 
@@ -83,6 +95,7 @@ describe('test manager unit tests', () => {
         stack: {
           isEmpty: sinon.stub().returns(true), // stack is empty
         },
+        variables: { set: sinon.stub() },
         update: sinon.stub(),
         getRawState: sinon.stub().returns(rawState),
         trace: { get: sinon.stub().returns(trace), block: sinon.stub(), end: sinon.stub() },
@@ -125,6 +138,7 @@ describe('test manager unit tests', () => {
           stack: {
             isEmpty: sinon.stub().returns(true), // stack is empty
           },
+          variables: { set: sinon.stub() },
           update: sinon.stub(),
           getRawState: sinon.stub().returns(rawState),
           trace: { get: sinon.stub().returns(trace), block: sinon.stub(), end: sinon.stub(), stream: sinon.stub() },
@@ -167,6 +181,7 @@ describe('test manager unit tests', () => {
           stack: {
             isEmpty: sinon.stub().returns(true), // stack is empty
           },
+          variables: { set: sinon.stub() },
           update: sinon.stub(),
           getRawState: sinon.stub().returns(rawState),
           trace: { get: sinon.stub().returns(trace), block: sinon.stub(), end: sinon.stub(), stream: sinon.stub() },
@@ -209,6 +224,7 @@ describe('test manager unit tests', () => {
           stack: {
             isEmpty: sinon.stub().returns(true), // stack is empty
           },
+          variables: { set: sinon.stub() },
           update: sinon.stub(),
           getRawState: sinon.stub().returns(rawState),
           trace: { get: sinon.stub().returns(trace), block: sinon.stub(), end: sinon.stub(), stream: sinon.stub() },

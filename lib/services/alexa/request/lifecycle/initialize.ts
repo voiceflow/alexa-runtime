@@ -1,7 +1,7 @@
 import { Context, Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
-import { F, S } from '@/lib/constants';
+import { F, S, V } from '@/lib/constants';
 import { createResumeFrame, RESUME_DIAGRAM_ID } from '@/lib/services/voiceflow/diagrams/resume';
 import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 
@@ -50,7 +50,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
 
   // default global variables
   variables.merge({
-    timestamp: Math.floor(Date.now() / 1000),
+    [V.TIMESTAMP]: 0,
     locale: storage.get(S.LOCALE),
     user_id: storage.get(S.USER),
     sessions: storage.get(S.SESSIONS),
