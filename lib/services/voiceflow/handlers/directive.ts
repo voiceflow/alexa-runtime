@@ -32,7 +32,7 @@ export const DirectiveHandler: HandlerFactory<DirectiveBlock, typeof utilsObj> =
   handle: (block, context, variables) => {
     const { directive: unparsedDirective } = block;
 
-    const directiveString = utils.regexVariables(unparsedDirective, variables);
+    const directiveString = utils.regexVariables(unparsedDirective, variables.getState());
     try {
       const directive = JSON.parse(directiveString) as Directive;
       context.turn.produce((draft) => {
