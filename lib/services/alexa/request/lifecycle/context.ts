@@ -16,9 +16,9 @@ const context = async (input: HandlerInput): Promise<Context> => {
 
   let request: IntentRequest | EventRequest | undefined;
 
-  if (alexaRequest.type === Request.INTENT) {
+  if (alexaRequest?.type === Request.INTENT) {
     request = { type: RequestType.INTENT, payload: alexaRequest };
-  } else {
+  } else if (alexaRequest) {
     request = { type: RequestType.EVENT, payload: { event: alexaRequest.type, data: alexaRequest } };
   }
 
