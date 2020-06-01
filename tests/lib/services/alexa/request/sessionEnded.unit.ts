@@ -116,7 +116,7 @@ describe('session ended handler unit tests', () => {
             JSON.stringify(context.variables.getState()),
             JSON.stringify(context.stack.getState()),
           ],
-          ['error=%s, versionID=%s', input.requestEnvelope.request, context.versionID],
+          ['error=%s, versionID=%s', JSON.stringify(input.requestEnvelope.request), context.versionID],
         ]);
       });
     });

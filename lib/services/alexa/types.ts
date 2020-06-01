@@ -26,3 +26,10 @@ export interface Audio {
   background?: string;
   offset: number;
 }
+
+export enum Request {
+  INTENT = 'IntentRequest',
+  SKILL_EVENT_ROOT = 'AlexaSkillEvent.',
+  PERMISSION_ACCEPTED = 'AlexaSkillEvent.SkillPermissionAccepted',
+  PERMISSION_CHANGED = 'AlexaSkillEvent.SkillPermissionChanged',
+}
