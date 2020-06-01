@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import { F, S } from '@/lib/constants';
 
-import { regexVariables } from '../utils';
+import { regexVariables, sanitizeVariables } from '../utils';
 
 export type Speak = {
   audio?: string;
@@ -25,16 +25,7 @@ const SpeakHandler: HandlerFactory<Speak> = () => ({
       speak = _.sample(block.random_speak);
     }
 
-    // turn float variables to 2 decimal places
-    const sanitizedVars = Object.entries(variables.getState()).reduce<Record<string, any>>((acc, [key, value]) => {
-      if (_.isNumber(value) && !Number.isInteger(value)) {
-        acc[key] = value.toFixed(2);
-      } else {
-        acc[key] = value;
-      }
-
-      return acc;
-    }, {});
+    const sanitizedVars = sanitizeVariables(variables.getState());
 
     if (_.isString(speak)) {
       const output = regexVariables(speak, sanitizedVars);
