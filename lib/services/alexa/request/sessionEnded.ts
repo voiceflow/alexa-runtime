@@ -51,7 +51,7 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
 
       if (request.reason === RequestReason.ERROR) {
         // eslint-disable-next-line no-console
-        utils.log('error=%s, versionID=%s', request, context.versionID);
+        utils.log('error=%s, versionID=%s', JSON.stringify(request), context.versionID);
       }
 
       const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;

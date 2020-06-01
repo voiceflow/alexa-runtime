@@ -10,7 +10,7 @@ const ErrorHandlerGenerator = (metrics: MetricsType): ErrorHandlerType => ({
     // TODO: fully implement error handler
 
     // eslint-disable-next-line no-console
-    console.error(input.requestEnvelope.request.type, error);
+    console.error(input.requestEnvelope.request.type, JSON.stringify(error));
 
     const { versionID } = input.context as { versionID: string };
     metrics.error(versionID);

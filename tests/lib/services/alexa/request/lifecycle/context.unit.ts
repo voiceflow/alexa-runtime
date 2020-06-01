@@ -3,6 +3,7 @@ import sinon from 'sinon';
 
 import { S, T } from '@/lib/constants';
 import buildContext from '@/lib/services/alexa/request/lifecycle/context';
+import { Request } from '@/lib/services/alexa/types';
 import { RequestType } from '@/lib/services/voiceflow/types';
 
 describe('context lifecycle unit tests', () => {
@@ -36,7 +37,7 @@ describe('context lifecycle unit tests', () => {
     ]);
   });
 
-  it('no intent', async () => {
+  it('with event', async () => {
     const rawState = 'raw-state';
     const context = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('output') },
@@ -45,7 +46,7 @@ describe('context lifecycle unit tests', () => {
 
     const input = {
       attributesManager: { getPersistentAttributes: sinon.stub().returns(rawState) },
-      requestEnvelope: { request: {}, context: { System: { user: {} } } },
+      requestEnvelope: { request: { type: 'randomEvent', foo: 'bar' }, context: { System: { user: {} } } },
       context: {
         versionID: 'version-id',
         voiceflow: { createContext: sinon.stub().returns(context) },
@@ -53,7 +54,9 @@ describe('context lifecycle unit tests', () => {
     };
 
     expect(await buildContext(input as any)).to.eql(context);
-    expect(input.context.voiceflow.createContext.args).to.eql([[input.context.versionID, rawState, undefined]]);
+    expect(input.context.voiceflow.createContext.args).to.eql([
+      [input.context.versionID, rawState, { type: RequestType.EVENT, payload: { event: 'randomEvent', data: input.requestEnvelope.request } }],
+    ]);
   });
 
   it('with intent', async () => {
@@ -65,7 +68,7 @@ describe('context lifecycle unit tests', () => {
 
     const input = {
       attributesManager: { getPersistentAttributes: sinon.stub().returns(rawState) },
-      requestEnvelope: { request: { intent: 'intent' }, context: { System: { user: {} } } },
+      requestEnvelope: { request: { intent: 'intent', type: Request.INTENT }, context: { System: { user: {} } } },
       context: {
         versionID: 'version-id',
         voiceflow: { createContext: sinon.stub().returns(context) },

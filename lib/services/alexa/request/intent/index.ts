@@ -1,11 +1,8 @@
 import { HandlerInput, RequestHandler } from 'ask-sdk';
 
+import { Request } from '../../types';
 import { buildContext, buildResponse, initialize, update } from '../lifecycle';
 import behavior from './behavior';
-
-export enum Request {
-  INTENT = 'IntentRequest',
-}
 
 const utilsObj = {
   buildContext,

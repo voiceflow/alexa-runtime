@@ -22,12 +22,13 @@ describe('alexa manager unit tests', () => {
       };
       const utils = {
         handlers: {
+          EventHandler: 'EventHandler',
           LaunchHandler: 'LaunchHandler',
           IntentHandler: 'IntentHandler',
           SessionEndedHandler: 'SessionEndedHandler',
           PlaybackControllerHandler: 'PlaybackControllerHandler',
           AudioPlayerEventHandler: 'AudioPlayerEventHandler',
-          EventHandler: 'EventHandler',
+          PermissionHandler: 'PermissionHandler',
           PurchaseHandler: 'PurchaseHandler',
           APLUserEventHandler: 'APLUserEventHandler',
           CancelPurchaseHandler: 'CancelPurchaseHandler',
@@ -44,12 +45,13 @@ describe('alexa manager unit tests', () => {
       expect(utils.builder.standard.callCount).to.eql(1);
       expect(addRequestHandlers.args).to.eql([
         [
+          utils.handlers.EventHandler,
           utils.handlers.LaunchHandler,
           utils.handlers.IntentHandler,
           utils.handlers.SessionEndedHandler,
           utils.handlers.PlaybackControllerHandler,
           utils.handlers.AudioPlayerEventHandler,
-          utils.handlers.EventHandler,
+          utils.handlers.PermissionHandler,
           utils.handlers.PurchaseHandler,
           utils.handlers.APLUserEventHandler,
           utils.handlers.CancelPurchaseHandler,

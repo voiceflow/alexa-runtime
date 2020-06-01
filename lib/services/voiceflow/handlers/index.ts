@@ -16,6 +16,7 @@ import AccountLinkingHandler, { AccountLinkingResponseBuilder } from './accountL
 import CancelPaymentHandler, { CancelPaymentResponseBuilder } from './cancelPayment';
 import CaptureHandler from './capture';
 import CardHandler, { CardResponseBuilder } from './card';
+import DirectiveHandler, { DirectiveResponseBuilder } from './directive';
 import DisplayHandler, { DisplayResponseBuilder } from './display';
 import InteractionHandler from './interaction';
 import PaymentHandler, { PaymentResponseBuilder } from './payment';
@@ -35,11 +36,13 @@ export const responseHandlers = [
   CancelPaymentResponseBuilder,
   DisplayResponseBuilder,
   StreamResponseBuilder,
+  DirectiveResponseBuilder,
 ];
 
 export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HANDLER_ENDPOINT }: Config) => [
   ...StateHandlers(),
   SpeakHandler(),
+  DirectiveHandler(),
   InteractionHandler(),
   CaptureHandler(),
   AccountLinkingHandler(),
