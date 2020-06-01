@@ -18,6 +18,7 @@ describe('alexa manager unit tests', () => {
       const services = {
         dynamo: 'dynamo',
         metrics: 'metrics',
+        adapter: 'adapter',
       };
       const utils = {
         handlers: {
@@ -63,7 +64,7 @@ describe('alexa manager unit tests', () => {
       expect(create.callCount).to.eql(1);
 
       expect(utils.handlers.ErrorHandlerGenerator.args[0]).to.eql([services.metrics]);
-      expect(utils.interceptors.RequestInterceptorGenerator.args[0]).to.eql([services.metrics]);
+      expect(utils.interceptors.RequestInterceptorGenerator.args[0]).to.eql([services.metrics, services.adapter]);
     });
   });
 
@@ -77,10 +78,12 @@ describe('alexa manager unit tests', () => {
         };
 
         const metrics = { invocation: sinon.stub() };
+        const adapter = { context: sinon.stub() };
 
-        await RequestInterceptorGenerator(metrics as any).process(input as any);
+        await RequestInterceptorGenerator(metrics as any, adapter as any).process(input as any);
 
         expect(metrics.invocation.args).to.eql([[versionID]]);
+        expect(adapter.context.args).to.eql([[input]]);
       });
     });
   });

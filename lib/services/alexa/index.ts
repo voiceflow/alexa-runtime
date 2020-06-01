@@ -2,6 +2,7 @@ import { HandlerInput, SkillBuilders } from 'ask-sdk';
 
 import { MetricsType } from '@/lib/clients/metrics';
 
+import AdapterManager from '../adapter';
 import { Config, Services } from '../utils';
 import {
   APLUserEventHandler,
@@ -23,10 +24,12 @@ export const ResponseInterceptor = {
   },
 };
 
-export const RequestInterceptorGenerator = (metrics: MetricsType) => ({
+export const RequestInterceptorGenerator = (metrics: MetricsType, adapter: AdapterManager) => ({
   async process(handlerInput: HandlerInput) {
     const { versionID } = handlerInput.context as { versionID: string };
     metrics.invocation(versionID);
+
+    await adapter.context(handlerInput);
   },
 });
 
@@ -49,7 +52,7 @@ const utilsObj = {
 
 const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
   const { handlers, interceptors, builder } = utils;
-  const { metrics } = services;
+  const { metrics, adapter } = services;
 
   const skill = builder
     .standard()
@@ -65,7 +68,7 @@ const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
       handlers.CancelPurchaseHandler
     )
     .addErrorHandlers(handlers.ErrorHandlerGenerator(metrics))
-    .addRequestInterceptors(interceptors.RequestInterceptorGenerator(metrics))
+    .addRequestInterceptors(interceptors.RequestInterceptorGenerator(metrics, adapter))
     .addResponseInterceptors(interceptors.ResponseInterceptor)
     .withDynamoDbClient(services.dynamo)
     .withTableName(config.SESSIONS_DYNAMO_TABLE)
