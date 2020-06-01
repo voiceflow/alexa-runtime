@@ -1,7 +1,6 @@
 import { Command, Context, extractFrameCommand } from '@voiceflow/client';
 
 import { EventRequest, RequestType } from '@/lib/services/voiceflow/types';
-// import { mapSlots } from '@/lib/services/voiceflow/utils';
 
 export const _getEvent = (context: Context, extractFrame: typeof extractFrameCommand) => {
   const request = context.getRequest() as EventRequest;
@@ -29,7 +28,6 @@ export const handleEvent = (utils: typeof utilsObj) => async (context: Context):
   if (!event) return;
 
   const { index, command } = event;
-  // const request = context.getRequest() as EventRequest;
 
   context.stack.popTo(index + 1);
   context.stack.top().setBlockID(command.next);
