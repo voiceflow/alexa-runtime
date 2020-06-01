@@ -1,10 +1,11 @@
 import { HandlerFactory } from '@voiceflow/client';
 
-import { T } from '@/lib/constants';
+import { S, T } from '@/lib/constants';
 
 import { IntentRequest, Mapping, RequestType } from '../types';
 import { addRepromptIfExists, formatName, mapSlots } from '../utils';
 import CommandHandler from './command';
+import NoMatchHandler from './noMatch';
 
 type Choice = {
   intent: string;
@@ -14,9 +15,11 @@ type Choice = {
 
 type Interaction = {
   elseId?: string;
+  noMatches?: string[];
   nextIds: string[];
   reprompt?: string;
   interactions: Choice[];
+  randomize?: boolean;
 };
 
 const utilsObj = {
@@ -24,6 +27,7 @@ const utilsObj = {
   formatName,
   mapSlots,
   commandHandler: CommandHandler(),
+  noMatchHandler: NoMatchHandler(),
 };
 
 export const InteractionHandler: HandlerFactory<Interaction, typeof utilsObj> = (utils) => ({
@@ -36,6 +40,9 @@ export const InteractionHandler: HandlerFactory<Interaction, typeof utilsObj> = 
     if (request?.type !== RequestType.INTENT) {
       utils.addRepromptIfExists(block, context, variables);
       context.trace.choice(block.interactions.map(({ intent }) => ({ name: intent })));
+
+      // clean up no matches counter on new interaction
+      context.storage.delete(S.NO_MATCHES_COUNTER);
 
       // quit cycleStack without ending session by stopping on itself
       return block.blockID;
@@ -68,6 +75,14 @@ export const InteractionHandler: HandlerFactory<Interaction, typeof utilsObj> = 
 
     // request for this turn has been processed, delete request
     context.turn.delete(T.REQUEST);
+
+    // check for noMatches to handle
+    if (!nextId && utils.noMatchHandler.canHandle(block, context)) {
+      return utils.noMatchHandler.handle(block, context, variables);
+    }
+
+    // clean up no matches counter
+    context.storage.delete(S.NO_MATCHES_COUNTER);
 
     return (nextId || block.elseId) ?? null;
   },
