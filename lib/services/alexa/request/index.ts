@@ -1,5 +1,6 @@
 export { default as IntentHandler } from './intent';
 export { default as LaunchHandler } from './launch';
+export { default as CanFulfillmaneRequestHandler } from './canFulfillment';
 export { default as ErrorHandlerGenerator } from './error';
 export { default as PlaybackControllerHandler } from './playback';
 export { default as EventHandler } from './event';

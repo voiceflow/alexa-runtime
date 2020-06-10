@@ -16,6 +16,9 @@ export enum Storage {
   STREAM_FINISHED = 'streamFinished',
   STREAM_TEMP = 'streamTemp',
   NO_MATCHES_COUNTER = 'noMatchesCounter',
+  FULFILLMENT = 'fulfillment',
+  INTENTS = 'intents',
+  SLOTS = 'slots',
 }
 
 export enum Turn {

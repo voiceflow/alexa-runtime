@@ -1,9 +1,29 @@
+export interface Input {
+  text: string;
+  slots: string[];
+}
+
 export interface Slot {
+  key: string;
   name: string;
   type: {
     value: string;
   };
+  inputs: Input[];
 }
+
+export interface Intent {
+  key: string;
+  name: string;
+  slots: { id: string; required: boolean }[];
+  inputs: Input[];
+}
+
+export type SlotConfig = Record<string, any>;
+
+export type IntentConfig = Record<string, SlotConfig>;
+
+export type Fulfillment = Record<string, IntentConfig>;
 
 export interface SkillMetadata {
   creator_id: number;
@@ -16,6 +36,7 @@ export interface SkillMetadata {
   slots: Slot[];
   fulfillment: Record<string, any>;
   alexa_permissions: string[];
+  intents: Intent[];
 }
 
 export interface Audio {

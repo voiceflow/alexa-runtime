@@ -47,6 +47,9 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
   // set based on metadata
   storage.set(S.ALEXA_PERMISSIONS, meta.alexa_permissions ?? []);
   storage.set(S.REPEAT, meta.repeat ?? 100);
+  storage.set(S.FULFILLMENT, meta.fulfillment);
+  storage.set(S.INTENTS, meta.intents ?? []);
+  storage.set(S.SLOTS, meta.slots ?? []);
 
   // default global variables
   variables.merge({
