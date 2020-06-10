@@ -32,6 +32,7 @@ describe('alexa manager unit tests', () => {
           PurchaseHandler: 'PurchaseHandler',
           APLUserEventHandler: 'APLUserEventHandler',
           CancelPurchaseHandler: 'CancelPurchaseHandler',
+          CanFulfillmentRequestHandler: 'CanFulfillmentRequestHandler',
           ErrorHandlerGenerator: sinon.stub().returns('ErrorHandler'),
         },
         interceptors: { ResponseInterceptor: 'ResponseInterceptor', RequestInterceptorGenerator: sinon.stub().returns('RequestInterceptor') },
@@ -55,6 +56,7 @@ describe('alexa manager unit tests', () => {
           utils.handlers.PurchaseHandler,
           utils.handlers.APLUserEventHandler,
           utils.handlers.CancelPurchaseHandler,
+          utils.handlers.CanFulfillmentRequestHandler,
         ],
       ]);
       expect(addErrorHandlers.args).to.eql([[utils.handlers.ErrorHandlerGenerator()]]);

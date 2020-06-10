@@ -22,6 +22,12 @@ describe('initialize lifecycle unit tests', async () => {
         },
       };
 
+      const fulfillment = {
+        mockKey: {
+          slots_config: {},
+        },
+      };
+
       const metaObj = {
         repeat: 2,
         global: ['a', 'b', 'c'],
@@ -29,6 +35,9 @@ describe('initialize lifecycle unit tests', async () => {
         diagram: 'diagram-id',
         resume_prompt: null,
         alexa_permissions: 'alexa-permission',
+        fulfillment,
+        intents: [],
+        slots: [],
       };
 
       const topStorage = {
@@ -117,6 +126,9 @@ describe('initialize lifecycle unit tests', async () => {
       expect(context.storage.set.args[3]).to.eql([S.SUPPORTED_INTERFACES, input.requestEnvelope.context.System.device?.supportedInterfaces]);
       expect(context.storage.set.args[4]).to.eql([S.ALEXA_PERMISSIONS, metaObj.alexa_permissions]);
       expect(context.storage.set.args[5]).to.eql([S.REPEAT, metaObj.repeat]);
+      expect(context.storage.set.args[6]).to.eql([S.FULFILLMENT, metaObj.fulfillment]);
+      expect(context.storage.set.args[7]).to.eql([S.INTENTS, metaObj.intents]);
+      expect(context.storage.set.args[8]).to.eql([S.SLOTS, metaObj.slots]);
       expect(context.variables.merge.args[0]).to.eql([
         {
           timestamp: 0,
@@ -292,7 +304,7 @@ describe('initialize lifecycle unit tests', async () => {
 
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
-          expect(context.storage.set.args[5]).to.eql([S.OUTPUT, '']);
+          expect(context.storage.set.args[8]).to.eql([S.OUTPUT, '']);
           expect(context.trace.speak.args).to.eql([['']]);
         });
 
@@ -310,7 +322,7 @@ describe('initialize lifecycle unit tests', async () => {
 
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
-          expect(context.storage.set.args[5]).to.eql([S.OUTPUT, lastSpeak]);
+          expect(context.storage.set.args[8]).to.eql([S.OUTPUT, lastSpeak]);
           expect(context.trace.speak.args).to.eql([[lastSpeak]]);
         });
       });
