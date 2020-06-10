@@ -2,7 +2,7 @@ import { HandlerInput, RequestHandler } from 'ask-sdk';
 import { canfulfill } from 'ask-sdk-model';
 
 import { Fulfillment } from '../../types';
-import { buildContext, buildResponse, initialize, update } from '../lifecycle';
+import { buildContext, initialize } from '../lifecycle';
 import getIntentAndSlotsConfig, { checkSupportedSlots } from './configs';
 
 export enum Request {
@@ -17,8 +17,6 @@ export enum CanFulfillType {
 const utilsObj = {
   buildContext,
   initialize,
-  update,
-  buildResponse,
 };
 
 export const CanFulfillmaneRequestHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
