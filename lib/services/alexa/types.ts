@@ -29,7 +29,10 @@ export interface Audio {
 
 export enum Request {
   INTENT = 'IntentRequest',
+  LAUNCH = 'LaunchRequest',
+  CAN_FULFILL_INTENT = 'CanFulfillIntentRequest',
   SKILL_EVENT_ROOT = 'AlexaSkillEvent.',
   PERMISSION_ACCEPTED = 'AlexaSkillEvent.SkillPermissionAccepted',
   PERMISSION_CHANGED = 'AlexaSkillEvent.SkillPermissionChanged',
+  APL_USER_EVENT = 'Alexa.Presentation.APL.UserEvent',
 }

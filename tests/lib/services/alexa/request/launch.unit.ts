@@ -1,17 +1,18 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import LaunchHandler, { LaunchHandlerGenerator, Request } from '@/lib/services/alexa/request/launch';
+import LaunchHandler, { LaunchHandlerGenerator } from '@/lib/services/alexa/request/launch';
+import { Request } from '@/lib/services/alexa/types';
 
 describe('launch handler unit tests', () => {
   describe('canHandle', () => {
     it('false', () => {
       expect(LaunchHandler.canHandle({ requestEnvelope: { request: { type: 'random' } } } as any)).to.eql(false);
+      expect(LaunchHandler.canHandle({ requestEnvelope: { request: { type: Request.CAN_FULFILL_INTENT } } } as any)).to.eql(false);
     });
 
     it('true', () => {
       expect(LaunchHandler.canHandle({ requestEnvelope: { request: { type: Request.LAUNCH } } } as any)).to.eql(true);
-      expect(LaunchHandler.canHandle({ requestEnvelope: { request: { type: Request.CAN_FULFILL_INTENT } } } as any)).to.eql(true);
     });
   });
 

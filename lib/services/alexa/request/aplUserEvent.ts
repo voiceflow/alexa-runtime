@@ -5,12 +5,9 @@ import { S } from '@/lib/constants';
 import { DOCUMENT_VIDEO_TYPE, ENDED_EVENT_PREFIX } from '@/lib/services/voiceflow/handlers/display/constants';
 import { DisplayInfo } from '@/lib/services/voiceflow/handlers/display/types';
 
+import { Request } from '../types';
 import { updateContext } from '../utils';
 import IntentHandler from './intent';
-
-export enum Request {
-  APL_USER_EVENT = 'Alexa.Presentation.APL.UserEvent',
-}
 
 export enum SourceHandler {
   END = 'End',

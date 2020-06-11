@@ -18,7 +18,7 @@
     "@voiceflow/logger": "^1.1.0",
     "@voiceflow/secrets-provider": "^1.6.2",
     "@voiceflow/verror": "^1.1.0",
-    "alexa-verifier-middleware": "^1.0.2",
+    "alexa-verifier": "^2.0.1",
     "ask-sdk": "^2.7.0",
     "ask-sdk-model": "^1.25.1",
     "aws-sdk": "^2.586.0",

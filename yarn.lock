@@ -1148,13 +1148,6 @@ alce@1.0.0:
     esprima "~1.0.4"
     estraverse "~1.3.0"
 
-alexa-verifier-middleware@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/alexa-verifier-middleware/-/alexa-verifier-middleware-1.0.2.tgz#395858b8b78297a208f4a03f698edcca6abb7b26"
-  integrity sha512-ytRxmTLFnVq504U00AuG0BkpHLXGTFKwau1Nvs/2/ceztouzuCi/XOAFFjOL3R53GmCtNp1vdXcOK4mIUq00eA==
-  dependencies:
-    alexa-verifier "^2.0.1"
-
 alexa-verifier@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/alexa-verifier/-/alexa-verifier-2.0.1.tgz#90bf4e08b5c8aa9073e211e9cd1dbc43acc69b83"

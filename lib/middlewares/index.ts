@@ -18,9 +18,10 @@ export interface MiddlewareClass<T = MiddlewareGroup> {
 const buildMiddleware = (services: FullServiceMap, config: Config) => {
   const middlewares = {} as MiddlewareMap;
 
-  middlewares.alexa = new Alexa(services, config);
   // everything before this will be route-wrapped
   routeWrapper(middlewares);
+
+  middlewares.alexa = new Alexa(services, config);
 
   return middlewares;
 };
