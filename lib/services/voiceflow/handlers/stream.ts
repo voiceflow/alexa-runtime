@@ -102,8 +102,8 @@ export const StreamResponseBuilderGenerator = (u: typeof responseUtils): Respons
     });
   }
 
-  const exitConditions = [StreamAction.START, StreamAction.PAUSE, StreamAction.RESUME, StreamAction.NOEFFECT, StreamAction.END];
-  if (streamPlay && exitConditions.includes(streamPlay.action)) {
+  const exitConditions = [StreamAction.START, StreamAction.PAUSE, StreamAction.RESUME, StreamAction.NOEFFECT];
+  if (streamPlay && (exitConditions.includes(streamPlay.action) || context.hasEnded())) {
     builder.withShouldEndSession(true);
   }
 
