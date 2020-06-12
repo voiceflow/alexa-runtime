@@ -103,7 +103,7 @@ export const StreamResponseBuilderGenerator = (u: typeof responseUtils): Respons
   }
 
   const exitConditions = [StreamAction.START, StreamAction.PAUSE, StreamAction.RESUME, StreamAction.NOEFFECT];
-  if (streamPlay && (exitConditions.includes(streamPlay.action) || context.hasEnded())) {
+  if (streamPlay && exitConditions.includes(streamPlay.action)) {
     builder.withShouldEndSession(true);
   }
 

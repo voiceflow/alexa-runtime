@@ -94,7 +94,7 @@ export const StreamStateHandler: HandlerFactory<any, typeof utilsObj> = (utils) 
       });
     } else if (intentName === IntentName.CANCEL) {
       context.storage.produce((draft) => {
-        draft[S.STREAM_PLAY].action = StreamAction.END;
+        draft[S.STREAM_PLAY].action = StreamAction.PAUSE;
       });
       context.end();
     } else if (utils.commandHandler.canHandle(context)) {
