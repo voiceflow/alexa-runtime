@@ -168,7 +168,7 @@ describe('stream state handler unit tests', () => {
       const fn = context.storage.produce.args[0][0];
       const draft = { [S.STREAM_PLAY]: { action: 'random' } };
       fn(draft);
-      expect(draft[S.STREAM_PLAY]).to.eql({ action: StreamAction.END });
+      expect(draft[S.STREAM_PLAY]).to.eql({ action: StreamAction.PAUSE });
       expect(context.end.callCount).to.eql(1);
     });
 
