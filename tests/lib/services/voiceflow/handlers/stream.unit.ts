@@ -259,10 +259,28 @@ describe('stream handler unit tests', () => {
         const context = {
           storage: { delete: sinon.stub(), get: sinon.stub().returns(streamPlay), produce: sinon.stub() },
           turn: { get: sinon.stub().returns(input) },
+          hasEnded: sinon.stub().returns(false),
         };
         const builder = { withShouldEndSession: sinon.stub(), addAudioPlayerStopDirective: sinon.stub() };
         StreamResponseBuilder(context as any, builder as any);
 
+        expect(context.storage.delete.args).to.eql([[S.STREAM_PAUSE], [S.STREAM_PLAY]]);
+        expect(builder.addAudioPlayerStopDirective.callCount).to.eql(1);
+      });
+
+      it('stream play action END but context ended', () => {
+        const streamPlay = { action: StreamAction.END };
+        const offsetInMilliseconds = 100;
+        const input = { requestEnvelope: { context: { AudioPlayer: { offsetInMilliseconds } } } };
+        const context = {
+          storage: { delete: sinon.stub(), get: sinon.stub().returns(streamPlay), produce: sinon.stub() },
+          turn: { get: sinon.stub().returns(input) },
+          hasEnded: sinon.stub().returns(true),
+        };
+        const builder = { withShouldEndSession: sinon.stub(), addAudioPlayerStopDirective: sinon.stub() };
+        StreamResponseBuilder(context as any, builder as any);
+
+        expect(builder.withShouldEndSession.args).to.eql([[true]]);
         expect(context.storage.delete.args).to.eql([[S.STREAM_PAUSE], [S.STREAM_PLAY]]);
         expect(builder.addAudioPlayerStopDirective.callCount).to.eql(1);
       });
