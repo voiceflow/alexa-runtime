@@ -102,7 +102,7 @@ export const StreamResponseBuilderGenerator = (u: typeof responseUtils): Respons
     });
   }
 
-  const exitConditions = [StreamAction.START, StreamAction.PAUSE, StreamAction.RESUME, StreamAction.NOEFFECT];
+  const exitConditions = [StreamAction.START, StreamAction.PAUSE, StreamAction.RESUME, StreamAction.NOEFFECT, StreamAction.END];
   if (streamPlay && exitConditions.includes(streamPlay.action)) {
     builder.withShouldEndSession(true);
   }
