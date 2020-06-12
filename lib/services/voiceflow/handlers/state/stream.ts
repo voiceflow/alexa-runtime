@@ -33,7 +33,7 @@ const utilsObj = {
 
 export const StreamStateHandler: HandlerFactory<any, typeof utilsObj> = (utils) => ({
   canHandle: (_, context) => {
-    return !!(context.storage.get(S.STREAM_PLAY) && context.storage.get(S.STREAM_PLAY).action !== StreamAction.END);
+    return context.storage.get(S.STREAM_PLAY) && context.storage.get(S.STREAM_PLAY).action !== StreamAction.END;
   },
   handle: (_, context, variables) => {
     const request = context.turn.get(T.REQUEST) as IntentRequest;
