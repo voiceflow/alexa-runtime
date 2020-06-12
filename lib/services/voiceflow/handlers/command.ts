@@ -1,4 +1,5 @@
 import { Command, Context, extractFrameCommand, Frame, Store } from '@voiceflow/client';
+import _ from 'lodash';
 
 import { F, T } from '@/lib/constants';
 
@@ -11,7 +12,7 @@ export const getCommand = (context: Context, extractFrame: typeof extractFrameCo
   if (request?.type !== RequestType.INTENT) return null;
 
   const { intent } = request.payload;
-  const intentName = intent.name;
+  let intentName = intent.name;
 
   // don't act on a catchall intent
   if (intentName === IntentName.VOICEFLOW) return null;
@@ -24,7 +25,8 @@ export const getCommand = (context: Context, extractFrame: typeof extractFrameCo
     const found = context.stack.getFrames().some((frame) => frame.getCommands().some(matcher));
 
     if (!found) {
-      request.payload.intent.name = IntentName.STOP;
+      intentName = IntentName.STOP;
+      _.set(request, 'payload.intent.name', intentName);
       context.turn.set(T.REQUEST, request);
     }
   }
