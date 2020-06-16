@@ -1,7 +1,7 @@
 import { Context, Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
-import { F, S, V } from '@/lib/constants';
+import { F, S, T, V } from '@/lib/constants';
 import { createResumeFrame, RESUME_DIAGRAM_ID } from '@/lib/services/voiceflow/diagrams/resume';
 import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 
@@ -87,6 +87,9 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
     // start the stack with just the root flow
     stack.flush();
     stack.push(new utils.client.Frame({ diagramID: meta.diagram }));
+
+    // we've created a brand new stack
+    context.turn.set(T.NEW_STACK, true);
   } else if (meta.resume_prompt) {
     // resume prompt flow - use command flow logic
     stack.top().storage.set(F.CALLED_COMMAND, true);

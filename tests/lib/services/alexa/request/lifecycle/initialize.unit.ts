@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { F, S } from '@/lib/constants';
+import { F, S, T } from '@/lib/constants';
 import { initializeGenerator, VAR_VF } from '@/lib/services/alexa/request/lifecycle/initialize';
 import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 
@@ -58,6 +58,9 @@ describe('initialize lifecycle unit tests', async () => {
           set: sinon.stub(),
           delete: sinon.stub(),
           produce: sinon.stub(),
+        },
+        turn: {
+          set: sinon.stub(),
         },
         variables: {
           get: sinon.stub(),
@@ -195,6 +198,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(context.stack.flush.callCount).to.eql(1);
           expect(utils.client.Frame.args[0]).to.eql([{ diagramID: metaObj.diagram }]);
           expect(context.stack.push.callCount).to.eql(1);
+          expect(context.turn.set.args[0]).to.eql([T.NEW_STACK, true]);
         });
 
         it('meta restart', async () => {
