@@ -29,6 +29,10 @@ describe('initialize lifecycle unit tests', async () => {
         diagram: 'diagram-id',
         resume_prompt: null,
         alexa_permissions: 'alexa-permission',
+        slots: [
+          { name: 'd', type: 'x' },
+          { name: 'e', type: 'y' },
+        ],
       };
 
       const topStorage = {
