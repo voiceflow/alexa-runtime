@@ -30,6 +30,7 @@ export enum Turn {
   HANDLER_INPUT = 'handlerInput',
   TRACE = 'trace',
   DIRECTIVES = 'directives',
+  NEW_STACK = 'newStack',
 }
 
 export enum Frame {
