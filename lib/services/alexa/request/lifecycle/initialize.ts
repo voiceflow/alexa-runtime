@@ -66,8 +66,13 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
     _system: input.requestEnvelope.context.System,
   });
 
-  // initialize all the global variables
+  // initialize all the global variables, as well as slots as global variables
   utils.client.Store.initialize(variables, meta.global, 0);
+  utils.client.Store.initialize(
+    variables,
+    meta.slots.map((slot) => slot.name),
+    0
+  );
 
   // end any existing stream
   if (storage.get(S.STREAM_PLAY)) {
