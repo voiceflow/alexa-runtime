@@ -16,6 +16,7 @@ export const NoMatchHandler = () => ({
     return Array.isArray(block.noMatches) && block.noMatches.length > (context.storage.get(S.NO_MATCHES_COUNTER) ?? 0);
   },
   handle: (block: Block, context: Context, variables: Store) => {
+    console.log('in no match handler');
     context.storage.produce((draft) => {
       draft[S.NO_MATCHES_COUNTER] = draft[S.NO_MATCHES_COUNTER] ? draft[S.NO_MATCHES_COUNTER] + 1 : 1;
     });

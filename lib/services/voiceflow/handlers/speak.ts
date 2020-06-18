@@ -15,9 +15,12 @@ export type Speak = {
 
 const SpeakHandler: HandlerFactory<Speak> = () => ({
   canHandle: (block) => {
+    console.log('speak handler - canHandle', block);
     return !!block.random_speak || !!block.audio || (_.isString(block.prompt) && block.prompt !== 'true') || !!block.speak;
   },
   handle: (block, context, variables) => {
+    console.log('speak handler - handle', block);
+
     let { speak } = block;
 
     // Pick a random part to speak

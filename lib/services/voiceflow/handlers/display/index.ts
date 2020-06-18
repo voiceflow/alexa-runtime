@@ -32,9 +32,12 @@ const utilsObj = {
 
 export const DisplayHandler: HandlerFactory<Display, typeof utilsObj> = (utils) => ({
   canHandle: (block) => {
+    console.log('display handler - canHandle', block);
+
     return !!block.display_id;
   },
   handle: async (block, context) => {
+    console.log('in display intent handle');
     const supportedInterfaces: SupportedInterfaces | undefined = context.storage.get(S.SUPPORTED_INTERFACES);
     const nextId = block.nextId ?? null;
 
@@ -78,8 +81,12 @@ export const DisplayHandler: HandlerFactory<Display, typeof utilsObj> = (utils) 
 
     const hasOnEndEvent = onEndEvents.some((event) => event.type === EVENT_SEND_EVENT && event.arguments?.includes?.(ENDED_EVENT_PREFIX));
 
+    console.log('hasOnEndEvent', hasOnEndEvent);
+    console.log('Block', block);
     if (hasOnEndEvent) {
       context.stack.top().setBlockID(block.nextId ?? null);
+      console.log('context stack', context.stack);
+      console.log('context end', context.end);
       context.end();
 
       return null;

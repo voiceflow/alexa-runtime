@@ -15,11 +15,15 @@ const utilsObj = {
 export const IntentHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
+    console.log('intent handler - canHandle', type);
 
     return type === Request.INTENT;
   },
   async handle(input: HandlerInput) {
     const context = await utils.buildContext(input);
+
+    console.log('in intent handler');
+    // console.log('input', input);
 
     if (context.stack.isEmpty()) {
       await utils.initialize(context, input);

@@ -22,10 +22,12 @@ const utilsObj = { updateContext, IntentHandler };
 export const APLUserEventHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
   canHandle(input: HandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
+    console.log('apl user event handler', type);
 
     return type === Request.APL_USER_EVENT;
   },
   async handle(input: HandlerInput) {
+    console.log('in apl handler');
     const request = input.requestEnvelope.request as interfaces.alexa.presentation.apl.UserEvent;
 
     let hasDisplayInfo = false;
@@ -55,7 +57,11 @@ export const APLUserEventHandlerGenerator = (utils: typeof utilsObj): RequestHan
       });
     });
 
+    console.log('hasDisplayInfo', hasDisplayInfo);
+    console.log('request', request);
+
     if (hasDisplayInfo && request.arguments?.includes?.(ENDED_EVENT_PREFIX)) {
+      console.log('sending to intentHandler');
       return utils.IntentHandler.handle(input);
     }
 
