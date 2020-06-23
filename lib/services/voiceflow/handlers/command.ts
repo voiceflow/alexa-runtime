@@ -1,7 +1,7 @@
 import { Command, Context, extractFrameCommand, Frame, Store } from '@voiceflow/client';
 import _ from 'lodash';
 
-import { F, T } from '@/lib/constants';
+import { F, S, T } from '@/lib/constants';
 
 import { IntentName, IntentRequest, Mapping, RequestType } from '../types';
 import { mapSlots } from '../utils';
@@ -46,14 +46,34 @@ const utilsObj = {
   Frame,
 };
 
+export const RepeatHandler = {
+  canHandle: (context: Context): boolean => {
+    const request = context.turn.get(T.REQUEST) as IntentRequest;
+    return request?.payload.intent.name === IntentName.REPEAT;
+  },
+  handle: (context: Context) => {
+    const top = context.stack.top();
+
+    context.storage.produce((draft) => {
+      draft[S.OUTPUT] += top.storage.get(F.SPEAK) || '';
+    });
+
+    return top.getBlockID() || null;
+  },
+};
+
 /**
  * The Command Handler is meant to be used inside other handlers, and should never handle blocks directly
  */
 export const CommandHandler = (utils: typeof utilsObj) => ({
   canHandle: (context: Context): boolean => {
-    return !!utils.getCommand(context);
+    return !!utils.getCommand(context) || RepeatHandler.canHandle(context);
   },
   handle: (context: Context, variables: Store): string | null => {
+    if (RepeatHandler.canHandle(context)) {
+      return RepeatHandler.handle(context);
+    }
+
     const res = utils.getCommand(context);
     if (!res) return null;
 
