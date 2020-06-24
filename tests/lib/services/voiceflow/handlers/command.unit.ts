@@ -5,7 +5,7 @@ import { F, T } from '@/lib/constants';
 import DefaultCommandHandler, { CommandHandler, getCommand } from '@/lib/services/voiceflow/handlers/command';
 import { IntentName, RequestType } from '@/lib/services/voiceflow/types';
 
-describe('capture handler unit tests', async () => {
+describe('command handler unit tests', async () => {
   afterEach(() => sinon.restore());
 
   describe('getCommand', () => {
@@ -236,7 +236,7 @@ describe('capture handler unit tests', async () => {
 
   describe('generation', () => {
     it('works correctly', () => {
-      const context = { turn: { get: sinon.stub().returns(null) } };
+      const context = { turn: { get: sinon.stub().returns(null) }, storage: { get: sinon.stub().returns(null) } };
       expect(DefaultCommandHandler().canHandle(context as any)).to.eql(false);
     });
   });

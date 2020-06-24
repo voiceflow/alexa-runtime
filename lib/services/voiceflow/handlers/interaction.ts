@@ -6,6 +6,7 @@ import { IntentRequest, Mapping, RequestType } from '../types';
 import { addRepromptIfExists, formatName, mapSlots } from '../utils';
 import CommandHandler from './command';
 import NoMatchHandler from './noMatch';
+import RepeatHandler from './repeat';
 
 type Choice = {
   intent: string;
@@ -27,6 +28,7 @@ const utilsObj = {
   formatName,
   mapSlots,
   commandHandler: CommandHandler(),
+  repeatHandler: RepeatHandler(),
   noMatchHandler: NoMatchHandler(),
 };
 
@@ -69,8 +71,13 @@ export const InteractionHandler: HandlerFactory<Interaction, typeof utilsObj> = 
     }
 
     // check if there is a command in the stack that fulfills intent
-    if (!nextId && utils.commandHandler.canHandle(context)) {
-      return utils.commandHandler.handle(context, variables);
+    if (!nextId) {
+      if (utils.commandHandler.canHandle(context)) {
+        return utils.commandHandler.handle(context, variables);
+      }
+      if (utils.repeatHandler.canHandle(context)) {
+        return utils.repeatHandler.handle(context);
+      }
     }
 
     // request for this turn has been processed, delete request
