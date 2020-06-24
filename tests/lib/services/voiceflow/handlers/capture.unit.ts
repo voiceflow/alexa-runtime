@@ -21,6 +21,8 @@ describe('capture handler unit tests', async () => {
   describe('handle', () => {
     it('no request', () => {
       const utils = {
+        commandHandler: { canHandle: () => false },
+        repeatHandler: { canHandle: () => false },
         addRepromptIfExists: sinon.stub(),
       };
 
@@ -36,6 +38,8 @@ describe('capture handler unit tests', async () => {
 
     it('request type not intent', () => {
       const utils = {
+        commandHandler: { canHandle: () => false },
+        repeatHandler: { canHandle: () => false },
         addRepromptIfExists: sinon.stub(),
       };
 
@@ -77,6 +81,7 @@ describe('capture handler unit tests', async () => {
             commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
+            repeatHandler: { canHandle: () => false },
           };
 
           const captureHandler = CaptureHandler(utils as any);
@@ -95,6 +100,7 @@ describe('capture handler unit tests', async () => {
             commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
+            repeatHandler: { canHandle: sinon.stub().returns(false) },
           };
 
           const captureHandler = CaptureHandler(utils as any);
@@ -115,6 +121,7 @@ describe('capture handler unit tests', async () => {
             commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
+            repeatHandler: { canHandle: sinon.stub().returns(false) },
             wordsToNumbers: sinon.stub().returns(word),
           };
 
@@ -139,6 +146,7 @@ describe('capture handler unit tests', async () => {
             commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
+            repeatHandler: { canHandle: sinon.stub().returns(false) },
             wordsToNumbers: sinon.stub().returns(word),
           };
 

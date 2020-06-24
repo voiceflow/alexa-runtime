@@ -82,6 +82,9 @@ describe('interaction handler unit tests', async () => {
             commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
+            repeatHandler: {
+              canHandle: sinon.stub().returns(false),
+            },
             noMatchHandler: {
               canHandle: sinon.stub().returns(false),
             },
@@ -103,6 +106,9 @@ describe('interaction handler unit tests', async () => {
           const utils = {
             formatName: sinon.stub().returns(false),
             commandHandler: {
+              canHandle: sinon.stub().returns(false),
+            },
+            repeatHandler: {
               canHandle: sinon.stub().returns(false),
             },
             noMatchHandler: {
@@ -127,6 +133,9 @@ describe('interaction handler unit tests', async () => {
           const utils = {
             formatName: sinon.stub().returns(false),
             commandHandler: {
+              canHandle: sinon.stub().returns(false),
+            },
+            repeatHandler: {
               canHandle: sinon.stub().returns(false),
             },
             noMatchHandler: {
@@ -161,6 +170,9 @@ describe('interaction handler unit tests', async () => {
             commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
+            repeatHandler: {
+              canHandle: sinon.stub().returns(false),
+            },
             noMatchHandler: {
               canHandle: sinon.stub().returns(false),
             },
@@ -187,6 +199,9 @@ describe('interaction handler unit tests', async () => {
           const utils = {
             formatName: sinon.stub().returns(intentName),
             commandHandler: {
+              canHandle: sinon.stub().returns(false),
+            },
+            repeatHandler: {
               canHandle: sinon.stub().returns(false),
             },
             noMatchHandler: {
@@ -221,6 +236,9 @@ describe('interaction handler unit tests', async () => {
           const utils = {
             formatName: sinon.stub().returns(intentName),
             commandHandler: {
+              canHandle: sinon.stub().returns(false),
+            },
+            repeatHandler: {
               canHandle: sinon.stub().returns(false),
             },
             noMatchHandler: {
