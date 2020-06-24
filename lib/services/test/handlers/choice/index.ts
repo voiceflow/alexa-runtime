@@ -2,6 +2,7 @@ import { HandlerFactory } from '@voiceflow/client';
 
 import { T } from '@/lib/constants';
 import CommandHandler from '@/lib/services/voiceflow/handlers/command';
+import RepeatHandler from '@/lib/services/voiceflow/handlers/repeat';
 import { IntentRequest, RequestType } from '@/lib/services/voiceflow/types';
 import { addRepromptIfExists } from '@/lib/services/voiceflow/utils';
 
@@ -19,6 +20,7 @@ const utilsObj = {
   addRepromptIfExists,
   getBestScore,
   commandHandler: CommandHandler(),
+  repeatHandler: RepeatHandler(),
 };
 
 // THIS HANDLER IS USED PURELY FOR THE TESTING TOOL, NOT FOR ALEXA
@@ -60,8 +62,13 @@ export const ChoiceHandler: HandlerFactory<Choice, typeof utilsObj> = (utils) =>
     }
 
     // check if there is a command in the stack that fulfills intent
-    if (!nextId && utils.commandHandler.canHandle(context)) {
-      return utils.commandHandler.handle(context, variables);
+    if (!nextId) {
+      if (utils.commandHandler.canHandle(context)) {
+        return utils.commandHandler.handle(context, variables);
+      }
+      if (utils.repeatHandler.canHandle(context)) {
+        return utils.repeatHandler.handle(context);
+      }
     }
 
     // request for this turn has been processed, delete request

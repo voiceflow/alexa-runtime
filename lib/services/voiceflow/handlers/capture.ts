@@ -7,6 +7,7 @@ import { T } from '@/lib/constants';
 import { IntentRequest, RequestType } from '../types';
 import { addRepromptIfExists } from '../utils';
 import CommandHandler from './command';
+import RepeatHandler from './repeat';
 
 export type Capture = {
   nextId?: string;
@@ -18,6 +19,7 @@ const utilsObj = {
   wordsToNumbers,
   addRepromptIfExists,
   commandHandler: CommandHandler(),
+  repeatHandler: RepeatHandler(),
 };
 
 export const CaptureHandler: HandlerFactory<Capture, typeof utilsObj> = (utils) => ({
@@ -38,6 +40,9 @@ export const CaptureHandler: HandlerFactory<Capture, typeof utilsObj> = (utils) 
     // check if there is a command in the stack that fulfills intent
     if (utils.commandHandler.canHandle(context)) {
       return utils.commandHandler.handle(context, variables);
+    }
+    if (utils.repeatHandler.canHandle(context)) {
+      return utils.repeatHandler.handle(context);
     }
 
     // "input" is only passed through the prototype tool

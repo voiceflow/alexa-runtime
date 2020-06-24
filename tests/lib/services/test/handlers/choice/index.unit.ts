@@ -64,6 +64,9 @@ describe('choice handler unit tests', async () => {
           commandHandler: {
             canHandle: sinon.stub().returns(false),
           },
+          repeatHandler: {
+            canHandle: sinon.stub().returns(false),
+          },
         };
         const choiceHandler = ChoiceHandler(utils as any);
 
@@ -174,6 +177,9 @@ describe('choice handler unit tests', async () => {
               commandHandler: {
                 canHandle: sinon.stub().returns(false),
               },
+              repeatHandler: {
+                canHandle: sinon.stub().returns(false),
+              },
             };
             const choiceHandler = ChoiceHandler(utils as any);
 
@@ -200,6 +206,9 @@ describe('choice handler unit tests', async () => {
             const utils = {
               getBestScore: sinon.stub().returns(null),
               commandHandler: {
+                canHandle: sinon.stub().returns(false),
+              },
+              repeatHandler: {
                 canHandle: sinon.stub().returns(false),
               },
             };
