@@ -878,10 +878,10 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
-"@voiceflow/backend-utils@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/backend-utils/-/backend-utils-2.0.0.tgz#77a4eb8188b42a067abe4288807770d697d5b44d"
-  integrity sha512-Ohkb/+MMioo51sI+IDRevlt0jmN08+LS9rLRa37hPA6QSkkWLcvJZD5J898l+sdWQmQX9Tgvh3+PbptOD+Kl0A==
+"@voiceflow/backend-utils@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/backend-utils/-/backend-utils-2.1.0.tgz#40e6ed923f7fea90b455d46ac1a8e3b684346c0d"
+  integrity sha512-BtL9Ct/NIM670zSFbDeiJSgFCiKri5fZfcAI3JWV2gamKTMkEJtuD9EUdegzICFYd04XQoDANqlv30hYy4MzfQ==
   dependencies:
     "@voiceflow/logger" "^1.1.0"
     "@voiceflow/verror" "^1.1.0"

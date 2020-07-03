@@ -2,6 +2,7 @@ declare module '@voiceflow/backend-utils' {
   // eslint-disable-next-line import/no-extraneous-dependencies
   import { HttpStatus } from 'http-status';
   import { Request, Response, NextFunction } from 'express';
+  import * as ExpressValidator from 'express-validator';
 
   type DataPromise = [] & {
     callback?: boolean;
@@ -18,4 +19,6 @@ declare module '@voiceflow/backend-utils' {
 
     validationResult(req: Record<string, any>, res?: Record<string, any>, next?: Function): void;
   }
+
+  export const Validator: typeof ExpressValidator;
 }
