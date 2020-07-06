@@ -1,9 +1,11 @@
-import { param } from 'express-validator';
+import { Validator } from '@voiceflow/backend-utils';
 
 import { Request } from '@/types';
 
 import { validate } from '../utils';
 import { AbstractController } from './utils';
+
+const { param } = Validator;
 
 class AlexaController extends AbstractController {
   static VALIDATIONS = {
