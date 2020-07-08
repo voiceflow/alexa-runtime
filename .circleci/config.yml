@@ -108,7 +108,7 @@ workflows:
                 - /env-.*/
 
   # Master (production)
-  build-deploy-app:
+  test-and-release-app:
     jobs:
       - test:
           context: dev-test
