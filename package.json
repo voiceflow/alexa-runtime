@@ -133,9 +133,6 @@
     ]
   },
   "prettier": "@voiceflow/prettier-config",
-  "release": {
-    "branch": "master"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/voiceflow/alexa.git"

@@ -1,8 +1,17 @@
 version: 2.1
 
+# Reusable YAML chunks
+defaults:
+  prod_deploy_filters: &prod_deploy_filters
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /^v[0-9]*(\.[0-9]*)*$/
+
 orbs:
   codecov: codecov/codecov@1.0.2
-  vfcommon: voiceflow/common@0.0.2
+  vfcommon: voiceflow/common@0.0.7
 
 commands:
   clone_s3_assets:
@@ -50,6 +59,15 @@ jobs:
           image_repo: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
           namespace: "voiceflow-v1"
           target: "deployment/alexa"
+
+  deploy-on-tag:
+    executor: vfcommon/build-executor
+    steps:
+      - vfcommon/deploy_image:
+          image_repo: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
+          namespace: "voiceflow-v1"
+          target: "deployment/alexa"
+          tagged: true
 
   build-deploy-dev-env:
     executor: vfcommon/build-executor
@@ -99,21 +117,6 @@ workflows:
               ignore:
                 - /env-.*/
                 - staging
-      - build-push-image:
-          context: dev-test
-          filters:
-            branches:
-              only:
-                - master
-      - deploy-image:
-          context: dev-test
-          requires:
-            - test
-            - build-push-image
-          filters:
-            branches:
-              only:
-                - master
       - vfcommon/release:
           context: dev-test
           requires:
@@ -121,3 +124,14 @@ workflows:
           filters:
             branches:
               only: master
+
+  deploy-app:
+    jobs:
+      - build-push-image:
+          <<: *prod_deploy_filters
+          context: dev-test
+      - deploy-on-tag:
+          <<: *prod_deploy_filters
+          context: dev-test
+          requires:
+            - build-push-image
