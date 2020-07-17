@@ -3,7 +3,10 @@ import Logger from '@voiceflow/logger';
 import { Level } from 'pino'; // We are only using the types here
 
 const infoLevel: Level = 'info';
-const options = ['local', 'test'].includes(process.env.NODE_ENV || '') ? { level: infoLevel, stackTrace: true, pretty: true } : {};
+const warnLevel: Level = 'warn';
+const options = ['local', 'test'].includes(process.env.NODE_ENV || '')
+  ? { level: infoLevel, stackTrace: true, pretty: true }
+  : { level: warnLevel, stackTrace: true, pretty: false };
 
 const log = new Logger(options);
 
