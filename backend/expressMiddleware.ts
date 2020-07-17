@@ -42,7 +42,7 @@ class ExpressMiddleware {
     app.enable('trust proxy');
     app.disable('x-powered-by');
 
-    app.use(log.logMiddlware());
+    app.use(log.logMiddleware());
 
     app.use(timeout(String(ERROR_RESPONSE_MS)));
     app.use((req, _res, next) => !req.timedout && next());

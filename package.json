@@ -16,7 +16,7 @@
     "@voiceflow/backend-utils": "2.1.0",
     "@voiceflow/client": "^1.7.5",
     "@voiceflow/common": "^6.2.0",
-    "@voiceflow/logger": "^1.1.8",
+    "@voiceflow/logger": "^1.1.10",
     "@voiceflow/secrets-provider": "^1.6.2",
     "@voiceflow/verror": "^1.1.0",
     "alexa-verifier-middleware": "^1.0.2",

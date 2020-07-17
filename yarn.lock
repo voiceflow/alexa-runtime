@@ -1023,10 +1023,10 @@
     express-pino-logger "^4.0.0"
     pino "^5.14.0"
 
-"@voiceflow/logger@^1.1.8":
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/@voiceflow/logger/-/logger-1.1.8.tgz#6ddb7b445fc72bd4e852b353d88a08d1e912265c"
-  integrity sha512-u60vx38zo8RJpG4Y5kAUALLG8UntPsI3HqqIP1c227Ehg7UmYu8qfp6rWgMUWYEtmqRJY8VY4Wt7wtdZnUQQWw==
+"@voiceflow/logger@^1.1.10":
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/@voiceflow/logger/-/logger-1.1.10.tgz#cb4700029ef411e46fbbbe51ac8493d7b5056d8c"
+  integrity sha512-FgFf9PnGNjcjkmC/LZtGTzWubP7qxccPLNbcux6mmelMOpAtXUOLg5V3MUSwgflOOSn7BPyl9X6yqZLK8RPMKg==
   dependencies:
     "@types/express-pino-logger" "^4.0.2"
     "@types/pino" "^6.3.0"
