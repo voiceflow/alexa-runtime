@@ -67,7 +67,7 @@ export const CardHandler: HandlerFactory<CardBlock, typeof utilsObj> = (utils) =
 
     if (card.type === CardType.STANDARD && card.image?.largeImageUrl) {
       newCard.image.largeImageUrl = utils.addVariables(card.image.largeImageUrl, variables);
-      newCard.image.smallImageUrl = utils.addVariables(card.image.smallImageUrl, variables, card.image.largeImageUrl);
+      newCard.image.smallImageUrl = utils.addVariables(card.image.smallImageUrl, variables, newCard.image.largeImageUrl);
     }
 
     context.turn.set(T.CARD, newCard);
