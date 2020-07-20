@@ -1,34 +1,19 @@
 version: 2.1
 
+# Reusable YAML chunks
+defaults:
+  prod_deploy_filters: &prod_deploy_filters
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /^v[0-9]*(\.[0-9]*)*$/
+
 orbs:
   codecov: codecov/codecov@1.0.2
-
-executors:
-  test-executor:
-    docker:
-      - image: circleci/node:12
-      - image: circleci/dynamodb:13-oracle # DynamoDB service container
-    resource_class: large
-  build-executor:
-    working_directory: /tmp/vf-build
-    docker:
-      - image: voiceflow/ci-image:v3
-    resource_class: medium
-  default-executor: # used to run the release
-    docker:
-      - image: circleci/node:12
-    resource_class: small
+  vfcommon: voiceflow/common@0.0.11
 
 commands:
-  install_aws_cli:
-    steps:
-      - run:
-          name: Install pip3
-          command: sudo apt update && sudo apt install -y python3-pip
-      - run:
-          name: Install AWS CLI
-          command: pip3 install awscli
-
   clone_s3_assets:
     steps:
       - run:
@@ -36,37 +21,13 @@ commands:
           command: |
             aws s3 sync s3://com.voiceflow.ci.assets/alexa ~/project/tests/smokeTest/recordedSessions
 
-  setup_test_env:
-    steps:
-      - run:
-          name: AWS Config
-          command: ./scripts/mock_aws_credentials.sh
-      - run:
-          name: Wait for Dynamo Docker Image
-          command: dockerize -wait tcp://localhost:8000 -timeout 1m
-
-  install_node_modules:
-    steps:
-      - restore_cache:
-          keys:
-            - node-module-cache-{{ checksum "yarn.lock" }}
-      - run:
-          name: yarn install packages
-          command: |
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-            yarn install --frozen-lockfile
-      - save_cache: # special step to save the dependency cache
-          key: node-module-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
-
 jobs:
   test:
-    executor: test-executor
+    executor: vfcommon/code-test-executor
     steps:
       - checkout
-      - install_node_modules
-      - setup_test_env
+      - vfcommon/install_node_modules
+      - vfcommon/setup_dynamodb
       - run:
           name: "Build package"
           command: |
@@ -78,126 +39,43 @@ jobs:
       - codecov/upload:
           file: nyc_coverage/lcov.info
       # temp steps
-      - install_aws_cli
+      - vfcommon/install_aws_cli
       - clone_s3_assets
       - run:
           name: Run smoke tests
           command: yarn test:smoke
 
   build-push-image:
-    executor: build-executor
-    environment:
-      IMAGE_REPO: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
+    executor: vfcommon/build-executor
     steps:
-      - checkout # special step to check out source code to working directory
-      - setup_remote_docker
-      - run:
-          name: "Build docker image"
-          command: |
-            IMAGE_TAG="k8s-$CIRCLE_SHA1"
-            IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
-            # Fix semantic versioning 
-            if [ "$CIRCLE_BRANCH" == "master" ]; then
-              npm config set unsafe-perm true # needed for npx to work
-              set +e  # Don't exit on the any error (for semantic-release)
-              npx semantic-release@15 --prepare --dry-run | tee sem_release.output  # print semver to screen and force return 0
-              SEM_VER=$(cat sem_release.output | grep 'Published release ' | awk '{print $NF}')  # Get release semver
-              set -e  # Don't exit on the any error (for semantic-release)
-              if [ -z "$SEM_VER" ]; then
-                echo -e "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-                SEM_VER=$(npm view @voiceflow/alexa version)
-              fi
-            else
-              SEM_VER=$CIRCLE_BRANCH-$CIRCLE_SHA1
-            fi
-            echo -e "Building with SEM_VER=$SEM_VER"
-            $(aws ecr get-login --no-include-email --region us-east-1)
-            docker build \
-              --build-arg NPM_TOKEN=//registry.npmjs.org/:_authToken=${NPM_TOKEN} \
-              --build-arg build_BUILD_NUM=${CIRCLE_BUILD_NUM} \
-              --build-arg build_BUILD_URL=${CIRCLE_BUILD_URL}	\
-              --build-arg build_GIT_SHA=${CIRCLE_SHA1} \
-              --build-arg build_SEM_VER=${SEM_VER} \
-              -t $IMAGE_NAME .
-      - run:
-          name: "Push docker images"
-          command: |
-            IMAGE_TAG="k8s-$CIRCLE_SHA1"
-            IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
-            docker push $IMAGE_NAME
-            docker tag $IMAGE_NAME $IMAGE_REPO:latest-$CIRCLE_BRANCH
-            docker push $IMAGE_REPO:latest-$CIRCLE_BRANCH
+      - vfcommon/build_push_image:
+          image_repo: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
+          release_pkg: "@voiceflow/alexa"
 
   deploy-image:
-    executor: build-executor
-    environment:
-      IMAGE_REPO: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
+    executor: vfcommon/build-executor
     steps:
-      - run:
-          name: Update kubernetes image
-          command: |
-            IMAGE_TAG="k8s-$CIRCLE_SHA1"
-            IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
-            aws eks --region us-east-1 update-kubeconfig --name development
-            kubectl set image --namespace voiceflow-v1 deployment/alexa-$CIRCLE_BRANCH app=$IMAGE_NAME
-            if [ "$CIRCLE_BRANCH" == "master" ]; then
-              aws eks --region us-east-1 update-kubeconfig --name production
-              kubectl set image --namespace voiceflow-v1 deployment/alexa-production app=$IMAGE_NAME
-            fi
+      - vfcommon/deploy_image:
+          image_repo: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
+          namespace: "voiceflow-v1"
+          target: "deployment/alexa"
+
+  deploy-on-tag:
+    executor: vfcommon/build-executor
+    steps:
+      - vfcommon/deploy_image:
+          image_repo: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
+          namespace: "voiceflow-v1"
+          target: "deployment/alexa"
+          tagged: true
 
   build-deploy-dev-env:
-    executor: build-executor
-    environment:
-      IMAGE_REPO: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
+    executor: vfcommon/build-executor
     steps:
-      - checkout # special step to check out source code to working directory
-      - setup_remote_docker # Need this to run DinD
-      - add_ssh_keys: # To enable write access to repository for removing development environment branches
-          fingerprints:
-            - "31:42:5a:4e:ee:42:40:e6:77:fc:d4:1b:9f:4e:ca:46"
-      - run:
-          name: "Build dev environment image"
-          command: |
-            IMAGE_TAG="k8s-$CIRCLE_SHA1"
-            IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
-            SEM_VER="$CIRCLE_BRANCH-$CIRCLE_SHA1"
-            $(aws ecr get-login --no-include-email --region us-east-1)
-            set +e
-            DOCKER_CLI_EXPERIMENTAL=enabled docker manifest inspect $IMAGE_NAME > /dev/null 2>&1
-            SEARCH_IMAGE_RESULT=$?
-            set -e
-            if [[ $SEARCH_IMAGE_RESULT -ne 0 ]]; then   # Only build the image if there are no existing images 
-              docker build \
-                --build-arg NPM_TOKEN=//registry.npmjs.org/:_authToken=${NPM_TOKEN} \
-                --build-arg build_BUILD_NUM=${CIRCLE_BUILD_NUM} \
-                --build-arg build_BUILD_URL=${CIRCLE_BUILD_URL}	\
-                --build-arg build_GIT_SHA=${CIRCLE_SHA1} \
-                --build-arg build_SEM_VER=${SEM_VER} \
-                -t $IMAGE_NAME . 
-              docker push $IMAGE_NAME
-            fi
-            git push origin --delete $CIRCLE_BRANCH --no-verify # Clean up git branch
-      - run:
-          name: Install latest envcli utility
-          command: |
-            API_URL="https://$GITHUB_TOKEN:@api.github.com/repos/voiceflow/envcli"
-            ASSET_ID=$(curl $API_URL/releases/latest | jq -r '.assets[2].id')
-            curl -J -L -H "Accept: application/octet-stream" "$API_URL/releases/assets/$ASSET_ID" --output envcli.tar.gz
-            tar -xf envcli.tar.gz
-      - run:
-          name: "Deploy dev environment image"
-          command: |
-            IMAGE_TAG="k8s-$CIRCLE_SHA1"
-            IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
-            ENV_NAME="${CIRCLE_BRANCH%%_*}"
-            aws eks --region us-east-1 update-kubeconfig --name development
-            NON_INTERACTIVE=true ./envcli edit component alexa alexa -n $ENV_NAME -i $IMAGE_NAME
-
-  release:
-    executor: default-executor
-    steps:
-      - checkout
-      - run: npx semantic-release@15
+      - vfcommon/build_deploy_dev_env:
+          image_repo: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
+          component: "alexa"
+          ssh_key: "31:42:5a:4e:ee:42:40:e6:77:fc:d4:1b:9f:4e:ca:46"
 
 # When should each job run and what are their dependencies?
 workflows:
@@ -230,7 +108,7 @@ workflows:
                 - /env-.*/
 
   # Master (production)
-  build-deploy-app:
+  test-and-release-app:
     jobs:
       - test:
           context: dev-test
@@ -239,25 +117,21 @@ workflows:
               ignore:
                 - /env-.*/
                 - staging
-      - build-push-image:
-          context: dev-test
-          filters:
-            branches:
-              only:
-                - master
-      - deploy-image:
-          context: dev-test
-          requires:
-            - test
-            - build-push-image
-          filters:
-            branches:
-              only:
-                - master
-      - release:
+      - vfcommon/release:
           context: dev-test
           requires:
             - test
           filters:
             branches:
               only: master
+
+  deploy-app:
+    jobs:
+      - build-push-image:
+          <<: *prod_deploy_filters
+          context: dev-test
+      - deploy-on-tag:
+          <<: *prod_deploy_filters
+          context: dev-test
+          requires:
+            - build-push-image

@@ -12,8 +12,8 @@ import Server from './server';
 (async () => {
   // Have to start secrets provider before creating serviceManager
   // serviceManager will make sync get() calls to secretsProvider during its construction, and the secrets have to be populated
-  await secretsProvider.start(config).catch((err: Error) => {
-    log.error(`Error while starting secretsProvider: ${err.stack}`);
+  await secretsProvider.start(config).catch(() => {
+    log.error('Error while starting secretsProvider');
     // eslint-disable-next-line no-process-exit
     process.exit(1);
   });

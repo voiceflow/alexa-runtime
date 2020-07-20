@@ -12,10 +12,11 @@
     }
   },
   "dependencies": {
-    "@voiceflow/backend-utils": "2.0.0",
-    "@voiceflow/client": "^1.7.2",
+    "@types/pino": "^6.3.0",
+    "@voiceflow/backend-utils": "2.1.0",
+    "@voiceflow/client": "^1.7.5",
     "@voiceflow/common": "^6.2.0",
-    "@voiceflow/logger": "^1.1.0",
+    "@voiceflow/logger": "^1.1.10",
     "@voiceflow/secrets-provider": "^1.6.2",
     "@voiceflow/verror": "^1.1.0",
     "alexa-verifier-middleware": "^1.0.2",
@@ -68,6 +69,7 @@
     "@types/lodash": "^4.14.149",
     "@types/mocha": "^5.2.7",
     "@types/moment": "^2.13.0",
+    "@types/node": "^14.0.23",
     "@types/pg": "^7.14.0",
     "@types/randomstring": "^1.1.6",
     "@types/sinon": "^7.5.1",
@@ -110,7 +112,7 @@
     "ts-node": "^8.5.4",
     "tsconfig-paths": "^3.9.0",
     "ttypescript": "^1.5.8",
-    "typescript": "^3.7.4"
+    "typescript": "^3.9.7"
   },
   "homepage": "https://github.com/voiceflow/backend-template#readme",
   "husky": {
@@ -133,9 +135,6 @@
     ]
   },
   "prettier": "@voiceflow/prettier-config",
-  "release": {
-    "branch": "master"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/voiceflow/alexa.git"
