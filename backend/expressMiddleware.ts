@@ -1,4 +1,3 @@
-import PrettyStream from 'bunyan-prettystream';
 import compression from 'compression';
 import timeout from 'connect-timeout';
 import cookieParser from 'cookie-parser';
@@ -12,9 +11,6 @@ import log from '@/logger';
 
 import api from './api';
 import { ERROR_RESPONSE_MS } from './constants';
-
-const prettyStdOut = new PrettyStream({ mode: 'dev' });
-prettyStdOut.pipe(process.stdout);
 
 /**
  * @class
