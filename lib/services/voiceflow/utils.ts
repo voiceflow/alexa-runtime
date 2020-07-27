@@ -32,7 +32,7 @@ export const sanitizeVariables = (variables: Record<string, any>) =>
   }, {});
 
 const _stringToNumIfNumeric = (str: string | null): number | string | null => {
-  if (str?.startsWith('0')) return str;
+  if (str?.startsWith('0') && str.length > 1) return str;
 
   const number = Number(str);
   return Number.isNaN(number) ? str : number;
