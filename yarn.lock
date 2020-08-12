@@ -971,10 +971,10 @@
     express-pino-logger "^4.0.0"
     pino "^5.14.0"
 
-"@voiceflow/logger@^1.1.10":
-  version "1.1.10"
-  resolved "https://registry.yarnpkg.com/@voiceflow/logger/-/logger-1.1.10.tgz#cb4700029ef411e46fbbbe51ac8493d7b5056d8c"
-  integrity sha512-FgFf9PnGNjcjkmC/LZtGTzWubP7qxccPLNbcux6mmelMOpAtXUOLg5V3MUSwgflOOSn7BPyl9X6yqZLK8RPMKg==
+"@voiceflow/logger@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/logger/-/logger-1.2.0.tgz#0076497941d67581061a3d62ee5d087f2d59667c"
+  integrity sha512-q7hXY8beYL/nf7L4U7epQfpwv0w281fTOFvSeXWRrR62/ad+0nUq/6+MMEVuuVG9nVhunyFrb4n6zTWJVA4WRw==
   dependencies:
     "@types/express-pino-logger" "^4.0.2"
     "@types/pino" "^6.3.0"
