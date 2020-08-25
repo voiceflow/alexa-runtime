@@ -1,6 +1,5 @@
 import 'core-js';
 import 'regenerator-runtime/runtime';
-import './envSetup';
 
 import secretsProvider from '@voiceflow/secrets-provider';
 

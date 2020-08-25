@@ -1,3 +1,5 @@
+import './envSetup';
+
 import * as Common from '@voiceflow/common';
 
 import { Config } from './types';
