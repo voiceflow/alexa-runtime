@@ -1,5 +1,6 @@
 import Logger from '@voiceflow/logger';
-import config from 'config';
+
+import config from './config';
 
 const log = new Logger({
   level: config.LOG_LEVEL,
