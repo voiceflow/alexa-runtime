@@ -31,6 +31,9 @@ export interface Config {
   SESSIONS_DYNAMO_TABLE: string;
 
   VF_DATA_ENDPOINT: string;
+  // Logging
+  LOG_LEVEL: string | null;
+  MIDDLEWARE_VERBOSITY: string | null;
 }
 
 export interface Request<P extends {} = {}> extends Express.Request<P> {

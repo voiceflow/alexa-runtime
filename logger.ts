@@ -1,13 +1,12 @@
 import Logger from '@voiceflow/logger';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { Level } from 'pino'; // We are only using the types here
 
-const infoLevel: Level = 'info';
-const warnLevel: Level = 'warn';
-const options = ['local', 'test'].includes(process.env.NODE_ENV || '')
-  ? { level: infoLevel, stackTrace: true, pretty: true, middlewareVerbosity: 'short' }
-  : { level: warnLevel, stackTrace: true, pretty: false, middlewareVerbosity: 'full' };
+import config from './config';
 
-const log = new Logger(options);
+const log = new Logger({
+  level: config.LOG_LEVEL,
+  stackTrace: true,
+  pretty: ['local', 'test'].includes(process.env.NODE_ENV || ''),
+  middlewareVerbosity: config.MIDDLEWARE_VERBOSITY,
+});
 
 export default log;
