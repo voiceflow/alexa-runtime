@@ -1,3 +1,5 @@
+import './envSetup';
+
 import * as Common from '@voiceflow/common';
 
 import { Config } from './types';
@@ -37,6 +39,10 @@ const CONFIG: Config = {
   SESSIONS_DYNAMO_TABLE: getProcessEnv('SESSIONS_DYNAMO_TABLE'),
 
   VF_DATA_ENDPOINT: getProcessEnv('VF_DATA_ENDPOINT'),
+
+  // Logging
+  LOG_LEVEL: optionalProcessEnv('LOG_LEVEL'),
+  MIDDLEWARE_VERBOSITY: optionalProcessEnv('MIDDLEWARE_VERBOSITY'),
 };
 
 export default CONFIG;
