@@ -1,3 +1,4 @@
+import { AmazonIntent, RepeatType } from '@voiceflow/alexa-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -6,22 +7,22 @@ import RepeatHandler from '@/lib/services/voiceflow/handlers/repeat';
 
 describe('repeat handler', () => {
   const repeatHandler = RepeatHandler();
-  const intentRequest = { payload: { intent: { name: 'AMAZON.RepeatIntent' } } };
+  const intentRequest = { payload: { intent: { name: AmazonIntent.REPEAT } } };
 
   describe('can handle', () => {
     it('true', () => {
-      const context = { turn: { get: sinon.stub().returns(intentRequest) }, storage: { get: sinon.stub().returns(100) } };
+      const context = { turn: { get: sinon.stub().returns(intentRequest) }, storage: { get: sinon.stub().returns(RepeatType.ALL) } };
       expect(repeatHandler.canHandle(context as any)).to.eql(true);
       expect(context.storage.get.args[0][0]).to.eql(S.REPEAT);
       expect(context.turn.get.args[0][0]).to.eql(T.REQUEST);
     });
 
     it('false', () => {
-      expect(repeatHandler.canHandle({ turn: { get: sinon.stub().returns(null) }, storage: { get: sinon.stub().returns(100) } } as any)).to.eql(
-        false
-      );
       expect(
-        repeatHandler.canHandle({ turn: { get: sinon.stub().returns(intentRequest) }, storage: { get: sinon.stub().returns(0) } } as any)
+        repeatHandler.canHandle({ turn: { get: sinon.stub().returns(null) }, storage: { get: sinon.stub().returns(RepeatType.ALL) } } as any)
+      ).to.eql(false);
+      expect(
+        repeatHandler.canHandle({ turn: { get: sinon.stub().returns(intentRequest) }, storage: { get: sinon.stub().returns(RepeatType.OFF) } } as any)
       ).to.eql(false);
       expect(
         repeatHandler.canHandle({
@@ -40,7 +41,7 @@ describe('repeat handler', () => {
 
         const context = {
           storage: {
-            get: sinon.stub().returns(0),
+            get: sinon.stub().returns(RepeatType.OFF),
             produce: sinon.stub(),
           },
           turn: {
@@ -76,7 +77,7 @@ describe('repeat handler', () => {
 
         const context = {
           storage: {
-            get: sinon.stub().returns(100),
+            get: sinon.stub().returns(RepeatType.ALL),
             produce: sinon.stub(),
           },
           turn: {

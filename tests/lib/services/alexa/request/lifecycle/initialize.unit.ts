@@ -1,3 +1,4 @@
+import { RepeatType, SessionType } from '@voiceflow/alexa-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -22,17 +23,21 @@ describe('initialize lifecycle unit tests', async () => {
         },
       };
 
+      const session: any = { type: SessionType.RESTART };
       const metaObj = {
-        repeat: 2,
-        global: ['a', 'b', 'c'],
-        restart: true,
-        diagram: 'diagram-id',
-        resume_prompt: null,
-        alexa_permissions: 'alexa-permission',
-        slots: [
-          { name: 'd', type: 'x' },
-          { name: 'e', type: 'y' },
-        ],
+        variables: ['a', 'b', 'c'],
+        platformData: {
+          slots: [
+            { name: 'd', type: 'x' },
+            { name: 'e', type: 'y' },
+          ],
+          settings: {
+            permissions: ['alexa-permission'],
+            repeat: RepeatType.DIALOG,
+            session,
+          },
+        },
+        rootDiagramID: 'diagram-id',
       };
 
       const topStorage = {
@@ -42,7 +47,7 @@ describe('initialize lifecycle unit tests', async () => {
       };
 
       const context = {
-        fetchMetadata: sinon.stub().resolves(metaObj),
+        fetchVersion: sinon.stub().resolves(metaObj),
         stack: {
           isEmpty: sinon.stub().returns(false),
           flush: sinon.stub(),
@@ -122,8 +127,8 @@ describe('initialize lifecycle unit tests', async () => {
       expect(context.storage.set.args[1]).to.eql([S.LOCALE, input.requestEnvelope.request.locale]);
       expect(context.storage.set.args[2]).to.eql([S.USER, userId]);
       expect(context.storage.set.args[3]).to.eql([S.SUPPORTED_INTERFACES, input.requestEnvelope.context.System.device?.supportedInterfaces]);
-      expect(context.storage.set.args[4]).to.eql([S.ALEXA_PERMISSIONS, metaObj.alexa_permissions]);
-      expect(context.storage.set.args[5]).to.eql([S.REPEAT, metaObj.repeat]);
+      expect(context.storage.set.args[4]).to.eql([S.ALEXA_PERMISSIONS, metaObj.platformData.settings.permissions]);
+      expect(context.storage.set.args[5]).to.eql([S.REPEAT, metaObj.platformData.settings.repeat]);
       expect(context.variables.merge.args[0]).to.eql([
         {
           timestamp: 0,
@@ -139,7 +144,7 @@ describe('initialize lifecycle unit tests', async () => {
           _system: input.requestEnvelope.context.System,
         },
       ]);
-      expect(utils.client.Store.initialize.args[0]).to.eql([context.variables, metaObj.global, 0]);
+      expect(utils.client.Store.initialize.args[0]).to.eql([context.variables, metaObj.variables, 0]);
     });
 
     it('second session', async () => {
@@ -171,16 +176,16 @@ describe('initialize lifecycle unit tests', async () => {
     it('meta repeat null, no alexa permissions, no system device', async () => {
       const { utils, context, input, metaObj } = generateFakes();
 
-      metaObj.repeat = null as any;
-      metaObj.alexa_permissions = null as any;
-      context.fetchMetadata = sinon.stub().resolves(metaObj);
+      metaObj.platformData.settings.repeat = null as any;
+      metaObj.platformData.settings.permissions = null as any;
+      context.fetchVersion = sinon.stub().resolves(metaObj);
 
       const fn = initializeGenerator(utils as any);
 
       delete input.requestEnvelope.context.System.device;
       await fn(context as any, input as any);
 
-      expect(context.storage.set.args[4]).to.eql([S.REPEAT, 100]);
+      expect(context.storage.set.args[4]).to.eql([S.REPEAT, RepeatType.ALL]);
       expect(context.storage.set.args[2]).to.eql([S.SUPPORTED_INTERFACES, undefined]);
     });
 
@@ -196,7 +201,7 @@ describe('initialize lifecycle unit tests', async () => {
           await fn(context as any, input as any);
 
           expect(context.stack.flush.callCount).to.eql(1);
-          expect(utils.client.Frame.args[0]).to.eql([{ diagramID: metaObj.diagram }]);
+          expect(utils.client.Frame.args[0]).to.eql([{ diagramID: metaObj.rootDiagramID }]);
           expect(context.stack.push.callCount).to.eql(1);
           expect(context.turn.set.args[0]).to.eql([T.NEW_STACK, true]);
         });
@@ -205,15 +210,15 @@ describe('initialize lifecycle unit tests', async () => {
           const { utils, context, input, metaObj } = generateFakes();
 
           context.stack.isEmpty = sinon.stub().returns(false);
-          metaObj.restart = true;
-          context.fetchMetadata = sinon.stub().resolves(metaObj);
+          metaObj.platformData.settings.session = { type: SessionType.RESTART };
+          context.fetchVersion = sinon.stub().resolves(metaObj);
 
           const fn = initializeGenerator(utils as any);
 
           await fn(context as any, input as any);
 
           expect(context.stack.flush.callCount).to.eql(1);
-          expect(utils.client.Frame.args[0]).to.eql([{ diagramID: metaObj.diagram }]);
+          expect(utils.client.Frame.args[0]).to.eql([{ diagramID: metaObj.rootDiagramID }]);
           expect(context.stack.push.callCount).to.eql(1);
         });
 
@@ -221,17 +226,17 @@ describe('initialize lifecycle unit tests', async () => {
           const { utils, context, input, metaObj } = generateFakes();
 
           context.stack.isEmpty = sinon.stub().returns(false);
-          metaObj.restart = false;
+          metaObj.platformData.settings.session = { type: SessionType.RESUME };
           context.variables.get = sinon.stub().returns({ resume: false });
 
-          context.fetchMetadata = sinon.stub().resolves(metaObj);
+          context.fetchVersion = sinon.stub().resolves(metaObj);
 
           const fn = initializeGenerator(utils as any);
 
           await fn(context as any, input as any);
 
           expect(context.stack.flush.callCount).to.eql(1);
-          expect(utils.client.Frame.args[0]).to.eql([{ diagramID: metaObj.diagram }]);
+          expect(utils.client.Frame.args[0]).to.eql([{ diagramID: metaObj.rootDiagramID }]);
           expect(context.stack.push.callCount).to.eql(1);
         });
       });
@@ -242,18 +247,18 @@ describe('initialize lifecycle unit tests', async () => {
 
           context.stack.isEmpty = sinon.stub().returns(false);
           context.stack.getFrames = sinon.stub().returns([]);
-          metaObj.restart = false;
+          const session = { type: SessionType.RESUME, resume: { foo: 'bar' }, follow: 'test' };
+          metaObj.platformData.settings.session = session;
           context.variables.get = sinon.stub().returns({ resume: true });
-          metaObj.resume_prompt = { foo: 'bar' } as any;
 
-          context.fetchMetadata = sinon.stub().resolves(metaObj);
+          context.fetchVersion = sinon.stub().resolves(metaObj);
 
           const fn = initializeGenerator(utils as any);
 
           await fn(context as any, input as any);
 
           expect(topStorage.set.args[0]).to.eql([F.CALLED_COMMAND, true]);
-          expect(utils.resume.createResumeFrame.args[0]).to.eql([metaObj.resume_prompt]);
+          expect(utils.resume.createResumeFrame.args[0]).to.eql([session.resume, session.follow]);
           expect(context.stack.push.args[0]).to.eql([resumeFrame]);
         });
 
@@ -269,11 +274,11 @@ describe('initialize lifecycle unit tests', async () => {
               { getDiagramID: () => utils.resume.RESUME_DIAGRAM_ID },
               { getDiagramID: () => false },
             ]);
-          metaObj.restart = false;
+          const session = { type: SessionType.RESUME, resume: { foo: 'bar' }, follow: null };
+          metaObj.platformData.settings.session = session;
           context.variables.get = sinon.stub().returns({ resume: true });
-          metaObj.resume_prompt = { foo: 'bar' } as any;
 
-          context.fetchMetadata = sinon.stub().resolves(metaObj);
+          context.fetchVersion = sinon.stub().resolves(metaObj);
 
           const fn = initializeGenerator(utils as any);
 
@@ -281,7 +286,7 @@ describe('initialize lifecycle unit tests', async () => {
 
           expect(topStorage.set.args[0]).to.eql([F.CALLED_COMMAND, true]);
           expect(context.stack.popTo.args[0]).to.eql([2]);
-          expect(utils.resume.createResumeFrame.args[0]).to.eql([metaObj.resume_prompt]);
+          expect(utils.resume.createResumeFrame.args[0]).to.eql([session.resume, session.follow]);
           expect(context.stack.push.args[0]).to.eql([resumeFrame]);
         });
       });
@@ -290,8 +295,8 @@ describe('initialize lifecycle unit tests', async () => {
         it('no last speak', async () => {
           const { utils, context, input, metaObj, topStorage } = generateFakes();
 
-          metaObj.restart = false;
-          context.fetchMetadata = sinon.stub().resolves(metaObj);
+          metaObj.platformData.settings.session = { type: SessionType.RESUME };
+          context.fetchVersion = sinon.stub().resolves(metaObj);
           topStorage.get = sinon.stub().returns(null);
 
           const fn = initializeGenerator(utils as any);
@@ -307,8 +312,8 @@ describe('initialize lifecycle unit tests', async () => {
         it('with last speak', async () => {
           const { utils, context, input, metaObj, topStorage } = generateFakes();
 
-          metaObj.restart = false;
-          context.fetchMetadata = sinon.stub().resolves(metaObj);
+          metaObj.platformData.settings.session = { type: SessionType.RESUME };
+          context.fetchVersion = sinon.stub().resolves(metaObj);
           const lastSpeak = 'random text';
           topStorage.get = sinon.stub().returns(lastSpeak);
 

@@ -1,11 +1,10 @@
+import { AlexaVersion, RepeatType, SessionType } from '@voiceflow/alexa-types';
 import { Context, Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
 import { F, S, T, V } from '@/lib/constants';
 import { createResumeFrame, RESUME_DIAGRAM_ID } from '@/lib/services/voiceflow/diagrams/resume';
 import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
-
-import { SkillMetadata } from '../../types';
 
 export const VAR_VF = 'voiceflow';
 
@@ -24,7 +23,11 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
   const { requestEnvelope } = input;
 
   // fetch the metadata for this version (project)
-  const meta = (await context.fetchMetadata()) as SkillMetadata;
+  const {
+    platformData: { settings, slots },
+    variables: versionVariables,
+    rootDiagramID,
+  } = await context.fetchVersion<AlexaVersion>();
 
   const { stack, storage, variables } = context;
 
@@ -45,8 +48,8 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
   storage.set(S.SUPPORTED_INTERFACES, requestEnvelope.context.System.device?.supportedInterfaces);
 
   // set based on metadata
-  storage.set(S.ALEXA_PERMISSIONS, meta.alexa_permissions ?? []);
-  storage.set(S.REPEAT, meta.repeat ?? 100);
+  storage.set(S.ALEXA_PERMISSIONS, settings.permissions ?? []);
+  storage.set(S.REPEAT, settings.repeat ?? RepeatType.ALL);
 
   // default global variables
   variables.merge({
@@ -67,10 +70,10 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
   });
 
   // initialize all the global variables, as well as slots as global variables
-  utils.client.Store.initialize(variables, meta.global, 0);
+  utils.client.Store.initialize(variables, versionVariables, 0);
   utils.client.Store.initialize(
     variables,
-    meta.slots.map((slot) => slot.name),
+    slots.map((slot) => slot.name),
     0
   );
 
@@ -81,16 +84,17 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
     });
   }
 
+  const { session = { type: SessionType.RESTART } } = settings;
   // restart logic
-  const shouldRestart = stack.isEmpty() || meta.restart || context.variables.get(VAR_VF)?.resume === false;
+  const shouldRestart = stack.isEmpty() || session.type === SessionType.RESTART || variables.get(VAR_VF)?.resume === false;
   if (shouldRestart) {
     // start the stack with just the root flow
     stack.flush();
-    stack.push(new utils.client.Frame({ diagramID: meta.diagram }));
+    stack.push(new utils.client.Frame({ diagramID: rootDiagramID }));
 
     // we've created a brand new stack
     context.turn.set(T.NEW_STACK, true);
-  } else if (meta.resume_prompt) {
+  } else if (session.type === SessionType.RESUME && session.resume) {
     // resume prompt flow - use command flow logic
     stack.top().storage.set(F.CALLED_COMMAND, true);
 
@@ -100,7 +104,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
       stack.popTo(resumeStackIndex);
     }
 
-    stack.push(utils.resume.createResumeFrame(meta.resume_prompt));
+    stack.push(utils.resume.createResumeFrame(session.resume, session.follow));
   } else {
     // give context to where the user left off with last speak block
     stack.top().storage.delete(F.CALLED_COMMAND);
