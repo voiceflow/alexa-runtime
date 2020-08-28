@@ -928,10 +928,10 @@
     randomstring "^1.1.5"
     sinon "^7.5.0"
 
-"@voiceflow/client@^1.7.8":
-  version "1.7.8"
-  resolved "https://registry.yarnpkg.com/@voiceflow/client/-/client-1.7.8.tgz#9046fc2f27c843547b57f2262b478f846eeeb2ae"
-  integrity sha512-ZqeC/W3jwofOBkyzwGeslvftw4iWdaXVfsMV5uhXsU5yaqViiaPAcRxjd8hLo8egkhVezJ0pea8C8tU81LONIw==
+"@voiceflow/client@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/client/-/client-1.8.0.tgz#bcfb384931a159df187d05aea860b39fb37a8543"
+  integrity sha512-fzUOWmuN3nVyKeILe6jkcofWZ+Ep7EOekdTNZoYjrQrERO/CDDgr/ppnu8BFiraQjcR0IXG0g1Twoi5OgAzt7A==
   dependencies:
     "@types/safe-json-stringify" "^1.1.0"
     axios "^0.19.0"
