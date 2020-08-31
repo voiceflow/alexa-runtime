@@ -12,8 +12,9 @@
     }
   },
   "dependencies": {
+    "@voiceflow/alexa-types": "^1.2.0",
     "@voiceflow/backend-utils": "2.1.0",
-    "@voiceflow/client": "^1.7.8",
+    "@voiceflow/client": "^1.8.0",
     "@voiceflow/common": "^6.2.0",
     "@voiceflow/logger": "^1.3.0",
     "@voiceflow/secrets-provider": "^1.6.2",

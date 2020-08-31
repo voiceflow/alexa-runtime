@@ -526,6 +526,11 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
+"@types/atob@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@types/atob/-/atob-2.1.2.tgz#157eb0cc46264a8c55f2273a836c7a1a644fb820"
+  integrity sha512-8GAYQ1jDRUQkSpHzJUqXwAkYFOxuWAOGLhIR4aPd/Y/yL12Q/9m7LsKpHKlfKdNE/362Hc9wPI1Yh6opDfxVJg==
+
 "@types/bluebird@^3.5.30":
   version "3.5.30"
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.30.tgz#ee034a0eeea8b84ed868b1aa60d690b08a6cfbc5"
@@ -885,6 +890,27 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
+"@voiceflow/alexa-types@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.2.0.tgz#49c1feaace93ffc944b51d12a36f1ae646583b9a"
+  integrity sha512-D+V52vryxb74DL6NO5d1+d8oD7MceoztClTylCBoRFCBK7KVdu4F7uvsyJvr76IjfYG+yqZyH1OAxqkBJWMH/g==
+  dependencies:
+    "@voiceflow/api-sdk" "1.5.1"
+
+"@voiceflow/api-sdk@1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.5.1.tgz#6b818e58d8accea50bae3bfd04598efad12d6c89"
+  integrity sha512-IPNvmOyUIESSrhW6OKwsJsycwvsqOk9qu5bClYMqCwSNvJ96Plz1X07KVyZ12gIpYjVctSvm+Lre2sVIPVdeDg==
+  dependencies:
+    "@types/atob" "^2.1.2"
+    "@voiceflow/logger" "^1.1.10"
+    atob "^2.1.2"
+    axios "^0.19.2"
+    core-js "^3.6.5"
+    io-ts "^2.2.8"
+    regenerator-runtime "^0.13.5"
+    superstruct "^0.10.12"
+
 "@voiceflow/backend-utils@2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@voiceflow/backend-utils/-/backend-utils-2.1.0.tgz#40e6ed923f7fea90b455d46ac1a8e3b684346c0d"
@@ -902,10 +928,10 @@
     randomstring "^1.1.5"
     sinon "^7.5.0"
 
-"@voiceflow/client@^1.7.8":
-  version "1.7.8"
-  resolved "https://registry.yarnpkg.com/@voiceflow/client/-/client-1.7.8.tgz#9046fc2f27c843547b57f2262b478f846eeeb2ae"
-  integrity sha512-ZqeC/W3jwofOBkyzwGeslvftw4iWdaXVfsMV5uhXsU5yaqViiaPAcRxjd8hLo8egkhVezJ0pea8C8tU81LONIw==
+"@voiceflow/client@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/client/-/client-1.8.0.tgz#bcfb384931a159df187d05aea860b39fb37a8543"
+  integrity sha512-fzUOWmuN3nVyKeILe6jkcofWZ+Ep7EOekdTNZoYjrQrERO/CDDgr/ppnu8BFiraQjcR0IXG0g1Twoi5OgAzt7A==
   dependencies:
     "@types/safe-json-stringify" "^1.1.0"
     axios "^0.19.0"
@@ -971,7 +997,7 @@
     express-pino-logger "^4.0.0"
     pino "^5.14.0"
 
-"@voiceflow/logger@^1.3.0":
+"@voiceflow/logger@^1.1.10", "@voiceflow/logger@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@voiceflow/logger/-/logger-1.3.0.tgz#0dad07d5c0482229ce4ce7cf596fd9a7b3a050aa"
   integrity sha512-oQtCiLA7Fz656RRd0BuXV8RXy9gxyM9p8UpEddgkjCjTLGRLO4rLT+gbeDRh6Y6IuPj8aIaS8GtwC4GdeTPo6w==
@@ -1472,7 +1498,7 @@ atob-lite@^2.0.0:
   resolved "https://registry.yarnpkg.com/atob-lite/-/atob-lite-2.0.0.tgz#0fef5ad46f1bd7a8502c65727f0367d5ee43d696"
   integrity sha1-D+9a1G8b16hQLGVyfwNn1e5D1pY=
 
-atob@^2.1.1:
+atob@^2.1.1, atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
@@ -1536,6 +1562,13 @@ axios@^0.19.0:
   dependencies:
     follow-redirects "1.5.10"
     is-buffer "^2.0.2"
+
+axios@^0.19.2:
+  version "0.19.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
+  integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
+  dependencies:
+    follow-redirects "1.5.10"
 
 axobject-query@^2.0.2:
   version "2.1.1"
@@ -2461,6 +2494,11 @@ core-js@^3.1.4, core-js@^3.4.8:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.5.0.tgz#66df8e49be4bd775e6f952a9d083b756ad41c1ed"
   integrity sha512-Ifh3kj78gzQ7NAoJXeTu+XwzDld0QRIwjBLRqAMhuLhP3d2Av5wmgE9ycfnvK6NAEjTkQ1sDPeoEZAWO3Hx1Uw==
+
+core-js@^3.6.5:
+  version "3.6.5"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.5.tgz#7395dc273af37fb2e50e9bd3d9fe841285231d1a"
+  integrity sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -4905,6 +4943,11 @@ invert-kv@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
+
+io-ts@^2.2.8:
+  version "2.2.10"
+  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-2.2.10.tgz#447d02df51717464a90712b146ec8dbc21b4a74b"
+  integrity sha512-WHx5jJe7hPpc6JoSIVbD+Xn6tYqe3cRvNpX24d8Wi15/kxhRWa8apo0Gzag6Xg99sCNY9OHKylw/Vhv0JAbNPQ==
 
 ip-regex@^2.1.0:
   version "2.1.0"
@@ -8079,6 +8122,11 @@ regenerator-runtime@^0.13.2, regenerator-runtime@^0.13.3:
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.3.tgz#7cf6a77d8f5c6f60eb73c5fc1955b2ceb01e6bf5"
   integrity sha512-naKIZz2GQ8JWh///G7L3X6LaQUAMp2lvb1rvwwsURe/VXwD6VMfr+/1NuNw3ag8v2kY1aQ/go5SNn79O9JU7yw==
 
+regenerator-runtime@^0.13.5:
+  version "0.13.7"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.7.tgz#cac2dacc8a1ea675feaabaeb8ae833898ae46f55"
+  integrity sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==
+
 regex-not@^1.0.0, regex-not@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/regex-not/-/regex-not-1.0.2.tgz#1f4ece27e00b0b65e0247a6810e6a85d83a5752c"
@@ -9067,6 +9115,11 @@ superagent@^3.8.3:
     mime "^1.4.1"
     qs "^6.5.1"
     readable-stream "^2.3.5"
+
+superstruct@^0.10.12:
+  version "0.10.12"
+  resolved "https://registry.yarnpkg.com/superstruct/-/superstruct-0.10.12.tgz#7b2c8adaf61b75257265eac3b588f30017f996f0"
+  integrity sha512-FiNhfegyytDI0QxrrEoeGknFM28SnoHqCBpkWewUm8jRNj74NVxLpiiePvkOo41Ze/aKMSHa/twWjNF81mKaQQ==
 
 supertest@^4.0.2:
   version "4.0.2"

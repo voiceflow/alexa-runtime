@@ -1,3 +1,4 @@
+import { Prompt } from '@voiceflow/alexa-types';
 import { Diagram, Frame } from '@voiceflow/client';
 
 import { IntentName } from '@/lib/services/voiceflow/types';
@@ -11,13 +12,6 @@ export enum ResumeVariables {
   FOLLOW_VOICE = '__voice1__',
 }
 
-export type ResumePrompt = {
-  content: string;
-  voice: string;
-  follow_content: string;
-  follow_voice: string;
-};
-
 export const promptToSSML = (content = '', voice: string | undefined) => {
   if (!voice || voice === 'Alexa' || !content) {
     return content;
@@ -28,12 +22,12 @@ export const promptToSSML = (content = '', voice: string | undefined) => {
   return `<voice name="${voice}">${content}</voice>`;
 };
 
-export const createResumeFrame = (resumePrompt: ResumePrompt) => {
+export const createResumeFrame = (resume: Prompt, follow: Prompt | null) => {
   return new Frame({
     diagramID: RESUME_DIAGRAM_ID,
     variables: {
-      [ResumeVariables.CONTENT]: promptToSSML(resumePrompt.content, resumePrompt.voice),
-      [ResumeVariables.FOLLOW_CONTENT]: promptToSSML(resumePrompt.follow_content, resumePrompt.follow_voice),
+      [ResumeVariables.CONTENT]: promptToSSML(resume.content, resume.voice),
+      [ResumeVariables.FOLLOW_CONTENT]: follow ? promptToSSML(follow.content, follow.voice) : '',
     },
   });
 };
