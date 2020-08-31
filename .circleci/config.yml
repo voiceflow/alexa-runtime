@@ -50,7 +50,7 @@ jobs:
     steps:
       - vfcommon/build_push_image:
           image_repo: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
-          release_pkg: "@voiceflow/alexa"
+          release_pkg: "@voiceflow/alexa-client"
 
   deploy-image:
     executor: vfcommon/build-executor
