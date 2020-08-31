@@ -997,10 +997,22 @@
     express-pino-logger "^4.0.0"
     pino "^5.14.0"
 
-"@voiceflow/logger@^1.1.10", "@voiceflow/logger@^1.3.0":
+"@voiceflow/logger@^1.1.10":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@voiceflow/logger/-/logger-1.3.0.tgz#0dad07d5c0482229ce4ce7cf596fd9a7b3a050aa"
   integrity sha512-oQtCiLA7Fz656RRd0BuXV8RXy9gxyM9p8UpEddgkjCjTLGRLO4rLT+gbeDRh6Y6IuPj8aIaS8GtwC4GdeTPo6w==
+  dependencies:
+    "@types/express-pino-logger" "^4.0.2"
+    "@types/pino" "^6.3.0"
+    "@voiceflow/pino-pretty" "^3.5.0"
+    "@zerollup/ts-transform-paths" "^1.7.18"
+    pino "^5.14.0"
+    pino-http "^5.2.0"
+
+"@voiceflow/logger@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/logger/-/logger-1.4.0.tgz#0d6c7d36b3b5593d4c2878af3ad183ec7bdbbd30"
+  integrity sha512-9A0sHwXI3e29RWENumy1yC3JyHCWQ/7iMFp0WLkxCIB/jdQhyPQjX6e9w3KuR+c7R+x78fs+7rNYMYqvdfdxSw==
   dependencies:
     "@types/express-pino-logger" "^4.0.2"
     "@types/pino" "^6.3.0"
