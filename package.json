@@ -1,5 +1,5 @@
 {
-  "name": "@voiceflow/alexa",
+  "name": "@voiceflow/alexa-client",
   "description": "voiceflow alexa runtime client",
   "version": "0.1.0",
   "author": "Voiceflow",
