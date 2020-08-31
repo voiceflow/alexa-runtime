@@ -27,17 +27,30 @@ describe('resume diagram', () => {
       const resumePrompt = {
         content: 'content',
         voice: 'not audio',
-        follow_content: 'follow content',
-        follow_voice: 'not audio',
+      };
+      const followPrompt = {
+        content: 'follow content',
+        voice: 'not followaudio',
       };
 
-      const frame = createResumeFrame(resumePrompt);
+      const frame = createResumeFrame(resumePrompt as any, followPrompt as any);
 
       expect(frame.getDiagramID()).to.eql(RESUME_DIAGRAM_ID);
       expect(frame.variables.get(ResumeVariables.CONTENT)).to.eql(`<voice name="${resumePrompt.voice}">${resumePrompt.content}</voice>`);
-      expect(frame.variables.get(ResumeVariables.FOLLOW_CONTENT)).to.eql(
-        `<voice name="${resumePrompt.follow_voice}">${resumePrompt.follow_content}</voice>`
-      );
+      expect(frame.variables.get(ResumeVariables.FOLLOW_CONTENT)).to.eql(`<voice name="${followPrompt.voice}">${followPrompt.content}</voice>`);
+    });
+
+    it('no follow prompt', () => {
+      const resumePrompt = {
+        content: 'content',
+        voice: 'not audio',
+      };
+
+      const frame = createResumeFrame(resumePrompt as any, null);
+
+      expect(frame.getDiagramID()).to.eql(RESUME_DIAGRAM_ID);
+      expect(frame.variables.get(ResumeVariables.CONTENT)).to.eql(`<voice name="${resumePrompt.voice}">${resumePrompt.content}</voice>`);
+      expect(frame.variables.get(ResumeVariables.FOLLOW_CONTENT)).to.eql('');
     });
   });
 });
