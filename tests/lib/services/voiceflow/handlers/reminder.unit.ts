@@ -162,6 +162,26 @@ describe('reminder handler unit test', () => {
           });
         });
 
+        it('format with variables', () => {
+          const locale = 'en';
+          const reminder = {
+            text: 'text',
+            timezone: 'User Timezone',
+            type: ReminderType.SCHEDULED_ABSOLUTE,
+            date: '01/{reminder_month}/{reminder_year}',
+            time: {
+              h: '1',
+              m: '2',
+              s: '3',
+            },
+          };
+          const result = _createReminderObject(reminder as any, { reminder_month: '02', reminder_year: '2023' }, locale);
+          expect(result.trigger).to.eql({
+            type: reminder.type,
+            scheduledTime: '2023-02-01T01:02:03',
+          });
+        });
+
         it('no date', () => {
           const locale = 'en';
           const reminder = {

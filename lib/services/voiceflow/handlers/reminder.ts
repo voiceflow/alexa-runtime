@@ -76,7 +76,8 @@ export const _createReminderObject = (reminder: Reminder, variablesMap: Record<s
   );
 
   if (reminder.type === ReminderType.SCHEDULED_ABSOLUTE) {
-    const { date } = reminder;
+    const date = reminder.date && regexVariables(reminder.date, variablesMap);
+
     const time = date?.includes('/') ? moment.utc(date, 'DD/MM/YYYY') : moment.utc(date?.split('T')[0], 'YYYY-MM-DD');
 
     if (!time.isValid()) throw new Error('invalid date');
