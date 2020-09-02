@@ -1,5 +1,25 @@
 version: 2.1
 
+parameters:
+  npm-repo:
+    type: string
+    default: "@voiecflow/alexa-client"
+  container-image-url:
+    type: string
+    default: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
+  k8s-asset:
+    type: string
+    default: "deployment/alexa"
+  k8s-namespace:
+    type: string
+    default: "voiceflow-v1" # This is usually voiceflow-v1
+  ssh-fingerprint:
+    type: string
+    default: "31:42:5a:4e:ee:42:40:e6:77:fc:d4:1b:9f:4e:ca:46"
+  dev-env-component:
+    type: string
+    default: "alexa"
+
 # Reusable YAML chunks
 defaults:
   prod_deploy_filters: &prod_deploy_filters
@@ -49,33 +69,33 @@ jobs:
     executor: vfcommon/build-executor
     steps:
       - vfcommon/build_push_image:
-          image_repo: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
-          release_pkg: "@voiceflow/alexa-client"
+          image_repo: << pipeline.parameters.container-image-url >>
+          release_pkg: << pipeline.parameters.npm-repo >>
 
   deploy-image:
     executor: vfcommon/build-executor
     steps:
       - vfcommon/deploy_image:
-          image_repo: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
-          namespace: "voiceflow-v1"
-          target: "deployment/alexa"
+          image_repo: << pipeline.parameters.container-image-url >>
+          namespace: << pipeline.parameters.k8s-namespace >>
+          target: << pipeline.parameters.k8s-asset >>
 
   deploy-on-tag:
     executor: vfcommon/build-executor
     steps:
       - vfcommon/deploy_image:
-          image_repo: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
-          namespace: "voiceflow-v1"
-          target: "deployment/alexa"
+          image_repo: << pipeline.parameters.container-image-url >>
+          namespace: << pipeline.parameters.k8s-namespace >>
+          target: << pipeline.parameters.k8s-asset >>
           tagged: true
 
   build-deploy-dev-env:
     executor: vfcommon/build-executor
     steps:
       - vfcommon/build_deploy_dev_env:
-          image_repo: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
-          component: "alexa"
-          ssh_key: "31:42:5a:4e:ee:42:40:e6:77:fc:d4:1b:9f:4e:ca:46"
+          image_repo: << pipeline.parameters.container-image-url >>
+          component: << pipeline.parameters.dev-env-component >>
+          ssh_key: << pipeline.parameters.ssh-fingerprint >>
 
 # When should each job run and what are their dependencies?
 workflows:
