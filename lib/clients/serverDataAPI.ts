@@ -30,6 +30,12 @@ class ServerDataAPI {
     return data;
   };
 
+  public getTestProgram = async (programID: string) => {
+    const { data }: { data: AlexaProgram } = await this.client.get(`/test/diagrams/${programID}`);
+
+    return data;
+  };
+
   public getVersion = async (versionID: string) => {
     const { data }: { data: AlexaVersion } = await this.client.get(`/version/${versionID}`);
 

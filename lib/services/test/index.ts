@@ -22,7 +22,9 @@ const TestManager = (services: Services, config: Config, utils = utilsObj) => {
     const { voiceflow, serverDataAPI } = services;
 
     const context = voiceflow.client.createContext(TEST_VERSION_ID, state as State, request, {
-      api: serverDataAPI,
+      api: {
+        getProgram: serverDataAPI.getTestProgram,
+      },
       handlers,
     });
 
