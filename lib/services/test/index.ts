@@ -19,14 +19,16 @@ const TestManager = (services: Services, config: Config, utils = utilsObj) => {
   const handlers = utils.Handlers(config);
 
   const invoke = async (state: State, request?: Request) => {
-    const { voiceflow } = services;
+    const { voiceflow, serverDataAPI } = services;
 
     const context = voiceflow.client.createContext(TEST_VERSION_ID, state as State, request, {
-      endpoint: `${config.VF_DATA_ENDPOINT}/test`,
+      api: {
+        getProgram: serverDataAPI.getTestProgram,
+      },
       handlers,
     });
 
-    context.setEvent(EventType.handlerWillHandle, (event) => context.trace.block(event.block.blockID));
+    context.setEvent(EventType.handlerWillHandle, (event) => context.trace.block(event.node.id));
 
     context.turn.set(T.REQUEST, request);
     context.variables.set(V.TIMESTAMP, Math.floor(Date.now() / 1000));

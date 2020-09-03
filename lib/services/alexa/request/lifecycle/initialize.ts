@@ -1,17 +1,18 @@
-import { AlexaVersion, RepeatType, SessionType } from '@voiceflow/alexa-types';
+import { RepeatType, SessionType } from '@voiceflow/alexa-types';
 import { Context, Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
+import { ServerDataAPIType } from '@/lib/clients/serverDataAPI';
 import { F, S, T, V } from '@/lib/constants';
-import { createResumeFrame, RESUME_DIAGRAM_ID } from '@/lib/services/voiceflow/diagrams/resume';
 import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
+import { createResumeFrame, RESUME_PROGRAM_ID } from '@/lib/services/voiceflow/programs/resume';
 
 export const VAR_VF = 'voiceflow';
 
 const utilsObj = {
   resume: {
     createResumeFrame,
-    RESUME_DIAGRAM_ID,
+    RESUME_PROGRAM_ID,
   },
   client: {
     Frame,
@@ -27,7 +28,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
     platformData: { settings, slots },
     variables: versionVariables,
     rootDiagramID,
-  } = await context.fetchVersion<AlexaVersion>();
+  } = await (input.context.api as ServerDataAPIType).getVersion(context.getVersionID());
 
   const { stack, storage, variables } = context;
 
@@ -59,7 +60,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
     sessions: storage.get(S.SESSIONS),
     platform: 'alexa',
 
-    // hidden system variables (code block only)
+    // hidden system variables (code node only)
     [VAR_VF]: {
       // TODO: implement all exposed voiceflow variables
       permissions: storage.get(S.ALEXA_PERMISSIONS),
@@ -90,7 +91,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
   if (shouldRestart) {
     // start the stack with just the root flow
     stack.flush();
-    stack.push(new utils.client.Frame({ diagramID: rootDiagramID }));
+    stack.push(new utils.client.Frame({ programID: rootDiagramID }));
 
     // we've created a brand new stack
     context.turn.set(T.NEW_STACK, true);
@@ -99,14 +100,14 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
     stack.top().storage.set(F.CALLED_COMMAND, true);
 
     // if there is an existing resume flow, remove itself and anything above it
-    const resumeStackIndex = stack.getFrames().findIndex((frame) => frame.getDiagramID() === utils.resume.RESUME_DIAGRAM_ID);
+    const resumeStackIndex = stack.getFrames().findIndex((frame) => frame.getProgramID() === utils.resume.RESUME_PROGRAM_ID);
     if (resumeStackIndex >= 0) {
       stack.popTo(resumeStackIndex);
     }
 
     stack.push(utils.resume.createResumeFrame(session.resume, session.follow));
   } else {
-    // give context to where the user left off with last speak block
+    // give context to where the user left off with last speak node
     stack.top().storage.delete(F.CALLED_COMMAND);
     const lastSpeak = stack.top().storage.get(F.SPEAK) ?? '';
 

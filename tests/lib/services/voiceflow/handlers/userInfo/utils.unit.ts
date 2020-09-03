@@ -629,7 +629,7 @@ describe('user info utils unit test', () => {
       });
     });
 
-    describe('ISP if block', () => {
+    describe('ISP if node', () => {
       it('transaction set to 0', async () => {
         const getInSkillProduct = sinon.stub().resolves(null);
         const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };

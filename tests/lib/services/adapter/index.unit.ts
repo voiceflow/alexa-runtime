@@ -72,9 +72,9 @@ describe('adapterManager unit tests', async () => {
       { text: 'missing attributes', old: oldMissing, new: newMissing },
       { text: 'outputmap', old: oldOutputMap, new: newOutputMap },
       { text: 'command called', old: oldCommandCalled, new: newCommandCalled },
-      { text: 'stream one block', old: oldStreamOne, new: newStreamOne },
-      { text: 'stream two blocks', old: oldStreamTwo, new: newStreamTwo },
-      { text: 'stream two blocks no next_line', old: oldStreamTwoNoLine, new: newStreamTwoNoLine },
+      { text: 'stream one node', old: oldStreamOne, new: newStreamOne },
+      { text: 'stream two nodes', old: oldStreamTwo, new: newStreamTwo },
+      { text: 'stream two nodes no next_line', old: oldStreamTwoNoLine, new: newStreamTwoNoLine },
       { text: 'display', old: oldDisplay, new: newDisplay },
     ];
 

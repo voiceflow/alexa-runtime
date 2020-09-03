@@ -20,23 +20,23 @@ describe('permission card handler unit tests', () => {
   describe('handle', () => {
     it('works correctly', () => {
       const context = { turn: { set: sinon.stub() }, trace: { debug: sinon.stub() } };
-      const block = {
+      const node = {
         nextId: 'next-id',
         permission_card: 'permission-card',
       };
 
-      expect(permissionCardHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.nextId);
-      expect(context.turn.set.args).to.eql([[T.PERMISSION_CARD, block.permission_card]]);
+      expect(permissionCardHandler.handle(node as any, context as any, null as any, null as any)).to.eql(node.nextId);
+      expect(context.turn.set.args).to.eql([[T.PERMISSION_CARD, node.permission_card]]);
     });
 
     it('no nextId', () => {
       const context = { turn: { set: sinon.stub() }, trace: { debug: sinon.stub() } };
-      const block = {
+      const node = {
         permission_card: 'permission-card',
       };
 
-      expect(permissionCardHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
-      expect(context.turn.set.args).to.eql([[T.PERMISSION_CARD, block.permission_card]]);
+      expect(permissionCardHandler.handle(node as any, context as any, null as any, null as any)).to.eql(null);
+      expect(context.turn.set.args).to.eql([[T.PERMISSION_CARD, node.permission_card]]);
     });
   });
 

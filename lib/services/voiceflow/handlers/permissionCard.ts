@@ -1,13 +1,18 @@
+import { NodeType } from '@voiceflow/alexa-types';
+import { Node } from '@voiceflow/api-sdk';
 import { HandlerFactory } from '@voiceflow/client';
 
 import { S, T } from '@/lib/constants';
 
 import { ResponseBuilder } from '../types';
 
-export type PermissionCard = {
-  permission_card?: string;
-  nextId: string;
-};
+export type PermissionNode = Node<
+  NodeType.PERMISSION,
+  {
+    permission_card?: string;
+    nextId: string;
+  }
+>;
 
 export const PermissionCardResponseBuilder: ResponseBuilder = (context, builder) => {
   // check permissions card
@@ -18,20 +23,20 @@ export const PermissionCardResponseBuilder: ResponseBuilder = (context, builder)
   }
 };
 
-const PermissionCardHandler: HandlerFactory<PermissionCard> = () => ({
-  canHandle: (block) => {
-    return !!block.permission_card;
+const PermissionCardHandler: HandlerFactory<PermissionNode> = () => ({
+  canHandle: (node) => {
+    return !!node.permission_card;
   },
-  handle: (block, context) => {
-    context.turn.set(T.PERMISSION_CARD, block.permission_card);
+  handle: (node, context) => {
+    context.turn.set(T.PERMISSION_CARD, node.permission_card);
 
     context.trace.debug('__Permissions__ - entered');
 
-    if (block.nextId) {
-      context.trace.debug('Permissions - redirecting to the next block');
+    if (node.nextId) {
+      context.trace.debug('Permissions - redirecting to the next node');
     }
 
-    return block.nextId ?? null;
+    return node.nextId ?? null;
   },
 });
 

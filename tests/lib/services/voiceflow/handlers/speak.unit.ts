@@ -26,7 +26,7 @@ describe('speak handler unit tests', async () => {
 
   describe('handle', () => {
     it('random speak', () => {
-      const block = {
+      const node = {
         nextId: 'next-id',
         random_speak: ['one', 'two', 'three'],
       };
@@ -41,14 +41,14 @@ describe('speak handler unit tests', async () => {
       };
       const variables = { getState: sinon.stub().returns({}) };
 
-      expect(speakHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.nextId);
+      expect(speakHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
       expect(topFrame.storage.set.args[0][0]).to.eql(F.SPEAK);
       // output is one of the options in random_speak
-      expect(block.random_speak.includes(topFrame.storage.set.args[0][1])).to.eql(true);
+      expect(node.random_speak.includes(topFrame.storage.set.args[0][1])).to.eql(true);
     });
 
     it('speak', () => {
-      const block = {
+      const node = {
         speak: 'random {var} or {var1}',
       };
 
@@ -63,7 +63,7 @@ describe('speak handler unit tests', async () => {
       const varState = { var: 1.234, var1: 'here' };
       const variables = { getState: sinon.stub().returns(varState) };
 
-      expect(speakHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(null);
+      expect(speakHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
       // output has vars replaced and numbers turned to 2digits floats
       expect(topFrame.storage.set.args).to.eql([[F.SPEAK, 'random 1.23 or here']]);
 
@@ -80,7 +80,7 @@ describe('speak handler unit tests', async () => {
     });
 
     it('speak is not string', () => {
-      const block = {
+      const node = {
         speak: 1,
       };
 
@@ -89,7 +89,7 @@ describe('speak handler unit tests', async () => {
       };
       const variables = { getState: sinon.stub().returns({}) };
 
-      expect(speakHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(null);
+      expect(speakHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
       expect(context.storage.produce.callCount).to.eql(0);
     });
   });

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { createResumeFrame, promptToSSML, RESUME_DIAGRAM_ID, ResumeVariables } from '@/lib/services/voiceflow/diagrams/resume';
+import { createResumeFrame, promptToSSML, RESUME_PROGRAM_ID, ResumeVariables } from '@/lib/services/voiceflow/programs/resume';
 
 describe('resume diagram', () => {
   describe('promptToSSML', () => {
@@ -35,7 +35,7 @@ describe('resume diagram', () => {
 
       const frame = createResumeFrame(resumePrompt as any, followPrompt as any);
 
-      expect(frame.getDiagramID()).to.eql(RESUME_DIAGRAM_ID);
+      expect(frame.getProgramID()).to.eql(RESUME_PROGRAM_ID);
       expect(frame.variables.get(ResumeVariables.CONTENT)).to.eql(`<voice name="${resumePrompt.voice}">${resumePrompt.content}</voice>`);
       expect(frame.variables.get(ResumeVariables.FOLLOW_CONTENT)).to.eql(`<voice name="${followPrompt.voice}">${followPrompt.content}</voice>`);
     });
@@ -48,7 +48,7 @@ describe('resume diagram', () => {
 
       const frame = createResumeFrame(resumePrompt as any, null);
 
-      expect(frame.getDiagramID()).to.eql(RESUME_DIAGRAM_ID);
+      expect(frame.getProgramID()).to.eql(RESUME_PROGRAM_ID);
       expect(frame.variables.get(ResumeVariables.CONTENT)).to.eql(`<voice name="${resumePrompt.voice}">${resumePrompt.content}</voice>`);
       expect(frame.variables.get(ResumeVariables.FOLLOW_CONTENT)).to.eql('');
     });

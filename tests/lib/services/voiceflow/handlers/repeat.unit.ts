@@ -35,7 +35,7 @@ describe('repeat handler', () => {
     describe('handle', () => {
       it('minimal repeat', () => {
         const frame = {
-          getBlockID: sinon.stub().returns('block'),
+          getNodeID: sinon.stub().returns('node'),
           storage: { get: sinon.stub().returns('foo') },
         };
 
@@ -71,7 +71,7 @@ describe('repeat handler', () => {
 
       it('max repeat', () => {
         const frame = {
-          getBlockID: sinon.stub().returns('block'),
+          getNodeID: sinon.stub().returns('node'),
           storage: { get: sinon.stub().returns('foo') },
         };
 

@@ -1,3 +1,4 @@
+import { Node as CaptureNode } from '@voiceflow/alexa-types/build/nodes/capture';
 import { HandlerFactory } from '@voiceflow/client';
 import _ from 'lodash';
 import wordsToNumbers from 'words-to-numbers';
@@ -9,12 +10,6 @@ import { addRepromptIfExists } from '../utils';
 import CommandHandler from './command';
 import RepeatHandler from './repeat';
 
-export type Capture = {
-  nextId?: string;
-  variable: string | number;
-  reprompt?: string;
-};
-
 const utilsObj = {
   wordsToNumbers,
   addRepromptIfExists,
@@ -22,17 +17,17 @@ const utilsObj = {
   repeatHandler: RepeatHandler(),
 };
 
-export const CaptureHandler: HandlerFactory<Capture, typeof utilsObj> = (utils) => ({
-  canHandle: (block) => {
-    return !!block.variable;
+export const CaptureHandler: HandlerFactory<CaptureNode, typeof utilsObj> = (utils) => ({
+  canHandle: (node) => {
+    return !!node.variable;
   },
-  handle: (block, context, variables) => {
+  handle: (node, context, variables) => {
     const request = context.turn.get(T.REQUEST) as IntentRequest;
 
     if (request?.type !== RequestType.INTENT) {
-      utils.addRepromptIfExists(block, context, variables);
+      utils.addRepromptIfExists(node, context, variables);
       // quit cycleStack without ending session by stopping on itself
-      return block.blockID;
+      return node.id;
     }
 
     let nextId: string | null = null;
@@ -55,13 +50,13 @@ export const CaptureHandler: HandlerFactory<Capture, typeof utilsObj> = (utils) 
       const num = utils.wordsToNumbers(value);
 
       if (typeof num !== 'number' || Number.isNaN(num)) {
-        variables.set(block.variable, value);
+        variables.set(node.variable, value);
       } else {
-        variables.set(block.variable, num);
+        variables.set(node.variable, num);
       }
     }
 
-    ({ nextId = null } = block);
+    ({ nextId = null } = node);
 
     // request for this turn has been processed, delete request
     context.turn.delete(T.REQUEST);

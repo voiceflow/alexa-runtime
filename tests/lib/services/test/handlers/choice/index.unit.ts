@@ -11,17 +11,17 @@ describe('choice handler unit tests', async () => {
 
   describe('canHandle', () => {
     it('false', async () => {
-      const block = {};
+      const node = {};
 
-      const result = ChoiceHandler(null as any).canHandle(block as any, null as any, null as any, null as any);
+      const result = ChoiceHandler(null as any).canHandle(node as any, null as any, null as any, null as any);
 
       expect(result).to.eql(false);
     });
 
     it('true', async () => {
-      const block = { choices: { foo: 'bar' } };
+      const node = { choices: { foo: 'bar' } };
 
-      const result = ChoiceHandler(null as any).canHandle(block as any, null as any, null as any, null as any);
+      const result = ChoiceHandler(null as any).canHandle(node as any, null as any, null as any, null as any);
 
       expect(result).to.eql(true);
     });
@@ -34,12 +34,12 @@ describe('choice handler unit tests', async () => {
       };
       const choiceHandler = ChoiceHandler(utils as any);
 
-      const block = { blockID: 'block-id', inputs: [['one'], ['two']] };
+      const node = { id: 'node-id', inputs: [['one'], ['two']] };
       const context = { trace: { choice: sinon.stub() }, turn: { get: sinon.stub().returns(null) } };
       const variables = { var: '1' };
 
-      expect(choiceHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.blockID);
-      expect(utils.addRepromptIfExists.args).to.eql([[block, context, variables]]);
+      expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.id);
+      expect(utils.addRepromptIfExists.args).to.eql([[node, context, variables]]);
       expect(context.trace.choice.args[0][0]).to.eql([{ name: 'one' }, { name: 'two' }]);
     });
 
@@ -49,12 +49,12 @@ describe('choice handler unit tests', async () => {
       };
       const choiceHandler = ChoiceHandler(utils as any);
 
-      const block = { blockID: 'block-id', inputs: [] };
+      const node = { id: 'node-id', inputs: [] };
       const context = { trace: { choice: sinon.stub() }, turn: { get: sinon.stub().returns({ type: 'random-type' }) } };
       const variables = { var: '1' };
 
-      expect(choiceHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.blockID);
-      expect(utils.addRepromptIfExists.args).to.eql([[block, context, variables]]);
+      expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.id);
+      expect(utils.addRepromptIfExists.args).to.eql([[node, context, variables]]);
       expect(context.trace.choice.args).to.eql([[[]]]);
     });
 
@@ -70,8 +70,8 @@ describe('choice handler unit tests', async () => {
         };
         const choiceHandler = ChoiceHandler(utils as any);
 
-        const block = {
-          blockID: 'block-id',
+        const node = {
+          id: 'node-id',
           inputs: [
             ['no', 'nah'],
             ['yes', 'yeah'],
@@ -84,7 +84,7 @@ describe('choice handler unit tests', async () => {
         const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
         const variables = { var: '1' };
 
-        expect(choiceHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(null);
+        expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
         expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
       });
 
@@ -95,8 +95,8 @@ describe('choice handler unit tests', async () => {
         };
         const choiceHandler = ChoiceHandler(utils as any);
 
-        const block = {
-          blockID: 'block-id',
+        const node = {
+          id: 'node-id',
           nextIds: ['one', 'two', 'three'],
           inputs: [
             ['no', 'nah'],
@@ -110,7 +110,7 @@ describe('choice handler unit tests', async () => {
         const context = { trace: { debug: sinon.stub() }, turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
         const variables = { var: '1' };
 
-        expect(choiceHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.nextIds[1]);
+        expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextIds[1]);
         expect(utils.getBestScore.args).to.eql([
           [
             request.payload.input,
@@ -151,8 +151,8 @@ describe('choice handler unit tests', async () => {
           };
           const choiceHandler = ChoiceHandler(utils as any);
 
-          const block = {
-            blockID: 'block-id',
+          const node = {
+            id: 'node-id',
             inputs: [
               ['no', 'nah'],
               ['yes', 'yeah'],
@@ -165,7 +165,7 @@ describe('choice handler unit tests', async () => {
           const context = { turn: { get: sinon.stub().returns(request) } };
           const variables = { var: '1' };
 
-          expect(choiceHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(output);
+          expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(output);
           expect(utils.commandHandler.canHandle.args).to.eql([[context]]);
           expect(utils.commandHandler.handle.args).to.eql([[context, variables]]);
         });
@@ -183,8 +183,8 @@ describe('choice handler unit tests', async () => {
             };
             const choiceHandler = ChoiceHandler(utils as any);
 
-            const block = {
-              blockID: 'block-id',
+            const node = {
+              id: 'node-id',
               elseId: 'else-id',
               inputs: [
                 ['no', 'nah'],
@@ -198,7 +198,7 @@ describe('choice handler unit tests', async () => {
             const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
             const variables = { var: '1' };
 
-            expect(choiceHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.elseId);
+            expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.elseId);
             expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
           });
 
@@ -214,8 +214,8 @@ describe('choice handler unit tests', async () => {
             };
             const choiceHandler = ChoiceHandler(utils as any);
 
-            const block = {
-              blockID: 'block-id',
+            const node = {
+              id: 'node-id',
               inputs: [
                 ['no', 'nah'],
                 ['yes', 'yeah'],
@@ -228,7 +228,7 @@ describe('choice handler unit tests', async () => {
             const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
             const variables = { var: '1' };
 
-            expect(choiceHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(null);
+            expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
             expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
           });
         });

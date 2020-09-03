@@ -1,8 +1,9 @@
-import { Command, Context, extractFrameCommand } from '@voiceflow/client';
+import { Command } from '@voiceflow/api-sdk';
+import { Context, extractFrameCommand } from '@voiceflow/client';
 
 import { EventRequest, RequestType } from '@/lib/services/voiceflow/types';
 
-export type EventCommand = { event: string; next: string | null; mappings: { path: string; var: string }[] };
+export type EventCommand = Command<'event', { event: string; next: string | null; mappings: { path: string; var: string }[] }>;
 
 export const getVariable = (path: string, data: any) => {
   if (!path || typeof path !== 'string') {
@@ -40,12 +41,12 @@ export const _getEvent = (context: Context, extractFrame: typeof extractFrameCom
 
   const { event } = request.payload;
 
-  const res = extractFrame(context.stack, (command: Command | null) => command?.event === event);
+  const res = extractFrame<EventCommand>(context.stack, (command: EventCommand | null) => command?.event === event);
   if (!res) return null;
 
   return {
     index: res.index,
-    command: res.command as EventCommand,
+    command: res.command,
     event,
   };
 };
@@ -64,7 +65,7 @@ export const handleEvent = (utils: typeof utilsObj) => async (context: Context):
   const request = context.getRequest() as EventRequest;
 
   context.stack.popTo(index + 1);
-  context.stack.top().setBlockID(command.next);
+  context.stack.top().setNodeID(command.next);
 
   command.mappings.forEach((mapping) => {
     context.variables.set(mapping.var, getVariable(mapping.path, request.payload.data));

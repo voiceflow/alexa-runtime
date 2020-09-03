@@ -45,14 +45,13 @@ describe('test manager unit tests', () => {
 
       const services = {
         voiceflow: { client: { createContext } },
+        serverDataAPI: { getTestProgram: 'api' },
       };
       const utils = {
         Handlers: () => 'foo',
       };
 
-      const config = {
-        VF_DATA_ENDPOINT: 'random-endpoint',
-      };
+      const config = {};
 
       const testManager = TestManager(services as any, config as any, utils as any);
 
@@ -65,16 +64,16 @@ describe('test manager unit tests', () => {
           state,
           request,
           {
-            endpoint: `${config.VF_DATA_ENDPOINT}/test`,
+            api: { getProgram: services.serverDataAPI.getTestProgram },
             handlers: 'foo',
           },
         ],
       ]);
       expect(context.setEvent.args[0][0]).to.eql(EventType.handlerWillHandle);
       const fn = context.setEvent.args[0][1];
-      const event = { context: { foo4: 'bar3' }, block: { blockID: 'block-id' } };
+      const event = { context: { foo4: 'bar3' }, node: { id: 'node-id' } };
       fn(event);
-      expect(context.trace.block.args).to.eql([[event.block.blockID]]);
+      expect(context.trace.block.args).to.eql([[event.node.id]]);
       expect(context.turn.set.args).to.eql([[T.REQUEST, request]]);
       expect(context.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
       expect(context.update.callCount).to.eql(1);
@@ -105,14 +104,13 @@ describe('test manager unit tests', () => {
 
       const services = {
         voiceflow: { client: { createContext } },
+        serverDataAPI: { getTestProgram: 'api' },
       };
       const utils = {
         Handlers: sinon.stub().returns([]),
       };
 
-      const config = {
-        VF_DATA_ENDPOINT: 'random-endpoint',
-      };
+      const config = {};
 
       const testManager = TestManager(services as any, config as any, utils as any);
 
@@ -148,11 +146,10 @@ describe('test manager unit tests', () => {
 
         const services = {
           voiceflow: { client: { createContext } },
+          serverDataAPI: { getTestProgram: 'api' },
         };
 
-        const config = {
-          VF_DATA_ENDPOINT: 'random-endpoint',
-        };
+        const config = {};
 
         const utils = {
           Handlers: sinon.stub().returns([]),
@@ -191,11 +188,10 @@ describe('test manager unit tests', () => {
 
         const services = {
           voiceflow: { client: { createContext } },
+          serverDataAPI: { getTestProgram: 'api' },
         };
 
-        const config = {
-          VF_DATA_ENDPOINT: 'random-endpoint',
-        };
+        const config = {};
 
         const utils = {
           Handlers: sinon.stub().returns([]),
@@ -234,11 +230,10 @@ describe('test manager unit tests', () => {
 
         const services = {
           voiceflow: { client: { createContext } },
+          serverDataAPI: { getTestProgram: 'api' },
         };
 
-        const config = {
-          VF_DATA_ENDPOINT: 'random-endpoint',
-        };
+        const config = {};
 
         const utils = {
           Handlers: sinon.stub().returns([]),

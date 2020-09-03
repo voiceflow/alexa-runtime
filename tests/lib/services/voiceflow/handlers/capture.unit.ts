@@ -28,12 +28,12 @@ describe('capture handler unit tests', async () => {
 
       const captureHandler = CaptureHandler(utils as any);
 
-      const block = { blockID: 'block-id' };
+      const node = { id: 'node-id' };
       const context = { turn: { get: sinon.stub().returns(null) } };
       const variables = { foo: 'bar' };
 
-      expect(captureHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.blockID);
-      expect(utils.addRepromptIfExists.args).to.eql([[block, context, variables]]);
+      expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.id);
+      expect(utils.addRepromptIfExists.args).to.eql([[node, context, variables]]);
     });
 
     it('request type not intent', () => {
@@ -45,12 +45,12 @@ describe('capture handler unit tests', async () => {
 
       const captureHandler = CaptureHandler(utils as any);
 
-      const block = { blockID: 'block-id' };
+      const node = { id: 'node-id' };
       const context = { turn: { get: sinon.stub().returns({ type: 'random' }) } };
       const variables = { foo: 'bar' };
 
-      expect(captureHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.blockID);
-      expect(utils.addRepromptIfExists.args).to.eql([[block, context, variables]]);
+      expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.id);
+      expect(utils.addRepromptIfExists.args).to.eql([[node, context, variables]]);
     });
 
     describe('request type is intent', () => {
@@ -66,11 +66,11 @@ describe('capture handler unit tests', async () => {
 
         const captureHandler = CaptureHandler(utils as any);
 
-        const block = { blockID: 'block-id' };
+        const node = { id: 'node-id' };
         const context = { turn: { get: sinon.stub().returns({ type: RequestType.INTENT }) } };
         const variables = { foo: 'bar' };
 
-        expect(captureHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(output);
+        expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(output);
         expect(utils.commandHandler.canHandle.args).to.eql([[context]]);
         expect(utils.commandHandler.handle.args).to.eql([[context, variables]]);
       });
@@ -86,12 +86,12 @@ describe('capture handler unit tests', async () => {
 
           const captureHandler = CaptureHandler(utils as any);
 
-          const block = { nextId: 'next-id' };
+          const node = { nextId: 'next-id' };
           const request = { type: RequestType.INTENT, payload: { intent: { slots: [] } } };
           const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
           const variables = { foo: 'bar' };
 
-          expect(captureHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.nextId);
+          expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
           expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
         });
 
@@ -105,12 +105,12 @@ describe('capture handler unit tests', async () => {
 
           const captureHandler = CaptureHandler(utils as any);
 
-          const block = { nextId: 'next-id' };
+          const node = { nextId: 'next-id' };
           const request = { type: RequestType.INTENT, payload: { intent: { slots: [null] } } };
           const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
           const variables = { foo: 'bar' };
 
-          expect(captureHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.nextId);
+          expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
           expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
         });
 
@@ -127,15 +127,15 @@ describe('capture handler unit tests', async () => {
 
           const captureHandler = CaptureHandler(utils as any);
 
-          const block = { nextId: 'next-id', variable: 'var' };
+          const node = { nextId: 'next-id', variable: 'var' };
           const input = 'input';
           const request = { type: RequestType.INTENT, payload: { intent: { slots: [{ value: input }] } } };
           const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
           const variables = { set: sinon.stub() };
 
-          expect(captureHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.nextId);
+          expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
           expect(utils.wordsToNumbers.args).to.eql([[input]]);
-          expect(variables.set.args).to.eql([[block.variable, input]]);
+          expect(variables.set.args).to.eql([[node.variable, input]]);
           expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
         });
 
@@ -152,15 +152,15 @@ describe('capture handler unit tests', async () => {
 
           const captureHandler = CaptureHandler(utils as any);
 
-          const block = { variable: 'var' };
+          const node = { variable: 'var' };
           const input = 'input';
           const request = { type: RequestType.INTENT, payload: { intent: { slots: [{ value: input }] } } };
           const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
           const variables = { set: sinon.stub() };
 
-          expect(captureHandler.handle(block as any, context as any, variables as any, null as any)).to.eql(null);
+          expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
           expect(utils.wordsToNumbers.args).to.eql([[input]]);
-          expect(variables.set.args).to.eql([[block.variable, word]]);
+          expect(variables.set.args).to.eql([[node.variable, word]]);
           expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
         });
       });

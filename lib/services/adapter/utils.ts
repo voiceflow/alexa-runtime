@@ -19,8 +19,8 @@ export const commandAdapter = (oldCommands: OldCommands): Commands =>
 export const stackAdapter = (oldContext: OldContextRaw): NewContextStack =>
   oldContext.diagrams?.reduce((acc, d, index) => {
     const frame = {
-      blockID: d.line === false ? null : d.line,
-      diagramID: d.id,
+      nodeID: d.line === false ? null : d.line,
+      programID: d.id,
       variables: d.variable_state,
       storage: {
         // speak is only added in the old server during commands
@@ -32,8 +32,8 @@ export const stackAdapter = (oldContext: OldContextRaw): NewContextStack =>
     };
 
     if (index === oldContext.diagrams.length - 1) {
-      // blockID for top of the stack frame is kept in line_id in old context
-      frame.blockID = oldContext.line_id;
+      // nodeID for top of the stack frame is kept in line_id in old context
+      frame.nodeID = oldContext.line_id;
       // old server only keeps what the last diagram spoke
       if (oldContext.last_speak) frame.storage.speak = oldContext.last_speak;
     }

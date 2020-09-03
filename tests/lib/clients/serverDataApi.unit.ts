@@ -2,9 +2,9 @@ import secretsProvider from '@voiceflow/secrets-provider';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import ServerDataApiClient from '@/lib/clients/serverDataApi';
+import ServerDataAPIClient from '@/lib/clients/serverDataAPI';
 
-describe('serverDataApi client unit tests', () => {
+describe('serverDataAPI client unit tests', () => {
   before(async () => {
     await secretsProvider.start({
       SECRETS_PROVIDER: 'test',
@@ -16,7 +16,7 @@ describe('serverDataApi client unit tests', () => {
       const clients = { axios: { create: sinon.stub() } };
       const config = { VF_DATA_ENDPOINT: 'random' };
 
-      ServerDataApiClient(clients as any, config as any);
+      ServerDataAPIClient(clients as any, config as any);
 
       expect(clients.axios.create.args).to.eql([
         [
@@ -35,7 +35,7 @@ describe('serverDataApi client unit tests', () => {
       const clients = { axios: { create: sinon.stub().returns(axios) } };
       const config = { VF_DATA_ENDPOINT: 'random' };
 
-      const client = ServerDataApiClient(clients as any, config as any);
+      const client = ServerDataAPIClient(clients as any, config as any);
 
       const displayId = 1;
       expect(await client.fetchDisplayById(displayId)).to.eql(null);
@@ -48,7 +48,7 @@ describe('serverDataApi client unit tests', () => {
       const clients = { axios: { create: sinon.stub().returns(axios) } };
       const config = { VF_DATA_ENDPOINT: 'random' };
 
-      const client = ServerDataApiClient(clients as any, config as any);
+      const client = ServerDataAPIClient(clients as any, config as any);
 
       const displayId = 1;
       expect(await client.fetchDisplayById(displayId)).to.eql(data);

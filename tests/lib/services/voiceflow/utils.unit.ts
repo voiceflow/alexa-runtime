@@ -17,11 +17,11 @@ describe('voiceflow manager utils unit tests', async () => {
 
     it('has reprompt', () => {
       const context = { turn: { set: sinon.stub() } };
-      const block = { reprompt: 'hello {var}' };
+      const node = { reprompt: 'hello {var}' };
       const varState = { var: 'there' };
       const variables = { getState: sinon.stub().returns(varState) };
 
-      addRepromptIfExists(block as any, context as any, variables as any);
+      addRepromptIfExists(node as any, context as any, variables as any);
 
       expect(context.turn.set.args[0]).to.eql([T.REPROMPT, 'hello there']);
     });

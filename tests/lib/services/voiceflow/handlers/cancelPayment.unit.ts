@@ -20,21 +20,21 @@ describe('cancel payment handler unit tests', () => {
   describe('handle', () => {
     it('works correctly', () => {
       const context = { storage: { set: sinon.stub() } };
-      const block = {
+      const node = {
         cancel_product_id: 'cancel-product-id',
         success_id: 'success-id',
         fail_id: 'fail-id',
-        blockID: 'block-id',
+        id: 'node-id',
       };
 
-      expect(cancelPaymentHandler.handle(block, context as any, null as any, null as any)).to.eql(block.blockID);
+      expect(cancelPaymentHandler.handle(node as any, context as any, null as any, null as any)).to.eql(node.id);
       expect(context.storage.set.args).to.eql([
         [
           S.CANCEL_PAYMENT,
           {
-            productId: block.cancel_product_id,
-            successPath: block.success_id,
-            failPath: block.fail_id,
+            productId: node.cancel_product_id,
+            successPath: node.success_id,
+            failPath: node.fail_id,
             status: null,
           },
         ],

@@ -20,19 +20,19 @@ describe('permission card handler unit tests', () => {
   describe('handle', () => {
     it('works correctly', () => {
       const context = { turn: { set: sinon.stub() } };
-      const block = {
+      const node = {
         nextId: 'next-id',
       };
 
-      expect(accountLinkingHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.nextId);
+      expect(accountLinkingHandler.handle(node as any, context as any, null as any, null as any)).to.eql(node.nextId);
       expect(context.turn.set.args).to.eql([[T.ACCOUNT_LINKING, true]]);
     });
 
     it('no nextId', () => {
       const context = { turn: { set: sinon.stub() } };
-      const block = {};
+      const node = {};
 
-      expect(accountLinkingHandler.handle(block as any, context as any, null as any, null as any)).to.eql(null);
+      expect(accountLinkingHandler.handle(node as any, context as any, null as any, null as any)).to.eql(null);
       expect(context.turn.set.args).to.eql([[T.ACCOUNT_LINKING, true]]);
     });
   });

@@ -1,10 +1,21 @@
-import { Command, Context, extractFrameCommand, Frame, Store } from '@voiceflow/client';
+import { Command } from '@voiceflow/api-sdk';
+import { Context, extractFrameCommand, Frame, Store } from '@voiceflow/client';
 import _ from 'lodash';
 
 import { F, T } from '@/lib/constants';
 
 import { IntentName, IntentRequest, Mapping, RequestType } from '../types';
 import { mapSlots } from '../utils';
+
+export type IntentCommand = Command<
+  any,
+  {
+    intent: string;
+    mappings: { variable: string; slot: string }[];
+    diagram_id?: string;
+    next?: null | string;
+  }
+>;
 
 export const getCommand = (context: Context, extractFrame: typeof extractFrameCommand) => {
   const request = context.turn.get(T.REQUEST) as IntentRequest;
@@ -31,7 +42,7 @@ export const getCommand = (context: Context, extractFrame: typeof extractFrameCo
     }
   }
 
-  const res = extractFrame(context.stack, matcher);
+  const res = extractFrame<IntentCommand>(context.stack, matcher);
   if (!res) return null;
 
   return {
@@ -47,7 +58,7 @@ const utilsObj = {
 };
 
 /**
- * The Command Handler is meant to be used inside other handlers, and should never handle blocks directly
+ * The Command Handler is meant to be used inside other handlers, and should never handle nodes directly
  */
 export const CommandHandler = (utils: typeof utilsObj) => ({
   canHandle: (context: Context): boolean => {
@@ -71,20 +82,20 @@ export const CommandHandler = (utils: typeof utilsObj) => ({
         context.stack.top().storage.set(F.CALLED_COMMAND, true);
 
         // Reset state to beginning of new diagram and store current line to the stack
-        const newFrame = new utils.Frame({ diagramID: command.diagram_id });
+        const newFrame = new utils.Frame({ programID: command.diagram_id });
         context.stack.push(newFrame);
       } else if (command.next) {
         if (index < context.stack.getSize() - 1) {
           // otherwise destructive and pop off everything before the command
           context.stack.popTo(index + 1);
-          context.stack.top().setBlockID(command.next);
+          context.stack.top().setNodeID(command.next);
 
-          context.trace.debug(`matched intent **${command.intent}** - exiting flows and jumping to block`);
+          context.trace.debug(`matched intent **${command.intent}** - exiting flows and jumping to node`);
         } else if (index === context.stack.getSize() - 1) {
           // jumping to an intent within the same flow
           nextId = command.next;
 
-          context.trace.debug(`matched intent **${command.intent}** - jumping to block`);
+          context.trace.debug(`matched intent **${command.intent}** - jumping to node`);
         }
       }
     }

@@ -1,9 +1,9 @@
-import { Prompt } from '@voiceflow/alexa-types';
-import { Diagram, Frame } from '@voiceflow/client';
+import { NodeType, Prompt } from '@voiceflow/alexa-types';
+import { Frame, Program } from '@voiceflow/client';
 
 import { IntentName } from '@/lib/services/voiceflow/types';
 
-export const RESUME_DIAGRAM_ID = '__RESUME_FLOW__';
+export const RESUME_PROGRAM_ID = '__RESUME_FLOW__';
 
 export enum ResumeVariables {
   CONTENT = '__content0__',
@@ -24,7 +24,7 @@ export const promptToSSML = (content = '', voice: string | undefined) => {
 
 export const createResumeFrame = (resume: Prompt, follow: Prompt | null) => {
   return new Frame({
-    diagramID: RESUME_DIAGRAM_ID,
+    programID: RESUME_PROGRAM_ID,
     variables: {
       [ResumeVariables.CONTENT]: promptToSSML(resume.content, resume.voice),
       [ResumeVariables.FOLLOW_CONTENT]: follow ? promptToSSML(follow.content, follow.voice) : '',
@@ -33,15 +33,17 @@ export const createResumeFrame = (resume: Prompt, follow: Prompt | null) => {
 };
 
 const ResumeDiagramRaw = {
-  id: RESUME_DIAGRAM_ID,
-  blocks: {
+  id: RESUME_PROGRAM_ID,
+  lines: {
     1: {
-      blockID: '1',
+      id: '1',
+      type: NodeType.SPEAK,
       speak: `{${ResumeVariables.CONTENT}}`,
       nextId: '2',
     },
     2: {
-      blockID: '2',
+      id: '2',
+      type: NodeType.INTERACTION,
       interactions: [
         {
           intent: IntentName.YES,
@@ -56,15 +58,17 @@ const ResumeDiagramRaw = {
       elseId: '3',
     },
     3: {
-      blockID: '3',
+      type: NodeType.SPEAK,
+      id: '3',
       speak: `{${ResumeVariables.FOLLOW_CONTENT}}`,
     },
     4: {
-      blockID: '4',
+      type: 'reset',
+      id: '4',
       reset: true,
     },
   },
-  startBlockID: '1',
+  startId: '1',
 };
 
-export const ResumeDiagram = new Diagram(ResumeDiagramRaw);
+export const ResumeDiagram = new Program(ResumeDiagramRaw);
