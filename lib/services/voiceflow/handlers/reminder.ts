@@ -1,3 +1,5 @@
+import { NodeType } from '@voiceflow/alexa-types';
+import { Node } from '@voiceflow/api-sdk';
 import { HandlerFactory } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 import axios from 'axios';
@@ -21,11 +23,14 @@ type Reminder = {
   timezone?: string;
 };
 
-export type ReminderBlock = {
-  reminder: Reminder;
-  success_id: string;
-  fail_id: string;
-};
+export type ReminderNode = Node<
+  NodeType.REMINDER,
+  {
+    reminder: Reminder;
+    success_id: string;
+    fail_id: string;
+  }
+>;
 
 type Trigger =
   | {
@@ -108,11 +113,11 @@ const utilsObj = {
   axios,
 };
 
-export const ReminderHandler: HandlerFactory<ReminderBlock, typeof utilsObj> = (utils) => ({
-  canHandle: (block) => {
-    return !!block.reminder;
+export const ReminderHandler: HandlerFactory<ReminderNode, typeof utilsObj> = (utils) => ({
+  canHandle: (node) => {
+    return !!node.reminder;
   },
-  handle: async (block, context, variables) => {
+  handle: async (node, context, variables) => {
     let nextId: string;
 
     try {
@@ -121,7 +126,7 @@ export const ReminderHandler: HandlerFactory<ReminderBlock, typeof utilsObj> = (
 
       if (!apiEndpoint || !apiAccessToken) throw new Error('invalid login token');
 
-      const reminderObject = utils._createReminderObject(block.reminder, variables.getState(), context.storage.get(S.LOCALE));
+      const reminderObject = utils._createReminderObject(node.reminder, variables.getState(), context.storage.get(S.LOCALE));
 
       await utils.axios.post(`${apiEndpoint}/v1/alerts/reminders`, reminderObject, {
         headers: {
@@ -130,9 +135,9 @@ export const ReminderHandler: HandlerFactory<ReminderBlock, typeof utilsObj> = (
         },
       });
 
-      nextId = block.success_id;
+      nextId = node.success_id;
     } catch (err) {
-      nextId = block.fail_id;
+      nextId = node.fail_id;
     }
 
     return nextId;

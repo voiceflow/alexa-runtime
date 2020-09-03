@@ -890,17 +890,17 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
-"@voiceflow/alexa-types@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.2.0.tgz#49c1feaace93ffc944b51d12a36f1ae646583b9a"
-  integrity sha512-D+V52vryxb74DL6NO5d1+d8oD7MceoztClTylCBoRFCBK7KVdu4F7uvsyJvr76IjfYG+yqZyH1OAxqkBJWMH/g==
+"@voiceflow/alexa-types@^1.12.2":
+  version "1.12.2"
+  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.12.2.tgz#6ebe20e7cf75d208c5d123c6d474fa2e07d7d56f"
+  integrity sha512-kz6VlbPqWl4Axrz12A1F4Et2uRicxrIif13J4qc5WkLlh5e0ukpIMxHy7KKcai1d7nXwJG1GJ/jPfZBbGiEblQ==
   dependencies:
-    "@voiceflow/api-sdk" "1.5.1"
+    "@voiceflow/api-sdk" "1.6.1"
 
-"@voiceflow/api-sdk@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.5.1.tgz#6b818e58d8accea50bae3bfd04598efad12d6c89"
-  integrity sha512-IPNvmOyUIESSrhW6OKwsJsycwvsqOk9qu5bClYMqCwSNvJ96Plz1X07KVyZ12gIpYjVctSvm+Lre2sVIPVdeDg==
+"@voiceflow/api-sdk@1.6.1", "@voiceflow/api-sdk@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.6.1.tgz#be2a26c42e621932a59e33d9203a8ac8eb59fc8f"
+  integrity sha512-I5dYih6UL6Bt0FwQG5aKYz0wiIjXi9u4IXLpL/eo/t/WSAmU0kBwUuRfUNayoj7/5CdBuyYnJzTMmVreVd3F3Q==
   dependencies:
     "@types/atob" "^2.1.2"
     "@voiceflow/logger" "^1.1.10"

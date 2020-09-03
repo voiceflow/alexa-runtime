@@ -21,8 +21,8 @@ describe('noMatch handler unit tests', () => {
 
   describe('handle', () => {
     it('with noMatch', () => {
-      const block = {
-        blockID: 'block-id',
+      const node = {
+        id: 'node-id',
         noMatches: ['the counter is {counter}'],
       };
       const context = {
@@ -39,7 +39,7 @@ describe('noMatch handler unit tests', () => {
       };
 
       const noMatchHandler = NoMatchHandler();
-      expect(noMatchHandler.handle(block as any, context as any, variables as any)).to.eql(block.blockID);
+      expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
       expect(context.trace.speak.args).to.eql([['the counter is 5.23']]);
 
       // assert produce
@@ -60,8 +60,8 @@ describe('noMatch handler unit tests', () => {
     });
 
     it('without noMatch', () => {
-      const block = {
-        blockID: 'block-id',
+      const node = {
+        id: 'node-id',
       };
       const context = {
         storage: {
@@ -77,13 +77,13 @@ describe('noMatch handler unit tests', () => {
       };
 
       const noMatchHandler = NoMatchHandler();
-      expect(noMatchHandler.handle(block as any, context as any, variables as any)).to.eql(block.blockID);
+      expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
       expect(context.trace.speak.args).to.eql([['']]);
     });
 
     it('with noMatch randomized', () => {
-      const block = {
-        blockID: 'block-id',
+      const node = {
+        id: 'node-id',
         noMatches: ['A', 'B', 'C'],
         randomize: true,
       };
@@ -101,8 +101,8 @@ describe('noMatch handler unit tests', () => {
       };
 
       const noMatchHandler = NoMatchHandler();
-      expect(noMatchHandler.handle(block as any, context as any, variables as any)).to.eql(block.blockID);
-      expect(block.noMatches.includes(context.trace.speak.args[0][0])).to.eql(true);
+      expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
+      expect(node.noMatches.includes(context.trace.speak.args[0][0])).to.eql(true);
     });
   });
 });

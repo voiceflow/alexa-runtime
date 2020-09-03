@@ -24,16 +24,16 @@ describe('Test reminderHandler unit tests', () => {
     });
 
     it('success_id', () => {
-      const block = { success_id: 'success-id' };
+      const node = { success_id: 'success-id' };
       const context = { trace: { debug: sinon.stub() } };
-      expect(reminderHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.success_id);
+      expect(reminderHandler.handle(node as any, context as any, null as any, null as any)).to.eql(node.success_id);
       expect(context.trace.debug.args).to.eql([['__reminder__ - entered'], ['__reminder__ - success path triggered']]);
     });
 
     it('fail_id', () => {
-      const block = { fail_id: 'fail-id' };
+      const node = { fail_id: 'fail-id' };
       const context = { trace: { debug: sinon.stub() } };
-      expect(reminderHandler.handle(block as any, context as any, null as any, null as any)).to.eql(block.fail_id);
+      expect(reminderHandler.handle(node as any, context as any, null as any, null as any)).to.eql(node.fail_id);
       expect(context.trace.debug.args).to.eql([
         ['__reminder__ - entered'],
         ['__reminder__ - success path not provided, redirecting to the fail path'],

@@ -1,3 +1,4 @@
+import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
 import secretsProvider from '@voiceflow/secrets-provider';
 import { AxiosInstance } from 'axios';
 
@@ -7,7 +8,7 @@ import { StaticType } from './static';
 
 export type Display = { document?: string };
 
-class ServerDataApi {
+class ServerDataAPI {
   private client: AxiosInstance;
 
   constructor(clients: StaticType, config: Config) {
@@ -22,10 +23,22 @@ class ServerDataApi {
 
     return data ?? null;
   };
+
+  public getProgram = async (programID: string) => {
+    const { data }: { data: AlexaProgram } = await this.client.get(`/diagrams/${programID}`);
+
+    return data;
+  };
+
+  public getVersion = async (versionID: string) => {
+    const { data }: { data: AlexaVersion } = await this.client.get(`/version/${versionID}`);
+
+    return data;
+  };
 }
 
-const ServerDataApiClient = (clients: StaticType, config: Config): ServerDataApi => new ServerDataApi(clients, config);
+const ServerDataAPIClient = (clients: StaticType, config: Config): ServerDataAPI => new ServerDataAPI(clients, config);
 
-export type ServerDataApiType = ServerDataApi;
+export type ServerDataAPIType = ServerDataAPI;
 
-export default ServerDataApiClient;
+export default ServerDataAPIClient;

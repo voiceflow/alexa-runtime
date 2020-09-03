@@ -21,8 +21,8 @@ describe('reminder handler unit test', () => {
       const input = { requestEnvelope: { context: { System: {} } } };
       const context = { turn: { get: sinon.stub().returns(input) } };
 
-      const block = { fail_id: 'fail-id' };
-      expect(await ReminderHandler(null as any).handle(block as any, context as any, null as any, null as any)).to.eql(block.fail_id);
+      const node = { fail_id: 'fail-id' };
+      expect(await ReminderHandler(null as any).handle(node as any, context as any, null as any, null as any)).to.eql(node.fail_id);
       expect(context.turn.get.args).to.eql([[T.HANDLER_INPUT]]);
     });
 
@@ -30,8 +30,8 @@ describe('reminder handler unit test', () => {
       const input = { requestEnvelope: { context: { System: { apiEndpoint: 'endpoint' } } } };
       const context = { turn: { get: sinon.stub().returns(input) } };
 
-      const block = { fail_id: 'fail-id' };
-      expect(await ReminderHandler(null as any).handle(block as any, context as any, null as any, null as any)).to.eql(block.fail_id);
+      const node = { fail_id: 'fail-id' };
+      expect(await ReminderHandler(null as any).handle(node as any, context as any, null as any, null as any)).to.eql(node.fail_id);
     });
 
     it('works correctly', async () => {
@@ -44,14 +44,14 @@ describe('reminder handler unit test', () => {
       const input = { requestEnvelope: { context: { System: { apiEndpoint, apiAccessToken } } } };
       const locale = 'en';
       const context = { turn: { get: sinon.stub().returns(input) }, storage: { get: sinon.stub().returns(locale) } };
-      const block = { success_id: 'success-id', reminder: 'reminder' };
+      const node = { success_id: 'success-id', reminder: 'reminder' };
       const variablesState = 'variables';
       const variables = { getState: sinon.stub().returns(variablesState) };
 
-      expect(await handler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.success_id);
+      expect(await handler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.success_id);
       expect(variables.getState.callCount).to.eql(1);
       expect(context.storage.get.args).to.eql([[S.LOCALE]]);
-      expect(utils._createReminderObject.args).to.eql([[block.reminder, variablesState, locale]]);
+      expect(utils._createReminderObject.args).to.eql([[node.reminder, variablesState, locale]]);
       expect(utils.axios.post.args).to.eql([
         [
           `${apiEndpoint}/v1/alerts/reminders`,

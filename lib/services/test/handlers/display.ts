@@ -1,19 +1,19 @@
 import { HandlerFactory } from '@voiceflow/client';
 
-import { Display } from '@/lib/services/voiceflow/handlers/display';
+import { DisplayNode } from '@/lib/services/voiceflow/handlers/display';
 
-const DisplayHandler: HandlerFactory<Display> = () => ({
-  canHandle: (block) => {
-    return !!block.display_id;
+const DisplayHandler: HandlerFactory<DisplayNode> = () => ({
+  canHandle: (node) => {
+    return !!node.display_id;
   },
-  handle: (block, context) => {
+  handle: (node, context) => {
     context.trace.debug('__display__ - entered');
 
-    if (block.nextId) {
+    if (node.nextId) {
       context.trace.debug('__display__ - redirecting to the next step');
     }
 
-    return block.nextId ?? null;
+    return node.nextId ?? null;
   },
 });
 

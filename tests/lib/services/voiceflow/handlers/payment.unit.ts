@@ -20,21 +20,21 @@ describe('payment handler unit tests', () => {
   describe('handle', () => {
     it('works correctly', () => {
       const context = { storage: { set: sinon.stub() } };
-      const block = {
+      const node = {
         product_id: 'produc-id',
         success_id: 'success-id',
         fail_id: 'fail-id',
-        blockID: 'block-id',
+        id: 'node-id',
       };
 
-      expect(paymentHandler.handle(block, context as any, null as any, null as any)).to.eql(block.blockID);
+      expect(paymentHandler.handle(node as any, context as any, null as any, null as any)).to.eql(node.id);
       expect(context.storage.set.args).to.eql([
         [
           S.PAYMENT,
           {
-            productId: block.product_id,
-            successPath: block.success_id,
-            failPath: block.fail_id,
+            productId: node.product_id,
+            successPath: node.success_id,
+            failPath: node.fail_id,
             status: null,
           },
         ],

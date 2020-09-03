@@ -73,8 +73,8 @@ export const mapSlots = (mappings: Mapping[], slots: { [key: string]: Slot }, ov
   return variables;
 };
 
-export const addRepromptIfExists = <B extends { reprompt?: string }>(block: B, context: Context, variables: Store): void => {
-  if (block.reprompt) {
-    context.turn.set(T.REPROMPT, regexVariables(block.reprompt, variables.getState()));
+export const addRepromptIfExists = <B extends { reprompt?: string }>(node: B, context: Context, variables: Store): void => {
+  if (node.reprompt) {
+    context.turn.set(T.REPROMPT, regexVariables(node.reprompt, variables.getState()));
   }
 };

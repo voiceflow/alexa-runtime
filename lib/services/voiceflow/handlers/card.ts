@@ -1,3 +1,5 @@
+import { NodeType } from '@voiceflow/alexa-types';
+import { Node } from '@voiceflow/api-sdk';
 import { HandlerFactory, Store } from '@voiceflow/client';
 
 import { T } from '@/lib/constants';
@@ -21,10 +23,13 @@ type Card = {
   };
 };
 
-export type CardBlock = {
-  card: Card;
-  nextId: string;
-};
+export type CardNode = Node<
+  NodeType.CARD,
+  {
+    card: Card;
+    nextId: string;
+  }
+>;
 
 export const CardResponseBuilder: ResponseBuilder = (context, builder) => {
   const card: Required<Card> | undefined = context.turn.get(T.CARD);
@@ -47,12 +52,12 @@ const utilsObj = {
   addVariables: addVariables(regexVariables),
 };
 
-export const CardHandler: HandlerFactory<CardBlock, typeof utilsObj> = (utils) => ({
-  canHandle: (block) => {
-    return !!block.card;
+export const CardHandler: HandlerFactory<CardNode, typeof utilsObj> = (utils) => ({
+  canHandle: (node) => {
+    return !!node.card;
   },
-  handle: (block, context, variables) => {
-    const { card } = block;
+  handle: (node, context, variables) => {
+    const { card } = node;
 
     const newCard: Required<Card> = {
       type: card.type ?? CardType.SIMPLE,
@@ -72,7 +77,7 @@ export const CardHandler: HandlerFactory<CardBlock, typeof utilsObj> = (utils) =
 
     context.turn.set(T.CARD, newCard);
 
-    return block.nextId;
+    return node.nextId;
   },
 });
 
