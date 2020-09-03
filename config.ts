@@ -44,7 +44,7 @@ const CONFIG: Config = {
   LOG_LEVEL: optionalProcessEnv('LOG_LEVEL'),
   MIDDLEWARE_VERBOSITY: optionalProcessEnv('MIDDLEWARE_VERBOSITY'),
 
-  PROGRAMS_SOURCE: optionalProcessEnv('PROGRAM_SOURCE'),
+  PROJECT_SOURCE: optionalProcessEnv('PROJECT_SOURCE'),
   SESSIONS_SOURCE: optionalProcessEnv('SESSIONS_SOURCE'),
 };
 

@@ -35,7 +35,7 @@ export interface Config {
   LOG_LEVEL: string | null;
   MIDDLEWARE_VERBOSITY: string | null;
 
-  PROGRAMS_SOURCE: string | null;
+  PROJECT_SOURCE: string | null;
   SESSIONS_SOURCE: string | null;
 }
 
