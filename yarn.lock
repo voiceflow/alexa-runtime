@@ -928,12 +928,13 @@
     randomstring "^1.1.5"
     sinon "^7.5.0"
 
-"@voiceflow/client@^1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/client/-/client-1.8.0.tgz#bcfb384931a159df187d05aea860b39fb37a8543"
-  integrity sha512-fzUOWmuN3nVyKeILe6jkcofWZ+Ep7EOekdTNZoYjrQrERO/CDDgr/ppnu8BFiraQjcR0IXG0g1Twoi5OgAzt7A==
+"@voiceflow/client@^1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/client/-/client-1.9.0.tgz#26186d573655f01c50b7ca57e440d753d651e5ed"
+  integrity sha512-QlX3V1BEfqbbrFVSUX9f+i+R75kA2ZYElS0ZvyMo51YKhGz7cQ4BVprMK5HMGQkCk0LEANpswAgL3I82tJoLIQ==
   dependencies:
     "@types/safe-json-stringify" "^1.1.0"
+    "@voiceflow/api-sdk" "^1.6.1"
     axios "^0.19.0"
     bluebird "^3.7.2"
     immer "^5.1.0"
