@@ -8,10 +8,8 @@ describe('alexa manager unit tests', () => {
     it('builds skill correctly', () => {
       const output = 'output';
       const create = sinon.stub().returns(output);
-      const withAutoCreateTable = sinon.stub().returns({ create });
-      const withTableName = sinon.stub().returns({ withAutoCreateTable });
-      const withDynamoDbClient = sinon.stub().returns({ withTableName });
-      const addResponseInterceptors = sinon.stub().returns({ withDynamoDbClient });
+      const withPersistenceAdapter = sinon.stub().returns({ create });
+      const addResponseInterceptors = sinon.stub().returns({ withPersistenceAdapter });
       const addRequestInterceptors = sinon.stub().returns({ addResponseInterceptors });
       const addErrorHandlers = sinon.stub().returns({ addRequestInterceptors });
       const addRequestHandlers = sinon.stub().returns({ addErrorHandlers });
@@ -35,14 +33,17 @@ describe('alexa manager unit tests', () => {
           ErrorHandlerGenerator: sinon.stub().returns('ErrorHandler'),
         },
         interceptors: { ResponseInterceptor: 'ResponseInterceptor', RequestInterceptorGenerator: sinon.stub().returns('RequestInterceptor') },
-        builder: { standard: sinon.stub().returns({ addRequestHandlers }) },
+        builder: { custom: sinon.stub().returns({ addRequestHandlers }) },
+        adapters: {
+          DynamoDbPersistenceAdapter: sinon.stub().returns({ foo: 'bar' }),
+        },
       };
       const config = { SESSIONS_DYNAMO_TABLE: 'SESSIONS_DYNAMO_TABLE' };
 
       const alexaManager = AlexaManager(services as any, config as any, utils as any);
 
       expect(alexaManager.skill).to.eql(output);
-      expect(utils.builder.standard.callCount).to.eql(1);
+      expect(utils.builder.custom.callCount).to.eql(1);
       expect(addRequestHandlers.args).to.eql([
         [
           utils.handlers.EventHandler,
@@ -60,10 +61,17 @@ describe('alexa manager unit tests', () => {
       expect(addErrorHandlers.args).to.eql([[utils.handlers.ErrorHandlerGenerator()]]);
       expect(addRequestInterceptors.args).to.eql([[utils.interceptors.RequestInterceptorGenerator()]]);
       expect(addResponseInterceptors.args).to.eql([[utils.interceptors.ResponseInterceptor]]);
-      expect(withDynamoDbClient.args).to.eql([[services.dynamo]]);
-      expect(withTableName.args).to.eql([[config.SESSIONS_DYNAMO_TABLE]]);
-      expect(withAutoCreateTable.args).to.eql([[false]]);
+      expect(withPersistenceAdapter.args).to.eql([[{ foo: 'bar' }]]);
       expect(create.callCount).to.eql(1);
+      expect(utils.adapters.DynamoDbPersistenceAdapter.args).to.eql([
+        [
+          {
+            createTable: false,
+            dynamoDBClient: services.dynamo,
+            tableName: config.SESSIONS_DYNAMO_TABLE,
+          },
+        ],
+      ]);
 
       expect(utils.handlers.ErrorHandlerGenerator.args[0]).to.eql([services.metrics]);
       expect(utils.interceptors.RequestInterceptorGenerator.args[0]).to.eql([services.metrics, services.adapter]);
