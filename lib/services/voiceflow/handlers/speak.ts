@@ -1,3 +1,5 @@
+import { NodeType } from '@voiceflow/alexa-types';
+import { Node } from '@voiceflow/api-sdk';
 import { HandlerFactory } from '@voiceflow/client';
 import _ from 'lodash';
 
@@ -5,24 +7,27 @@ import { F, S } from '@/lib/constants';
 
 import { regexVariables, sanitizeVariables } from '../utils';
 
-export type Speak = {
-  audio?: string;
-  speak?: string;
-  prompt?: string;
-  nextId?: string;
-  random_speak?: string[];
-};
+export type SpeakNode = Node<
+  NodeType.SPEAK,
+  {
+    audio?: string;
+    speak?: string;
+    prompt?: string;
+    nextId?: string;
+    random_speak?: string[];
+  }
+>;
 
-const SpeakHandler: HandlerFactory<Speak> = () => ({
-  canHandle: (block) => {
-    return !!block.random_speak || !!block.audio || (_.isString(block.prompt) && block.prompt !== 'true') || !!block.speak;
+const SpeakHandler: HandlerFactory<SpeakNode> = () => ({
+  canHandle: (node) => {
+    return !!node.random_speak || !!node.audio || (_.isString(node.prompt) && node.prompt !== 'true') || !!node.speak;
   },
-  handle: (block, context, variables) => {
-    let { speak } = block;
+  handle: (node, context, variables) => {
+    let { speak } = node;
 
     // Pick a random part to speak
-    if (Array.isArray(block.random_speak)) {
-      speak = _.sample(block.random_speak);
+    if (Array.isArray(node.random_speak)) {
+      speak = _.sample(node.random_speak);
     }
 
     const sanitizedVars = sanitizeVariables(variables.getState());
@@ -38,7 +43,7 @@ const SpeakHandler: HandlerFactory<Speak> = () => ({
       context.trace.speak(output);
     }
 
-    return block.nextId ?? null;
+    return node.nextId ?? null;
   },
 });
 

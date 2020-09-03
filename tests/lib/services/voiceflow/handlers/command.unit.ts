@@ -177,7 +177,7 @@ describe('command handler unit tests', async () => {
         expect(commandHandler.handle(context as any, null as any)).to.eql(null);
         expect(context.trace.debug.args).to.eql([[`matched command **${res.command.intent}** - adding command flow`]]);
         expect(topFrame.storage.set.args).to.eql([[F.CALLED_COMMAND, true]]);
-        expect(utils.Frame.args).to.eql([[{ diagramID: res.command.diagram_id }]]);
+        expect(utils.Frame.args).to.eql([[{ programID: res.command.diagram_id }]]);
         expect(context.stack.push.args).to.eql([[{}]]);
       });
 
@@ -196,7 +196,7 @@ describe('command handler unit tests', async () => {
           };
 
           expect(commandHandler.handle(context as any, null as any)).to.eql(res.command.next);
-          expect(context.trace.debug.args).to.eql([[`matched intent **${res.command.intent}** - jumping to block`]]);
+          expect(context.trace.debug.args).to.eql([[`matched intent **${res.command.intent}** - jumping to node`]]);
         });
 
         it('not last frame', () => {
@@ -205,7 +205,7 @@ describe('command handler unit tests', async () => {
           const utils = { getCommand: sinon.stub().returns(res) };
           const commandHandler = CommandHandler(utils as any);
 
-          const topFrame = { setBlockID: sinon.stub() };
+          const topFrame = { setNodeID: sinon.stub() };
           const context = {
             trace: { debug: sinon.stub() },
             turn: { delete: sinon.stub() },
@@ -214,8 +214,8 @@ describe('command handler unit tests', async () => {
 
           expect(commandHandler.handle(context as any, null as any)).to.eql(null);
           expect(context.stack.popTo.args).to.eql([[index + 1]]);
-          expect(topFrame.setBlockID.args).to.eql([[res.command.next]]);
-          expect(context.trace.debug.args).to.eql([[`matched intent **${res.command.intent}** - exiting flows and jumping to block`]]);
+          expect(topFrame.setNodeID.args).to.eql([[res.command.next]]);
+          expect(context.trace.debug.args).to.eql([[`matched intent **${res.command.intent}** - exiting flows and jumping to node`]]);
         });
 
         it('index bigger than stack size', () => {

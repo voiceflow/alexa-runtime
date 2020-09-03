@@ -1,8 +1,8 @@
 import Client, { EventType } from '@voiceflow/client';
 
 import { F, S, TEST_VERSION_ID } from '@/lib/constants';
-import { RESUME_DIAGRAM_ID, ResumeDiagram } from '@/lib/services/voiceflow/diagrams/resume';
 import { executeEvents } from '@/lib/services/voiceflow/handlers/events';
+import { RESUME_PROGRAM_ID, ResumeDiagram } from '@/lib/services/voiceflow/programs/resume';
 
 import { Config, Services } from '../utils';
 import Handlers from './handlers';
@@ -11,7 +11,7 @@ const utilsObj = {
   Client,
   resume: {
     ResumeDiagram,
-    RESUME_DIAGRAM_ID,
+    RESUME_PROGRAM_ID,
   },
   Handlers,
   executeEvents,
@@ -21,8 +21,7 @@ const VoiceflowManager = (services: Services, config: Config, utils = utilsObj) 
   const handlers = utils.Handlers(config);
 
   const client = new utils.Client({
-    secret: services.secretsProvider.get('VF_DATA_SECRET'),
-    endpoint: config.VF_DATA_ENDPOINT,
+    api: services.serverDataAPI,
     services,
     handlers,
   });
@@ -32,9 +31,9 @@ const VoiceflowManager = (services: Services, config: Config, utils = utilsObj) 
   });
 
   client.setEvent(EventType.stackDidChange, ({ context }) => {
-    const diagramID = context.stack.top()?.getDiagramID();
+    const programID = context.stack.top()?.getProgramID();
 
-    context.trace.flow(diagramID);
+    context.trace.flow(programID);
   });
 
   client.setEvent(EventType.frameDidFinish, ({ context }) => {
@@ -51,8 +50,8 @@ const VoiceflowManager = (services: Services, config: Config, utils = utilsObj) 
     }
   });
 
-  client.setEvent(EventType.diagramWillFetch, ({ diagramID, override }) => {
-    if (diagramID === utils.resume.RESUME_DIAGRAM_ID) {
+  client.setEvent(EventType.programWillFetch, ({ programID, override }) => {
+    if (programID === utils.resume.RESUME_PROGRAM_ID) {
       override(utils.resume.ResumeDiagram);
     }
   });

@@ -43,8 +43,8 @@ describe('stream handler unit tests', () => {
         const variablesMap = 'variables-map';
         const variables = { getState: sinon.stub().returns(variablesMap) };
         const context = { storage: { set: sinon.stub(), get: sinon.stub().returns(null) }, end: sinon.stub() };
-        const block = {
-          blockID: 'block-id',
+        const node = {
+          id: 'node-id',
           play: 'play',
           nextId: 'next-id',
           NEXT: 'NEXT',
@@ -57,14 +57,14 @@ describe('stream handler unit tests', () => {
           title: 'title',
         };
 
-        expect(handler.handle(block as any, context as any, variables as any, null as any)).to.eql(null);
+        expect(handler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
         expect(variables.getState.callCount).to.eql(1);
         expect(utils.regexVariables.args).to.eql([
-          [block.play, variablesMap],
-          [block.title, variablesMap],
-          [block.description, variablesMap],
-          [block.icon_img, variablesMap],
-          [block.background_img, variablesMap],
+          [node.play, variablesMap],
+          [node.title, variablesMap],
+          [node.description, variablesMap],
+          [node.icon_img, variablesMap],
+          [node.background_img, variablesMap],
         ]);
         expect(context.storage.set.args).to.eql([
           [
@@ -72,17 +72,17 @@ describe('stream handler unit tests', () => {
             {
               action: StreamAction.START,
               url: audioUrl,
-              loop: block.loop,
+              loop: node.loop,
               offset: 0,
-              token: block.blockID,
-              nextId: block.nextId,
-              PAUSE_ID: block.PAUSE_ID,
-              NEXT: block.NEXT,
-              PREVIOUS: block.PREVIOUS,
+              token: node.id,
+              nextId: node.nextId,
+              PAUSE_ID: node.PAUSE_ID,
+              NEXT: node.NEXT,
+              PREVIOUS: node.PREVIOUS,
               title,
               description,
-              regex_title: block.title,
-              regex_description: block.description,
+              regex_title: node.title,
+              regex_description: node.description,
               icon_img,
               background_img,
             },
@@ -108,9 +108,9 @@ describe('stream handler unit tests', () => {
           },
           end: sinon.stub(),
         };
-        const block = { PAUSE_ID: 'PAUSE_ID' };
+        const node = { PAUSE_ID: 'PAUSE_ID' };
 
-        expect(handler.handle(block as any, context as any, variables as any, null as any)).to.eql(null);
+        expect(handler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
         expect(context.storage.delete.args).to.eql([[S.STREAM_PAUSE]]);
       });
 
@@ -129,9 +129,9 @@ describe('stream handler unit tests', () => {
           },
           end: sinon.stub(),
         };
-        const block = { PAUSE_ID: 'PAUSE_ID' };
+        const node = { PAUSE_ID: 'PAUSE_ID' };
 
-        expect(handler.handle(block as any, context as any, variables as any, null as any)).to.eql(null);
+        expect(handler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
         expect(context.storage.produce.callCount).to.eql(1);
 
         // assert produce callback

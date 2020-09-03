@@ -24,7 +24,7 @@ describe('voiceflowManager unit tests', async () => {
       const utils = {
         resume: {
           ResumeDiagram: { foo: 'bar' },
-          RESUME_DIAGRAM_ID: 'diagram-id',
+          RESUME_PROGRAM_ID: 'diagram-id',
         },
         Client: sinon.stub().returns(clientObj),
         executeEvents: sinon.stub(),
@@ -54,7 +54,7 @@ describe('voiceflowManager unit tests', async () => {
       expect(clientObj.setEvent.args[0][0]).to.eql(EventType.traceWillAdd);
       expect(clientObj.setEvent.args[1][0]).to.eql(EventType.stackDidChange);
       expect(clientObj.setEvent.args[2][0]).to.eql(EventType.frameDidFinish);
-      expect(clientObj.setEvent.args[3][0]).to.eql(EventType.diagramWillFetch);
+      expect(clientObj.setEvent.args[3][0]).to.eql(EventType.programWillFetch);
       expect(clientObj.setEvent.args[4]).to.eql([EventType.stateDidExecute, executeEventsOutput]);
       expect(utils.executeEvents.args).to.eql([[EventType.stateDidExecute]]);
     });
@@ -113,12 +113,12 @@ describe('voiceflowManager unit tests', async () => {
 
         const fn = clientObj.setEvent.args[1][1];
 
-        const diagramID = 'diagram-id';
-        const context = { trace: { flow: sinon.stub() }, stack: { top: sinon.stub().returns({ getDiagramID: sinon.stub().returns(diagramID) }) } };
+        const programID = 'diagram-id';
+        const context = { trace: { flow: sinon.stub() }, stack: { top: sinon.stub().returns({ getProgramID: sinon.stub().returns(programID) }) } };
 
         fn({ context });
 
-        expect(context.trace.flow.args).to.eql([[diagramID]]);
+        expect(context.trace.flow.args).to.eql([[programID]]);
       });
     });
 
@@ -235,37 +235,37 @@ describe('voiceflowManager unit tests', async () => {
       });
     });
 
-    describe('diagramWillFetch', () => {
-      it('diagramID is eql to RESUME_DIAGRAM_ID', async () => {
+    describe('programWillFetch', () => {
+      it('programID is eql to RESUME_PROGRAM_ID', async () => {
         const { clientObj, services, config, utils } = generateFakes();
 
-        utils.resume.RESUME_DIAGRAM_ID = 'different-id';
+        utils.resume.RESUME_PROGRAM_ID = 'different-id';
 
         VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[3][1];
 
-        const diagramID = 'diagram-id';
+        const programID = 'diagram-id';
         const override = sinon.stub();
 
-        fn({ diagramID, override });
+        fn({ programID, override });
 
         expect(override.callCount).to.eql(0);
       });
 
-      it('diagramID is not eql to RESUME_DIAGRAM_ID', async () => {
+      it('programID is not eql to RESUME_PROGRAM_ID', async () => {
         const { clientObj, services, config, utils } = generateFakes();
 
-        utils.resume.RESUME_DIAGRAM_ID = 'diagram-id';
+        utils.resume.RESUME_PROGRAM_ID = 'diagram-id';
 
         VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[3][1];
 
-        const diagramID = 'diagram-id';
+        const programID = 'diagram-id';
         const override = sinon.stub();
 
-        fn({ diagramID, override });
+        fn({ programID, override });
 
         expect(override.args[0]).to.eql([utils.resume.ResumeDiagram]);
       });

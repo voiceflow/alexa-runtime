@@ -10,17 +10,17 @@ describe('reset handler unit tests', async () => {
 
   describe('canHandle', () => {
     it('false', async () => {
-      const block = {};
+      const node = {};
 
-      const result = resetHandler.canHandle(block as any, null as any, null as any, null as any);
+      const result = resetHandler.canHandle(node as any, null as any, null as any, null as any);
 
       expect(result).to.eql(false);
     });
 
     it('true', async () => {
-      const block = { reset: { foo: 'bar' } };
+      const node = { reset: { foo: 'bar' } };
 
-      const result = resetHandler.canHandle(block as any, null as any, null as any, null as any);
+      const result = resetHandler.canHandle(node as any, null as any, null as any, null as any);
 
       expect(result).to.eql(true);
     });
@@ -29,7 +29,7 @@ describe('reset handler unit tests', async () => {
   describe('handle', () => {
     it('works', async () => {
       const topFrame = {
-        setBlockID: sinon.stub(),
+        setNodeID: sinon.stub(),
       };
 
       const context = {
@@ -41,7 +41,7 @@ describe('reset handler unit tests', async () => {
 
       expect(resetHandler.handle(null as any, context as any, null as any, null as any)).to.eql(null);
       expect(context.stack.popTo.args).to.eql([[1]]);
-      expect(topFrame.setBlockID.args).to.eql([[null]]);
+      expect(topFrame.setNodeID.args).to.eql([[null]]);
     });
   });
 });

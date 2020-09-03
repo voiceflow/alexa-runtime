@@ -11,40 +11,40 @@ describe('multimodal client unit tests', () => {
     });
 
     it('no data', async () => {
-      const serverDataApi = { fetchDisplayById: sinon.stub().resolves(null) };
-      const multimodal = MultimodalClient(serverDataApi as any);
+      const serverDataAPI = { fetchDisplayById: sinon.stub().resolves(null) };
+      const multimodal = MultimodalClient(serverDataAPI as any);
 
       const displayId = 1;
       expect(await multimodal.getDisplayDocument(displayId)).to.eql(null);
-      expect(serverDataApi.fetchDisplayById.args).to.eql([[displayId]]);
+      expect(serverDataAPI.fetchDisplayById.args).to.eql([[displayId]]);
     });
 
     it('no document', async () => {
-      const serverDataApi = { fetchDisplayById: sinon.stub().resolves({}) };
-      const multimodal = MultimodalClient(serverDataApi as any);
+      const serverDataAPI = { fetchDisplayById: sinon.stub().resolves({}) };
+      const multimodal = MultimodalClient(serverDataAPI as any);
 
       const displayId = 1;
       expect(await multimodal.getDisplayDocument(displayId)).to.eql(null);
-      expect(serverDataApi.fetchDisplayById.args).to.eql([[displayId]]);
+      expect(serverDataAPI.fetchDisplayById.args).to.eql([[displayId]]);
     });
 
     it('with document', async () => {
       const document = { foo: 'bar' };
-      const serverDataApi = { fetchDisplayById: sinon.stub().resolves({ document: JSON.stringify(document) }) };
-      const multimodal = MultimodalClient(serverDataApi as any);
+      const serverDataAPI = { fetchDisplayById: sinon.stub().resolves({ document: JSON.stringify(document) }) };
+      const multimodal = MultimodalClient(serverDataAPI as any);
 
       const displayId = 1;
       expect(await multimodal.getDisplayDocument(displayId)).to.eql(document);
-      expect(serverDataApi.fetchDisplayById.args).to.eql([[displayId]]);
+      expect(serverDataAPI.fetchDisplayById.args).to.eql([[displayId]]);
     });
 
     it('error', async () => {
-      const serverDataApi = { fetchDisplayById: sinon.stub().throws('error') };
-      const multimodal = MultimodalClient(serverDataApi as any);
+      const serverDataAPI = { fetchDisplayById: sinon.stub().throws('error') };
+      const multimodal = MultimodalClient(serverDataAPI as any);
 
       const displayId = 1;
       expect(await multimodal.getDisplayDocument(displayId)).to.eql(null);
-      expect(serverDataApi.fetchDisplayById.args).to.eql([[displayId]]);
+      expect(serverDataAPI.fetchDisplayById.args).to.eql([[displayId]]);
     });
   });
 });

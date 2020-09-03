@@ -21,7 +21,7 @@ const RepeatHandler = {
       draft[S.OUTPUT] += output;
     });
 
-    return top.getBlockID() || null;
+    return top.getNodeID() || null;
   },
 };
 

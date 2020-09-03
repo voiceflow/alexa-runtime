@@ -1,3 +1,5 @@
+import { NodeType } from '@voiceflow/alexa-types';
+import { Node } from '@voiceflow/api-sdk';
 import { HandlerFactory } from '@voiceflow/client';
 import { Directive } from 'ask-sdk-model';
 import _isString from 'lodash/isString';
@@ -7,10 +9,13 @@ import { T } from '@/lib/constants';
 import { ResponseBuilder } from '../types';
 import { regexVariables } from '../utils';
 
-export type DirectiveBlock = {
-  directive: string;
-  nextId: string;
-};
+export type DirectiveNode = Node<
+  NodeType.DIRECTIVE,
+  {
+    directive: string;
+    nextId: string;
+  }
+>;
 
 export const DirectiveResponseBuilder: ResponseBuilder = (context, builder) => {
   const directives = context.turn.get(T.DIRECTIVES) as undefined | Directive[];
@@ -25,12 +30,12 @@ const utilsObj = {
   regexVariables,
 };
 
-export const DirectiveHandler: HandlerFactory<DirectiveBlock, typeof utilsObj> = (utils) => ({
-  canHandle: (block) => {
-    return _isString(block.directive);
+export const DirectiveHandler: HandlerFactory<DirectiveNode, typeof utilsObj> = (utils) => ({
+  canHandle: (node) => {
+    return _isString(node.directive);
   },
-  handle: (block, context, variables) => {
-    const { directive: unparsedDirective } = block;
+  handle: (node, context, variables) => {
+    const { directive: unparsedDirective } = node;
 
     const directiveString = utils.regexVariables(unparsedDirective, variables.getState());
     try {
@@ -43,7 +48,7 @@ export const DirectiveHandler: HandlerFactory<DirectiveBlock, typeof utilsObj> =
       context.trace.debug(`invalid directive JSON:\n\`${directiveString}\`\n\`${err}\``);
     }
 
-    return block.nextId;
+    return node.nextId;
   },
 });
 

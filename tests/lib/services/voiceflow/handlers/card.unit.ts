@@ -9,17 +9,17 @@ describe('card handler unit tests', async () => {
 
   describe('canHandle', () => {
     it('false', async () => {
-      const block = {};
+      const node = {};
 
-      const result = CardHandler(null as any).canHandle(block as any, null as any, null as any, null as any);
+      const result = CardHandler(null as any).canHandle(node as any, null as any, null as any, null as any);
 
       expect(result).to.eql(false);
     });
 
     it('true', async () => {
-      const block = { card: { foo: 'bar' } };
+      const node = { card: { foo: 'bar' } };
 
-      const result = CardHandler(null as any).canHandle(block as any, null as any, null as any, null as any);
+      const result = CardHandler(null as any).canHandle(node as any, null as any, null as any, null as any);
 
       expect(result).to.eql(true);
     });
@@ -40,7 +40,7 @@ describe('card handler unit tests', async () => {
 
       const cardHandler = CardHandler(utils);
 
-      const block = {
+      const node = {
         card: {
           title: 'title',
           text: 'text',
@@ -53,12 +53,12 @@ describe('card handler unit tests', async () => {
       };
       const variables = { foo: 'bar' };
 
-      const result = cardHandler.handle(block as any, context as any, variables as any, null as any);
+      const result = cardHandler.handle(node as any, context as any, variables as any, null as any);
 
-      expect(result).to.eql(block.nextId);
-      expect(utils.addVariables.args[0]).to.eql([block.card.title, variables]);
-      expect(utils.addVariables.args[1]).to.eql([block.card.text, variables]);
-      expect(utils.addVariables.args[2]).to.eql([block.card.content, variables]);
+      expect(result).to.eql(node.nextId);
+      expect(utils.addVariables.args[0]).to.eql([node.card.title, variables]);
+      expect(utils.addVariables.args[1]).to.eql([node.card.text, variables]);
+      expect(utils.addVariables.args[2]).to.eql([node.card.content, variables]);
       expect(context.turn.set.args[0]).to.eql([
         T.CARD,
         {
@@ -81,7 +81,7 @@ describe('card handler unit tests', async () => {
 
       const cardHandler = CardHandler(utils);
 
-      const block = {
+      const node = {
         card: {
           type: 'random-type',
         },
@@ -91,9 +91,9 @@ describe('card handler unit tests', async () => {
       };
       const variables = { foo: 'bar' };
 
-      cardHandler.handle(block as any, context as any, variables as any, null as any);
+      cardHandler.handle(node as any, context as any, variables as any, null as any);
 
-      expect(context.turn.set.args[0][1].type).to.eql(block.card.type);
+      expect(context.turn.set.args[0][1].type).to.eql(node.card.type);
     });
 
     it('type STANDARD but no image', async () => {
@@ -103,7 +103,7 @@ describe('card handler unit tests', async () => {
 
       const cardHandler = CardHandler(utils);
 
-      const block = {
+      const node = {
         card: {
           type: CardType.STANDARD,
         },
@@ -113,7 +113,7 @@ describe('card handler unit tests', async () => {
       };
       const variables = { foo: 'bar' };
 
-      cardHandler.handle(block as any, context as any, variables as any, null as any);
+      cardHandler.handle(node as any, context as any, variables as any, null as any);
 
       expect(context.turn.set.args[0][1].image).to.eql({ largeImageUrl: '', smallImageUrl: '' });
     });
@@ -125,7 +125,7 @@ describe('card handler unit tests', async () => {
 
       const cardHandler = CardHandler(utils);
 
-      const block = {
+      const node = {
         card: {
           type: CardType.STANDARD,
           image: {
@@ -139,9 +139,9 @@ describe('card handler unit tests', async () => {
       };
       const variables = { foo: 'bar' };
 
-      cardHandler.handle(block as any, context as any, variables as any, null as any);
+      cardHandler.handle(node as any, context as any, variables as any, null as any);
 
-      expect(utils.addVariables.args[3]).to.eql([block.card.image.largeImageUrl, variables]);
+      expect(utils.addVariables.args[3]).to.eql([node.card.image.largeImageUrl, variables]);
       expect(context.turn.set.args[0][1].image).to.eql({ largeImageUrl: 'url', smallImageUrl: 'url' });
     });
   });

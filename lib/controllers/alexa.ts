@@ -18,11 +18,11 @@ class AlexaController extends AbstractController {
 
   @validate({ VERSION_ID: AlexaController.VALIDATIONS.PARAMS.versionID })
   async handler(req: Request<{ versionID: string }>) {
-    const { alexa, voiceflow, metrics } = this.services;
+    const { alexa, voiceflow, metrics, serverDataAPI } = this.services;
 
     metrics.request();
 
-    return alexa.skill.invoke(req.body, { versionID: req.params.versionID, voiceflow: voiceflow.client });
+    return alexa.skill.invoke(req.body, { versionID: req.params.versionID, voiceflow: voiceflow.client, api: serverDataAPI });
   }
 }
 

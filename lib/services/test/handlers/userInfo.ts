@@ -1,21 +1,21 @@
 import { HandlerFactory } from '@voiceflow/client';
 
-import { UserInfo } from '@/lib/services/voiceflow/handlers/userInfo';
+import { UserInfoNode } from '@/lib/services/voiceflow/handlers/userInfo';
 
-const UserInfoHandler: HandlerFactory<UserInfo> = () => ({
-  canHandle: (block) => {
-    return !!block.permissions;
+const UserInfoHandler: HandlerFactory<UserInfoNode> = () => ({
+  canHandle: (node) => {
+    return !!node.permissions;
   },
-  handle: (block, context) => {
+  handle: (node, context) => {
     context.trace.debug('__user info__ - entered');
 
-    if (block.success_id || block.fail_id) {
+    if (node.success_id || node.fail_id) {
       context.trace.debug(
-        block.success_id ? '__user info__ - success path triggered' : '__user info__ - success path not provided, redirecting to the fail path'
+        node.success_id ? '__user info__ - success path triggered' : '__user info__ - success path not provided, redirecting to the fail path'
       );
     }
 
-    return block.success_id ?? block.fail_id ?? null;
+    return node.success_id ?? node.fail_id ?? null;
   },
 });
 

@@ -112,8 +112,8 @@ export type Command = {
 export type Commands = Array<Command>;
 
 export type Frame = {
-  blockID: string | null;
-  diagramID: string;
+  nodeID: string | null;
+  programID: string;
   variables: Record<string, any>;
   storage: {
     [key: string]: any;

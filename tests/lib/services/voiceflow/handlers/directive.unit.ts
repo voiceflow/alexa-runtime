@@ -25,13 +25,13 @@ describe('directive handler unit tests', () => {
         trace: { debug: sinon.stub() },
       };
       const variables = { getState: sinon.stub().resolves({}) };
-      const block = {
-        blockID: 'block',
+      const node = {
+        id: 'node',
         directive: '{"foo": "bar"}',
         nextId: 'foo',
       };
 
-      expect(directiveHandler.handle(block, context as any, variables as any, null as any)).to.eql(block.nextId);
+      expect(directiveHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
       expect(turnStore).to.eql({ [T.DIRECTIVES]: [{ foo: 'bar' }] });
       expect(variables.getState.callCount).to.eql(1);
       expect(context.trace.debug.callCount).to.eql(1);
@@ -46,13 +46,13 @@ describe('directive handler unit tests', () => {
         trace: { debug: sinon.stub() },
       };
       const variables = { getState: sinon.stub().resolves({}) };
-      const block = {
-        blockID: 'block',
+      const node = {
+        id: 'node',
         directive: '{"foo": "bar"}',
         nextId: 'foo',
       };
 
-      expect(directiveHandler.handle(block, context as any, variables as any, null as any)).to.eql(block.nextId);
+      expect(directiveHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
       expect(turnStore).to.eql({ [T.DIRECTIVES]: ['first_directive', { foo: 'bar' }] });
       expect(variables.getState.callCount).to.eql(1);
       expect(context.trace.debug.callCount).to.eql(1);
@@ -64,13 +64,13 @@ describe('directive handler unit tests', () => {
         trace: { debug: sinon.stub() },
       };
       const variables = { getState: sinon.stub().resolves({}) };
-      const block = {
-        blockID: 'block',
+      const node = {
+        id: 'node',
         directive: 'not json',
         nextId: 'foo',
       };
 
-      expect(directiveHandler.handle(block, context as any, variables as any, null as any)).to.eql(block.nextId);
+      expect(directiveHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
       expect(variables.getState.callCount).to.eql(1);
       expect(context.turn.produce.callCount).to.eql(0);
       expect(context.trace.debug.callCount).to.eql(1);

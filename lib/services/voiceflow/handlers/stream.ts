@@ -1,3 +1,5 @@
+import { NodeType } from '@voiceflow/alexa-types';
+import { Node } from '@voiceflow/api-sdk';
 import { HandlerFactory } from '@voiceflow/client';
 import { utils } from '@voiceflow/common';
 import { HandlerInput } from 'ask-sdk';
@@ -22,18 +24,21 @@ export enum AudioDirective {
   ENQUEUE = 'ENQUEUE',
 }
 
-type StreamBlock = {
-  play: string;
-  nextId: string;
-  NEXT: string;
-  PAUSE_ID: string;
-  PREVIOUS: string;
-  loop: boolean;
-  icon_img: string;
-  background_img: string;
-  description: string;
-  title: string;
-};
+type StreamNode = Node<
+  NodeType.STREAM,
+  {
+    play: string;
+    nextId: string;
+    NEXT: string;
+    PAUSE_ID: string;
+    PREVIOUS: string;
+    loop: boolean;
+    icon_img: string;
+    background_img: string;
+    description: string;
+    title: string;
+  }
+>;
 
 export type StreamPlay = {
   action: StreamAction;
@@ -140,35 +145,35 @@ const handlerUtils = {
   regexVariables,
 };
 
-export const StreamHandler: HandlerFactory<StreamBlock, typeof handlerUtils> = (u) => ({
-  canHandle: (block) => {
-    return !!block.play;
+export const StreamHandler: HandlerFactory<StreamNode, typeof handlerUtils> = (u) => ({
+  canHandle: (node) => {
+    return !!node.play;
   },
-  handle: (block, context, variables) => {
+  handle: (node, context, variables) => {
     const variablesMap = variables.getState();
-    const audioUrl = u.regexVariables(block.play, variablesMap);
+    const audioUrl = u.regexVariables(node.play, variablesMap);
 
     context.storage.set(S.STREAM_PLAY, {
       action: StreamAction.START,
       url: audioUrl,
-      loop: block.loop,
+      loop: node.loop,
       offset: 0,
-      token: block.blockID,
-      nextId: block.nextId,
-      PAUSE_ID: block.PAUSE_ID,
-      NEXT: block.NEXT,
-      PREVIOUS: block.PREVIOUS,
-      title: u.regexVariables(block.title, variablesMap),
-      description: u.regexVariables(block.description, variablesMap),
-      regex_title: block.title,
-      regex_description: block.description,
-      icon_img: u.regexVariables(block.icon_img, variablesMap),
-      background_img: u.regexVariables(block.background_img, variablesMap),
+      token: node.id,
+      nextId: node.nextId,
+      PAUSE_ID: node.PAUSE_ID,
+      NEXT: node.NEXT,
+      PREVIOUS: node.PREVIOUS,
+      title: u.regexVariables(node.title, variablesMap),
+      description: u.regexVariables(node.description, variablesMap),
+      regex_title: node.title,
+      regex_description: node.description,
+      icon_img: u.regexVariables(node.icon_img, variablesMap),
+      background_img: u.regexVariables(node.background_img, variablesMap),
     } as StreamPlay);
 
     const streamPause = context.storage.get(S.STREAM_PAUSE);
     if (streamPause) {
-      if (block.PAUSE_ID === streamPause.id) {
+      if (node.PAUSE_ID === streamPause.id) {
         context.storage.produce((draft) => {
           draft[S.STREAM_PLAY].offset = streamPause.offset;
           draft[S.STREAM_PLAY].action = StreamAction.PAUSE;

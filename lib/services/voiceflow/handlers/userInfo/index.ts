@@ -1,34 +1,39 @@
+import { NodeType } from '@voiceflow/alexa-types';
+import { Node } from '@voiceflow/api-sdk';
 import { HandlerFactory } from '@voiceflow/client';
 
 import { Permission } from './constants';
 import isPermissionGranted from './utils';
 
-export type UserInfo = {
-  fail_id?: string;
-  success_id?: string;
-  permissions?: Permission[];
-};
+export type UserInfoNode = Node<
+  NodeType.USER_INFO,
+  {
+    fail_id?: string;
+    success_id?: string;
+    permissions?: Permission[];
+  }
+>;
 
 const utilsObj = {
   isPermissionGranted,
 };
 
-export const UserInfoHandler: HandlerFactory<UserInfo, typeof utilsObj> = (utils) => ({
-  canHandle: (block) => {
-    return !!block.permissions;
+export const UserInfoHandler: HandlerFactory<UserInfoNode, typeof utilsObj> = (utils) => ({
+  canHandle: (node) => {
+    return !!node.permissions;
   },
-  handle: async (block, context, variables) => {
-    let nextId = block.fail_id ?? null;
+  handle: async (node, context, variables) => {
+    let nextId = node.fail_id ?? null;
 
-    if (Array.isArray(block.permissions) && block.permissions.length) {
-      const requests = block.permissions.map((p) => utils.isPermissionGranted(p, context, variables));
+    if (Array.isArray(node.permissions) && node.permissions.length) {
+      const requests = node.permissions.map((p) => utils.isPermissionGranted(p, context, variables));
       const results = await Promise.all(requests);
 
       if (!results.includes(false)) {
-        nextId = block.success_id ?? null;
+        nextId = node.success_id ?? null;
       }
     } else {
-      nextId = block.success_id ?? null;
+      nextId = node.success_id ?? null;
     }
 
     return nextId;

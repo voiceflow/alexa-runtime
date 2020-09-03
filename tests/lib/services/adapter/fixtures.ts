@@ -165,7 +165,7 @@ export const newBasic = {
   },
 };
 
-// state when waiting on interaction block
+// state when waiting on interaction node
 export const oldInteraction = {
   // last_speak: 'where are you from?',
   sessions: 1,
@@ -231,12 +231,12 @@ export const oldInteraction = {
 export const newInteraction = {
   stack: [
     {
-      blockID: 'ck9wxfxb5004z3h5saskt2eg8',
+      nodeID: 'ck9wxfxb5004z3h5saskt2eg8',
       variables: {},
       storage: {
         // speak: 'where are you from?',
       },
-      diagramID: 'wNt8ySvDY8TcYnKNWX00Nzdx8q97C7KZ',
+      programID: 'wNt8ySvDY8TcYnKNWX00Nzdx8q97C7KZ',
       commands: [
         {
           diagram_id: 'nfJFGM0yhDHLmne2gf9A8GcTsillWS04',
@@ -445,10 +445,10 @@ export const oldOutputMap = {
 export const newOutputMap = {
   stack: [
     {
-      blockID: null,
+      nodeID: null,
       variables: {},
       storage: {},
-      diagramID: 'q9LLZZ1bxytt9i9gk1LEJKsyxTvpWwf2',
+      programID: 'q9LLZZ1bxytt9i9gk1LEJKsyxTvpWwf2',
       commands: [
         {
           next: 'ck9yngwzk008q3h5sfjm8138y',
@@ -473,7 +473,7 @@ export const newOutputMap = {
       ],
     },
     {
-      blockID: 'ck9ynii2e00at3h5sajryaqeh',
+      nodeID: 'ck9ynii2e00at3h5sajryaqeh',
       variables: {
         secondFlowVar: 0,
       },
@@ -481,7 +481,7 @@ export const newOutputMap = {
         outputMap: [['homeFlowGlobalVar', 'secondFlowVar']],
         speak: 'second flow. say smth',
       },
-      diagramID: 't3gsmG59DGqaM7NjrMtKbfxlHVS7gXWM',
+      programID: 't3gsmG59DGqaM7NjrMtKbfxlHVS7gXWM',
       commands: [],
     },
   ],
@@ -598,13 +598,13 @@ export const oldCommandCalled = {
 export const newCommandCalled = {
   stack: [
     {
-      blockID: 'ck9ynzz8x00gw3h5sr5n6dyn3',
+      nodeID: 'ck9ynzz8x00gw3h5sr5n6dyn3',
       variables: {},
       storage: {
         calledCommand: true,
         speak: 'say smth',
       },
-      diagramID: 'kQdlGAhOQMc4QeMq6IzwkzYrWDJYSJVF',
+      programID: 'kQdlGAhOQMc4QeMq6IzwkzYrWDJYSJVF',
       commands: [
         {
           diagram_id: 'BYNRN1DErUcvrNhFnfYSO9Z5pHHwo6gk',
@@ -619,12 +619,12 @@ export const newCommandCalled = {
       ],
     },
     {
-      blockID: '53ac199f-ecbd-4d67-91d5-77ffedef3bbf',
+      nodeID: '53ac199f-ecbd-4d67-91d5-77ffedef3bbf',
       variables: {},
       storage: {
         speak: "This is where you'll insert your own help message. Make sure this message ends with a choice, like this. Would you like to continue?",
       },
-      diagramID: 'Vm1dTzzVCIyhFcaMmYPRrRl30ol0OREG',
+      programID: 'Vm1dTzzVCIyhFcaMmYPRrRl30ol0OREG',
       commands: [],
     },
   ],
@@ -670,7 +670,7 @@ export const newCommandCalled = {
   },
 };
 
-// stream one block
+// stream one node
 export const oldStreamOne = {
   last_speak: 'here we go',
   play: {
@@ -752,12 +752,12 @@ export const oldStreamOne = {
 export const newStreamOne = {
   stack: [
     {
-      blockID: 'ck9yq4f4200mc3h5sf0p8y1nh',
+      nodeID: 'ck9yq4f4200mc3h5sf0p8y1nh',
       variables: {},
       storage: {
         speak: 'here we go',
       },
-      diagramID: '3LZN29uAfSqEolxwRZfpTrXA0ycBM3pH',
+      programID: '3LZN29uAfSqEolxwRZfpTrXA0ycBM3pH',
       commands: [
         {
           diagram_id: 'CAdIIh4VFxe6JQBTbFryExHEwfFCM6o0',
@@ -837,7 +837,7 @@ export const newStreamOne = {
   },
 };
 
-// stream two blocks
+// stream two nodes
 export const oldStreamTwo = {
   play: {
     regex_description: 'desc text',
@@ -973,12 +973,12 @@ export const oldStreamTwo = {
 export const newStreamTwo = {
   stack: [
     {
-      blockID: 'ck9yqmd0200st3h5sigsp4803',
+      nodeID: 'ck9yqmd0200st3h5sigsp4803',
       variables: {},
       storage: {
         speak: 'here we go',
       },
-      diagramID: 'RWGouz4Wa5SkYC7C9ebVbnfqjLtoetPN',
+      programID: 'RWGouz4Wa5SkYC7C9ebVbnfqjLtoetPN',
       commands: [
         {
           diagram_id: 'XrORmu9S7PdWrU5h0aEBjNbTAf98lwp8',
@@ -1058,7 +1058,7 @@ export const newStreamTwo = {
   },
 };
 
-// stream two blocks without next_line
+// stream two nodes without next_line
 export const oldStreamTwoNoLine = {
   play: {
     regex_description: 'desc text',
@@ -1193,12 +1193,12 @@ export const oldStreamTwoNoLine = {
 export const newStreamTwoNoLine = {
   stack: [
     {
-      blockID: null,
+      nodeID: null,
       variables: {},
       storage: {
         speak: 'here we go',
       },
-      diagramID: 'RWGouz4Wa5SkYC7C9ebVbnfqjLtoetPN',
+      programID: 'RWGouz4Wa5SkYC7C9ebVbnfqjLtoetPN',
       commands: [
         {
           diagram_id: 'XrORmu9S7PdWrU5h0aEBjNbTAf98lwp8',

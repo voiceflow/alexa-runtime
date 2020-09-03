@@ -17,13 +17,13 @@ describe('user info handler unit test', () => {
   describe('handle', () => {
     describe('no permissions in array', () => {
       it('with success_id', async () => {
-        const block = { success_id: 'success-id', permissions: [] };
-        expect(await UserInfoHandler(null as any).handle(block as any, null as any, null as any, null as any)).to.eql(block.success_id);
+        const node = { success_id: 'success-id', permissions: [] };
+        expect(await UserInfoHandler(null as any).handle(node as any, null as any, null as any, null as any)).to.eql(node.success_id);
       });
 
       it('without success_id', async () => {
-        const block = { permissions: [] };
-        expect(await UserInfoHandler(null as any).handle(block as any, null as any, null as any, null as any)).to.eql(null);
+        const node = { permissions: [] };
+        expect(await UserInfoHandler(null as any).handle(node as any, null as any, null as any, null as any)).to.eql(null);
       });
     });
 
@@ -33,15 +33,15 @@ describe('user info handler unit test', () => {
           const utils = { isPermissionGranted: sinon.stub().resolves(true) };
           const handler = UserInfoHandler(utils);
 
-          const block = { permissions: ['permission1', 'permission2', 'permission3'], success_id: 'success-id' };
+          const node = { permissions: ['permission1', 'permission2', 'permission3'], success_id: 'success-id' };
           const context = 'context';
           const variables = 'variables';
 
-          expect(await handler.handle(block as any, context as any, variables as any, null as any)).to.eql(block.success_id);
+          expect(await handler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.success_id);
           expect(utils.isPermissionGranted.args).to.eql([
-            [block.permissions[0], context, variables],
-            [block.permissions[1], context, variables],
-            [block.permissions[2], context, variables],
+            [node.permissions[0], context, variables],
+            [node.permissions[1], context, variables],
+            [node.permissions[2], context, variables],
           ]);
         });
 
@@ -49,9 +49,9 @@ describe('user info handler unit test', () => {
           const utils = { isPermissionGranted: sinon.stub().resolves(true) };
           const handler = UserInfoHandler(utils);
 
-          const block = { permissions: ['permission1', 'permission2', 'permission3'] };
+          const node = { permissions: ['permission1', 'permission2', 'permission3'] };
 
-          expect(await handler.handle(block as any, null as any, null as any, null as any)).to.eql(null);
+          expect(await handler.handle(node as any, null as any, null as any, null as any)).to.eql(null);
         });
       });
 
@@ -63,9 +63,9 @@ describe('user info handler unit test', () => {
           const utils = { isPermissionGranted };
           const handler = UserInfoHandler(utils);
 
-          const block = { permissions: ['permission1', 'permission2', 'permission3'], fail_id: 'fail-id' };
+          const node = { permissions: ['permission1', 'permission2', 'permission3'], fail_id: 'fail-id' };
 
-          expect(await handler.handle(block as any, null as any, null as any, null as any)).to.eql(block.fail_id);
+          expect(await handler.handle(node as any, null as any, null as any, null as any)).to.eql(node.fail_id);
         });
 
         it('without fail id', async () => {
@@ -75,9 +75,9 @@ describe('user info handler unit test', () => {
           const utils = { isPermissionGranted };
           const handler = UserInfoHandler(utils);
 
-          const block = { permissions: ['permission1', 'permission2', 'permission3'] };
+          const node = { permissions: ['permission1', 'permission2', 'permission3'] };
 
-          expect(await handler.handle(block as any, null as any, null as any, null as any)).to.eql(null);
+          expect(await handler.handle(node as any, null as any, null as any, null as any)).to.eql(null);
         });
       });
     });
