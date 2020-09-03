@@ -1445,7 +1445,7 @@ ask-sdk-dynamodb-persistence-adapter@^2.9.0:
   dependencies:
     aws-sdk "^2.163.0"
 
-ask-sdk-model@^1.29.0, ask-sdk-model@^1.31.1:
+ask-sdk-model@^1.29.0, ask-sdk-model@^1.31.0:
   version "1.31.0"
   resolved "https://registry.yarnpkg.com/ask-sdk-model/-/ask-sdk-model-1.31.0.tgz#54f4c86e8bd74d97d1edae4f9e526acef42db376"
   integrity sha512-PupmNdxazlQWdxewhjCYMhzzNLfCpUYMnqwNldpCHYOctiQaW7paMRhc0wm7wTaSE8X6X7Ff2IZT46SVhokODA==
