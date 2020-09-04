@@ -45,7 +45,7 @@ describe('test manager unit tests', () => {
 
       const services = {
         voiceflow: { client: { createContext } },
-        serverDataAPI: { getTestProgram: 'api' },
+        dataAPI: { getTestProgram: 'api' },
       };
       const utils = {
         Handlers: () => 'foo',
@@ -64,7 +64,7 @@ describe('test manager unit tests', () => {
           state,
           request,
           {
-            api: { getProgram: services.serverDataAPI.getTestProgram },
+            api: { getProgram: services.dataAPI.getTestProgram },
             handlers: 'foo',
           },
         ],
@@ -104,7 +104,7 @@ describe('test manager unit tests', () => {
 
       const services = {
         voiceflow: { client: { createContext } },
-        serverDataAPI: { getTestProgram: 'api' },
+        dataAPI: { getTestProgram: 'api' },
       };
       const utils = {
         Handlers: sinon.stub().returns([]),
@@ -146,7 +146,7 @@ describe('test manager unit tests', () => {
 
         const services = {
           voiceflow: { client: { createContext } },
-          serverDataAPI: { getTestProgram: 'api' },
+          dataAPI: { getTestProgram: 'api' },
         };
 
         const config = {};
@@ -188,7 +188,7 @@ describe('test manager unit tests', () => {
 
         const services = {
           voiceflow: { client: { createContext } },
-          serverDataAPI: { getTestProgram: 'api' },
+          dataAPI: { getTestProgram: 'api' },
         };
 
         const config = {};
@@ -230,7 +230,7 @@ describe('test manager unit tests', () => {
 
         const services = {
           voiceflow: { client: { createContext } },
-          serverDataAPI: { getTestProgram: 'api' },
+          dataAPI: { getTestProgram: 'api' },
         };
 
         const config = {};

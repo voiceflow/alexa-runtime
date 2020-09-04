@@ -13,19 +13,19 @@ describe('alexa controller unit tests', () => {
 
       const client = { foo: 'bar' };
       const skill = { invoke: sinon.stub().resolves(output) };
-      const serverDataAPI = 'api';
+      const dataAPI = 'api';
       const services = {
         alexa: { skill },
         voiceflow: { client },
         metrics: { request: sinon.stub() },
-        serverDataAPI,
+        dataAPI,
       };
 
       const alexaController = new Alexa(services as any, null as any);
 
       const req = { body: { var1: 'val1' }, params: { versionID: 'version-id' } };
       expect(await alexaController.handler(req as any)).to.eql(output);
-      expect(skill.invoke.args).to.eql([[req.body, { versionID: req.params.versionID, voiceflow: client, api: serverDataAPI }]]);
+      expect(skill.invoke.args).to.eql([[req.body, { versionID: req.params.versionID, voiceflow: client, api: dataAPI }]]);
       expect(services.metrics.request.callCount).to.eql(1);
     });
   });
