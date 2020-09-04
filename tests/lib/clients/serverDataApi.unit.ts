@@ -2,7 +2,7 @@ import secretsProvider from '@voiceflow/secrets-provider';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import ServerDataAPIClient from '@/lib/clients/serverDataAPI';
+import ServerDataAPIClient from '@/lib/clients/data/serverDataAPI';
 
 describe('serverDataAPI client unit tests', () => {
   before(async () => {
