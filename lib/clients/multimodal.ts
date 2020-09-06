@@ -1,7 +1,7 @@
-import { ServerDataAPIType } from './serverDataAPI';
+import { DataAPI } from './data/types';
 
 class Multimodal {
-  constructor(private serverDataAPI: ServerDataAPIType) {}
+  constructor(private dataAPI: DataAPI) {}
 
   getDisplayDocument = async (displayId: number): Promise<null | Record<string, any>> => {
     if (displayId < 0) {
@@ -9,7 +9,7 @@ class Multimodal {
     }
 
     try {
-      const data = await this.serverDataAPI.fetchDisplayById(displayId);
+      const data = await this.dataAPI.fetchDisplayById(displayId);
 
       if (!data?.document) {
         return null;
@@ -22,7 +22,7 @@ class Multimodal {
   };
 }
 
-const MultimodalClient = (serverDataAPI: ServerDataAPIType) => new Multimodal(serverDataAPI);
+const MultimodalClient = (dataAPI: DataAPI) => new Multimodal(dataAPI);
 
 export type MultimodalType = Multimodal;
 

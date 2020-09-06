@@ -21,7 +21,7 @@ const VoiceflowManager = (services: Services, config: Config, utils = utilsObj) 
   const handlers = utils.Handlers(config);
 
   const client = new utils.Client({
-    api: services.serverDataAPI,
+    api: services.dataAPI,
     services,
     handlers,
   });

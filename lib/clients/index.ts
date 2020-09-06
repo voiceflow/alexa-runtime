@@ -1,15 +1,17 @@
 import { Config } from '@/types';
 
+import LocalDataAPI from './data/localDataAPI';
+import ServerDataAPI from './data/serverDataAPI';
+import { DataAPI } from './data/types';
 import Dynamo, { DynamoType } from './dynamo';
 import Metrics, { MetricsType } from './metrics';
 import Multimodal, { MultimodalType } from './multimodal';
-import ServerDataAPI, { ServerDataAPIType } from './serverDataAPI';
 import Static, { StaticType } from './static';
 
 export interface ClientMap extends StaticType {
   dynamo: DynamoType;
   multimodal: MultimodalType;
-  serverDataAPI: ServerDataAPIType;
+  dataAPI: DataAPI;
   metrics: MetricsType;
 }
 
@@ -18,15 +20,15 @@ export interface ClientMap extends StaticType {
  */
 const buildClients = (config: Config): ClientMap => {
   const dynamo = Dynamo(config);
-  const serverDataAPI = ServerDataAPI(Static, config);
-  const multimodal = Multimodal(serverDataAPI);
+  const dataAPI = config.PROJECT_SOURCE ? new LocalDataAPI(Static, config) : new ServerDataAPI(Static, config);
+  const multimodal = Multimodal(dataAPI);
   const metrics = Metrics(config);
 
   return {
     ...Static,
     dynamo,
     multimodal,
-    serverDataAPI,
+    dataAPI,
     metrics,
   };
 };

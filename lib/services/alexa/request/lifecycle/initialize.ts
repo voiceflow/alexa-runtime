@@ -2,7 +2,7 @@ import { RepeatType, SessionType } from '@voiceflow/alexa-types';
 import { Context, Frame, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
 
-import { ServerDataAPIType } from '@/lib/clients/serverDataAPI';
+import { DataAPI } from '@/lib/clients/data/types';
 import { F, S, T, V } from '@/lib/constants';
 import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 import { createResumeFrame, RESUME_PROGRAM_ID } from '@/lib/services/voiceflow/programs/resume';
@@ -28,7 +28,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
     platformData: { settings, slots },
     variables: versionVariables,
     rootDiagramID,
-  } = await (input.context.api as ServerDataAPIType).getVersion(context.getVersionID());
+  } = await (input.context.api as DataAPI).getVersion(context.getVersionID());
 
   const { stack, storage, variables } = context;
 
