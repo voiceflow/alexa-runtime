@@ -4,11 +4,10 @@ import { AxiosInstance } from 'axios';
 
 import { Config } from '@/types';
 
-import { StaticType } from './static';
+import { StaticType } from '../static';
+import { DataAPI, Display } from './types';
 
-export type Display = { document?: string };
-
-class ServerDataAPI {
+class ServerDataAPI implements DataAPI {
   private client: AxiosInstance;
 
   constructor(clients: StaticType, config: Config) {
@@ -43,8 +42,4 @@ class ServerDataAPI {
   };
 }
 
-const ServerDataAPIClient = (clients: StaticType, config: Config): ServerDataAPI => new ServerDataAPI(clients, config);
-
-export type ServerDataAPIType = ServerDataAPI;
-
-export default ServerDataAPIClient;
+export default ServerDataAPI;
