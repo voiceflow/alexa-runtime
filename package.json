@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "author": "Voiceflow",
   "bugs": {
-    "url": "https://github.com/voiceflow/alexa/issues"
+    "url": "https://github.com/voiceflow/alexa-client/issues"
   },
   "config": {
     "commitizen": {
@@ -107,7 +107,7 @@
     "ttypescript": "^1.5.8",
     "typescript": "^3.9.7"
   },
-  "homepage": "https://github.com/voiceflow/backend-template#readme",
+  "homepage": "https://github.com/voiceflow/alexa-client#readme",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
@@ -130,7 +130,7 @@
   "prettier": "@voiceflow/prettier-config",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/voiceflow/alexa.git"
+    "url": "git+https://github.com/voiceflow/alexa-client.git"
   },
   "scripts": {
     "build": "yarn clean && ttsc --project ./tsconfig.build.json && cp app.config.js yarn.lock build/",
