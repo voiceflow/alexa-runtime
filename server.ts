@@ -5,7 +5,6 @@ import http from 'http';
 import https from 'https';
 
 import { ExpressMiddleware, ServiceManager } from './backend';
-import log from './logger';
 import pjson from './package.json';
 import { Config } from './types';
 
@@ -41,7 +40,8 @@ class Server {
 
     await Promise.fromCallback((cb: any) => server.listen(this.config.PORT, cb));
 
-    log.info(`${name} listening on port ${this.config.PORT}`);
+    // eslint-disable-next-line no-console
+    console.log(`${name} listening on port ${this.config.PORT}`);
   }
 
   /**

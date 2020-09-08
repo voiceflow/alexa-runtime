@@ -50,3 +50,6 @@ build
 
 /tests/smokeTest/recordedSessions/*
 !/tests/smokeTest/recordedSessions/readme.md
+
+/projects/*
+!/projects/README.md

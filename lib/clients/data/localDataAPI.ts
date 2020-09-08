@@ -13,7 +13,8 @@ class LocalDataAPI implements DataAPI {
   constructor(clients: StaticType, config: Config) {
     if (!config.PROJECT_SOURCE) throw new Error('project source undefined');
 
-    const content = JSON.parse(clients.fs.readFileSync(config.PROJECT_SOURCE, 'utf8'));
+    const { fs, path } = clients;
+    const content = JSON.parse(fs.readFileSync(path.join('projects', config.PROJECT_SOURCE), 'utf8'));
     this.version = content.version;
     this.programs = content.programs;
   }
