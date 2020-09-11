@@ -12,7 +12,8 @@ describe('alexa manager unit tests', () => {
       const addResponseInterceptors = sinon.stub().returns({ withPersistenceAdapter });
       const addRequestInterceptors = sinon.stub().returns({ addResponseInterceptors });
       const addErrorHandlers = sinon.stub().returns({ addRequestInterceptors });
-      const addRequestHandlers = sinon.stub().returns({ addErrorHandlers });
+      const withApiClient = sinon.stub().returns({ addErrorHandlers });
+      const addRequestHandlers = sinon.stub().returns({ withApiClient });
       const services = {
         dynamo: 'dynamo',
         metrics: 'metrics',
@@ -37,6 +38,7 @@ describe('alexa manager unit tests', () => {
         adapters: {
           DynamoDbPersistenceAdapter: sinon.stub().returns({ foo: 'bar' }),
         },
+        APIClient: sinon.stub().returns({ api: 'client' }),
       };
       const config = { SESSIONS_DYNAMO_TABLE: 'SESSIONS_DYNAMO_TABLE' };
 
@@ -58,6 +60,7 @@ describe('alexa manager unit tests', () => {
           utils.handlers.CancelPurchaseHandler,
         ],
       ]);
+      expect(withApiClient.args).to.eql([[{ api: 'client' }]]);
       expect(addErrorHandlers.args).to.eql([[utils.handlers.ErrorHandlerGenerator()]]);
       expect(addRequestInterceptors.args).to.eql([[utils.interceptors.RequestInterceptorGenerator()]]);
       expect(addResponseInterceptors.args).to.eql([[utils.interceptors.ResponseInterceptor]]);
@@ -84,7 +87,8 @@ describe('alexa manager unit tests', () => {
       const addResponseInterceptors = sinon.stub().returns({ withPersistenceAdapter });
       const addRequestInterceptors = sinon.stub().returns({ addResponseInterceptors });
       const addErrorHandlers = sinon.stub().returns({ addRequestInterceptors });
-      const addRequestHandlers = sinon.stub().returns({ addErrorHandlers });
+      const withApiClient = sinon.stub().returns({ addErrorHandlers });
+      const addRequestHandlers = sinon.stub().returns({ withApiClient });
       const services = {
         dynamo: 'dynamo',
         metrics: 'metrics',
@@ -109,6 +113,7 @@ describe('alexa manager unit tests', () => {
         adapters: {
           MemoryPersistenceAdapter: sinon.stub().returns({ foo: 'bar' }),
         },
+        APIClient: sinon.stub().returns({ api: 'client' }),
       };
       const config = { SESSIONS_DYNAMO_TABLE: 'SESSIONS_DYNAMO_TABLE', SESSIONS_SOURCE: 'local' };
 
@@ -130,6 +135,7 @@ describe('alexa manager unit tests', () => {
           utils.handlers.CancelPurchaseHandler,
         ],
       ]);
+      expect(withApiClient.args).to.eql([[{ api: 'client' }]]);
       expect(addErrorHandlers.args).to.eql([[utils.handlers.ErrorHandlerGenerator()]]);
       expect(addRequestInterceptors.args).to.eql([[utils.interceptors.RequestInterceptorGenerator()]]);
       expect(addResponseInterceptors.args).to.eql([[utils.interceptors.ResponseInterceptor]]);
@@ -137,6 +143,7 @@ describe('alexa manager unit tests', () => {
       expect(create.callCount).to.eql(1);
       expect(utils.adapters.MemoryPersistenceAdapter.args).to.eql([[]]);
 
+      expect(utils.APIClient.args).to.eql([[]]);
       expect(utils.handlers.ErrorHandlerGenerator.args[0]).to.eql([services.metrics]);
       expect(utils.interceptors.RequestInterceptorGenerator.args[0]).to.eql([services.metrics, services.adapter]);
     });

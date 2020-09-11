@@ -52,6 +52,7 @@ const utilsObj = {
   },
   interceptors: { RequestInterceptorGenerator, ResponseInterceptor },
   builder: SkillBuilders,
+  APIClient: DefaultApiClient,
   adapters: {
     MemoryPersistenceAdapter,
     DynamoDbPersistenceAdapter,
@@ -59,7 +60,7 @@ const utilsObj = {
 };
 
 const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
-  const { handlers, interceptors, builder } = utils;
+  const { handlers, interceptors, builder, APIClient } = utils;
   const { metrics, adapter } = services;
 
   const persistenceAdapter =
@@ -86,7 +87,7 @@ const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
         handlers.APLUserEventHandler,
         handlers.CancelPurchaseHandler
       )
-      .withApiClient(new DefaultApiClient())
+      .withApiClient(new APIClient())
       .addErrorHandlers(handlers.ErrorHandlerGenerator(metrics))
       .addRequestInterceptors(interceptors.RequestInterceptorGenerator(metrics, adapter))
       .addResponseInterceptors(interceptors.ResponseInterceptor)
