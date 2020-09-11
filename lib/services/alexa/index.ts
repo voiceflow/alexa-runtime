@@ -1,4 +1,4 @@
-import { DynamoDbPersistenceAdapter, HandlerInput, SkillBuilders } from 'ask-sdk';
+import { DefaultApiClient, DynamoDbPersistenceAdapter, HandlerInput, SkillBuilders } from 'ask-sdk';
 
 import { MetricsType } from '@/lib/clients/metrics';
 import { Source } from '@/lib/constants';
@@ -86,6 +86,7 @@ const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
         handlers.APLUserEventHandler,
         handlers.CancelPurchaseHandler
       )
+      .withApiClient(new DefaultApiClient())
       .addErrorHandlers(handlers.ErrorHandlerGenerator(metrics))
       .addRequestInterceptors(interceptors.RequestInterceptorGenerator(metrics, adapter))
       .addResponseInterceptors(interceptors.ResponseInterceptor)
