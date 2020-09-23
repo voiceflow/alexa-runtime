@@ -8,14 +8,10 @@ import { S } from '@/lib/constants';
 
 import { getVariables } from '../display';
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '../display/constants';
-import * as events from '../display/events';
-import { Command, DisplayInfoV2 } from '../display/types';
+import { Command, DisplayInfo } from '../display/types';
 import { deepFindVideos, VideoEvent } from '../display/utils';
-import DisplayResponseBuilderV2 from './responseBuilder';
 
-export { events, DisplayResponseBuilderV2 };
-
-export type DisplayNode = Node<
+type DisplayNode = Node<
   NodeType.DISPLAY,
   {
     nextId?: string;
@@ -56,7 +52,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
 
     const { document } = node;
 
-    const displayInfo: DisplayInfoV2 = {
+    const displayInfo: DisplayInfo = {
       commands,
       dataSource,
       document,
@@ -68,7 +64,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
     if (!document) {
       return nextId;
     }
-    context.storage.set(S.DISPLAY_V2_INFO, displayInfo);
+    context.storage.set(S.DISPLAY_INFO, displayInfo);
 
     let documentData;
     try {

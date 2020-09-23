@@ -12,29 +12,39 @@ import { deepFindVideos, getEventToSend } from './utils';
 export const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
   const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
 
-  if (!displayInfo?.shouldUpdate || displayInfo.currentDisplay === undefined) {
+  if (!displayInfo?.shouldUpdate || (displayInfo.currentDisplay === undefined && !displayInfo.document)) {
     return;
   }
 
   const variables = context.variables.getState();
   const services = context.services as FullServiceMap;
 
+  let dataSources: object | undefined;
+
   try {
-    let document = await services.multimodal.getDisplayDocument(displayInfo.currentDisplay);
+    let document;
 
-    if (!document) {
-      return;
-    }
+    if (!displayInfo.document) {
+      document = await services.multimodal.getDisplayDocument(displayInfo.currentDisplay!);
 
-    let dataSources: object | undefined;
+      if (!document) {
+        return;
+      }
 
-    // Gracefully handle slightly malformed document
-    if (document.dataSources) {
-      dataSources = document.dataSources as object;
-    }
+      // Gracefully handle slightly malformed document
+      if (document.dataSources) {
+        dataSources = document.dataSources as object;
+      }
 
-    if (document.document) {
-      ({ document } = document);
+      if (document.document) {
+        ({ document } = document);
+      }
+    } else {
+      try {
+        document = JSON.parse(regexVariables(displayInfo.document, variables));
+      } catch (e) {
+        // document not valid
+      }
     }
 
     if (displayInfo.dataSource) {

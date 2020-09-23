@@ -18,7 +18,7 @@ import CaptureHandler from './capture';
 import CardHandler, { CardResponseBuilder } from './card';
 import DirectiveHandler, { DirectiveResponseBuilder } from './directive';
 import DisplayHandler, { DisplayResponseBuilder } from './display';
-import DisplayHandlerV2, { DisplayResponseBuilderV2 } from './displayV2';
+import DisplayHandlerV2 from './displayV2';
 import InteractionHandler from './interaction';
 import PaymentHandler, { PaymentResponseBuilder } from './payment';
 import PermissionCardHandler, { PermissionCardResponseBuilder } from './permissionCard';
@@ -36,7 +36,6 @@ export const responseHandlers = [
   PaymentResponseBuilder,
   CancelPaymentResponseBuilder,
   DisplayResponseBuilder,
-  DisplayResponseBuilderV2,
   StreamResponseBuilder,
   DirectiveResponseBuilder,
 ];

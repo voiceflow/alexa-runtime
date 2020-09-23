@@ -20,22 +20,11 @@ export interface Command {
 export type DisplayInfo = {
   playingVideos: Record<string, { started: number }>;
   dataSource?: string;
+  document?: string;
   commands?: Command[];
   shouldUpdate?: boolean;
   lastVariables?: Record<string, any>;
   currentDisplay?: number;
-  lastDataSource?: string;
-  dataSourceVariables?: string[];
-  shouldUpdateOnResume?: boolean;
-};
-
-export type DisplayInfoV2 = {
-  playingVideos: Record<string, { started: number }>;
-  dataSource: string;
-  document: string;
-  commands?: Command[];
-  shouldUpdate?: boolean;
-  lastVariables?: Record<string, any>;
   lastDataSource?: string;
   dataSourceVariables?: string[];
   shouldUpdateOnResume?: boolean;
