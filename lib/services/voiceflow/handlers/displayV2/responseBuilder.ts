@@ -9,7 +9,7 @@ import { DisplayInfoV2, VideoCommand, VideoCommandType } from '../display/types'
 import { deepFindVideos, getEventToSend } from '../display/utils';
 
 export const DocumentResponseBuilderV2: ResponseBuilder = async (context, builder) => {
-  const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfoV2 | undefined;
+  const displayInfo = context.storage.get(S.DISPLAY_V2_INFO) as DisplayInfoV2 | undefined;
 
   if (!displayInfo?.shouldUpdate) {
     return;
@@ -69,7 +69,7 @@ export const DocumentResponseBuilderV2: ResponseBuilder = async (context, builde
     });
 
     context.storage.produce((state) => {
-      const dInfo = state[S.DISPLAY_INFO] as DisplayInfoV2;
+      const dInfo = state[S.DISPLAY_V2_INFO] as DisplayInfoV2;
 
       dInfo.lastVariables = variables;
 
@@ -82,7 +82,7 @@ export const DocumentResponseBuilderV2: ResponseBuilder = async (context, builde
 };
 
 export const CommandsResponseBuilderV2: ResponseBuilder = async (context, builder) => {
-  const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfoV2 | undefined;
+  const displayInfo = context.storage.get(S.DISPLAY_V2_INFO) as DisplayInfoV2 | undefined;
 
   if (!displayInfo?.commands) {
     return;
@@ -94,7 +94,7 @@ export const CommandsResponseBuilderV2: ResponseBuilder = async (context, builde
     commands.forEach(({ type, command, componentId }) => {
       if (type === VideoCommandType.CONTROL_MEDIA && command === VideoCommand.PLAY) {
         context.storage.produce((storage) => {
-          storage[S.DISPLAY_INFO].playingVideos[componentId] = { started: Date.now() };
+          storage[S.DISPLAY_V2_INFO].playingVideos[componentId] = { started: Date.now() };
         });
       }
     });
@@ -106,7 +106,7 @@ export const CommandsResponseBuilderV2: ResponseBuilder = async (context, builde
   }
 
   context.storage.produce((state) => {
-    const dInfo = state[S.DISPLAY_INFO] as DisplayInfoV2;
+    const dInfo = state[S.DISPLAY_V2_INFO] as DisplayInfoV2;
     delete dInfo.commands;
   });
 };

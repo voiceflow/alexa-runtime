@@ -71,7 +71,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
     if (!document) {
       return nextId;
     }
-    context.storage.set(S.DISPLAY_INFO, displayInfo);
+    context.storage.set(S.DISPLAY_V2_INFO, displayInfo);
 
     let documentData;
     try {
