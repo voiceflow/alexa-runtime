@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import { S } from '@/lib/constants';
 
+import { getVariables } from '../display';
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '../display/constants';
 import * as events from '../display/events';
 import { Command, DisplayInfoV2 } from '../display/types';
@@ -24,10 +25,6 @@ export type DisplayNode = Node<
     update_on_change?: boolean;
   }
 >;
-
-export const getVariables = (str: string): string[] => {
-  return (str.match(/\{[\w\d]+\}/g) || []).map((s) => s.slice(1, -1));
-};
 
 const utilsObj = {
   deepFindVideos,
