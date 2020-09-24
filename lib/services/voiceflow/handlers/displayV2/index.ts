@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import { S } from '@/lib/constants';
 
+import { regexVariables } from '../../utils';
 import { getVariables } from '../display';
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '../display/constants';
 import { Command, DisplayInfo } from '../display/types';
@@ -17,7 +18,7 @@ type DisplayNode = Node<
     nextId?: string;
     datasource: string;
     document: string;
-    apl_commands?: Command[] | string;
+    aplCommands?: Command[] | string;
     update_on_change?: boolean;
   }
 >;
@@ -38,13 +39,15 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
     if (!supportedInterfaces?.[APL_INTERFACE_NAME]) {
       return nextId;
     }
+    const variables = context.variables.getState();
 
     const dataSource = node.datasource ?? '';
 
     let commands;
-    if (node.apl_commands && _.isString(node.apl_commands)) {
+
+    if (node.aplCommands && _.isString(node.aplCommands)) {
       try {
-        commands = JSON.parse(node.apl_commands) as Command[];
+        commands = JSON.parse(node.aplCommands) as Command[];
       } catch {
         // invalid JSON
       }
@@ -68,7 +71,8 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
 
     let documentData;
     try {
-      documentData = JSON.parse(document);
+      // documentData = JSON.parse(document);
+      documentData = JSON.parse(regexVariables(document, variables));
     } catch {
       // invalid JSON
     }
