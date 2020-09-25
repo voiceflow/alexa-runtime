@@ -33,7 +33,7 @@ describe('metrics client unit tests', () => {
       [
         {
           apiKey: secretsProvider.get('DATADOG_API_KEY'),
-          prefix: `vf-server.${NODE_ENV}`,
+          prefix: `vf_server.${NODE_ENV}.`,
           flushIntervalSeconds: 5,
         },
       ],
