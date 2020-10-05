@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { S } from '@/lib/constants';
 import { FullServiceMap } from '@/lib/services';
 
+import { regexVariables } from '../../utils';
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from './constants';
 import * as events from './events';
 import DisplayResponseBuilder from './responseBuilder';
@@ -39,7 +40,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
   canHandle: (node) => {
     return !!node.display_id;
   },
-  handle: async (node, context) => {
+  handle: async (node, context, variables) => {
     const supportedInterfaces: SupportedInterfaces | undefined = context.storage.get(S.SUPPORTED_INTERFACES);
     const nextId = node.nextId ?? null;
 
@@ -51,10 +52,15 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
     const displayID = node.display_id as number;
     const dataSource = node.datasource ?? '';
 
+    // console.log('NODE APL', node);
+
     let commands;
     if (node.apl_commands && _.isString(node.apl_commands)) {
       try {
-        commands = JSON.parse(node.apl_commands) as Command[];
+        // commands = JSON.parse(node.apl_commands) as Command[];
+        commands = JSON.parse(regexVariables(node.apl_commands, variables)) as Command[];
+        // console.log('commands', commands);
+        // console.log('OLD', JSON.parse(node.apl_commands));
       } catch {
         // invalid JSON
       }
