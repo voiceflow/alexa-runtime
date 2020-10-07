@@ -20,12 +20,12 @@ describe('displayHandler.unit tests', () => {
 
   describe('handle', () => {
     it('supportedInterfaces is null', async () => {
-      const context = { storage: { get: sinon.stub().returns(null) } };
+      const context = { storage: { get: sinon.stub().returns(null) }, variables: { getState: sinon.stub().returns(null) } };
       expect(await displayHandler.handle({} as any, context as any, null as any, null as any)).to.eql(null);
     });
 
     it('supportedInterfaces does not have APL_INTERFACE_NAME', async () => {
-      const context = { storage: { get: sinon.stub().returns({}) } };
+      const context = { storage: { get: sinon.stub().returns({}) }, variables: { getState: sinon.stub().returns(null) } };
       const nextId = 'next-id';
       expect(await displayHandler.handle({ nextId } as any, context as any, null as any, null as any)).to.eql(nextId);
     });
@@ -33,6 +33,7 @@ describe('displayHandler.unit tests', () => {
     it('no document', async () => {
       const context = {
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
+        variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
       };
       const node = { display_id: 'display-id', apl_commands: 'commands', datasource: '{hello} there, {name}' };
@@ -56,6 +57,7 @@ describe('displayHandler.unit tests', () => {
     it('valid json command', async () => {
       const context = {
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
+        variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
       };
       const rawCommand = ['a', 'b'];
@@ -80,6 +82,7 @@ describe('displayHandler.unit tests', () => {
     it('undefined command', async () => {
       const context = {
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
+        variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
       };
 
@@ -110,6 +113,7 @@ describe('displayHandler.unit tests', () => {
         const document = 'document';
         const context = {
           storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
+          variables: { getState: sinon.stub().returns(null) },
           services: { multimodal: { getDisplayDocument: sinon.stub().returns(document) } },
         };
         const node = { display_id: 'display-id', apl_commands: 'commands', datasource: 'random' };
@@ -164,6 +168,7 @@ describe('displayHandler.unit tests', () => {
           end: sinon.stub(),
           stack: { top: sinon.stub().returns({ setNodeID }) },
           storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
+          variables: { getState: sinon.stub().returns(null) },
           services: { multimodal: { getDisplayDocument: sinon.stub().returns(document) } },
         };
         const node = { display_id: 'display-id', apl_commands: 'commands', nextId: 'next-id' };
@@ -194,6 +199,7 @@ describe('displayHandler.unit tests', () => {
           end: sinon.stub(),
           stack: { top: sinon.stub().returns({ setNodeID }) },
           storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
+          variables: { getState: sinon.stub().returns(null) },
           services: { multimodal: { getDisplayDocument: sinon.stub().returns(document) } },
         };
         const node = { display_id: 'display-id', apl_commands: 'commands' };
