@@ -5,8 +5,8 @@ import { SupportedInterfaces } from 'ask-sdk-model';
 import _ from 'lodash';
 
 import { S } from '@/lib/constants';
+import { regexVariables } from '@/lib/services/voiceflow/utils';
 
-import { regexVariables } from '../../utils';
 import { getVariables } from '../display';
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '../display/constants';
 import { Command, DisplayInfo } from '../display/types';
@@ -47,7 +47,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
 
     if (node.aplCommands && _.isString(node.aplCommands)) {
       try {
-        commands = JSON.parse(node.aplCommands) as Command[];
+        commands = JSON.parse(regexVariables(node.aplCommands, variables)) as Command[];
       } catch {
         // invalid JSON
       }
