@@ -8,6 +8,8 @@ export type Permission = {
 export enum PERMISSIONS {
   NOTIFICATIONS_WRITE = 'alexa::devices:all:notifications:write',
   REMINDERS_READ_WRITE = 'alexa::alerts:reminders:skill:readwrite',
+  ALEXA_HOUSEHOLD_LISTS_READ = 'alexa::household:lists:read',
+  ALEXA_HOUSEHOLD_LISTS_WRITE = 'alexa::household:lists:write',
   ISP = 'UNOFFICIAL::isp',
   PRODUCT = 'UNOFFICIAL::product',
   ACCOUNT_LINKING = 'UNOFFICIAL::account_linking',

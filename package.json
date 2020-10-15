@@ -140,7 +140,7 @@
     "lint": "eslint \"./**/*.{js,ts}\"",
     "local": "NODE_ENV=local ts-node --files -r tsconfig-paths/register start.ts",
     "local:watch": "NODE_ENV=local forever --watch -c \"ts-node --files -r tsconfig-paths/register\" start.ts",
-    "preview:check": "echo \"alexa\"",
+    "preview:check": "echo \"alexaclient\"",
     "preview:new": "scripts/deploy_dev_environments.sh",
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
     "test": "NODE_ENV=test nyc ts-mocha --paths --opts mocha.opts",

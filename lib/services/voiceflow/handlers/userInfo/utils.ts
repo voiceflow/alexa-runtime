@@ -246,6 +246,14 @@ export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
     return true;
   }
 
+  if (permissionValue === PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_READ) {
+    return true;
+  }
+
+  if (permissionValue === PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_WRITE) {
+    return true;
+  }
+
   if (permissionValue === PERMISSIONS.ISP) {
     return utils._ispPermission(handlerInput);
   }

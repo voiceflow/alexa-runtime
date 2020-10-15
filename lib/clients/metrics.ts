@@ -9,7 +9,7 @@ export class Metrics {
   constructor(config: Config, Logger: typeof BufferedMetricsLogger) {
     this.client = new Logger({
       apiKey: secretsProvider.get('DATADOG_API_KEY'),
-      prefix: `vf-server.${config.NODE_ENV}`,
+      prefix: `vf_server.${config.NODE_ENV}.`,
       flushIntervalSeconds: 5,
     });
   }

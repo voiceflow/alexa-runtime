@@ -77,6 +77,20 @@ describe('user info utils unit test', () => {
       expect(await isPermissionGranted(permission as any, context as any, null as any)).to.eql(true);
     });
 
+    it('PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_READ', async () => {
+      const permissionValue = PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_READ;
+      const context = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const permission = { selected: { value: permissionValue } };
+      expect(await isPermissionGranted(permission as any, context as any, null as any)).to.eql(true);
+    });
+
+    it('PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_WRITE', async () => {
+      const permissionValue = PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_WRITE;
+      const context = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const permission = { selected: { value: permissionValue } };
+      expect(await isPermissionGranted(permission as any, context as any, null as any)).to.eql(true);
+    });
+
     it('PERMISSIONS.ISP', async () => {
       const utils = { _ispPermission: sinon.stub().returns(true) };
       const fn = isPermissionGrantedGenerator(utils as any);
