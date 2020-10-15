@@ -14,9 +14,11 @@ type NoMatchNode = Node<
   }
 >;
 
+const EMPTY_AUDIO_STRING = '<audio src=""/>';
+
 const removeEmptyNoMatches = (noMatchArray?: string[]) => {
   return noMatchArray?.filter((noMatch) => {
-    return noMatch != null;
+    return noMatch != null && noMatch !== EMPTY_AUDIO_STRING;
   });
 };
 
