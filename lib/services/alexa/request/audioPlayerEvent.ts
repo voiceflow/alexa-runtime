@@ -4,7 +4,7 @@ import { HandlerInput, RequestHandler } from 'ask-sdk';
 
 import { S } from '@/lib/constants';
 
-import { _streamMetaData, AudioDirective, StreamAction } from '../../voiceflow/handlers/stream';
+import { _streamMetaData, AudioDirective, StreamAction, StreamPlay } from '../../voiceflow/handlers/stream';
 import { update } from './lifecycle';
 
 export enum Request {
@@ -57,7 +57,7 @@ export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): Reques
         break;
       case AudioEvent.PlaybackNearlyFinished: {
         // determine if there is another stream after this
-        const streamPlay = storage.get(S.STREAM_PLAY);
+        const streamPlay = storage.get<StreamPlay>(S.STREAM_PLAY);
         if (!streamPlay) break;
 
         if (streamPlay.loop) {
@@ -73,30 +73,30 @@ export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): Reques
         } else if (streamPlay.action === StreamAction.START && !storage.get(S.STREAM_TEMP)) {
           // check for next stream
           const tempContext = voiceflow.createContext(versionID, rawState as State);
-          tempContext.storage.set(S.STREAM_PLAY, { ...tempContext.storage.get(S.STREAM_PLAY), action: StreamAction.NEXT });
+          tempContext.storage.set(S.STREAM_PLAY, { ...tempContext.storage.get<StreamPlay>(S.STREAM_PLAY), action: StreamAction.NEXT });
 
           await utils.update(tempContext);
 
-          if (tempContext.storage.get(S.STREAM_PLAY)?.action === StreamAction.START) {
-            const { url, token, metaData } = utils._streamMetaData(tempContext.storage.get(S.STREAM_PLAY));
+          if (tempContext.storage.get<StreamPlay>(S.STREAM_PLAY)?.action === StreamAction.START) {
+            const { url, token, metaData } = utils._streamMetaData(tempContext.storage.get<StreamPlay>(S.STREAM_PLAY)!);
 
             if (url && token) {
               tempContext.storage.produce((draft: any) => {
                 draft[S.STREAM_PLAY].token = token;
               });
-              builder.addAudioPlayerPlayDirective(AudioDirective.ENQUEUE, url, token, 0, storage.get(S.STREAM_PLAY).token, metaData);
+              builder.addAudioPlayerPlayDirective(AudioDirective.ENQUEUE, url, token, 0, storage.get<StreamPlay>(S.STREAM_PLAY)!.token, metaData);
             }
             storage.set(S.STREAM_TEMP, tempContext.getRawState());
           }
         } else if (streamPlay.action === StreamAction.RESUME && storage.get(S.STREAM_TEMP)) {
           // resume with next stream present
-          const { url, token, metaData } = utils._streamMetaData(storage.get(S.STREAM_TEMP)[S.STREAM_PLAY]);
+          const { url, token, metaData } = utils._streamMetaData(storage.get<{ [S.STREAM_PLAY]: StreamPlay }>(S.STREAM_TEMP)![S.STREAM_PLAY]);
 
           if (url && token) {
             storage.produce((draft: any) => {
               draft[S.STREAM_TEMP][S.STREAM_PLAY].token = token;
             });
-            builder.addAudioPlayerPlayDirective(AudioDirective.ENQUEUE, url, token, 0, storage.get(S.STREAM_PLAY).token, metaData);
+            builder.addAudioPlayerPlayDirective(AudioDirective.ENQUEUE, url, token, 0, storage.get<StreamPlay>(S.STREAM_PLAY)!.token, metaData);
           }
         }
         break;

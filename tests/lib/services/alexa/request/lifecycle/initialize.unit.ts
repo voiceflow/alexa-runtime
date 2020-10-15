@@ -1,4 +1,5 @@
 import { RepeatType, SessionType } from '@voiceflow/alexa-types';
+import { TraceType } from '@voiceflow/general-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -74,7 +75,7 @@ describe('initialize lifecycle unit tests', async () => {
           merge: sinon.stub(),
         },
         trace: {
-          speak: sinon.stub(),
+          addTrace: sinon.stub(),
         },
       };
 
@@ -312,7 +313,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
           expect(context.storage.set.args[5]).to.eql([S.OUTPUT, '']);
-          expect(context.trace.speak.args).to.eql([['']]);
+          expect(context.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: '' } }]]);
           expect(input.context.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
 
@@ -330,7 +331,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
           expect(context.storage.set.args[5]).to.eql([S.OUTPUT, lastSpeak]);
-          expect(context.trace.speak.args).to.eql([[lastSpeak]]);
+          expect(context.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: lastSpeak } }]]);
           expect(input.context.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
       });

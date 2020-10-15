@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import PaymentStateHandler, { PaymentStatus } from '@/lib/services/voiceflow/handlers/state/payment';
+import PaymentStateHandler from '@/lib/services/voiceflow/handlers/state/payment';
 
 describe('payment state handler unit tests', () => {
   const paymentStateHandler = PaymentStateHandler();
@@ -26,7 +26,7 @@ describe('payment state handler unit tests', () => {
   describe('handle', () => {
     describe('success path', () => {
       it('ACCEPTED', () => {
-        const payment = { status: PaymentStatus.ACCEPTED, successPath: 'success-path-id', failPath: 'fail-path-id' };
+        const payment = { status: 'ACCEPTED', successPath: 'success-path-id', failPath: 'fail-path-id' };
         const context = { storage: { get: sinon.stub().returns(payment), delete: sinon.stub() } };
 
         const result = paymentStateHandler.handle(null as any, context as any, null as any, null as any);
@@ -36,7 +36,7 @@ describe('payment state handler unit tests', () => {
       });
 
       it('PURCHASED', () => {
-        const payment = { status: PaymentStatus.PURCHASED, successPath: 'success-path-id', failPath: 'fail-path-id' };
+        const payment = { status: 'ALREADY_PURCHASED', successPath: 'success-path-id', failPath: 'fail-path-id' };
         const context = { storage: { get: sinon.stub().returns(payment), delete: sinon.stub() } };
 
         const result = paymentStateHandler.handle(null as any, context as any, null as any, null as any);
@@ -46,7 +46,7 @@ describe('payment state handler unit tests', () => {
       });
 
       it('PENDING', () => {
-        const payment = { status: PaymentStatus.PENDING, successPath: 'success-path-id', failPath: 'fail-path-id' };
+        const payment = { status: 'PENDING_PURCHASE', successPath: 'success-path-id', failPath: 'fail-path-id' };
         const context = { storage: { get: sinon.stub().returns(payment), delete: sinon.stub() } };
 
         const result = paymentStateHandler.handle(null as any, context as any, null as any, null as any);

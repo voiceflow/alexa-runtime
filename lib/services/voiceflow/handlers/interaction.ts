@@ -1,33 +1,35 @@
-import { Node as InteractionNode } from '@voiceflow/alexa-types/build/nodes/interaction';
-import { HandlerFactory } from '@voiceflow/client';
+import { formatIntentName, HandlerFactory } from '@voiceflow/client';
+import { SlotMapping, TraceType } from '@voiceflow/general-types';
+import { Node, TraceFrame } from '@voiceflow/general-types/build/nodes/interaction';
 
 import { S, T } from '@/lib/constants';
 
-import { IntentRequest, Mapping, RequestType } from '../types';
-import { addRepromptIfExists, formatName, mapSlots } from '../utils';
+import { IntentRequest, RequestType } from '../types';
+import { addRepromptIfExists, mapSlots } from '../utils';
 import CommandHandler from './command';
 import NoMatchHandler from './noMatch';
 import RepeatHandler from './repeat';
 
 const utilsObj = {
-  addRepromptIfExists,
-  formatName,
   mapSlots,
-  commandHandler: CommandHandler(),
   repeatHandler: RepeatHandler(),
+  commandHandler: CommandHandler(),
   noMatchHandler: NoMatchHandler(),
+  formatIntentName,
+  addRepromptIfExists,
 };
 
-export const InteractionHandler: HandlerFactory<InteractionNode, typeof utilsObj> = (utils) => ({
-  canHandle: (node) => {
-    return !!node.interactions;
-  },
+export const InteractionHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
+  canHandle: (node) => !!node.interactions,
   handle: (node, context, variables) => {
     const request = context.turn.get(T.REQUEST) as IntentRequest;
 
     if (request?.type !== RequestType.INTENT) {
       utils.addRepromptIfExists(node, context, variables);
-      context.trace.choice(node.interactions.map(({ intent }) => ({ name: intent })));
+      context.trace.addTrace<TraceFrame>({
+        type: TraceType.CHOICE,
+        payload: { choices: node.interactions.map(({ intent }) => ({ name: intent })) },
+      });
 
       // clean up no matches counter on new interaction
       context.storage.delete(S.NO_MATCHES_COUNTER);
@@ -37,14 +39,14 @@ export const InteractionHandler: HandlerFactory<InteractionNode, typeof utilsObj
     }
 
     let nextId: string | null = null;
-    let variableMap: Mapping[] | null = null;
+    let variableMap: SlotMapping[] | null = null;
 
     const { intent } = request.payload;
 
     // check if there is a choice in the node that fulfills intent
     node.interactions.forEach((choice, i: number) => {
-      if (choice.intent && utils.formatName(choice.intent) === intent.name) {
-        variableMap = (choice.mappings as Mapping[]) ?? null;
+      if (choice.intent && utils.formatIntentName(choice.intent) === intent.name) {
+        variableMap = choice.mappings ?? null;
         nextId = node.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
 
         context.trace.debug(`matched choice **${choice.intent}** - taking path ${i + 1}`);

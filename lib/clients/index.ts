@@ -1,8 +1,8 @@
+import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
+import { DataAPI, LocalDataApi, ServerDataApi } from '@voiceflow/client';
+
 import { Config } from '@/types';
 
-import LocalDataAPI from './data/localDataAPI';
-import ServerDataAPI from './data/serverDataAPI';
-import { DataAPI } from './data/types';
 import Dynamo, { DynamoType } from './dynamo';
 import Metrics, { MetricsType } from './metrics';
 import Multimodal, { MultimodalType } from './multimodal';
@@ -11,7 +11,7 @@ import Static, { StaticType } from './static';
 export interface ClientMap extends StaticType {
   dynamo: DynamoType;
   multimodal: MultimodalType;
-  dataAPI: DataAPI;
+  dataAPI: DataAPI<AlexaProgram, AlexaVersion>;
   metrics: MetricsType;
 }
 
@@ -20,7 +20,9 @@ export interface ClientMap extends StaticType {
  */
 const buildClients = (config: Config): ClientMap => {
   const dynamo = Dynamo(config);
-  const dataAPI = config.PROJECT_SOURCE ? new LocalDataAPI(Static, config) : new ServerDataAPI(Static, config);
+  const dataAPI = config.PROJECT_SOURCE
+    ? new LocalDataApi({ projectSource: config.PROJECT_SOURCE }, { fs: Static.fs, path: Static.path })
+    : new ServerDataApi({ dataSecret: config.VF_DATA_SECRET, dataEndpoint: config.VF_DATA_ENDPOINT }, { axios: Static.axios });
   const multimodal = Multimodal(dataAPI);
   const metrics = Metrics(config);
 

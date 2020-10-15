@@ -27,12 +27,12 @@ describe('interaction handler unit tests', async () => {
       const interactionHandler = InteractionHandler(utils as any);
 
       const node = { id: 'node-id', interactions: [{ intent: 'one' }, { intent: 'two' }] };
-      const context = { trace: { choice: sinon.stub() }, storage: { delete: sinon.stub() }, turn: { get: sinon.stub().returns(null) } };
+      const context = { trace: { addTrace: sinon.stub() }, storage: { delete: sinon.stub() }, turn: { get: sinon.stub().returns(null) } };
       const variables = { foo: 'bar' };
 
       expect(interactionHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.id);
       expect(utils.addRepromptIfExists.args).to.eql([[node, context, variables]]);
-      expect(context.trace.choice.args[0][0]).to.eql([{ name: 'one' }, { name: 'two' }]);
+      expect(context.trace.addTrace.args[0][0]).to.eql({ type: 'choice', payload: { choices: [{ name: 'one' }, { name: 'two' }] } });
       expect(context.storage.delete.args).to.eql([[S.NO_MATCHES_COUNTER]]);
     });
 
@@ -44,12 +44,16 @@ describe('interaction handler unit tests', async () => {
       const captureHandler = InteractionHandler(utils as any);
 
       const node = { id: 'node-id', interactions: [] };
-      const context = { trace: { choice: sinon.stub() }, storage: { delete: sinon.stub() }, turn: { get: sinon.stub().returns({ type: 'random' }) } };
+      const context = {
+        trace: { addTrace: sinon.stub() },
+        storage: { delete: sinon.stub() },
+        turn: { get: sinon.stub().returns({ type: 'random' }) },
+      };
       const variables = { foo: 'bar' };
 
       expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.id);
       expect(utils.addRepromptIfExists.args).to.eql([[node, context, variables]]);
-      expect(context.trace.choice.args[0][0]).to.eql([]);
+      expect(context.trace.addTrace.args[0][0]).to.eql({ type: 'choice', payload: { choices: [] } });
       expect(context.storage.delete.args).to.eql([[S.NO_MATCHES_COUNTER]]);
     });
 
@@ -78,7 +82,7 @@ describe('interaction handler unit tests', async () => {
       describe('command cant handle', () => {
         it('no choice', () => {
           const utils = {
-            formatName: sinon.stub().returns(false),
+            formatIntentName: sinon.stub().returns(false),
             commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
@@ -98,13 +102,13 @@ describe('interaction handler unit tests', async () => {
           const variables = { foo: 'bar' };
 
           expect(interactionHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
-          expect(utils.formatName.args).to.eql([[node.interactions[0].intent], [node.interactions[1].intent]]);
+          expect(utils.formatIntentName.args).to.eql([[node.interactions[0].intent], [node.interactions[1].intent]]);
           expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
         });
 
         it('no choice with elseId', () => {
           const utils = {
-            formatName: sinon.stub().returns(false),
+            formatIntentName: sinon.stub().returns(false),
             commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
@@ -131,7 +135,7 @@ describe('interaction handler unit tests', async () => {
           const noMatches = ['speak1', 'speak2', 'speak3'];
 
           const utils = {
-            formatName: sinon.stub().returns(false),
+            formatIntentName: sinon.stub().returns(false),
             commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
@@ -156,7 +160,7 @@ describe('interaction handler unit tests', async () => {
           const variables = { foo: 'bar' };
 
           expect(interactionHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(nextId);
-          expect(utils.formatName.args).to.eql([[node.interactions[0].intent], [node.interactions[1].intent]]);
+          expect(utils.formatIntentName.args).to.eql([[node.interactions[0].intent], [node.interactions[1].intent]]);
           expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
           expect(utils.noMatchHandler.canHandle.args).to.eql([[node, context]]);
           expect(utils.noMatchHandler.handle.args).to.eql([[node, context, variables]]);
@@ -166,7 +170,7 @@ describe('interaction handler unit tests', async () => {
           const intentName = 'random-intent';
 
           const utils = {
-            formatName: sinon.stub().returns(intentName),
+            formatIntentName: sinon.stub().returns(intentName),
             commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
@@ -197,7 +201,7 @@ describe('interaction handler unit tests', async () => {
           const intentName = 'random-intent';
 
           const utils = {
-            formatName: sinon.stub().returns(intentName),
+            formatIntentName: sinon.stub().returns(intentName),
             commandHandler: {
               canHandle: sinon.stub().returns(false),
             },
@@ -234,7 +238,7 @@ describe('interaction handler unit tests', async () => {
           const mappedSlots = { slot1: 'slot-1' };
 
           const utils = {
-            formatName: sinon.stub().returns(intentName),
+            formatIntentName: sinon.stub().returns(intentName),
             commandHandler: {
               canHandle: sinon.stub().returns(false),
             },

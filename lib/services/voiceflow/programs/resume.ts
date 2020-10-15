@@ -1,5 +1,6 @@
-import { NodeType, Prompt } from '@voiceflow/alexa-types';
+import { Voice } from '@voiceflow/alexa-types';
 import { Frame, Program } from '@voiceflow/client';
+import { NodeType, Prompt } from '@voiceflow/general-types';
 
 import { IntentName } from '@/lib/services/voiceflow/types';
 
@@ -22,7 +23,7 @@ export const promptToSSML = (content = '', voice: string | undefined) => {
   return `<voice name="${voice}">${content}</voice>`;
 };
 
-export const createResumeFrame = (resume: Prompt, follow: Prompt | null) => {
+export const createResumeFrame = (resume: Prompt<Voice>, follow: Prompt<Voice> | null) => {
   return new Frame({
     programID: RESUME_PROGRAM_ID,
     variables: {

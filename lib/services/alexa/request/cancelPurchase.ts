@@ -2,13 +2,14 @@ import { HandlerInput, RequestHandler } from 'ask-sdk';
 import { interfaces } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
+import { CancelPaymentStorage } from '@/lib/services/voiceflow/handlers/cancelPayment';
 
 import { updateContext } from '../utils';
 import IntentHandler from './intent';
 
 export enum Request {
-  RESPONSE_TYPE = 'Connections.Response',
   REQ_NAME = 'Cancel',
+  RESPONSE_TYPE = 'Connections.Response',
 }
 
 const utilsObj = {
@@ -27,8 +28,10 @@ export const CancelPurchaseHandlerGenerator = (utils: typeof utilsObj): RequestH
     const result: false | interfaces.monetization.v1.PurchaseResult = payload?.purchaseResult ?? false;
 
     await utils.updateContext(input, (context) => {
-      context.storage.produce((draft) => {
-        if (draft[S.CANCEL_PAYMENT]) draft[S.CANCEL_PAYMENT].status = result || false;
+      context.storage.produce<{ [S.CANCEL_PAYMENT]: CancelPaymentStorage }>((draft) => {
+        if (draft[S.CANCEL_PAYMENT]) {
+          draft[S.CANCEL_PAYMENT].status = result || false;
+        }
       });
     });
 

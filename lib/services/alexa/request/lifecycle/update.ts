@@ -6,11 +6,13 @@ import { S, T, V } from '@/lib/constants';
 const update = async (context: Context): Promise<void> => {
   const { turn, variables, storage } = context;
 
+  const repeatNumber = storage?.get(S.REPEAT);
+
   // TODO: temporary buffer to update sessions with old numeric repeat type REMOVE SOON
-  if (typeof storage?.get(S.REPEAT) === 'number') {
+  if (typeof repeatNumber === 'number') {
     let repeat = RepeatType.ALL;
-    if (storage.get(S.REPEAT) === 0) repeat = RepeatType.OFF;
-    else if (storage.get(S.REPEAT) < 100) repeat = RepeatType.DIALOG;
+    if (repeatNumber === 0) repeat = RepeatType.OFF;
+    else if (repeatNumber < 100) repeat = RepeatType.DIALOG;
     storage.set(S.REPEAT, repeat);
   }
 

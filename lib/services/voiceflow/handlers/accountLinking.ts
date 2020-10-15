@@ -1,5 +1,4 @@
-import { NodeType } from '@voiceflow/alexa-types';
-import { Node } from '@voiceflow/api-sdk';
+import { Node } from '@voiceflow/alexa-types/build/nodes/accountLinking';
 import { HandlerFactory } from '@voiceflow/client';
 
 import { T } from '@/lib/constants';
@@ -13,18 +12,8 @@ export const AccountLinkingResponseBuilder: ResponseBuilder = (context, builder)
   }
 };
 
-export type AccountLinkingNode = Node<
-  NodeType.ACCOUNT_LINKING,
-  {
-    link_account?: boolean;
-    nextId: string;
-  }
->;
-
-const AccountLinkingHandler: HandlerFactory<AccountLinkingNode> = () => ({
-  canHandle: (node) => {
-    return !!node.link_account;
-  },
+const AccountLinkingHandler: HandlerFactory<Node> = () => ({
+  canHandle: (node) => !!node.link_account,
   handle: (node, context) => {
     context.turn.set(T.ACCOUNT_LINKING, true);
 

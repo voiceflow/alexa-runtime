@@ -1,12 +1,12 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { HandlerFactory } from '@voiceflow/client';
+import { HandlerFactory, replaceVariables } from '@voiceflow/client';
 
 import { S, T } from '@/lib/constants';
 
 import { IntentName, IntentRequest } from '../../types';
-import { regexVariables } from '../../utils';
+import {} from '../../utils';
 import CommandHandler from '../command';
-import { StreamAction } from '../stream';
+import { StreamAction, StreamPauseStorage, StreamPlay } from '../stream';
 
 export const StreamFailPhrase: Record<string, string> = {
   'en-US': 'Sorry, this action isn’t available in this skill. ',
@@ -28,46 +28,44 @@ export const StreamFailPhrase: Record<string, string> = {
 
 const utilsObj = {
   commandHandler: CommandHandler(),
-  regexVariables,
+  replaceVariables,
 };
 
 export const StreamStateHandler: HandlerFactory<any, typeof utilsObj> = (utils) => ({
-  canHandle: (_, context) => {
-    return !!(context.storage.get(S.STREAM_PLAY) && context.storage.get(S.STREAM_PLAY).action !== StreamAction.END);
-  },
+  canHandle: (_, context) => !!(context.storage.get(S.STREAM_PLAY) && context.storage.get<StreamPlay>(S.STREAM_PLAY)!.action !== StreamAction.END),
   handle: (_, context, variables) => {
     const request = context.turn.get(T.REQUEST) as IntentRequest;
     const intentName = request?.payload?.intent?.name || null;
-    const streamPlay = context.storage.get(S.STREAM_PLAY);
+    const streamPlay = context.storage.get<StreamPlay>(S.STREAM_PLAY)!;
 
     let nextId;
 
     if (intentName === IntentName.PAUSE) {
       if (streamPlay.nextId) {
         // If it is linked to something else, save current pause state
-        context.storage.set(S.STREAM_PAUSE, {
+        context.storage.set<StreamPauseStorage>(S.STREAM_PAUSE, {
           id: streamPlay.PAUSE_ID,
           offset: streamPlay.offset,
         });
 
         ({ nextId } = streamPlay);
-        context.storage.produce((draft) => {
+        context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
           draft[S.STREAM_PLAY].action = StreamAction.END;
         });
       } else {
         // Literally just PAUSE
-        context.storage.produce((draft) => {
+        context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
           draft[S.STREAM_PLAY].action = StreamAction.PAUSE;
         });
         context.end();
       }
     } else if (intentName === IntentName.RESUME) {
-      context.storage.produce((draft) => {
+      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.RESUME;
       });
       context.end();
     } else if (intentName === IntentName.STARTOVER || intentName === IntentName.REPEAT) {
-      context.storage.produce((draft) => {
+      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.START;
         draft[S.STREAM_PLAY].offset = 0;
       });
@@ -79,7 +77,7 @@ export const StreamStateHandler: HandlerFactory<any, typeof utilsObj> = (utils) 
 
       context.storage.delete(S.STREAM_TEMP);
 
-      context.storage.produce((draft) => {
+      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
     } else if (intentName === IntentName.PREV) {
@@ -89,42 +87,46 @@ export const StreamStateHandler: HandlerFactory<any, typeof utilsObj> = (utils) 
 
       context.storage.delete(S.STREAM_TEMP);
 
-      context.storage.produce((draft) => {
+      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
     } else if (intentName === IntentName.CANCEL) {
-      context.storage.produce((draft) => {
+      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.PAUSE;
       });
       context.end();
     } else if (utils.commandHandler.canHandle(context)) {
-      context.storage.produce((draft) => {
+      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
       return utils.commandHandler.handle(context, variables);
     } else {
-      context.storage.produce((draft) => {
+      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.NOEFFECT;
       });
 
-      context.storage.produce((draft) => {
-        draft.output += StreamFailPhrase[context.storage.get(S.LOCALE)] || StreamFailPhrase['en-US'];
+      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay; output: string }>((draft) => {
+        draft.output += StreamFailPhrase[context.storage.get<string>(S.LOCALE)!] || StreamFailPhrase['en-US'];
       });
+
       context.end();
     }
 
-    const updatedStreamPlay = context.storage.get(S.STREAM_PLAY);
+    const updatedStreamPlay = context.storage.get<StreamPlay>(S.STREAM_PLAY);
+
     if (updatedStreamPlay) {
       const variablesMap = variables.getState();
-      context.storage.produce((draft) => {
-        draft[S.STREAM_PLAY].title = utils.regexVariables(updatedStreamPlay.regex_title, variablesMap);
-        draft[S.STREAM_PLAY].description = utils.regexVariables(updatedStreamPlay.regex_description, variablesMap);
+
+      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
+        draft[S.STREAM_PLAY].title = utils.replaceVariables(updatedStreamPlay.regex_title, variablesMap);
+        draft[S.STREAM_PLAY].description = utils.replaceVariables(updatedStreamPlay.regex_description, variablesMap);
       });
     }
 
     // request for this turn has been processed, delete request
     context.turn.delete(T.REQUEST);
-    return nextId;
+
+    return nextId ?? null;
   },
 });
 

@@ -1,4 +1,7 @@
 import Client, { EventType } from '@voiceflow/client';
+import { TraceType } from '@voiceflow/general-types';
+import { TraceFrame as FlowTraceFrame } from '@voiceflow/general-types/build/nodes/flow';
+import { TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
 
 import { F, S, TEST_VERSION_ID } from '@/lib/constants';
 import { executeEvents } from '@/lib/services/voiceflow/handlers/events';
@@ -33,19 +36,27 @@ const VoiceflowManager = (services: Services, config: Config, utils = utilsObj) 
   client.setEvent(EventType.stackDidChange, ({ context }) => {
     const programID = context.stack.top()?.getProgramID();
 
-    context.trace.flow(programID);
+    context.trace.addTrace<FlowTraceFrame>({
+      type: TraceType.FLOW,
+      payload: { diagramID: programID },
+    });
   });
 
   client.setEvent(EventType.frameDidFinish, ({ context }) => {
     if (context.stack.top()?.storage.get(F.CALLED_COMMAND)) {
       context.stack.top().storage.delete(F.CALLED_COMMAND);
 
-      const output = context.stack.top().storage.get(F.SPEAK);
+      const output = context.stack.top().storage.get<string>(F.SPEAK);
+
       if (output) {
         context.storage.produce((draft) => {
           draft[S.OUTPUT] += output;
         });
-        context.trace.speak(output);
+
+        context.trace.addTrace<SpeakTraceFrame>({
+          type: TraceType.SPEAK,
+          payload: { message: output },
+        });
       }
     }
   });

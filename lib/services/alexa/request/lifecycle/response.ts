@@ -18,8 +18,8 @@ export const responseGenerator = (utils: typeof utilsObj) => async (context: Con
   }
 
   responseBuilder
-    .speak(storage.get(S.OUTPUT))
-    .reprompt(turn.get('reprompt') || storage.get(S.OUTPUT))
+    .speak(storage.get<string>(S.OUTPUT) ?? '')
+    .reprompt((turn.get<string>('reprompt') || storage.get<string>(S.OUTPUT)) ?? '')
     .withShouldEndSession(!!turn.get(T.END));
 
   // eslint-disable-next-line no-restricted-syntax

@@ -982,17 +982,20 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
-"@voiceflow/alexa-types@^1.12.2":
-  version "1.18.2"
-  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.18.2.tgz#a008b3bca603af24daad840f99d32fc5a1a41905"
-  integrity sha512-lvs0Cd1Hti493/Kw+xyNqQ87qJr7tKYM6MG0OehCuafxk3OjzMZpctTlR/ZVApSdX7FEIoC6LY6pvVh3aDzMiw==
+"@voiceflow/alexa-types@1.29.0":
+  version "1.29.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.29.0.tgz#4dcace66e418ab5c1eedf92c1083ff5754ce4972"
+  integrity sha512-Uz5CJcdpZf+YtWIKY/ZVumrpX8IKeNpv/2PpG5JZL/Qelp4UtmVVikqMxxFE4VZw0ofBMetR5kKLtR9TCIQqtg==
   dependencies:
-    "@voiceflow/api-sdk" "1.7.0"
+    "@voiceflow/api-sdk" "1.10.1"
+    "@voiceflow/general-types" "^1.1.0"
+    ask-smapi-model "^1.11.0"
+    eslint-plugin-prettier "^3.1.4"
 
-"@voiceflow/api-sdk@1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.7.0.tgz#d99080d6731fcd1268d68c00605b30c798edd785"
-  integrity sha512-cZO13zfFBInGabZ6RBwrEs7RAXpBc9EWPZYBS48gBW4U42T28dvexcNPz6kmOXCl+3ip0MlnGZk+YuB44wBO9A==
+"@voiceflow/api-sdk@1.10.1":
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.10.1.tgz#c9177eb866a003b786453056cdb11439d820f076"
+  integrity sha512-PEpf0dybn5YCc9Sp2JrYGW5sYGe3dxGJ7QPcTdFUp0Hz/D4ihsisLKEU5LhcRFXQU62o+PlxAQt/u90/QDHHmA==
   dependencies:
     "@types/atob" "^2.1.2"
     "@voiceflow/logger" "^1.1.10"
@@ -1087,6 +1090,13 @@
     eslint-plugin-simple-import-sort "^3.1.1"
     eslint-plugin-sonarjs "^0.4.0"
     eslint-plugin-xss "^0.1.9"
+
+"@voiceflow/general-types@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.1.0.tgz#d00d5462fd6eda0da20e0cb63771dc1b68fbb81b"
+  integrity sha512-Gn9jwK4p7HUb22v80Ec3U7HMok4zl4OsnsefgCr3LD0XPK6pXcttTGyYcWwwWyCdSgAdHP2ZhK12lS1khV1fXw==
+  dependencies:
+    "@voiceflow/api-sdk" "1.10.1"
 
 "@voiceflow/git-branch-check@^1.0.6":
   version "1.1.3"
@@ -1519,6 +1529,11 @@ ask-sdk-dynamodb-persistence-adapter@^2.9.0:
   dependencies:
     aws-sdk "^2.163.0"
 
+ask-sdk-model-runtime@^1.1.0:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/ask-sdk-model-runtime/-/ask-sdk-model-runtime-1.2.1.tgz#d8740a432212a4e4ff3e42b11ed1ae996b9ca4d5"
+  integrity sha512-3tM9E9Afs+PiYMHC/awUdtK3vZbT8YJo6PHwFop5FztN21n1kwRd++r6fRR727WCmLZPjbhSg9QifSGVEBUX8g==
+
 ask-sdk-model@^1.29.0, ask-sdk-model@^1.31.0:
   version "1.31.0"
   resolved "https://registry.yarnpkg.com/ask-sdk-model/-/ask-sdk-model-1.31.0.tgz#54f4c86e8bd74d97d1edae4f9e526acef42db376"
@@ -1537,6 +1552,13 @@ ask-sdk@^2.9.0:
     ask-sdk-core "^2.9.0"
     ask-sdk-dynamodb-persistence-adapter "^2.9.0"
     ask-sdk-model "^1.29.0"
+
+ask-smapi-model@^1.11.0:
+  version "1.12.3"
+  resolved "https://registry.yarnpkg.com/ask-smapi-model/-/ask-smapi-model-1.12.3.tgz#280d74df76d04120fbc5dd6c3f5f51d012710814"
+  integrity sha512-nH9rtw275x3KdnLyOG8j6kkwe2OdlKoea4TZP0wzhvGOMVb7O2H/EeaFhsJ+s/4bPN3grL2CF9aZkP13O2Ll7g==
+  dependencies:
+    ask-sdk-model-runtime "^1.1.0"
 
 asn1@~0.2.3:
   version "0.2.4"
@@ -3369,7 +3391,7 @@ eslint-plugin-prefer-arrow@^1.1.5:
   resolved "https://registry.yarnpkg.com/eslint-plugin-prefer-arrow/-/eslint-plugin-prefer-arrow-1.2.2.tgz#0c6d25a6b94cb3e0110a23d129760af5860edb6e"
   integrity sha512-C8YMhL+r8RMeMdYAw/rQtE6xNdMulj+zGWud/qIGnlmomiPRaLDGLMeskZ3alN6uMBojmooRimtdrXebLN4svQ==
 
-eslint-plugin-prettier@^3.1.0:
+eslint-plugin-prettier@^3.1.0, eslint-plugin-prettier@^3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-3.1.4.tgz#168ab43154e2ea57db992a2cd097c828171f75c2"
   integrity sha512-jZDa8z76klRqo+TdGDTFJSavwbnWK2ZpqGKNZ+VvweMW516pDUMmQ2koXvxEE4JhzNvTv+radye/bWGBmA6jmg==

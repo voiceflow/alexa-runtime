@@ -2,8 +2,6 @@ import { Context, Request } from '@voiceflow/client';
 import { ResponseBuilder as ASKResponseBuilder } from 'ask-sdk';
 import { Intent } from 'ask-sdk-model';
 
-export type Mapping = { variable: string; slot: string };
-
 export enum RequestType {
   INTENT = 'INTENT',
   EVENT = 'EVENT',

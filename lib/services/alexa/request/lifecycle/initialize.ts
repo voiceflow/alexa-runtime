@@ -1,8 +1,9 @@
-import { RepeatType, SessionType } from '@voiceflow/alexa-types';
-import { Context, Frame, Store } from '@voiceflow/client';
+import { AlexaProgram, AlexaVersion, RepeatType, SessionType } from '@voiceflow/alexa-types';
+import { Context, DataAPI, Frame, Store } from '@voiceflow/client';
+import { TraceType } from '@voiceflow/general-types';
+import { TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
 import { HandlerInput } from 'ask-sdk';
 
-import { DataAPI } from '@/lib/clients/data/types';
 import { F, S, T, V } from '@/lib/constants';
 import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 import { createResumeFrame, RESUME_PROGRAM_ID } from '@/lib/services/voiceflow/programs/resume';
@@ -20,7 +21,10 @@ const utilsObj = {
   },
 };
 
-export const initializeGenerator = (utils: typeof utilsObj) => async (context: Context, input: HandlerInput): Promise<void> => {
+export const initializeGenerator = (utils: typeof utilsObj) => async (
+  context: Context<DataAPI<AlexaProgram, AlexaVersion>>,
+  input: HandlerInput
+): Promise<void> => {
   const { requestEnvelope } = input;
 
   // fetch the metadata for this version (project)
@@ -28,7 +32,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
     platformData: { settings, slots },
     variables: versionVariables,
     rootDiagramID,
-  } = await (input.context.api as DataAPI).getVersion(context.getVersionID());
+  } = await context.api.getVersion(context.getVersionID());
 
   const { stack, storage, variables } = context;
 
@@ -87,7 +91,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
 
   const { session = { type: SessionType.RESTART } } = settings;
   // restart logic
-  const shouldRestart = stack.isEmpty() || session.type === SessionType.RESTART || variables.get(VAR_VF)?.resume === false;
+  const shouldRestart = stack.isEmpty() || session.type === SessionType.RESTART || variables.get<{ resume?: boolean }>(VAR_VF)?.resume === false;
   if (shouldRestart) {
     // start the stack with just the root flow
     stack.flush();
@@ -109,10 +113,13 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (context: C
   } else {
     // give context to where the user left off with last speak node
     stack.top().storage.delete(F.CALLED_COMMAND);
-    const lastSpeak = stack.top().storage.get(F.SPEAK) ?? '';
+    const lastSpeak = stack.top().storage.get<string>(F.SPEAK) ?? '';
 
     storage.set(S.OUTPUT, lastSpeak);
-    context.trace.speak(lastSpeak);
+    context.trace.addTrace<SpeakTraceFrame>({
+      type: TraceType.SPEAK,
+      payload: { message: lastSpeak },
+    });
   }
 };
 

@@ -31,7 +31,7 @@ describe('noMatch handler unit tests', () => {
           get: sinon.stub().returns(1),
         },
         trace: {
-          speak: sinon.stub(),
+          addTrace: sinon.stub(),
         },
       };
       const variables = {
@@ -40,7 +40,7 @@ describe('noMatch handler unit tests', () => {
 
       const noMatchHandler = NoMatchHandler();
       expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
-      expect(context.trace.speak.args).to.eql([['the counter is 5.23']]);
+      expect(context.trace.addTrace.args).to.eql([[{ type: 'speak', payload: { message: 'the counter is 5.23' } }]]);
 
       // assert produce
       const cb1 = context.storage.produce.args[0][0];
@@ -69,7 +69,7 @@ describe('noMatch handler unit tests', () => {
           get: sinon.stub().returns(1),
         },
         trace: {
-          speak: sinon.stub(),
+          addTrace: sinon.stub(),
         },
       };
       const variables = {
@@ -78,7 +78,7 @@ describe('noMatch handler unit tests', () => {
 
       const noMatchHandler = NoMatchHandler();
       expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
-      expect(context.trace.speak.args).to.eql([['']]);
+      expect(context.trace.addTrace.args).to.eql([[{ type: 'speak', payload: { message: '' } }]]);
     });
 
     it('with noMatch randomized', () => {
@@ -93,7 +93,7 @@ describe('noMatch handler unit tests', () => {
           get: sinon.stub().returns(1),
         },
         trace: {
-          speak: sinon.stub(),
+          addTrace: sinon.stub(),
         },
       };
       const variables = {
@@ -102,7 +102,7 @@ describe('noMatch handler unit tests', () => {
 
       const noMatchHandler = NoMatchHandler();
       expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
-      expect(node.noMatches.includes(context.trace.speak.args[0][0])).to.eql(true);
+      expect(node.noMatches.includes(context.trace.addTrace.args[0][0].payload.message)).to.eql(true);
     });
 
     it('with noMatch null speak string', () => {

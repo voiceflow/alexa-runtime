@@ -1,35 +1,9 @@
-import { NodeType } from '@voiceflow/alexa-types';
-import { Node } from '@voiceflow/api-sdk';
-import { HandlerFactory, Store } from '@voiceflow/client';
+import { Card, CardType, Node } from '@voiceflow/alexa-types/build/nodes/card';
+import { HandlerFactory, replaceVariables, Store } from '@voiceflow/client';
 
 import { T } from '@/lib/constants';
 
 import { ResponseBuilder } from '../types';
-import { regexVariables } from '../utils';
-
-export enum CardType {
-  STANDARD = 'Standard',
-  SIMPLE = 'Simple',
-}
-
-type Card = {
-  type?: CardType;
-  title?: string;
-  text?: string;
-  content?: string;
-  image?: {
-    smallImageUrl?: string;
-    largeImageUrl?: string;
-  };
-};
-
-export type CardNode = Node<
-  NodeType.CARD,
-  {
-    card: Card;
-    nextId: string;
-  }
->;
 
 export const CardResponseBuilder: ResponseBuilder = (context, builder) => {
   const card: Required<Card> | undefined = context.turn.get(T.CARD);
@@ -39,31 +13,36 @@ export const CardResponseBuilder: ResponseBuilder = (context, builder) => {
   }
 
   if (card.type === CardType.SIMPLE) {
-    builder.withSimpleCard(card.title, card.content);
+    builder.withSimpleCard(card.title, card.text);
   } else if (card.type === CardType.STANDARD) {
     builder.withStandardCard(card.title, card.text, card.image.smallImageUrl, card.image.largeImageUrl);
   }
 };
 
-export const addVariables = (regex: typeof regexVariables) => (value: string | undefined, variables: Store, defaultValue = '') =>
+export const addVariables = (regex: typeof replaceVariables) => (value: string | undefined, variables: Store, defaultValue = '') =>
   value ? regex(value, variables.getState()) : defaultValue;
 
 const utilsObj = {
-  addVariables: addVariables(regexVariables),
+  addVariables: addVariables(replaceVariables),
 };
 
-export const CardHandler: HandlerFactory<CardNode, typeof utilsObj> = (utils) => ({
-  canHandle: (node) => {
-    return !!node.card;
-  },
+export const CardHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
+  canHandle: (node) => !!node.card,
   handle: (node, context, variables) => {
     const { card } = node;
+    const type = card.type ?? CardType.SIMPLE;
+
+    // FIXME: remove after data refactoring
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    const { content } = card;
+
+    const text = (type === CardType.SIMPLE ? content : card.text) ?? card.text;
 
     const newCard: Required<Card> = {
-      type: card.type ?? CardType.SIMPLE,
+      type,
+      text: utils.addVariables(text, variables),
       title: utils.addVariables(card.title, variables),
-      text: utils.addVariables(card.text, variables),
-      content: utils.addVariables(card.content, variables),
       image: {
         largeImageUrl: '',
         smallImageUrl: '',
@@ -77,7 +56,7 @@ export const CardHandler: HandlerFactory<CardNode, typeof utilsObj> = (utils) =>
 
     context.turn.set(T.CARD, newCard);
 
-    return node.nextId;
+    return node.nextId ?? null;
   },
 });
 

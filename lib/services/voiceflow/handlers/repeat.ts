@@ -9,6 +9,7 @@ const RepeatHandler = {
   canHandle: (context: Context): boolean => {
     const request = context.turn.get(T.REQUEST) as IntentRequest;
     const repeat = context.storage.get(S.REPEAT) as RepeatType;
+
     return request?.payload.intent.name === IntentName.REPEAT && [RepeatType.ALL, RepeatType.DIALOG].includes(repeat);
   },
   handle: (context: Context) => {

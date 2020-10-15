@@ -25,19 +25,19 @@ describe('stream handler unit tests', () => {
   describe('handle', () => {
     describe('no pause', () => {
       it('works', () => {
-        const regexVariables = sinon.stub();
+        const replaceVariables = sinon.stub();
         const audioUrl = 'audio-url';
-        regexVariables.onCall(0).returns(audioUrl);
+        replaceVariables.onCall(0).returns(audioUrl);
         const title = 'title';
-        regexVariables.onCall(1).returns(title);
+        replaceVariables.onCall(1).returns(title);
         const description = 'description';
-        regexVariables.onCall(2).returns(description);
+        replaceVariables.onCall(2).returns(description);
         const icon_img = 'icon_img';
-        regexVariables.onCall(3).returns(icon_img);
+        replaceVariables.onCall(3).returns(icon_img);
         const background_img = 'background_img';
-        regexVariables.onCall(4).returns(background_img);
+        replaceVariables.onCall(4).returns(background_img);
 
-        const utils = { regexVariables };
+        const utils = { replaceVariables };
         const handler = StreamHandler(utils);
 
         const variablesMap = 'variables-map';
@@ -59,7 +59,7 @@ describe('stream handler unit tests', () => {
 
         expect(handler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
         expect(variables.getState.callCount).to.eql(1);
-        expect(utils.regexVariables.args).to.eql([
+        expect(utils.replaceVariables.args).to.eql([
           [node.play, variablesMap],
           [node.title, variablesMap],
           [node.description, variablesMap],
@@ -95,7 +95,7 @@ describe('stream handler unit tests', () => {
 
     describe('with pause', () => {
       it('different pause ids', () => {
-        const utils = { regexVariables: sinon.stub().returns('') };
+        const utils = { replaceVariables: sinon.stub().returns('') };
         const handler = StreamHandler(utils);
 
         const variables = { getState: sinon.stub().returns({}) };
@@ -115,7 +115,7 @@ describe('stream handler unit tests', () => {
       });
 
       it('equal pause ids', () => {
-        const utils = { regexVariables: sinon.stub().returns('') };
+        const utils = { replaceVariables: sinon.stub().returns('') };
         const handler = StreamHandler(utils);
 
         const variables = { getState: sinon.stub().returns({}) };
@@ -219,7 +219,7 @@ describe('stream handler unit tests', () => {
       it('stream play action NOEFFECT', () => {
         const streamPlay = { action: StreamAction.NOEFFECT };
         const offsetInMilliseconds = 100;
-        const input = { requestEnvelope: { context: { AudioPlayer: { offsetInMilliseconds } } } };
+        const input = { requestEnvelope: { context: { AudioPlayer: { offsetInMilliseconds } as { offsetInMilliseconds: number } | undefined } } };
         const context = { storage: { get: sinon.stub().returns(streamPlay), produce: sinon.stub() }, turn: { get: sinon.stub().returns(input) } };
         const builder = { withShouldEndSession: sinon.stub() };
         StreamResponseBuilder(context as any, builder as any);

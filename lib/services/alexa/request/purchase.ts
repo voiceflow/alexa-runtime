@@ -2,6 +2,7 @@ import { HandlerInput, RequestHandler } from 'ask-sdk';
 import { interfaces } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
+import { PaymentStorage } from '@/lib/services/voiceflow/handlers/payment';
 
 import { updateContext } from '../utils';
 import IntentHandler from './intent';
@@ -27,8 +28,10 @@ export const PurchaseHandlerGenerator = (utils: typeof utilsObj): RequestHandler
     const result: false | undefined | interfaces.monetization.v1.PurchaseResult = +(status?.code || 0) < 300 && payload?.purchaseResult;
 
     await utils.updateContext(input, (context) => {
-      context.storage.produce((draft) => {
-        if (draft[S.PAYMENT]) draft[S.PAYMENT].status = result || false;
+      context.storage.produce<{ [S.PAYMENT]: PaymentStorage }>((draft) => {
+        if (draft[S.PAYMENT]) {
+          draft[S.PAYMENT].status = result || false;
+        }
       });
     });
 

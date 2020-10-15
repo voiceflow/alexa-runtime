@@ -1,21 +1,13 @@
 import { Command } from '@voiceflow/api-sdk';
 import { Context, extractFrameCommand, Frame, Store } from '@voiceflow/client';
+import { CommandMapping } from '@voiceflow/general-types';
+import { Command as IntentCommand } from '@voiceflow/general-types/build/nodes/command';
 import _ from 'lodash';
 
 import { F, T } from '@/lib/constants';
 
-import { IntentName, IntentRequest, Mapping, RequestType } from '../types';
+import { IntentName, IntentRequest, RequestType } from '../types';
 import { mapSlots } from '../utils';
-
-export type IntentCommand = Command<
-  any,
-  {
-    intent: string;
-    mappings: { variable: string; slot: string }[];
-    diagram_id?: string;
-    next?: null | string;
-  }
->;
 
 export const getCommand = (context: Context, extractFrame: typeof extractFrameCommand) => {
   const request = context.turn.get(T.REQUEST) as IntentRequest;
@@ -69,7 +61,7 @@ export const CommandHandler = (utils: typeof utilsObj) => ({
     if (!res) return null;
 
     let nextId: string | null = null;
-    let variableMap: Mapping[] | undefined;
+    let variableMap: CommandMapping[] | undefined;
 
     if (res.command) {
       const { index, command } = res;
