@@ -26,6 +26,7 @@ type DisplayNode = Node<
 const utilsObj = {
   deepFindVideos,
   getVariables,
+  regexVariables,
 };
 
 export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (utils) => ({
@@ -47,7 +48,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
 
     if (node.aplCommands && _.isString(node.aplCommands)) {
       try {
-        commands = JSON.parse(regexVariables(node.aplCommands, variables)) as Command[];
+        commands = JSON.parse(utils.regexVariables(node.aplCommands, variables)) as Command[];
       } catch {
         // invalid JSON
       }
@@ -72,7 +73,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
     let documentData;
     try {
       // documentData = JSON.parse(document);
-      documentData = JSON.parse(regexVariables(document, variables));
+      documentData = JSON.parse(utils.regexVariables(document, variables));
     } catch {
       // invalid JSON
     }
