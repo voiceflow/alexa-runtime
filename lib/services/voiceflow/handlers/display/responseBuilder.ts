@@ -2,9 +2,9 @@ import randomstring from 'randomstring';
 
 import { S } from '@/lib/constants';
 import { FullServiceMap } from '@/lib/services';
+import { ResponseBuilder } from '@/lib/services/voiceflow/types';
+import { regexVariables } from '@/lib/services/voiceflow/utils';
 
-import { ResponseBuilder } from '../../types';
-import { regexVariables } from '../../utils';
 import { ENDED_EVENT_PREFIX, RENDER_DOCUMENT_DIRECTIVE_TYPE, STARTED_EVENT_PREFIX, VIDEO_ID_PREFIX } from './constants';
 import { DisplayInfo, VideoCommand, VideoCommandType } from './types';
 import { deepFindVideos, getEventToSend } from './utils';
