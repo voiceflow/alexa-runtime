@@ -14,7 +14,7 @@ type NoMatchNode = Node<
   }
 >;
 
-const EMPTY_AUDIO_STRING = '<audio src=""/>';
+export const EMPTY_AUDIO_STRING = '<audio src=""/>';
 
 const removeEmptyNoMatches = (noMatchArray?: string[]) => {
   return noMatchArray?.filter((noMatch) => {
@@ -33,9 +33,7 @@ export const NoMatchHandler = () => ({
     });
 
     const nonEmptyNoMatches = removeEmptyNoMatches(node.noMatches);
-
     const speak = (node.randomize ? _.sample(nonEmptyNoMatches) : nonEmptyNoMatches?.[context.storage.get(S.NO_MATCHES_COUNTER) - 1]) || '';
-
     const sanitizedVars = sanitizeVariables(variables.getState());
     // replaces var values
     const output = regexVariables(speak, sanitizedVars);
