@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import { NoMatchHandler } from '@/lib/services/voiceflow/handlers/noMatch';
+import { EMPTY_AUDIO_STRING, NoMatchHandler } from '@/lib/services/voiceflow/handlers/noMatch';
 
 describe('noMatch handler unit tests', () => {
   describe('canHandle', () => {
@@ -103,6 +103,54 @@ describe('noMatch handler unit tests', () => {
       const noMatchHandler = NoMatchHandler();
       expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
       expect(node.noMatches.includes(context.trace.speak.args[0][0])).to.eql(true);
+    });
+
+    it('with noMatch null speak string', () => {
+      const NON_NULL_STRING = 'Josh was here';
+      const node = {
+        id: 'node-id',
+        noMatches: [null, NON_NULL_STRING],
+      };
+      const context = {
+        storage: {
+          produce: sinon.stub(),
+          get: sinon.stub().returns(1),
+        },
+        trace: {
+          speak: sinon.stub(),
+        },
+      };
+      const variables = {
+        getState: sinon.stub().returns({}),
+      };
+
+      const noMatchHandler = NoMatchHandler();
+      expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
+      expect(context.trace.speak.args[0][0]).to.eql(NON_NULL_STRING);
+    });
+
+    it('with noMatch empty audio', () => {
+      const NON_NULL_STRING = 'Josh was here';
+      const node = {
+        id: 'node-id',
+        noMatches: [EMPTY_AUDIO_STRING, NON_NULL_STRING],
+      };
+      const context = {
+        storage: {
+          produce: sinon.stub(),
+          get: sinon.stub().returns(1),
+        },
+        trace: {
+          speak: sinon.stub(),
+        },
+      };
+      const variables = {
+        getState: sinon.stub().returns({}),
+      };
+
+      const noMatchHandler = NoMatchHandler();
+      expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
+      expect(context.trace.speak.args[0][0]).to.eql(NON_NULL_STRING);
     });
   });
 });
