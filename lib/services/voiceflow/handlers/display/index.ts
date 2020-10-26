@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import { S } from '@/lib/constants';
 import { FullServiceMap } from '@/lib/services';
+import { regexVariables } from '@/lib/services/voiceflow/utils';
 
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from './constants';
 import * as events from './events';
@@ -33,6 +34,7 @@ export const getVariables = (str: string): string[] => {
 const utilsObj = {
   deepFindVideos,
   getVariables,
+  regexVariables,
 };
 
 export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (utils) => ({
@@ -41,6 +43,8 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
   },
   handle: async (node, context) => {
     const supportedInterfaces: SupportedInterfaces | undefined = context.storage.get(S.SUPPORTED_INTERFACES);
+    const variables = context.variables.getState();
+
     const nextId = node.nextId ?? null;
 
     if (!supportedInterfaces?.[APL_INTERFACE_NAME]) {
@@ -54,7 +58,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
     let commands;
     if (node.apl_commands && _.isString(node.apl_commands)) {
       try {
-        commands = JSON.parse(node.apl_commands) as Command[];
+        commands = JSON.parse(utils.regexVariables(node.apl_commands, variables)) as Command[];
       } catch {
         // invalid JSON
       }
