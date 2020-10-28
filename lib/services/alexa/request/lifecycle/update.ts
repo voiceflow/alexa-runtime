@@ -1,5 +1,5 @@
-import { RepeatType } from '@voiceflow/alexa-types';
 import { Context } from '@voiceflow/client';
+import { RepeatType } from '@voiceflow/general-types';
 
 import { S, T, V } from '@/lib/constants';
 

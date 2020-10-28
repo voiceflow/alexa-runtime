@@ -1,6 +1,6 @@
-import { AlexaProgram, AlexaVersion, RepeatType, SessionType } from '@voiceflow/alexa-types';
+import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
 import { Context, DataAPI, Frame, Store } from '@voiceflow/client';
-import { TraceType } from '@voiceflow/general-types';
+import { RepeatType, SessionType, TraceType } from '@voiceflow/general-types';
 import { TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
 import { HandlerInput } from 'ask-sdk';
 

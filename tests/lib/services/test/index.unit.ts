@@ -1,5 +1,5 @@
-import { TraceStreamAction } from '@voiceflow/alexa-types/build/nodes/stream';
 import { EventType } from '@voiceflow/client';
+import { TraceStreamAction } from '@voiceflow/general-types/build/nodes/stream';
 import { expect } from 'chai';
 import sinon from 'sinon';
 

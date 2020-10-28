@@ -1,8 +1,7 @@
-import { TraceType as AlexaTraceType } from '@voiceflow/alexa-types';
-import { TraceFrame as StreamTraceFrame, TraceStreamAction } from '@voiceflow/alexa-types/build/nodes/stream';
 import { EventType, State } from '@voiceflow/client';
-import { BlockTraceFrame, TraceType as GeneralTraceType } from '@voiceflow/general-types';
+import { BlockTraceFrame, TraceType } from '@voiceflow/general-types';
 import { TraceFrame as ExitTraceFrame } from '@voiceflow/general-types/build/nodes/exit';
+import { TraceFrame as StreamTraceFrame, TraceStreamAction } from '@voiceflow/general-types/build/nodes/stream';
 import { IntentRequest as AlexaIntentRequest } from 'ask-sdk-model';
 
 import { S, T, TEST_VERSION_ID, V } from '@/lib/constants';
@@ -27,13 +26,13 @@ const TestManager = (services: Services, config: Config, utils = utilsObj) => {
     const context = voiceflow.client.createContext(TEST_VERSION_ID, state as State, request, {
       api: {
         getProgram: dataAPI.getTestProgram,
-      },
+      } as any,
       handlers,
     });
 
     context.setEvent(EventType.handlerWillHandle, (event) =>
       context.trace.addTrace<BlockTraceFrame>({
-        type: GeneralTraceType.BLOCK,
+        type: TraceType.BLOCK,
         payload: { blockID: event.node.id },
       })
     );
@@ -51,13 +50,13 @@ const TestManager = (services: Services, config: Config, utils = utilsObj) => {
         case StreamAction.START:
         case StreamAction.RESUME:
           context.trace.addTrace<StreamTraceFrame>({
-            type: AlexaTraceType.STREAM,
+            type: TraceType.STREAM,
             payload: { src: url, token, action: loop ? TraceStreamAction.LOOP : TraceStreamAction.PLAY },
           });
           break;
         case StreamAction.PAUSE:
           context.trace.addTrace<StreamTraceFrame>({
-            type: AlexaTraceType.STREAM,
+            type: TraceType.STREAM,
             payload: { src: url, token, action: TraceStreamAction.PAUSE },
           });
           break;
@@ -67,7 +66,7 @@ const TestManager = (services: Services, config: Config, utils = utilsObj) => {
     }
 
     if (context.stack.isEmpty() || context.turn.get(T.END)) {
-      context.trace.addTrace<ExitTraceFrame>({ type: GeneralTraceType.END });
+      context.trace.addTrace<ExitTraceFrame>({ type: TraceType.END });
     }
 
     return {
