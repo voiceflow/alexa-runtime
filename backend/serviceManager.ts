@@ -1,7 +1,4 @@
 /* eslint-disable class-methods-use-this, no-empty-function */
-
-import secretsProvider from '@voiceflow/secrets-provider';
-
 import { buildClients, buildControllers, buildMiddleware, buildServices, ClientMap, ControllerMap, FullServiceMap, MiddlewareMap } from '@/lib';
 import { Config } from '@/types';
 
@@ -39,7 +36,7 @@ class ServiceManager {
    * Stop services
    */
   async stop() {
-    await secretsProvider.stop();
+    // needed for eslint
   }
 }
 

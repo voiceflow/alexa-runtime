@@ -18,7 +18,6 @@
     "@voiceflow/client": "^1.9.0",
     "@voiceflow/common": "^6.2.0",
     "@voiceflow/logger": "^1.4.0",
-    "@voiceflow/secrets-provider": "^1.6.2",
     "@voiceflow/verror": "^1.1.0",
     "alexa-verifier-middleware": "^1.0.2",
     "ask-sdk": "^2.9.0",
@@ -133,7 +132,7 @@
     "url": "git+https://github.com/voiceflow/alexa-client.git"
   },
   "scripts": {
-    "build": "yarn clean && ttsc --project ./tsconfig.build.json && cp app.config.js yarn.lock build/",
+    "build": "yarn clean && ttsc --project ./tsconfig.build.json && cp yarn.lock build/",
     "clean": "rimraf build",
     "deploy:staging": "git push origin $(git branch | grep \\* | cut -d ' ' -f2):staging -f",
     "gen-certs": "scripts/generate_certs.sh",

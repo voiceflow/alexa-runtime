@@ -1,22 +1,12 @@
 import 'core-js';
 import 'regenerator-runtime/runtime';
 
-import secretsProvider from '@voiceflow/secrets-provider';
-
 import { ServiceManager } from './backend';
 import config from './config';
 import log from './logger';
 import Server from './server';
 
 (async () => {
-  // Have to start secrets provider before creating serviceManager
-  // serviceManager will make sync get() calls to secretsProvider during its construction, and the secrets have to be populated
-  await secretsProvider.start(config).catch(() => {
-    log.error('Error while starting secretsProvider');
-    // eslint-disable-next-line no-process-exit
-    process.exit(1);
-  });
-
   const serviceManager = new ServiceManager(config);
   const server = new Server(serviceManager, config);
 

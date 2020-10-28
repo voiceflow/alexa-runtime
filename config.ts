@@ -17,14 +17,11 @@ const CONFIG: Config = {
   AWS_REGION: optionalProcessEnv('AWS_REGION'),
   AWS_ENDPOINT: optionalProcessEnv('AWS_ENDPOINT'),
 
+  // Application secrets
+  VF_DATA_SECRET: getProcessEnv('VF_DATA_SECRET'),
+  DATADOG_API_KEY: getProcessEnv('DATADOG_API_KEY'),
+
   DYNAMO_ENDPOINT: optionalProcessEnv('DYNAMO_ENDPOINT'),
-
-  // Secrets configuration
-  SECRETS_PROVIDER: getProcessEnv('SECRETS_PROVIDER'),
-  API_KEYS_SECRET: optionalProcessEnv('API_KEYS_SECRET'),
-  MAIN_DB_SECRET: optionalProcessEnv('MAIN_DB_SECRET'),
-  LOGGING_DB_SECRET: optionalProcessEnv('LOGGING_DB_SECRET'),
-
   CODE_HANDLER_ENDPOINT: getProcessEnv('CODE_HANDLER_ENDPOINT'),
   INTEGRATIONS_HANDLER_ENDPOINT: getProcessEnv('INTEGRATIONS_HANDLER_ENDPOINT'),
   API_HANDLER_ENDPOINT: getProcessEnv('API_HANDLER_ENDPOINT'),
