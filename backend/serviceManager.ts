@@ -32,11 +32,12 @@ class ServiceManager {
     // needed for eslint
   }
 
-  // /**
-  //  * Stop services
-  //  */
-  // async stop() {
-  // }
+  /**
+   * Stop services
+   */
+  async stop() {
+    // needed for eslint
+  }
 }
 
 export default ServiceManager;
