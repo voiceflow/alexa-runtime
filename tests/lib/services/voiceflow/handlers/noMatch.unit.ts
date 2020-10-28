@@ -117,7 +117,7 @@ describe('noMatch handler unit tests', () => {
           get: sinon.stub().returns(1),
         },
         trace: {
-          speak: sinon.stub(),
+          addTrace: sinon.stub(),
         },
       };
       const variables = {
@@ -126,7 +126,7 @@ describe('noMatch handler unit tests', () => {
 
       const noMatchHandler = NoMatchHandler();
       expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
-      expect(context.trace.speak.args[0][0]).to.eql(NON_NULL_STRING);
+      expect(context.trace.addTrace.args[0][0].payload.message).to.eql(NON_NULL_STRING);
     });
 
     it('with noMatch empty audio', () => {
@@ -141,7 +141,7 @@ describe('noMatch handler unit tests', () => {
           get: sinon.stub().returns(1),
         },
         trace: {
-          speak: sinon.stub(),
+          addTrace: sinon.stub(),
         },
       };
       const variables = {
@@ -150,7 +150,7 @@ describe('noMatch handler unit tests', () => {
 
       const noMatchHandler = NoMatchHandler();
       expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
-      expect(context.trace.speak.args[0][0]).to.eql(NON_NULL_STRING);
+      expect(context.trace.addTrace.args[0][0].payload.message).to.eql(NON_NULL_STRING);
     });
   });
 });
