@@ -1,5 +1,4 @@
 import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
-import secretsProvider from '@voiceflow/secrets-provider';
 import { AxiosInstance } from 'axios';
 
 import { Config } from '@/types';
@@ -13,7 +12,7 @@ class ServerDataAPI implements DataAPI {
   constructor(clients: StaticType, config: Config) {
     this.client = clients.axios.create({
       baseURL: config.VF_DATA_ENDPOINT,
-      headers: { authorization: `Bearer ${secretsProvider.get('VF_DATA_SECRET')}` },
+      headers: { authorization: `Bearer ${config.VF_DATA_SECRET}` },
     });
   }
 

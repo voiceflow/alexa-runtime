@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 import '../../envSetup';
 
-import secretsProvider from '@voiceflow/secrets-provider';
 import AWS from 'aws-sdk';
 import axios from 'axios';
 import Promise from 'bluebird';
@@ -154,11 +153,6 @@ const runTest = async (filePath: string) => {
 };
 
 const beforeAll = async () => {
-  await secretsProvider.start(config).catch((err: Error) => {
-    console.error(LOG.ERROR, `Error while starting secretsProvider: ${err.stack}`);
-    process.exit(1);
-  });
-
   const serviceManager = new ServiceManager(config);
   const server = new Server(serviceManager, config);
 
