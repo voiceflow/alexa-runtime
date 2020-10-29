@@ -10,7 +10,7 @@ const context = async (input: HandlerInput): Promise<Context> => {
   const { versionID, voiceflow } = input.context as { versionID: string; voiceflow: Client };
   const { attributesManager, requestEnvelope } = input;
 
-  const rawState = await attributesManager.getPersistentAttributes();
+  const rawState = await attributesManager.getPersistentAttributes(requestEnvelope.session?.new);
 
   const alexaRequest = requestEnvelope.request;
 
