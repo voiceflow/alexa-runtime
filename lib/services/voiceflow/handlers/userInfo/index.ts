@@ -1,28 +1,19 @@
-import { NodeType } from '@voiceflow/alexa-types';
-import { Node } from '@voiceflow/api-sdk';
+import { Node } from '@voiceflow/alexa-types/build/nodes/userInfo';
 import { HandlerFactory } from '@voiceflow/client';
 
-import { Permission } from './constants';
 import isPermissionGranted from './utils';
-
-export type UserInfoNode = Node<
-  NodeType.USER_INFO,
-  {
-    fail_id?: string;
-    success_id?: string;
-    permissions?: Permission[];
-  }
->;
 
 const utilsObj = {
   isPermissionGranted,
 };
 
-export const UserInfoHandler: HandlerFactory<UserInfoNode, typeof utilsObj> = (utils) => ({
-  canHandle: (node) => {
-    return !!node.permissions;
-  },
+export const UserInfoHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
+  canHandle: (node) => 'permissions' in node && !!node.permissions,
   handle: async (node, context, variables) => {
+    if (!('permissions' in node)) {
+      return node.nextId ?? null;
+    }
+
     let nextId = node.fail_id ?? null;
 
     if (Array.isArray(node.permissions) && node.permissions.length) {

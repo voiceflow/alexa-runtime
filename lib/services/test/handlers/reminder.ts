@@ -1,8 +1,7 @@
+import { Node } from '@voiceflow/alexa-types/build/nodes/reminder';
 import { HandlerFactory } from '@voiceflow/client';
 
-import { ReminderNode } from '@/lib/services/voiceflow/handlers/reminder';
-
-export const ReminderHandlerGenerator: HandlerFactory<ReminderNode> = () => ({
+export const ReminderHandlerGenerator: HandlerFactory<Node> = () => ({
   canHandle: (node) => {
     return !!node.reminder;
   },

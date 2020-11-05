@@ -1,38 +1,23 @@
-import { NodeType } from '@voiceflow/alexa-types';
-import { Node } from '@voiceflow/api-sdk';
-import { HandlerFactory } from '@voiceflow/client';
+import { Node } from '@voiceflow/alexa-types/build/nodes/display';
+import { HandlerFactory, replaceVariables } from '@voiceflow/client';
 import { SupportedInterfaces } from 'ask-sdk-model';
 import _ from 'lodash';
 
 import { S } from '@/lib/constants';
-import { regexVariables } from '@/lib/services/voiceflow/utils';
 
 import { getVariables } from '../display';
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '../display/constants';
 import { Command, DisplayInfo } from '../display/types';
 import { deepFindVideos, VideoEvent } from '../display/utils';
 
-type DisplayNode = Node<
-  NodeType.DISPLAY,
-  {
-    nextId?: string;
-    datasource: string;
-    document: string;
-    aplCommands?: Command[] | string;
-    update_on_change?: boolean;
-  }
->;
-
 const utilsObj = {
-  deepFindVideos,
   getVariables,
-  regexVariables,
+  deepFindVideos,
+  replaceVariables,
 };
 
-export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (utils) => ({
-  canHandle: (node) => {
-    return !!node.document && !!node.datasource;
-  },
+export const DisplayHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
+  canHandle: (node) => !!node.document && !!node.datasource,
   handle: async (node, context) => {
     const supportedInterfaces: SupportedInterfaces | undefined = context.storage.get(S.SUPPORTED_INTERFACES);
     const nextId = node.nextId ?? null;
@@ -48,7 +33,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
 
     if (node.aplCommands && _.isString(node.aplCommands)) {
       try {
-        commands = JSON.parse(utils.regexVariables(node.aplCommands, variables)) as Command[];
+        commands = JSON.parse(utils.replaceVariables(node.aplCommands, variables)) as Command[];
       } catch {
         // invalid JSON
       }
@@ -73,7 +58,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
     let documentData;
     try {
       // documentData = JSON.parse(document);
-      documentData = JSON.parse(utils.regexVariables(document, variables));
+      documentData = JSON.parse(utils.replaceVariables(document, variables));
     } catch {
       // invalid JSON
     }

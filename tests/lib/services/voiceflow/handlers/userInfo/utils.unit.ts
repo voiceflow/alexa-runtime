@@ -1,8 +1,8 @@
+import { PermissionType } from '@voiceflow/alexa-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import { PERMISSIONS, PRODUCT } from '@/lib/services/voiceflow/handlers/userInfo/constants';
 import isPermissionGranted, {
   _accountLinkingPermission,
   _alexaApiCallGenerator,
@@ -15,6 +15,7 @@ import isPermissionGranted, {
   _profileNameReadPermission,
   _profileNumberReadPermission,
   isPermissionGrantedGenerator,
+  PRODUCT,
 } from '@/lib/services/voiceflow/handlers/userInfo/utils';
 
 describe('user info utils unit test', () => {
@@ -64,28 +65,28 @@ describe('user info utils unit test', () => {
     });
 
     it('PERMISSIONS.NOTIFICATIONS_WRITE', async () => {
-      const permissionValue = PERMISSIONS.NOTIFICATIONS_WRITE;
+      const permissionValue = PermissionType.ALEXA_DEVICES_ALL_NOTIFICATIONS_WRITE;
       const context = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
       const permission = { selected: { value: permissionValue } };
       expect(await isPermissionGranted(permission as any, context as any, null as any)).to.eql(true);
     });
 
     it('PERMISSIONS.REMINDERS_READ_WRITE', async () => {
-      const permissionValue = PERMISSIONS.REMINDERS_READ_WRITE;
+      const permissionValue = PermissionType.ALEXA_ALERTS_REMINDERS_SKILL_READ_WRITE;
       const context = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
       const permission = { selected: { value: permissionValue } };
       expect(await isPermissionGranted(permission as any, context as any, null as any)).to.eql(true);
     });
 
     it('PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_READ', async () => {
-      const permissionValue = PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_READ;
+      const permissionValue = PermissionType.ALEXA_HOUSEHOLD_LISTS_READ;
       const context = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
       const permission = { selected: { value: permissionValue } };
       expect(await isPermissionGranted(permission as any, context as any, null as any)).to.eql(true);
     });
 
     it('PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_WRITE', async () => {
-      const permissionValue = PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_WRITE;
+      const permissionValue = PermissionType.ALEXA_HOUSEHOLD_LISTS_WRITE;
       const context = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
       const permission = { selected: { value: permissionValue } };
       expect(await isPermissionGranted(permission as any, context as any, null as any)).to.eql(true);
@@ -95,7 +96,7 @@ describe('user info utils unit test', () => {
       const utils = { _ispPermission: sinon.stub().returns(true) };
       const fn = isPermissionGrantedGenerator(utils as any);
 
-      const permissionValue = PERMISSIONS.ISP;
+      const permissionValue = PermissionType.UNOFFICIAL_ISP;
       const handlerInput = 'handler-input';
       const context = { turn: { get: sinon.stub().returns(handlerInput) }, storage: { get: sinon.stub().returns([permissionValue]) } };
       const permission = { selected: { value: permissionValue } };
@@ -108,7 +109,7 @@ describe('user info utils unit test', () => {
         const utils = { _productPermission: sinon.stub().returns(true) };
         const fn = isPermissionGrantedGenerator(utils as any);
 
-        const permissionValue = PERMISSIONS.PRODUCT;
+        const permissionValue = PermissionType.UNOFFICIAL_PRODUCT;
         const permissionVariable = 'permission-variable';
         const handlerInput = 'handler-input';
         const variables = 'variables';
@@ -126,7 +127,7 @@ describe('user info utils unit test', () => {
       });
 
       it('no product value', async () => {
-        const permissionValue = PERMISSIONS.PRODUCT;
+        const permissionValue = PermissionType.UNOFFICIAL_PRODUCT;
         const context = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
         const permission = { selected: { value: permissionValue } };
         expect(await isPermissionGranted(permission as any, context as any, null as any)).to.eql(false);
@@ -137,7 +138,7 @@ describe('user info utils unit test', () => {
       const utils = { _accountLinkingPermission: sinon.stub().returns(true) };
       const fn = isPermissionGrantedGenerator(utils as any);
 
-      const permissionValue = PERMISSIONS.ACCOUNT_LINKING;
+      const permissionValue = PermissionType.UNOFFICIAL_ACCOUNT_LINKING;
       const permissionVariable = 'permission-variable';
       const handlerInput = 'handler-input';
       const variables = 'variables';
@@ -158,7 +159,7 @@ describe('user info utils unit test', () => {
       const utils = { _personIdReadPermission: sinon.stub().returns(true) };
       const fn = isPermissionGrantedGenerator(utils as any);
 
-      const permissionValue = PERMISSIONS.PERSON_ID_READ;
+      const permissionValue = PermissionType.ALEXA_PERSON_ID_READ;
       const permissionVariable = 'permission-variable';
       const handlerInput = 'handler-input';
       const variables = 'variables';
@@ -172,7 +173,7 @@ describe('user info utils unit test', () => {
       const utils = { _profileEmailReadPermission: sinon.stub().returns(true) };
       const fn = isPermissionGrantedGenerator(utils as any);
 
-      const permissionValue = PERMISSIONS.PROFILE_EMAIL_READ;
+      const permissionValue = PermissionType.ALEXA_PROFILE_EMAIL_READ;
       const permissionVariable = 'permission-variable';
       const handlerInput = 'handler-input';
       const variables = 'variables';
@@ -186,7 +187,7 @@ describe('user info utils unit test', () => {
       const utils = { _profileNameReadPermission: sinon.stub().returns(true) };
       const fn = isPermissionGrantedGenerator(utils as any);
 
-      const permissionValue = PERMISSIONS.PROFILE_NAME_READ;
+      const permissionValue = PermissionType.ALEXA_PROFILE_NAME_READ;
       const permissionVariable = 'permission-variable';
       const handlerInput = 'handler-input';
       const variables = 'variables';
@@ -200,7 +201,7 @@ describe('user info utils unit test', () => {
       const utils = { _profileNumberReadPermission: sinon.stub().returns(true) };
       const fn = isPermissionGrantedGenerator(utils as any);
 
-      const permissionValue = PERMISSIONS.PROFILE_NUMBER_READ;
+      const permissionValue = PermissionType.ALEXA_PROFILE_MOBILE_NUMBER_READ;
       const permissionVariable = 'permission-variable';
       const handlerInput = 'handler-input';
       const variables = 'variables';
@@ -214,7 +215,7 @@ describe('user info utils unit test', () => {
       const utils = { _geolocationRead: sinon.stub().returns(true) };
       const fn = isPermissionGrantedGenerator(utils as any);
 
-      const permissionValue = PERMISSIONS.GEOLOCATION_READ;
+      const permissionValue = PermissionType.ALEXA_DEVICES_ALL_GEOLOCATION_READ;
       const permissionVariable = 'permission-variable';
       const handlerInput = 'handler-input';
       const variables = 'variables';
@@ -515,7 +516,7 @@ describe('user info utils unit test', () => {
         requestEnvelope: { request: { locale }, context: { System: { apiEndpoint: `12345678${host}` } } },
       };
       const endpoint = 'endpoint';
-      expect(apiCall(handlerInput, endpoint)).to.eql(output);
+      expect(apiCall(handlerInput as any, endpoint)).to.eql(output);
       expect(axios.get.args).to.eql([
         [
           `${apiEndpoint}${endpoint}`,

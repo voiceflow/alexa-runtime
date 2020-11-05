@@ -1,12 +1,13 @@
+import { Node } from '@voiceflow/alexa-types/build/nodes/cancelPayment';
 import { HandlerFactory } from '@voiceflow/client';
 
-import { PaymentsNode } from '@/lib/services/voiceflow/handlers/cancelPayment';
-
-const CancelPaymentHandler: HandlerFactory<PaymentsNode> = () => ({
-  canHandle: (node) => {
-    return !!node.cancel_product_id;
-  },
+const CancelPaymentHandler: HandlerFactory<Node> = () => ({
+  canHandle: (node) => 'cancel_product_id' in node && !!node.cancel_product_id,
   handle: (node, context) => {
+    if (!('cancel_product_id' in node)) {
+      return node.nextId ?? null;
+    }
+
     context.trace.debug('__cancel payment__ - entered');
 
     if (node.success_id || node.fail_id) {

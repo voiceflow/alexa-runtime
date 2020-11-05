@@ -1,6 +1,5 @@
-import { NodeType } from '@voiceflow/alexa-types';
-import { Node } from '@voiceflow/api-sdk';
-import { HandlerFactory } from '@voiceflow/client';
+import { Node } from '@voiceflow/alexa-types/build/nodes/stream';
+import { HandlerFactory, replaceVariables } from '@voiceflow/client';
 import { utils } from '@voiceflow/common';
 import { HandlerInput } from 'ask-sdk';
 import _ from 'lodash';
@@ -8,7 +7,6 @@ import _ from 'lodash';
 import { S, T } from '@/lib/constants';
 
 import { ResponseBuilder } from '../types';
-import { regexVariables } from '../utils';
 
 export enum StreamAction {
   START = 'START',
@@ -20,25 +18,9 @@ export enum StreamAction {
 }
 
 export enum AudioDirective {
-  REPLACE_ALL = 'REPLACE_ALL',
   ENQUEUE = 'ENQUEUE',
+  REPLACE_ALL = 'REPLACE_ALL',
 }
-
-type StreamNode = Node<
-  NodeType.STREAM,
-  {
-    play: string;
-    nextId: string;
-    NEXT: string;
-    PAUSE_ID: string;
-    PREVIOUS: string;
-    loop: boolean;
-    icon_img: string;
-    background_img: string;
-    description: string;
-    title: string;
-  }
->;
 
 export type StreamPlay = {
   action: StreamAction;
@@ -56,6 +38,11 @@ export type StreamPlay = {
   regex_description: string;
   icon_img: string;
   background_img: string;
+};
+
+export type StreamPauseStorage = {
+  id: string;
+  offset: number;
 };
 
 export const _streamMetaData = (streamPlay: StreamPlay) => {
@@ -98,8 +85,8 @@ const responseUtils = {
 };
 
 export const StreamResponseBuilderGenerator = (u: typeof responseUtils): ResponseBuilder => (context, builder) => {
-  const handlerInput = context.turn.get(T.HANDLER_INPUT) as HandlerInput;
-  const streamPlay = context.storage.get(S.STREAM_PLAY);
+  const handlerInput = context.turn.get<HandlerInput>(T.HANDLER_INPUT);
+  const streamPlay = context.storage.get<StreamPlay>(S.STREAM_PLAY);
 
   if (handlerInput?.requestEnvelope.context?.AudioPlayer && streamPlay) {
     context.storage.produce((draft) => {
@@ -142,16 +129,16 @@ export const StreamResponseBuilderGenerator = (u: typeof responseUtils): Respons
 export const StreamResponseBuilder = StreamResponseBuilderGenerator(responseUtils);
 
 const handlerUtils = {
-  regexVariables,
+  replaceVariables,
 };
 
-export const StreamHandler: HandlerFactory<StreamNode, typeof handlerUtils> = (u) => ({
+export const StreamHandler: HandlerFactory<Node, typeof handlerUtils> = (u) => ({
   canHandle: (node) => {
     return !!node.play;
   },
   handle: (node, context, variables) => {
     const variablesMap = variables.getState();
-    const audioUrl = u.regexVariables(node.play, variablesMap);
+    const audioUrl = u.replaceVariables(node.play, variablesMap);
 
     context.storage.set(S.STREAM_PLAY, {
       action: StreamAction.START,
@@ -163,15 +150,16 @@ export const StreamHandler: HandlerFactory<StreamNode, typeof handlerUtils> = (u
       PAUSE_ID: node.PAUSE_ID,
       NEXT: node.NEXT,
       PREVIOUS: node.PREVIOUS,
-      title: u.regexVariables(node.title, variablesMap),
-      description: u.regexVariables(node.description, variablesMap),
+      title: u.replaceVariables(node.title, variablesMap),
+      description: u.replaceVariables(node.description, variablesMap),
       regex_title: node.title,
       regex_description: node.description,
-      icon_img: u.regexVariables(node.icon_img, variablesMap),
-      background_img: u.regexVariables(node.background_img, variablesMap),
+      icon_img: u.replaceVariables(node.icon_img, variablesMap),
+      background_img: u.replaceVariables(node.background_img, variablesMap),
     } as StreamPlay);
 
-    const streamPause = context.storage.get(S.STREAM_PAUSE);
+    const streamPause = context.storage.get<StreamPauseStorage>(S.STREAM_PAUSE);
+
     if (streamPause) {
       if (node.PAUSE_ID === streamPause.id) {
         context.storage.produce((draft) => {
@@ -184,6 +172,7 @@ export const StreamHandler: HandlerFactory<StreamNode, typeof handlerUtils> = (u
     }
 
     context.end();
+
     return null;
   },
 });

@@ -39,13 +39,14 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
       if (errorType === ErrorType.INVALID_RESPONSE || errorType === ErrorType.INTERNAL_SERVICE_ERROR) {
         // eslint-disable-next-line no-console
         utils.log(
-          'errorType=%s, versionID=%s, storage=%s, turn=%s, variables=%s',
+          'errorType=%s, versionID=%s, storage=%s, turn=%s, variables=%s, stack=%s, trace=%s',
           errorType,
           context.versionID,
           JSON.stringify(context.storage.getState()),
           JSON.stringify(context.turn.getState()),
           JSON.stringify(context.variables.getState()),
-          JSON.stringify(context.stack.getState())
+          JSON.stringify(context.stack.getState()),
+          JSON.stringify(context.trace.get())
         );
       }
 

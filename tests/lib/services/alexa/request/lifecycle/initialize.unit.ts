@@ -1,4 +1,4 @@
-import { RepeatType, SessionType } from '@voiceflow/alexa-types';
+import { RepeatType, SessionType, TraceType } from '@voiceflow/general-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -74,7 +74,10 @@ describe('initialize lifecycle unit tests', async () => {
           merge: sinon.stub(),
         },
         trace: {
-          speak: sinon.stub(),
+          addTrace: sinon.stub(),
+        },
+        api: {
+          getVersion: sinon.stub().resolves(metaObj),
         },
       };
 
@@ -84,11 +87,6 @@ describe('initialize lifecycle unit tests', async () => {
             locale: 'en',
           },
           context: { System: { user: { userId: 'user-id' }, device: { supportedInterfaces: 'supported-interfaces' } } },
-        },
-        context: {
-          api: {
-            getVersion: sinon.stub().resolves(metaObj),
-          },
         },
       };
 
@@ -152,7 +150,7 @@ describe('initialize lifecycle unit tests', async () => {
         },
       ]);
       expect(utils.client.Store.initialize.args[0]).to.eql([context.variables, metaObj.variables, 0]);
-      expect(input.context.api.getVersion.args).to.eql([[VERSION_ID]]);
+      expect(context.api.getVersion.args).to.eql([[VERSION_ID]]);
     });
 
     it('second session', async () => {
@@ -179,7 +177,7 @@ describe('initialize lifecycle unit tests', async () => {
       const streamDraft = { [S.STREAM_PLAY]: { action: null } };
       streamDraftCb(streamDraft);
       expect(streamDraft[S.STREAM_PLAY].action).to.eql(StreamAction.END);
-      expect(input.context.api.getVersion.args).to.eql([[VERSION_ID]]);
+      expect(context.api.getVersion.args).to.eql([[VERSION_ID]]);
     });
 
     it('meta repeat null, no alexa permissions, no system device', async () => {
@@ -195,7 +193,7 @@ describe('initialize lifecycle unit tests', async () => {
 
       expect(context.storage.set.args[4]).to.eql([S.REPEAT, RepeatType.ALL]);
       expect(context.storage.set.args[2]).to.eql([S.SUPPORTED_INTERFACES, undefined]);
-      expect(input.context.api.getVersion.args).to.eql([[VERSION_ID]]);
+      expect(context.api.getVersion.args).to.eql([[VERSION_ID]]);
     });
 
     describe('restart logic', () => {
@@ -213,7 +211,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(utils.client.Frame.args[0]).to.eql([{ programID: metaObj.rootDiagramID }]);
           expect(context.stack.push.callCount).to.eql(1);
           expect(context.turn.set.args[0]).to.eql([T.NEW_STACK, true]);
-          expect(input.context.api.getVersion.args).to.eql([[VERSION_ID]]);
+          expect(context.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
 
         it('meta restart', async () => {
@@ -229,7 +227,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(context.stack.flush.callCount).to.eql(1);
           expect(utils.client.Frame.args[0]).to.eql([{ programID: metaObj.rootDiagramID }]);
           expect(context.stack.push.callCount).to.eql(1);
-          expect(input.context.api.getVersion.args).to.eql([[VERSION_ID]]);
+          expect(context.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
 
         it('resume var false', async () => {
@@ -246,7 +244,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(context.stack.flush.callCount).to.eql(1);
           expect(utils.client.Frame.args[0]).to.eql([{ programID: metaObj.rootDiagramID }]);
           expect(context.stack.push.callCount).to.eql(1);
-          expect(input.context.api.getVersion.args).to.eql([[VERSION_ID]]);
+          expect(context.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
       });
 
@@ -267,7 +265,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(topStorage.set.args[0]).to.eql([F.CALLED_COMMAND, true]);
           expect(utils.resume.createResumeFrame.args[0]).to.eql([session.resume, session.follow]);
           expect(context.stack.push.args[0]).to.eql([resumeFrame]);
-          expect(input.context.api.getVersion.args).to.eql([[VERSION_ID]]);
+          expect(context.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
 
         it('resume stack > 0', async () => {
@@ -294,7 +292,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(context.stack.popTo.args[0]).to.eql([2]);
           expect(utils.resume.createResumeFrame.args[0]).to.eql([session.resume, session.follow]);
           expect(context.stack.push.args[0]).to.eql([resumeFrame]);
-          expect(input.context.api.getVersion.args).to.eql([[VERSION_ID]]);
+          expect(context.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
       });
 
@@ -312,8 +310,8 @@ describe('initialize lifecycle unit tests', async () => {
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
           expect(context.storage.set.args[5]).to.eql([S.OUTPUT, '']);
-          expect(context.trace.speak.args).to.eql([['']]);
-          expect(input.context.api.getVersion.args).to.eql([[VERSION_ID]]);
+          expect(context.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: '' } }]]);
+          expect(context.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
 
         it('with last speak', async () => {
@@ -330,8 +328,8 @@ describe('initialize lifecycle unit tests', async () => {
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
           expect(context.storage.set.args[5]).to.eql([S.OUTPUT, lastSpeak]);
-          expect(context.trace.speak.args).to.eql([[lastSpeak]]);
-          expect(input.context.api.getVersion.args).to.eql([[VERSION_ID]]);
+          expect(context.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: lastSpeak } }]]);
+          expect(context.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
       });
     });

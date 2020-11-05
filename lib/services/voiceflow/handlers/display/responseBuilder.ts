@@ -1,9 +1,9 @@
+import { replaceVariables } from '@voiceflow/client';
 import randomstring from 'randomstring';
 
 import { S } from '@/lib/constants';
 import { FullServiceMap } from '@/lib/services';
 import { ResponseBuilder } from '@/lib/services/voiceflow/types';
-import { regexVariables } from '@/lib/services/voiceflow/utils';
 
 import { ENDED_EVENT_PREFIX, RENDER_DOCUMENT_DIRECTIVE_TYPE, STARTED_EVENT_PREFIX, VIDEO_ID_PREFIX } from './constants';
 import { DisplayInfo, VideoCommand, VideoCommandType } from './types';
@@ -41,7 +41,7 @@ export const DocumentResponseBuilder: ResponseBuilder = async (context, builder)
       }
     } else {
       try {
-        document = JSON.parse(regexVariables(displayInfo.document, variables));
+        document = JSON.parse(replaceVariables(displayInfo.document, variables));
       } catch (e) {
         // document not valid
       }
@@ -49,7 +49,7 @@ export const DocumentResponseBuilder: ResponseBuilder = async (context, builder)
 
     if (displayInfo.dataSource) {
       try {
-        dataSources = JSON.parse(regexVariables(displayInfo.dataSource, variables));
+        dataSources = JSON.parse(replaceVariables(displayInfo.dataSource, variables));
       } catch (e) {
         // DataSources not valid
       }

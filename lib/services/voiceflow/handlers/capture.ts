@@ -1,5 +1,5 @@
-import { Node as CaptureNode } from '@voiceflow/alexa-types/build/nodes/capture';
 import { HandlerFactory } from '@voiceflow/client';
+import { Node } from '@voiceflow/general-types/build/nodes/capture';
 import _ from 'lodash';
 import wordsToNumbers from 'words-to-numbers';
 
@@ -17,12 +17,10 @@ const utilsObj = {
   repeatHandler: RepeatHandler(),
 };
 
-export const CaptureHandler: HandlerFactory<CaptureNode, typeof utilsObj> = (utils) => ({
-  canHandle: (node) => {
-    return !!node.variable;
-  },
+export const CaptureHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
+  canHandle: (node) => !!node.variable,
   handle: (node, context, variables) => {
-    const request = context.turn.get(T.REQUEST) as IntentRequest;
+    const request = context.turn.get<IntentRequest>(T.REQUEST);
 
     if (request?.type !== RequestType.INTENT) {
       utils.addRepromptIfExists(node, context, variables);

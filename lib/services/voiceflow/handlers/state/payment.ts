@@ -2,23 +2,22 @@ import { HandlerFactory } from '@voiceflow/client';
 
 import { S } from '@/lib/constants';
 
-export enum PaymentStatus {
-  ACCEPTED = 'ACCEPTED',
-  PURCHASED = 'ALREADY_PURCHASED',
-  PENDING = 'PENDING_PURCHASE',
-}
+import { PaymentStorage } from '../payment';
+
+const SUCCESS_PATHS = ['PENDING_PURCHASE', 'ACCEPTED', 'ALREADY_PURCHASED'];
 
 const paymentStateHandler: HandlerFactory<any> = () => ({
-  canHandle: (_, context) => {
-    return !!context.storage.get(S.PAYMENT);
-  },
+  canHandle: (_, context) => !!context.storage.get<PaymentStorage>(S.PAYMENT),
   handle: (_, context) => {
-    const payment = context.storage.get(S.PAYMENT);
+    const payment = context.storage.get<PaymentStorage>(S.PAYMENT);
+
     context.storage.delete(S.PAYMENT);
-    if ([PaymentStatus.ACCEPTED, PaymentStatus.PURCHASED, PaymentStatus.PENDING].includes(payment.status)) {
-      return payment.successPath;
+
+    if (payment?.status && SUCCESS_PATHS.includes(payment.status)) {
+      return payment.successPath ?? null;
     }
-    return payment.failPath;
+
+    return payment?.failPath ?? null;
   },
 });
 

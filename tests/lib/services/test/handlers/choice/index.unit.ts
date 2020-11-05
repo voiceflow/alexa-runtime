@@ -35,12 +35,12 @@ describe('choice handler unit tests', async () => {
       const choiceHandler = ChoiceHandler(utils as any);
 
       const node = { id: 'node-id', inputs: [['one'], ['two']] };
-      const context = { trace: { choice: sinon.stub() }, turn: { get: sinon.stub().returns(null) } };
+      const context = { trace: { addTrace: sinon.stub() }, turn: { get: sinon.stub().returns(null) } };
       const variables = { var: '1' };
 
       expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.id);
       expect(utils.addRepromptIfExists.args).to.eql([[node, context, variables]]);
-      expect(context.trace.choice.args[0][0]).to.eql([{ name: 'one' }, { name: 'two' }]);
+      expect(context.trace.addTrace.args[0]).to.eql([{ type: 'choice', payload: { choices: [{ name: 'one' }, { name: 'two' }] } }]);
     });
 
     it('request is not intent', () => {
@@ -50,12 +50,12 @@ describe('choice handler unit tests', async () => {
       const choiceHandler = ChoiceHandler(utils as any);
 
       const node = { id: 'node-id', inputs: [] };
-      const context = { trace: { choice: sinon.stub() }, turn: { get: sinon.stub().returns({ type: 'random-type' }) } };
+      const context = { trace: { addTrace: sinon.stub() }, turn: { get: sinon.stub().returns({ type: 'random-type' }) } };
       const variables = { var: '1' };
 
       expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.id);
       expect(utils.addRepromptIfExists.args).to.eql([[node, context, variables]]);
-      expect(context.trace.choice.args).to.eql([[[]]]);
+      expect(context.trace.addTrace.args).to.eql([[{ type: 'choice', payload: { choices: [] } }]]);
     });
 
     describe('request type is intent', () => {

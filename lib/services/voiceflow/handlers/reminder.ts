@@ -1,42 +1,25 @@
-import { NodeType } from '@voiceflow/alexa-types';
-import { Node } from '@voiceflow/api-sdk';
-import { HandlerFactory } from '@voiceflow/client';
+import { Node, NodeData, RecurrenceFreq } from '@voiceflow/alexa-types/build/nodes/reminder';
+import { HandlerFactory, replaceVariables } from '@voiceflow/client';
+import { NodeID } from '@voiceflow/general-types';
 import { HandlerInput } from 'ask-sdk';
 import axios from 'axios';
 import moment from 'moment';
 
 import { S, T } from '@/lib/constants';
 
-import { regexVariables } from '../utils';
-
 export enum ReminderType {
   SCHEDULED_ABSOLUTE = 'SCHEDULED_ABSOLUTE',
   SCHEDULED_RELATIVE = 'SCHEDULED_RELATIVE',
 }
 
-type Reminder = {
-  time: { h: string; m: string; s: string };
-  type: ReminderType;
-  text: string;
-  date?: string;
-  recurrence?: string;
-  timezone?: string;
-};
-
-export type ReminderNode = Node<
-  NodeType.REMINDER,
-  {
-    reminder: Reminder;
-    success_id: string;
-    fail_id: string;
-  }
->;
-
 type Trigger =
   | {
       type: ReminderType.SCHEDULED_ABSOLUTE;
       scheduledTime: string;
-      recurrence?: string;
+      recurrence?: {
+        byDay?: string[];
+        freq: RecurrenceFreq;
+      };
       timeZoneId?: string;
     }
   | {
@@ -47,12 +30,15 @@ type Trigger =
 
 const _deriveSeconds = (text: string, multiplier = 1): number => {
   const number = parseInt(text, 10);
-  if (Number.isNaN(number)) return 0;
+
+  if (Number.isNaN(number)) {
+    return 0;
+  }
 
   return number * multiplier;
 };
 
-export const _createReminderObject = (reminder: Reminder, variablesMap: Record<string, any>, locale: string) => {
+export const _createReminderObject = (reminder: NodeData['reminder'], variablesMap: Record<string, any>, locale: string) => {
   if (reminder.type !== ReminderType.SCHEDULED_ABSOLUTE && reminder.type !== ReminderType.SCHEDULED_RELATIVE)
     throw new Error('invalid reminder type');
 
@@ -63,7 +49,7 @@ export const _createReminderObject = (reminder: Reminder, variablesMap: Record<s
         content: [
           {
             locale,
-            text: regexVariables(reminder.text, variablesMap),
+            text: replaceVariables(reminder.text, variablesMap),
           },
         ],
       },
@@ -75,13 +61,13 @@ export const _createReminderObject = (reminder: Reminder, variablesMap: Record<s
   };
 
   const seconds = Math.round(
-    _deriveSeconds(regexVariables(reminder.time.h, variablesMap), 3600) +
-      _deriveSeconds(regexVariables(reminder.time.m, variablesMap), 60) +
-      _deriveSeconds(regexVariables(reminder.time.s, variablesMap))
+    _deriveSeconds(replaceVariables(reminder.time.h, variablesMap), 3600) +
+      _deriveSeconds(replaceVariables(reminder.time.m, variablesMap), 60) +
+      _deriveSeconds(replaceVariables(reminder.time.s, variablesMap))
   );
 
   if (reminder.type === ReminderType.SCHEDULED_ABSOLUTE) {
-    const date = reminder.date && regexVariables(reminder.date, variablesMap);
+    const date = reminder.date && replaceVariables(reminder.date, variablesMap);
 
     const time = date?.includes('/') ? moment.utc(date, 'DD/MM/YYYY') : moment.utc(date?.split('T')[0], 'YYYY-MM-DD');
 
@@ -93,7 +79,9 @@ export const _createReminderObject = (reminder: Reminder, variablesMap: Record<s
       scheduledTime: time.toISOString().split('.')[0],
     };
 
-    if (reminder.recurrence) reminderObject.trigger.recurrence = reminder.recurrence;
+    if (reminder.recurrence) {
+      reminderObject.trigger.recurrence = reminder.recurrence;
+    }
     if (reminder.timezone !== 'User Timezone') reminderObject.trigger.timeZoneId = reminder.timezone;
   } else {
     // ReminderType.SCHEDULED_RELATIVE
@@ -113,12 +101,12 @@ const utilsObj = {
   axios,
 };
 
-export const ReminderHandler: HandlerFactory<ReminderNode, typeof utilsObj> = (utils) => ({
+export const ReminderHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => {
     return !!node.reminder;
   },
   handle: async (node, context, variables) => {
-    let nextId: string;
+    let nextId: NodeID;
 
     try {
       const handlerInput = context.turn.get(T.HANDLER_INPUT) as HandlerInput;
@@ -126,7 +114,7 @@ export const ReminderHandler: HandlerFactory<ReminderNode, typeof utilsObj> = (u
 
       if (!apiEndpoint || !apiAccessToken) throw new Error('invalid login token');
 
-      const reminderObject = utils._createReminderObject(node.reminder, variables.getState(), context.storage.get(S.LOCALE));
+      const reminderObject = utils._createReminderObject(node.reminder, variables.getState(), context.storage.get<string>(S.LOCALE)!);
 
       await utils.axios.post(`${apiEndpoint}/v1/alerts/reminders`, reminderObject, {
         headers: {
@@ -135,9 +123,9 @@ export const ReminderHandler: HandlerFactory<ReminderNode, typeof utilsObj> = (u
         },
       });
 
-      nextId = node.success_id;
+      nextId = node.success_id ?? null;
     } catch (err) {
-      nextId = node.fail_id;
+      nextId = node.fail_id ?? null;
     }
 
     return nextId;

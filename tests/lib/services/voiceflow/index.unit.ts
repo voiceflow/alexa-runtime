@@ -1,4 +1,5 @@
 import { EventType } from '@voiceflow/client';
+import { TraceType } from '@voiceflow/general-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -97,11 +98,11 @@ describe('voiceflowManager unit tests', async () => {
 
         const fn = clientObj.setEvent.args[1][1];
 
-        const context = { trace: { flow: sinon.stub() }, stack: { top: sinon.stub().returns(null) } };
+        const context = { trace: { addTrace: sinon.stub() }, stack: { top: sinon.stub().returns(null) } };
 
         fn({ context });
 
-        expect(context.trace.flow.args).to.eql([[undefined]]);
+        expect(context.trace.addTrace.args).to.eql([[{ type: 'flow', payload: { diagramID: undefined } }]]);
       });
 
       it('with top frame', () => {
@@ -112,11 +113,14 @@ describe('voiceflowManager unit tests', async () => {
         const fn = clientObj.setEvent.args[1][1];
 
         const programID = 'diagram-id';
-        const context = { trace: { flow: sinon.stub() }, stack: { top: sinon.stub().returns({ getProgramID: sinon.stub().returns(programID) }) } };
+        const context = {
+          trace: { addTrace: sinon.stub() },
+          stack: { top: sinon.stub().returns({ getProgramID: sinon.stub().returns(programID) }) },
+        };
 
         fn({ context });
 
-        expect(context.trace.flow.args).to.eql([[programID]]);
+        expect(context.trace.addTrace.args).to.eql([[{ type: 'flow', payload: { diagramID: programID } }]]);
       });
     });
 
@@ -204,7 +208,7 @@ describe('voiceflowManager unit tests', async () => {
           delete: sinon.stub(),
         };
         const context = {
-          trace: { speak: sinon.stub() },
+          trace: { addTrace: sinon.stub() },
           stack: {
             top: sinon.stub().returns({ storage: storageTop }),
           },
@@ -218,7 +222,7 @@ describe('voiceflowManager unit tests', async () => {
         expect(topStorageGet.args[0]).to.eql([F.CALLED_COMMAND]);
         expect(storageTop.delete.args[0]).to.eql([F.CALLED_COMMAND]);
         expect(topStorageGet.args[1]).to.eql([F.SPEAK]);
-        expect(context.trace.speak.args).to.eql([[fSpeak]]);
+        expect(context.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: fSpeak } }]]);
 
         const fn2 = context.storage.produce.args[0][0];
 

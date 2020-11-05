@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import CancelPaymentStateHandler, { PaymentStatus } from '@/lib/services/voiceflow/handlers/state/cancelPayment';
+import CancelPaymentStateHandler from '@/lib/services/voiceflow/handlers/state/cancelPayment';
 
 describe('cancelPayment state handler unit tests', () => {
   const cancelPaymentStateHandler = CancelPaymentStateHandler();
@@ -25,7 +25,7 @@ describe('cancelPayment state handler unit tests', () => {
 
   describe('handle', () => {
     it('success path', () => {
-      const cancelPayment = { status: PaymentStatus.ACCEPTED, successPath: 'success-path-id', failPath: 'fail-path-id' };
+      const cancelPayment = { status: 'ACCEPTED', successPath: 'success-path-id', failPath: 'fail-path-id' };
       const context = { storage: { get: sinon.stub().returns(cancelPayment), delete: sinon.stub() } };
 
       const result = cancelPaymentStateHandler.handle(null as any, context as any, null as any, null as any);

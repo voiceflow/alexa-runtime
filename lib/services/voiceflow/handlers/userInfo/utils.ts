@@ -1,13 +1,32 @@
+import { PermissionType } from '@voiceflow/alexa-types';
+import { Permission } from '@voiceflow/alexa-types/build/nodes/userInfo';
 import { Context, Store } from '@voiceflow/client';
 import { HandlerInput } from 'ask-sdk';
+import { services } from 'ask-sdk-model';
 import axios, { AxiosStatic } from 'axios';
 
 import { Storage as S, Turn as T } from '@/lib/constants/flags';
 
-import { Permission, PERMISSIONS, PRODUCT } from './constants';
+export enum PRODUCT {
+  ENTITLED = 'ENTITLED',
+  // entitlement reason
+  PURCHASED = 'PURCHASED',
+  AUTO_ENTITLED = 'AUTO_ENTITLED',
+  // type
+  CONSUMABLE = 'CONSUMABLE',
+  // var value
+  APPROVED_BY_PARENT = 'APPROVED_BY_PARENT',
+  FTU = 'FTU',
+  NOT_PURCHASABLE = 'NOT_PURCHASABLE',
+}
 
-export const _alexaApiCallGenerator = (http: AxiosStatic) => (handlerInput: any, endpoint: string) => {
-  const { apiEndpoint, authorizationValue } = handlerInput.serviceClientFactory.apiConfiguration;
+export const _alexaApiCallGenerator = (http: AxiosStatic) => (handlerInput: HandlerInput, endpoint: string) => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
+  const { apiConfiguration } = handlerInput.serviceClientFactory;
+
+  const { apiEndpoint, authorizationValue } = apiConfiguration;
+
   return http.get(`${apiEndpoint}${endpoint}`, {
     headers: {
       Authorization: `Bearer ${authorizationValue}`,
@@ -29,9 +48,49 @@ export const _ispPermissionGenerator = (apiCall: typeof _alexaApiCall) => async 
   }
 };
 
+const _transactionPermissionGenerator = async ({
+  result,
+  apiCall,
+  variables,
+  transaction,
+  handlerInput,
+  productValue,
+}: {
+  result: services.monetization.InSkillProduct;
+  apiCall: typeof _alexaApiCall;
+  variables: Store;
+  transaction?: { value: string };
+  handlerInput: HandlerInput;
+  productValue: string;
+}) => {
+  if (!transaction?.value) {
+    return;
+  }
+
+  if (result?.entitlementReason === PRODUCT.PURCHASED && result.entitled === PRODUCT.ENTITLED) {
+    variables.set(transaction.value, PRODUCT.APPROVED_BY_PARENT);
+  } else if (result?.entitlementReason === PRODUCT.AUTO_ENTITLED) {
+    variables.set(transaction.value, PRODUCT.FTU);
+  } else if (result?.purchasable === PRODUCT.NOT_PURCHASABLE) {
+    // eslint-disable-next-line max-depth
+    try {
+      const transactionsEndpoint = '/v1/users/~current/skills/~current/inSkillProductsTransactions';
+      const transactions = await apiCall(handlerInput, transactionsEndpoint);
+
+      const found = transactions.data.results.find((t: { productId: string }) => t.productId === productValue);
+
+      variables.set(transaction.value, found ? found.status : 0);
+    } catch (err) {
+      variables.set(transaction.value, 0);
+    }
+  } else {
+    variables.set(transaction.value, 0);
+  }
+};
+
 export const _productPermissionGenerator = (apiCall: typeof _alexaApiCall) => async (
   handlerInput: HandlerInput,
-  permission: Permission,
+  permission: Partial<Permission>,
   permissionVariable: string | undefined,
   locale: string,
   variables: Store
@@ -49,31 +108,22 @@ export const _productPermissionGenerator = (apiCall: typeof _alexaApiCall) => as
     const result = await factory.getMonetizationServiceClient().getInSkillProduct(locale, productValue);
 
     // Kids ISP testing
-    if (permission.transaction && permission.transaction.value) {
-      if (result?.entitlementReason === PRODUCT.PURCHASED && result.entitled === PRODUCT.ENTITLED) {
-        variables.set(permission.transaction.value, PRODUCT.APPROVED_BY_PARENT);
-      } else if (result?.entitlementReason === PRODUCT.AUTO_ENTITLED) {
-        variables.set(permission.transaction.value, PRODUCT.FTU);
-      } else if (result?.purchasable === PRODUCT.NOT_PURCHASABLE) {
-        // eslint-disable-next-line max-depth
-        try {
-          const transactionsEndpoint = '/v1/users/~current/skills/~current/inSkillProductsTransactions';
-          const transactions = await apiCall(handlerInput, transactionsEndpoint);
-
-          const found = transactions.data.results.find((t: { productId: string }) => t.productId === productValue);
-
-          variables.set(permission.transaction.value, found ? found.status : 0);
-        } catch (err) {
-          variables.set(permission.transaction.value, 0);
-        }
-      } else {
-        variables.set(permission.transaction.value, 0);
-      }
-    }
+    _transactionPermissionGenerator({
+      result,
+      apiCall,
+      variables,
+      // FIXME: add transaction type or remove it since never used on the FE
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      transaction: permission.transaction,
+      handlerInput,
+      productValue,
+    });
 
     if (!result || !(result.entitled === PRODUCT.ENTITLED || result.entitlementReason === PRODUCT.AUTO_ENTITLED)) {
       return false;
     }
+
     if (result.type === PRODUCT.CONSUMABLE && permissionVariable) {
       if (result.entitlementReason === PRODUCT.AUTO_ENTITLED) {
         result.activeEntitlementCount = 100;
@@ -218,19 +268,19 @@ const utilsObj = {
 };
 
 export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
-  permission: Permission,
+  permission: Partial<Permission> | null,
   context: Context,
   variables: Store
 ): Promise<boolean> => {
   if (!permission) return false;
 
   const permissionValue = permission.selected?.value;
-  const handlerInput = context.turn.get(T.HANDLER_INPUT);
+  const handlerInput = context.turn.get<HandlerInput>(T.HANDLER_INPUT);
 
   if (
     !permissionValue ||
     !handlerInput ||
-    ((!Array.isArray(context.storage.get(S.PERMISSIONS)) || !context.storage.get(S.PERMISSIONS).includes(permissionValue)) &&
+    ((!Array.isArray(context.storage.get<string[]>(S.PERMISSIONS)) || !context.storage.get<string[]>(S.PERMISSIONS)!.includes(permissionValue)) &&
       !permissionValue.startsWith('UNOFFICIAL') &&
       !permissionValue.startsWith('alexa::person_id'))
   )
@@ -238,51 +288,51 @@ export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
 
   const permissionVariable = permission.map_to?.value;
 
-  if (permissionValue === PERMISSIONS.NOTIFICATIONS_WRITE) {
+  if (permissionValue === PermissionType.ALEXA_DEVICES_ALL_NOTIFICATIONS_WRITE) {
     return true;
   }
 
-  if (permissionValue === PERMISSIONS.REMINDERS_READ_WRITE) {
+  if (permissionValue === PermissionType.ALEXA_ALERTS_REMINDERS_SKILL_READ_WRITE) {
     return true;
   }
 
-  if (permissionValue === PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_READ) {
+  if (permissionValue === PermissionType.ALEXA_HOUSEHOLD_LISTS_READ) {
     return true;
   }
 
-  if (permissionValue === PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_WRITE) {
+  if (permissionValue === PermissionType.ALEXA_HOUSEHOLD_LISTS_WRITE) {
     return true;
   }
 
-  if (permissionValue === PERMISSIONS.ISP) {
+  if (permissionValue === PermissionType.UNOFFICIAL_ISP) {
     return utils._ispPermission(handlerInput);
   }
 
-  if (permissionValue === PERMISSIONS.PRODUCT && permission.product?.value) {
-    return utils._productPermission(handlerInput, permission, permissionVariable, context.storage.get(S.LOCALE), variables);
+  if (permissionValue === PermissionType.UNOFFICIAL_PRODUCT && permission.product?.value) {
+    return utils._productPermission(handlerInput, permission, permissionVariable, context.storage.get<string>(S.LOCALE)!, variables);
   }
 
-  if (permissionValue === PERMISSIONS.ACCOUNT_LINKING) {
-    return utils._accountLinkingPermission(context.storage.get(S.ACCESS_TOKEN), permissionVariable, variables);
+  if (permissionValue === PermissionType.UNOFFICIAL_ACCOUNT_LINKING) {
+    return utils._accountLinkingPermission(context.storage.get<string>(S.ACCESS_TOKEN)!, permissionVariable, variables);
   }
 
-  if (permissionValue === PERMISSIONS.PERSON_ID_READ) {
+  if (permissionValue === PermissionType.ALEXA_PERSON_ID_READ) {
     return utils._personIdReadPermission(handlerInput, permissionVariable, variables);
   }
 
-  if (permissionValue === PERMISSIONS.PROFILE_EMAIL_READ) {
+  if (permissionValue === PermissionType.ALEXA_PROFILE_EMAIL_READ) {
     return utils._profileEmailReadPermission(handlerInput, permissionVariable, variables);
   }
 
-  if (permissionValue === PERMISSIONS.PROFILE_NAME_READ) {
+  if (permissionValue === PermissionType.ALEXA_PROFILE_NAME_READ) {
     return utils._profileNameReadPermission(handlerInput, permissionVariable, variables);
   }
 
-  if (permissionValue === PERMISSIONS.PROFILE_NUMBER_READ) {
+  if (permissionValue === PermissionType.ALEXA_PROFILE_MOBILE_NUMBER_READ) {
     return utils._profileNumberReadPermission(handlerInput, permissionVariable, variables);
   }
 
-  if (permissionValue === PERMISSIONS.GEOLOCATION_READ) {
+  if (permissionValue === PermissionType.ALEXA_DEVICES_ALL_GEOLOCATION_READ) {
     return utils._geolocationRead(handlerInput, permissionVariable, variables);
   }
 

@@ -1,22 +1,21 @@
-import { NodeType } from '@voiceflow/alexa-types';
-import { Node } from '@voiceflow/api-sdk';
+import { Node } from '@voiceflow/alexa-types/build/nodes/payment';
 import { HandlerFactory } from '@voiceflow/client';
+import { NodeID } from '@voiceflow/general-types';
+import { interfaces } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
 import { ResponseBuilder } from '@/lib/services/voiceflow/types';
 
-export type PaymentsNode = Node<
-  NodeType.PAYMENT,
-  {
-    product_id?: string;
-    success_id?: string;
-    fail_id?: string;
-  }
->;
+export type PaymentStorage = {
+  status: null | false | interfaces.monetization.v1.PurchaseResult;
+  failPath?: NodeID;
+  productId: string;
+  successPath?: NodeID;
+};
 
 export const PaymentResponseBuilder: ResponseBuilder = (context, builder) => {
   // check payment
-  const payment = context.storage.get(S.PAYMENT);
+  const payment = context.storage.get<PaymentStorage>(S.PAYMENT);
 
   if (payment && !payment.status) {
     // return an early response if there is a payment node
@@ -35,16 +34,18 @@ export const PaymentResponseBuilder: ResponseBuilder = (context, builder) => {
   }
 };
 
-const PaymentHandler: HandlerFactory<PaymentsNode> = () => ({
-  canHandle: (node) => {
-    return !!node.product_id;
-  },
+const PaymentHandler: HandlerFactory<Node> = () => ({
+  canHandle: (node) => 'product_id' in node && !!node.product_id,
   handle: (node, context) => {
-    context.storage.set(S.PAYMENT, {
+    if (!('product_id' in node)) {
+      return node.nextId ?? null;
+    }
+
+    context.storage.set<PaymentStorage>(S.PAYMENT, {
+      status: null,
+      failPath: node.fail_id,
       productId: node.product_id,
       successPath: node.success_id,
-      failPath: node.fail_id,
-      status: null,
     });
 
     // stop on itself and wait for paymentStateHandler to determine next path

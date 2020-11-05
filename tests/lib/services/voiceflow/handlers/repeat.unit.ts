@@ -1,4 +1,5 @@
-import { AmazonIntent, RepeatType } from '@voiceflow/alexa-types';
+import { AmazonIntent } from '@voiceflow/alexa-types';
+import { RepeatType } from '@voiceflow/general-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 

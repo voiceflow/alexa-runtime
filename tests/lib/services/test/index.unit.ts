@@ -1,5 +1,5 @@
 import { EventType } from '@voiceflow/client';
-import { StreamAction as TraceStreamAction } from '@voiceflow/client/build/lib/Context/Trace';
+import { TraceStreamAction } from '@voiceflow/general-types/build/nodes/stream';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -38,7 +38,7 @@ describe('test manager unit tests', () => {
         variables: { set: sinon.stub() },
         update: sinon.stub(),
         getRawState: sinon.stub().returns(rawState),
-        trace: { get: sinon.stub().returns(trace), block: sinon.stub() },
+        trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
       };
 
       const createContext = sinon.stub().returns(context);
@@ -73,7 +73,7 @@ describe('test manager unit tests', () => {
       const fn = context.setEvent.args[0][1];
       const event = { context: { foo4: 'bar3' }, node: { id: 'node-id' } };
       fn(event);
-      expect(context.trace.block.args).to.eql([[event.node.id]]);
+      expect(context.trace.addTrace.args).to.eql([[{ type: 'block', payload: { blockID: event.node.id } }]]);
       expect(context.turn.set.args).to.eql([[T.REQUEST, request]]);
       expect(context.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
       expect(context.update.callCount).to.eql(1);
@@ -97,7 +97,7 @@ describe('test manager unit tests', () => {
         variables: { set: sinon.stub() },
         update: sinon.stub(),
         getRawState: sinon.stub().returns(rawState),
-        trace: { get: sinon.stub().returns(trace), block: sinon.stub(), end: sinon.stub() },
+        trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
       };
 
       const createContext = sinon.stub().returns(context);
@@ -116,7 +116,7 @@ describe('test manager unit tests', () => {
 
       expect(await testManager.invoke({} as any, {} as any)).to.eql({ ...rawState, trace });
       expect(utils.Handlers.callCount).to.eql(1);
-      expect(context.trace.end.callCount).to.eql(1);
+      expect(context.trace.addTrace.args[0]).to.eql([{ type: 'end' }]);
     });
 
     describe('with stream', () => {
@@ -139,7 +139,7 @@ describe('test manager unit tests', () => {
           variables: { set: sinon.stub() },
           update: sinon.stub(),
           getRawState: sinon.stub().returns(rawState),
-          trace: { get: sinon.stub().returns(trace), block: sinon.stub(), end: sinon.stub(), stream: sinon.stub() },
+          trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
         };
 
         const createContext = sinon.stub().returns(context);
@@ -159,7 +159,16 @@ describe('test manager unit tests', () => {
 
         expect(await testManager.invoke({} as any, {} as any)).to.eql({ ...rawState, trace });
         expect(utils.Handlers.callCount).to.eql(1);
-        expect(context.trace.stream.args).to.eql([[stream.url, stream.token, TraceStreamAction.LOOP]]);
+        expect(context.trace.addTrace.args[0]).to.eql([
+          {
+            type: 'stream',
+            payload: {
+              src: stream.url,
+              token: stream.token,
+              action: TraceStreamAction.LOOP,
+            },
+          },
+        ]);
       });
 
       it('StreamAction.RESUME', async () => {
@@ -181,7 +190,7 @@ describe('test manager unit tests', () => {
           variables: { set: sinon.stub() },
           update: sinon.stub(),
           getRawState: sinon.stub().returns(rawState),
-          trace: { get: sinon.stub().returns(trace), block: sinon.stub(), end: sinon.stub(), stream: sinon.stub() },
+          trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
         };
 
         const createContext = sinon.stub().returns(context);
@@ -201,7 +210,16 @@ describe('test manager unit tests', () => {
 
         expect(await testManager.invoke({} as any, {} as any)).to.eql({ ...rawState, trace });
         expect(utils.Handlers.callCount).to.eql(1);
-        expect(context.trace.stream.args).to.eql([[stream.url, stream.token, TraceStreamAction.PLAY]]);
+        expect(context.trace.addTrace.args[0]).to.eql([
+          {
+            type: 'stream',
+            payload: {
+              src: stream.url,
+              token: stream.token,
+              action: TraceStreamAction.PLAY,
+            },
+          },
+        ]);
       });
 
       it('StreamAction.PAUSE', async () => {
@@ -223,7 +241,7 @@ describe('test manager unit tests', () => {
           variables: { set: sinon.stub() },
           update: sinon.stub(),
           getRawState: sinon.stub().returns(rawState),
-          trace: { get: sinon.stub().returns(trace), block: sinon.stub(), end: sinon.stub(), stream: sinon.stub() },
+          trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
         };
 
         const createContext = sinon.stub().returns(context);
@@ -242,7 +260,16 @@ describe('test manager unit tests', () => {
         const testManager = TestManager(services as any, config as any, utils as any);
 
         expect(await testManager.invoke({} as any, {} as any)).to.eql({ ...rawState, trace });
-        expect(context.trace.stream.args).to.eql([[stream.url, stream.token, TraceStreamAction.PAUSE]]);
+        expect(context.trace.addTrace.args[0]).to.eql([
+          {
+            type: 'stream',
+            payload: {
+              src: stream.url,
+              token: stream.token,
+              action: TraceStreamAction.PAUSE,
+            },
+          },
+        ]);
       });
     });
   });

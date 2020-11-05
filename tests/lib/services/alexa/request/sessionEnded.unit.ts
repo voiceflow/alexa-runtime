@@ -96,6 +96,7 @@ describe('session ended handler unit tests', () => {
         const turnState = 'turn-state';
         const variablesState = 'variables-state';
         const stackState = 'stack-state';
+        const traceState = 'trace-state';
 
         const context = {
           versionID: 'version-id',
@@ -103,18 +104,20 @@ describe('session ended handler unit tests', () => {
           turn: { getState: sinon.stub().returns(turnState) },
           variables: { getState: sinon.stub().returns(variablesState) },
           stack: { getState: sinon.stub().returns(stackState) },
+          trace: { get: sinon.stub().returns(traceState) },
         };
 
         fn(context);
         expect(utils.log.args).to.eql([
           [
-            'errorType=%s, versionID=%s, storage=%s, turn=%s, variables=%s',
+            'errorType=%s, versionID=%s, storage=%s, turn=%s, variables=%s, stack=%s, trace=%s',
             errorType,
             context.versionID,
             JSON.stringify(context.storage.getState()),
             JSON.stringify(context.turn.getState()),
             JSON.stringify(context.variables.getState()),
             JSON.stringify(context.stack.getState()),
+            JSON.stringify(context.trace.get()),
           ],
           ['error=%s, versionID=%s', JSON.stringify(input.requestEnvelope.request), context.versionID],
         ]);

@@ -1,5 +1,7 @@
 import { Node } from '@voiceflow/api-sdk';
 import { HandlerFactory } from '@voiceflow/client';
+import { TraceType } from '@voiceflow/general-types';
+import { TraceFrame as InteractionTraceFrame } from '@voiceflow/general-types/build/nodes/interaction';
 
 import { T } from '@/lib/constants';
 import CommandHandler from '@/lib/services/voiceflow/handlers/command';
@@ -29,15 +31,16 @@ const utilsObj = {
 
 // THIS HANDLER IS USED PURELY FOR THE TESTING TOOL, NOT FOR ALEXA
 export const ChoiceHandler: HandlerFactory<ChoiceNode, typeof utilsObj> = (utils) => ({
-  canHandle: (node) => {
-    return !!node.choices;
-  },
+  canHandle: (node) => !!node.choices,
   handle: (node, context, variables) => {
     const request = context.turn.get(T.REQUEST) as IntentRequest;
 
     if (request?.type !== RequestType.INTENT) {
       utils.addRepromptIfExists(node, context, variables);
-      context.trace.choice(node.inputs.map((choice) => ({ name: choice[0] })));
+      context.trace.addTrace<InteractionTraceFrame>({
+        type: TraceType.CHOICE,
+        payload: { choices: node.inputs.map((choice) => ({ name: choice[0] })) },
+      });
 
       // quit cycleStack without ending session by stopping on itself
       return node.id;

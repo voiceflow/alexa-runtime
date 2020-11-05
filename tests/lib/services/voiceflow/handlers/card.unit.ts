@@ -1,8 +1,9 @@
+import { CardType } from '@voiceflow/alexa-types/build/nodes/card';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T } from '@/lib/constants';
-import { addVariables, CardHandler, CardResponseBuilder, CardType } from '@/lib/services/voiceflow/handlers/card';
+import { addVariables, CardHandler, CardResponseBuilder } from '@/lib/services/voiceflow/handlers/card';
 
 describe('card handler unit tests', async () => {
   afterEach(() => sinon.restore());
@@ -31,11 +32,9 @@ describe('card handler unit tests', async () => {
         addVariables: sinon
           .stub()
           .onFirstCall()
-          .returns('TITLE')
+          .returns('CONTENT')
           .onSecondCall()
-          .returns('TEXT')
-          .onThirdCall()
-          .returns('CONTENT'),
+          .returns('TITLE'),
       };
 
       const cardHandler = CardHandler(utils);
@@ -56,16 +55,14 @@ describe('card handler unit tests', async () => {
       const result = cardHandler.handle(node as any, context as any, variables as any, null as any);
 
       expect(result).to.eql(node.nextId);
-      expect(utils.addVariables.args[0]).to.eql([node.card.title, variables]);
-      expect(utils.addVariables.args[1]).to.eql([node.card.text, variables]);
-      expect(utils.addVariables.args[2]).to.eql([node.card.content, variables]);
+      expect(utils.addVariables.args[0]).to.eql([node.card.content, variables]);
+      expect(utils.addVariables.args[1]).to.eql([node.card.title, variables]);
       expect(context.turn.set.args[0]).to.eql([
         T.CARD,
         {
           type: CardType.SIMPLE,
           title: 'TITLE',
-          text: 'TEXT',
-          content: 'CONTENT',
+          text: 'CONTENT',
           image: {
             largeImageUrl: '',
             smallImageUrl: '',
@@ -141,7 +138,7 @@ describe('card handler unit tests', async () => {
 
       cardHandler.handle(node as any, context as any, variables as any, null as any);
 
-      expect(utils.addVariables.args[3]).to.eql([node.card.image.largeImageUrl, variables]);
+      expect(utils.addVariables.args[2]).to.eql([node.card.image.largeImageUrl, variables]);
       expect(context.turn.set.args[0][1].image).to.eql({ largeImageUrl: 'url', smallImageUrl: 'url' });
     });
   });
@@ -175,7 +172,7 @@ describe('card handler unit tests', async () => {
       const card = {
         type: CardType.SIMPLE,
         title: 'TITLE',
-        content: 'CONTENT',
+        texr: 'CONTENT',
       };
 
       const context = {
@@ -230,13 +227,13 @@ describe('card handler unit tests', async () => {
     it('has value', () => {
       const value = 'value';
       const actual = 'random';
-      const regexVariables = sinon.stub().returns(actual);
+      const replaceVariables = sinon.stub().returns(actual);
       const varState = { foo: 'bar' };
       const variables = { getState: sinon.stub().returns(varState) };
 
-      const result = addVariables(regexVariables as any)(value, variables as any, null as any);
+      const result = addVariables(replaceVariables as any)(value, variables as any, null as any);
       expect(result).to.eql(actual);
-      expect(regexVariables.args[0]).to.eql([value, varState]);
+      expect(replaceVariables.args[0]).to.eql([value, varState]);
     });
   });
 });
