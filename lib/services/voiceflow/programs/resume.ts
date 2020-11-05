@@ -1,6 +1,6 @@
 import { Voice } from '@voiceflow/alexa-types';
-import { Frame, Program } from '@voiceflow/client';
 import { NodeType, Prompt } from '@voiceflow/general-types';
+import { Frame, Program } from '@voiceflow/runtime';
 
 import { IntentName } from '@/lib/services/voiceflow/types';
 

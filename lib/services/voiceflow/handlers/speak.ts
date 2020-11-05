@@ -1,6 +1,6 @@
-import { HandlerFactory, replaceVariables, sanitizeVariables } from '@voiceflow/client';
 import { TraceType } from '@voiceflow/general-types';
 import { Node, TraceFrame } from '@voiceflow/general-types/build/nodes/speak';
+import { HandlerFactory, replaceVariables, sanitizeVariables } from '@voiceflow/runtime';
 import _ from 'lodash';
 
 import { F, S } from '@/lib/constants';

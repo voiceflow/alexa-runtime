@@ -1,4 +1,4 @@
-import { HandlerFactory } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/runtime';
 
 import { DisplayNode } from '@/lib/services/voiceflow/handlers/display';
 

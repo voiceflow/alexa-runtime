@@ -9,7 +9,7 @@ import {
   ResetHandler,
   SetHandler,
   StartHandler,
-} from '@voiceflow/client';
+} from '@voiceflow/runtime';
 
 import { Config } from '@/types';
 

@@ -1,7 +1,7 @@
-import { EventType, State } from '@voiceflow/client';
 import { BlockTraceFrame, TraceType } from '@voiceflow/general-types';
 import { TraceFrame as ExitTraceFrame } from '@voiceflow/general-types/build/nodes/exit';
 import { TraceFrame as StreamTraceFrame, TraceStreamAction } from '@voiceflow/general-types/build/nodes/stream';
+import { EventType, State } from '@voiceflow/runtime';
 import { IntentRequest as AlexaIntentRequest } from 'ask-sdk-model';
 
 import { S, T, TEST_VERSION_ID, V } from '@/lib/constants';

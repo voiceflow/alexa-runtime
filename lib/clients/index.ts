@@ -1,5 +1,5 @@
 import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
-import { DataAPI, LocalDataApi, ServerDataApi } from '@voiceflow/client';
+import { DataAPI, LocalDataApi, ServerDataApi } from '@voiceflow/runtime';
 
 import { Config } from '@/types';
 

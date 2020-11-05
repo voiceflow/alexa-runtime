@@ -1,5 +1,5 @@
-import { Context } from '@voiceflow/client';
 import { RepeatType } from '@voiceflow/general-types';
+import { Context } from '@voiceflow/runtime';
 
 import { S, T, V } from '@/lib/constants';
 

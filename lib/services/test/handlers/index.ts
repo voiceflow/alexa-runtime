@@ -9,7 +9,7 @@ import {
   ResetHandler,
   SetHandler,
   StartHandler,
-} from '@voiceflow/client';
+} from '@voiceflow/runtime';
 
 import AccountLinkingHandler from '@/lib/services/voiceflow/handlers/accountLinking';
 import CaptureHandler from '@/lib/services/voiceflow/handlers/capture';

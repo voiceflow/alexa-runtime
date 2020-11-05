@@ -1,6 +1,6 @@
-import { formatIntentName, HandlerFactory } from '@voiceflow/client';
 import { SlotMapping, TraceType } from '@voiceflow/general-types';
 import { Node, TraceFrame } from '@voiceflow/general-types/build/nodes/interaction';
+import { formatIntentName, HandlerFactory } from '@voiceflow/runtime';
 
 import { S, T } from '@/lib/constants';
 

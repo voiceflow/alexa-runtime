@@ -1,4 +1,4 @@
-import { Context } from '@voiceflow/client';
+import { Context } from '@voiceflow/runtime';
 import { HandlerInput } from 'ask-sdk';
 import { Response } from 'ask-sdk-model';
 

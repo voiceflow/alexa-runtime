@@ -1,4 +1,4 @@
-import Client, { Context, State } from '@voiceflow/client';
+import Client, { Context, State } from '@voiceflow/runtime';
 import { HandlerInput } from 'ask-sdk';
 
 // eslint-disable-next-line import/prefer-default-export

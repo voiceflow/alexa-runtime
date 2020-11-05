@@ -1,5 +1,5 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/cancelPayment';
-import { HandlerFactory } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/runtime';
 
 const CancelPaymentHandler: HandlerFactory<Node> = () => ({
   canHandle: (node) => 'cancel_product_id' in node && !!node.cancel_product_id,

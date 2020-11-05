@@ -1,5 +1,5 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/payment';
-import { HandlerFactory } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/runtime';
 
 const PaymentHandler: HandlerFactory<Node> = () => ({
   canHandle: (node) => 'product_id' in node && !!node.product_id,

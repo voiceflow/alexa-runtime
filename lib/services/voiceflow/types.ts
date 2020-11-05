@@ -1,4 +1,4 @@
-import { Context, Request } from '@voiceflow/client';
+import { Context, Request } from '@voiceflow/runtime';
 import { ResponseBuilder as ASKResponseBuilder } from 'ask-sdk';
 import { Intent } from 'ask-sdk-model';
 

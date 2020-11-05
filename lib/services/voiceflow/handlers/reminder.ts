@@ -1,6 +1,6 @@
 import { Node, NodeData, RecurrenceFreq } from '@voiceflow/alexa-types/build/nodes/reminder';
-import { HandlerFactory, replaceVariables } from '@voiceflow/client';
 import { NodeID } from '@voiceflow/general-types';
+import { HandlerFactory, replaceVariables } from '@voiceflow/runtime';
 import { HandlerInput } from 'ask-sdk';
 import axios from 'axios';
 import moment from 'moment';

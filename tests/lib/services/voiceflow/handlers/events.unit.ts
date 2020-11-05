@@ -1,4 +1,4 @@
-import { EventType } from '@voiceflow/client';
+import { EventType } from '@voiceflow/runtime';
 import { expect } from 'chai';
 import sinon from 'sinon';
 

@@ -1,6 +1,6 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/cancelPayment';
-import { HandlerFactory } from '@voiceflow/client';
 import { NodeID } from '@voiceflow/general-types';
+import { HandlerFactory } from '@voiceflow/runtime';
 import { interfaces } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';

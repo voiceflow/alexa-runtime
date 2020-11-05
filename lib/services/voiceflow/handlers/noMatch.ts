@@ -1,7 +1,7 @@
 import { Node } from '@voiceflow/api-sdk';
-import { Context, replaceVariables, sanitizeVariables, Store } from '@voiceflow/client';
 import { TraceType } from '@voiceflow/general-types';
 import { TraceFrame } from '@voiceflow/general-types/build/nodes/speak';
+import { Context, replaceVariables, sanitizeVariables, Store } from '@voiceflow/runtime';
 import _ from 'lodash';
 
 import { S } from '@/lib/constants';

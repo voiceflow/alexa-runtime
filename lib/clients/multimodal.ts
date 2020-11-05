@@ -1,4 +1,4 @@
-import { DataAPI } from '@voiceflow/client';
+import { DataAPI } from '@voiceflow/runtime';
 
 class Multimodal {
   constructor(private dataAPI: DataAPI) {}

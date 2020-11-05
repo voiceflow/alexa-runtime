@@ -1,5 +1,5 @@
 import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
-import Client, { DataAPI, State } from '@voiceflow/client';
+import Client, { DataAPI, State } from '@voiceflow/runtime';
 import { HandlerInput } from 'ask-sdk';
 
 import { S, T } from '@/lib/constants';

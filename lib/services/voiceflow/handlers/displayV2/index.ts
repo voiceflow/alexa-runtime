@@ -1,5 +1,5 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/display';
-import { HandlerFactory, replaceVariables } from '@voiceflow/client';
+import { HandlerFactory, replaceVariables } from '@voiceflow/runtime';
 import { SupportedInterfaces } from 'ask-sdk-model';
 import _ from 'lodash';
 

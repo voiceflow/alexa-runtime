@@ -1,5 +1,5 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/accountLinking';
-import { HandlerFactory } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/runtime';
 
 import { T } from '@/lib/constants';
 

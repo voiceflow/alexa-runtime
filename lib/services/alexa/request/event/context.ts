@@ -1,5 +1,5 @@
 import { Command } from '@voiceflow/api-sdk';
-import { Context, extractFrameCommand } from '@voiceflow/client';
+import { Context, extractFrameCommand } from '@voiceflow/runtime';
 
 import { EventRequest, RequestType } from '@/lib/services/voiceflow/types';
 

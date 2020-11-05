@@ -1,5 +1,5 @@
-import { EventType } from '@voiceflow/client';
 import { TraceType } from '@voiceflow/general-types';
+import { EventType } from '@voiceflow/runtime';
 import { expect } from 'chai';
 import sinon from 'sinon';
 

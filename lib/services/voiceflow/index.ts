@@ -1,7 +1,7 @@
-import Client, { EventType } from '@voiceflow/client';
 import { TraceType } from '@voiceflow/general-types';
 import { TraceFrame as FlowTraceFrame } from '@voiceflow/general-types/build/nodes/flow';
 import { TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
+import Client, { EventType } from '@voiceflow/runtime';
 
 import { F, S, TEST_VERSION_ID } from '@/lib/constants';
 import { executeEvents } from '@/lib/services/voiceflow/handlers/events';

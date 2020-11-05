@@ -1,5 +1,5 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/userInfo';
-import { HandlerFactory } from '@voiceflow/client';
+import { HandlerFactory } from '@voiceflow/runtime';
 
 const UserInfoHandler: HandlerFactory<Node> = () => ({
   canHandle: (node) => 'permissions' in node && !!node.permissions,

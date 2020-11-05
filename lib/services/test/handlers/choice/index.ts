@@ -1,7 +1,7 @@
 import { Node } from '@voiceflow/api-sdk';
-import { HandlerFactory } from '@voiceflow/client';
 import { TraceType } from '@voiceflow/general-types';
 import { TraceFrame as InteractionTraceFrame } from '@voiceflow/general-types/build/nodes/interaction';
+import { HandlerFactory } from '@voiceflow/runtime';
 
 import { T } from '@/lib/constants';
 import CommandHandler from '@/lib/services/voiceflow/handlers/command';
