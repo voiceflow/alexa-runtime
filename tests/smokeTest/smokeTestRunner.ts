@@ -156,6 +156,11 @@ const beforeAll = async () => {
   const serviceManager = new ServiceManager(config);
   const server = new Server(serviceManager, config);
 
+  // mock server-data-api token gen
+  nock(config.VF_DATA_ENDPOINT)
+    .intercept('/generate-platform-token', 'POST')
+    .reply(200, { token: 'token' });
+
   await server.start();
 
   await awaitServerHealthy(SERVER_URL);
