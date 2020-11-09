@@ -18,7 +18,7 @@ const CONFIG: Config = {
   AWS_ENDPOINT: optionalProcessEnv('AWS_ENDPOINT'),
 
   // Application secrets
-  VF_DATA_SECRET: getProcessEnv('VF_DATA_SECRET'),
+  ADMIN_SERVER_DATA_API_TOKEN: getProcessEnv('ADMIN_SERVER_DATA_API_TOKEN'),
   DATADOG_API_KEY: getProcessEnv('DATADOG_API_KEY'),
 
   DYNAMO_ENDPOINT: optionalProcessEnv('DYNAMO_ENDPOINT'),
