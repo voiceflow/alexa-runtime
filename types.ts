@@ -12,7 +12,7 @@ export interface Config {
 
   // Application secrets
   DATADOG_API_KEY: string;
-  VF_DATA_SECRET: string;
+  ADMIN_SERVER_DATA_API_TOKEN: string;
 
   DYNAMO_ENDPOINT: string | null;
   CODE_HANDLER_ENDPOINT: string;

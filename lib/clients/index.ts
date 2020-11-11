@@ -22,7 +22,7 @@ const buildClients = (config: Config): ClientMap => {
   const dynamo = Dynamo(config);
   const dataAPI = config.PROJECT_SOURCE
     ? new LocalDataApi({ projectSource: config.PROJECT_SOURCE }, { fs: Static.fs, path: Static.path })
-    : new ServerDataApi({ dataSecret: config.VF_DATA_SECRET, dataEndpoint: config.VF_DATA_ENDPOINT }, { axios: Static.axios });
+    : new ServerDataApi({ adminToken: config.ADMIN_SERVER_DATA_API_TOKEN, dataEndpoint: config.VF_DATA_ENDPOINT }, { axios: Static.axios });
   const multimodal = Multimodal(dataAPI);
   const metrics = Metrics(config);
 
@@ -33,6 +33,10 @@ const buildClients = (config: Config): ClientMap => {
     dataAPI,
     metrics,
   };
+};
+
+export const initClients = async (clients: ClientMap) => {
+  await clients.dataAPI.init();
 };
 
 export default buildClients;
