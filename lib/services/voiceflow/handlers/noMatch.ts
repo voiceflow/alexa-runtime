@@ -1,7 +1,7 @@
 import { Node } from '@voiceflow/api-sdk';
 import { TraceType } from '@voiceflow/general-types';
 import { TraceFrame } from '@voiceflow/general-types/build/nodes/speak';
-import { Choice, Interaction } from '@voiceflow/general-types/lib/nodes/interaction';
+import { Interaction } from '@voiceflow/general-types/lib/nodes/interaction';
 import { Context, replaceVariables, sanitizeVariables, Store } from '@voiceflow/runtime';
 import _ from 'lodash';
 
@@ -37,10 +37,10 @@ export const NoMatchHandler = () => ({
       draft[S.OUTPUT] += output;
     });
 
-    const choices = node?.interactions?.map((choice: any) => ({ name: choice.intent }));
+    const choices = node?.interactions?.map((choice: { intent: string }) => ({ name: choice.intent }));
     context.trace.addTrace<TraceFrame>({
       type: TraceType.SPEAK,
-      payload: { message: output, choices } as { message: string },
+      payload: { message: output, choices },
     });
 
     return node.id;
