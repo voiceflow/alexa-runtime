@@ -11,7 +11,7 @@ import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from './cons
 import * as events from './events';
 import DisplayResponseBuilder from './responseBuilder';
 import { Command, DisplayInfo } from './types';
-import { deepFindVideos, VideoEvent } from './utils';
+import { deepFindVideos, isVideoEvent, VideoEvent } from './utils';
 
 export { events, DisplayResponseBuilder };
 
@@ -82,7 +82,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
 
     const onEndEvents = _.flatMap(results, (result) => result.item.onEnd).filter(Boolean) as VideoEvent[];
 
-    const hasOnEndEvent = onEndEvents.some((event) => event.type === EVENT_SEND_EVENT && event.arguments?.includes?.(ENDED_EVENT_PREFIX));
+    const hasOnEndEvent = onEndEvents.some((event) => event.type === EVENT_SEND_EVENT && event.arguments?.some?.(isVideoEvent(ENDED_EVENT_PREFIX)));
 
     if (hasOnEndEvent) {
       context.stack.top().setNodeID(node.nextId ?? null);

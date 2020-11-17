@@ -4,6 +4,7 @@ import { interfaces } from 'ask-sdk-model';
 import { S } from '@/lib/constants';
 import { DOCUMENT_VIDEO_TYPE, ENDED_EVENT_PREFIX } from '@/lib/services/voiceflow/handlers/display/constants';
 import { DisplayInfo } from '@/lib/services/voiceflow/handlers/display/types';
+import { isVideoEvent } from '@/lib/services/voiceflow/handlers/display/utils';
 
 import { updateContext } from '../utils';
 import IntentHandler from './intent';
@@ -55,7 +56,7 @@ export const APLUserEventHandlerGenerator = (utils: typeof utilsObj): RequestHan
       });
     });
 
-    if (hasDisplayInfo && request.arguments?.includes?.(ENDED_EVENT_PREFIX)) {
+    if (hasDisplayInfo && request.arguments?.some?.(isVideoEvent(ENDED_EVENT_PREFIX))) {
       return utils.IntentHandler.handle(input);
     }
 
