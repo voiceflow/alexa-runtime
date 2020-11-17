@@ -2,7 +2,7 @@ export const VIDEO_ID_PREFIX = 'voiceflowVideo';
 
 export const EVENT_SEND_EVENT = 'SendEvent';
 
-export const ENDED_EVENT_PREFIX = 'voiceFlowVideoEnded';
+export const ENDED_EVENT_PREFIX = 'voiceflowVideoEnded';
 
 export const DOCUMENT_VIDEO_TYPE = 'Video';
 
