@@ -40,7 +40,17 @@ describe('noMatch handler unit tests', () => {
 
       const noMatchHandler = NoMatchHandler();
       expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
-      expect(context.trace.addTrace.args).to.eql([[{ type: 'speak', payload: { message: 'the counter is 5.23' } }]]);
+      expect(context.trace.addTrace.args).to.eql([
+        [
+          {
+            type: 'speak',
+            payload: {
+              message: 'the counter is 5.23',
+              choices: undefined,
+            },
+          },
+        ],
+      ]);
 
       // assert produce
       const cb1 = context.storage.produce.args[0][0];
@@ -78,7 +88,50 @@ describe('noMatch handler unit tests', () => {
 
       const noMatchHandler = NoMatchHandler();
       expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
-      expect(context.trace.addTrace.args).to.eql([[{ type: 'speak', payload: { message: '' } }]]);
+      expect(context.trace.addTrace.args).to.eql([
+        [
+          {
+            type: 'speak',
+            payload: {
+              message: '',
+              choices: undefined,
+            },
+          },
+        ],
+      ]);
+    });
+
+    it('with choices', () => {
+      const node = {
+        id: 'node-id',
+        interactions: [{ intent: 'address_intent' }, { intent: 'phone_number_intent' }],
+      };
+      const context = {
+        storage: {
+          produce: sinon.stub(),
+          get: sinon.stub().returns(1),
+        },
+        trace: {
+          addTrace: sinon.stub(),
+        },
+      };
+      const variables = {
+        getState: sinon.stub().returns({}),
+      };
+
+      const noMatchHandler = NoMatchHandler();
+      expect(noMatchHandler.handle(node as any, context as any, variables as any)).to.eql(node.id);
+      expect(context.trace.addTrace.args).to.eql([
+        [
+          {
+            type: 'speak',
+            payload: {
+              message: '',
+              choices: [{ name: 'address_intent' }, { name: 'phone_number_intent' }],
+            },
+          },
+        ],
+      ]);
     });
 
     it('with noMatch randomized', () => {

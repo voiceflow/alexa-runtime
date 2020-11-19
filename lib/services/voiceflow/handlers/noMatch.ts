@@ -1,7 +1,7 @@
 import { Node } from '@voiceflow/api-sdk';
 import { TraceType } from '@voiceflow/general-types';
+import { Interaction } from '@voiceflow/general-types/build/nodes/interaction';
 import { TraceFrame } from '@voiceflow/general-types/build/nodes/speak';
-import { Interaction } from '@voiceflow/general-types/lib/nodes/interaction';
 import { Context, replaceVariables, sanitizeVariables, Store } from '@voiceflow/runtime';
 import _ from 'lodash';
 
