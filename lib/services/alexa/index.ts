@@ -1,7 +1,6 @@
 import { DefaultApiClient, DynamoDbPersistenceAdapter, HandlerInput, SkillBuilders } from 'ask-sdk';
 
 import { MetricsType } from '@/lib/clients/metrics';
-import MongoDb from '@/lib/clients/mongodb';
 import { Source } from '@/lib/constants';
 
 import AdapterManager from '../adapter';
@@ -70,7 +69,7 @@ const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
 
   if (config.SESSIONS_SOURCE === Source.LOCAL) {
     persistenceAdapter = new utils.adapters.MemoryPersistenceAdapter();
-  } else if (MongoDb.enabled(config)) {
+  } else if (MongoPersistenceAdapter.enabled(config)) {
     persistenceAdapter = new utils.adapters.MongoPersistenceAdapter(services.mongo!);
   } else {
     persistenceAdapter = new utils.adapters.DynamoDbPersistenceAdapter({

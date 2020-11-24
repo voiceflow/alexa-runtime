@@ -1,6 +1,7 @@
 import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
 import { DataAPI, LocalDataApi, ServerDataApi } from '@voiceflow/runtime';
 
+import MongoPersistenceAdapter from '@/lib/services/alexa/mongo';
 import { Config } from '@/types';
 
 import Dynamo, { DynamoType } from './dynamo';
@@ -27,7 +28,7 @@ const buildClients = (config: Config): ClientMap => {
     : new ServerDataApi({ adminToken: config.ADMIN_SERVER_DATA_API_TOKEN, dataEndpoint: config.VF_DATA_ENDPOINT }, { axios: Static.axios });
   const multimodal = Multimodal(dataAPI);
   const metrics = Metrics(config);
-  const mongo = MongoDB.enabled(config) ? new MongoDB(config) : null;
+  const mongo = MongoPersistenceAdapter.enabled(config) ? new MongoDB(config) : null;
 
   return {
     ...Static,
@@ -41,11 +42,11 @@ const buildClients = (config: Config): ClientMap => {
 
 export const initClients = async (config: Config, clients: ClientMap) => {
   await clients.dataAPI.init();
-  if (MongoDB.enabled(config)) await clients.mongo!.start();
+  if (MongoPersistenceAdapter.enabled(config)) await clients.mongo!.start();
 };
 
 export const stopClients = async (config: Config, clients: ClientMap) => {
-  if (MongoDB.enabled(config)) await clients.mongo!.stop();
+  if (MongoPersistenceAdapter.enabled(config)) await clients.mongo!.stop();
 };
 
 export default buildClients;

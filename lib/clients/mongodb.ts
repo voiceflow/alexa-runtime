@@ -1,18 +1,11 @@
 import { Db, MongoClient } from 'mongodb';
 
-import { Config } from '@/types';
-
-import { Source } from '../constants';
 import { AbstractClient } from './utils';
 
 class MongoDB extends AbstractClient {
   private client: MongoClient | undefined;
 
   public _db: Db | undefined;
-
-  public static enabled(config: Config) {
-    return config.SESSIONS_SOURCE === Source.MONGO;
-  }
 
   async start() {
     this.client = await MongoClient.connect(this.config.MONGO_URI!, { useUnifiedTopology: true });
