@@ -34,6 +34,9 @@ export interface Config {
 
   PROJECT_SOURCE: string | null;
   SESSIONS_SOURCE: string | null;
+
+  MONGO_URI: string | null;
+  MONGO_DB: string | null;
 }
 
 export interface Request<P extends {} = {}> extends Express.Request<P> {

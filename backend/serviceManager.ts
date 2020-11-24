@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this, no-empty-function */
 import { buildClients, buildControllers, buildMiddleware, buildServices, ClientMap, ControllerMap, FullServiceMap, MiddlewareMap } from '@/lib';
-import { initClients } from '@/lib/clients';
+import { initClients, stopClients } from '@/lib/clients';
 import { Config } from '@/types';
 
 class ServiceManager {
@@ -30,14 +30,14 @@ class ServiceManager {
    * Start services
    */
   async start() {
-    await initClients(this.clients);
+    await initClients(this.config, this.clients);
   }
 
   /**
    * Stop services
    */
   async stop() {
-    // needed for eslint
+    await stopClients(this.config, this.clients);
   }
 }
 

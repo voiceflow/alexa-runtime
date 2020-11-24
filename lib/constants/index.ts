@@ -5,5 +5,6 @@ export const TEST_VERSION_ID = '__TEST__';
 
 export enum Source {
   LOCAL = 'local',
+  MONGO = 'mongo',
   REMOTE = 'remote',
 }
