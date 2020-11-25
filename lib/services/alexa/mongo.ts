@@ -24,9 +24,7 @@ class MongoPersistenceAdapter implements PersistenceAdapter {
 
   async getAttributes(requestEnvelope: RequestEnvelope) {
     const userId = this.idGenerator(requestEnvelope);
-    const session = await this.mongo.db
-      .collection(this.collectionName)
-      .findOne<{ attributes: object }>({ id: userId }, { projection: { attributes: true } });
+    const session = await this.mongo.db.collection(this.collectionName).findOne<{ attributes: object }>({ id: userId });
     return session?.attributes || {};
   }
 
