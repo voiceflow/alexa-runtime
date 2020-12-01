@@ -79,7 +79,7 @@ export const InteractionHandler: HandlerFactory<Node, typeof utilsObj> = (utils)
     // clean up no matches counter
     context.storage.delete(S.NO_MATCHES_COUNTER);
 
-    return (nextId || node.elseId) ?? null;
+    return (nextId !== undefined ? nextId : node.elseId) || null;
   },
 });
 
