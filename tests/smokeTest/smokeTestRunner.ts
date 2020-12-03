@@ -159,6 +159,7 @@ const beforeAll = async () => {
   // mock server-data-api token gen
   nock(config.VF_DATA_ENDPOINT)
     .intercept('/generate-platform-token', 'POST')
+    .times(2) // TODO: remove after prototypeDataAPI deleted
     .reply(200, { token: 'token' });
 
   await server.start();

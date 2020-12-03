@@ -21,12 +21,10 @@ const TestManager = (services: Services, config: Config, utils = utilsObj) => {
   const handlers = utils.Handlers(config);
 
   const invoke = async (state: State, request?: Request) => {
-    const { voiceflow, dataAPI } = services;
+    const { voiceflow, prototypeDataAPI } = services;
 
     const context = voiceflow.client.createContext(TEST_VERSION_ID, state as State, request, {
-      api: {
-        getProgram: dataAPI.getTestProgram,
-      } as any,
+      api: prototypeDataAPI,
       handlers,
     });
 

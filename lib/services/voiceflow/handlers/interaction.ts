@@ -1,4 +1,5 @@
-import { SlotMapping, TraceType } from '@voiceflow/general-types';
+import { SlotMapping } from '@voiceflow/api-sdk';
+import { TraceType } from '@voiceflow/general-types';
 import { Node, TraceFrame } from '@voiceflow/general-types/build/nodes/interaction';
 import { formatIntentName, HandlerFactory } from '@voiceflow/runtime';
 
