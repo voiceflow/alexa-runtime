@@ -997,29 +997,15 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
-"@voiceflow/alexa-types@1.30.2":
-  version "1.30.2"
-  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.30.2.tgz#6dd74c94f44599d2532962c560da5267b85030ab"
-  integrity sha512-8SjRZ6UsBLdnxlpsWUjrzLSMO5lsdSib+HctGLNjpZPNUy+RxtNb1CkZ9W4oA7WybkHQ6+oZ8G4XnuMEHXVInw==
+"@voiceflow/alexa-types@1.32.2":
+  version "1.32.2"
+  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.32.2.tgz#f55533415a7a385adb019ef88cc5119a267ef35c"
+  integrity sha512-vGHXFdxftZvh2uKG0Hy9bTMUiALTS5x2TGnsjyXU9Y/fM4P8vpE0DSVns0+KTGH7QkRNzuA3h3T5hKTQlFrZRA==
   dependencies:
-    "@voiceflow/api-sdk" "1.10.1"
-    "@voiceflow/general-types" "^1.2.0"
+    "@voiceflow/api-sdk" "1.17.1"
+    "@voiceflow/general-types" "1.10.2"
     ask-smapi-model "^1.11.0"
     eslint-plugin-prettier "^3.1.4"
-
-"@voiceflow/api-sdk@1.10.1":
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.10.1.tgz#c9177eb866a003b786453056cdb11439d820f076"
-  integrity sha512-PEpf0dybn5YCc9Sp2JrYGW5sYGe3dxGJ7QPcTdFUp0Hz/D4ihsisLKEU5LhcRFXQU62o+PlxAQt/u90/QDHHmA==
-  dependencies:
-    "@types/atob" "^2.1.2"
-    "@voiceflow/logger" "^1.1.10"
-    atob "^2.1.2"
-    axios "^0.19.2"
-    core-js "^3.6.5"
-    io-ts "^2.2.8"
-    regenerator-runtime "^0.13.5"
-    superstruct "^0.10.12"
 
 "@voiceflow/api-sdk@1.16.0":
   version "1.16.0"
@@ -1112,7 +1098,7 @@
   dependencies:
     "@voiceflow/api-sdk" "1.16.0"
 
-"@voiceflow/general-types@1.10.2", "@voiceflow/general-types@^1.2.0":
+"@voiceflow/general-types@1.10.2":
   version "1.10.2"
   resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.10.2.tgz#9853e42971967a9b7bd2d8bc0089cfe4648ffb60"
   integrity sha512-oWIEtQdiFKb9te/YzpWUZLHl6o0igBipe4hb2tzXI64NcRGwzwqTRY4HS8/J8s9ZwhqsgbB3K3FleEqG7UPSaA==
