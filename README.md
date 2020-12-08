@@ -1,8 +1,9 @@
-# alexa-client
+# alexa-runtime
 
 [![codecov](https://codecov.io/gh/voiceflow/alexa/branch/master/graph/badge.svg?token=WHYHNCC9FW)](https://codecov.io/gh/voiceflow/alexa)
 
-`alexa-client` is an http webhook service that handles alexa requests and generates a response. It manages the state of the user based on the programs (flows) made on the Voiceflow Creator tool.
+`alexa-runtime` is an http webhook service that handles alexa requests and generates a response. It manages the state of the user based on the programs (flows) made on the Voiceflow Creator tool.
+This is an interface between the [voiceflow/runtime]()
 
 > ⚠️ **This repository is still undergoing active development**: Major breaking changes may be pushed periodically and the documentation may become outdated - a stable version has not been released
 
@@ -15,7 +16,7 @@ https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-and-response
 
 ### anatomy of an interaction
 
-1. user says something to alexa, alexa uses natural language processing to transcribe user intent, then sends it via webhook (along with other metadata i.e. _userID_) to `alexa-client`
+1. user says something to alexa, alexa uses natural language processing to transcribe user intent, then sends it via webhook (along with other metadata i.e. _userID_) to `alexa-runtime`
 2. fetch user state (JSON format) from **end user session storage** based on a _userID_ identifier
 3. fetch project version data for initialization parameters from **Voiceflow API/Project File**
 4. fetch the current program (flow) that the user is on from **Voiceflow API/Project File**
@@ -28,14 +29,13 @@ repeat all steps each time a user speaks to the alexa skill, to perform a conver
 
 ## environment variables
 
-`voiceflow/alexa-client` reads environment variables from a `.env.[environment]` file, where `[environment]` is either `local` or `production` depending on if you run `yarn local` or `yarn start`, respectively. (there is also an `.env.test` for integration tests)
+`voiceflow/alexa-runtime` reads environment variables from a `.env.[environment]` file, where `[environment]` is either `local` or `production` depending on if you run `yarn local` or `yarn start`, respectively. (there is also an `.env.test` for integration tests)
 
 ### types
 
 | name                            | example/values                    |                                                                                                                desc | required |
 | ------------------------------- | :-------------------------------- | ------------------------------------------------------------------------------------------------------------------: | -------- |
 | `PORT`                          | `4000`                            |                                                                                  http port that service will run on | YES      |
-| `SECRETS_PROVIDER`              | `local`                           |                                                 `local` will configure secrets to be read from `local_secrets.yaml` | YES      |
 | `PROJECT_SOURCE`                | `VF-Project-nPDdD6qZJ9.json`      |            JSON File inside `/projects` to read version/program metadata - if undefined will use `VF_DATA_ENDPOINT` | NO       |
 | `SESSIONS_SOURCE`               | `local` \| `remote`               |           if `local` read/write sessions to memory, otherwise if `remote` or undefined read/write to DynamoDB` | NO |
 | `AWS_REGION`                    | `localhost`                       |                                                  AWS Region for DynamoDB, doesn't matter if `SESSION_SOUCE='local'` | NO       |
@@ -43,7 +43,7 @@ repeat all steps each time a user speaks to the alexa skill, to perform a conver
 | `SESSIONS_DYNAMO_TABLE`         | `com.getvoiceflow.local.sessions` |                              DynamoDB table for end user session storage, doesn't matter if `SESSION_SOUCE='local'` | YES      |
 | `VF_DATA_ENDPOINT`              | `http://localhost:8200`           | cloud endpoint to read Voiceflow version and program metadata, doesn't matter if `PROJECT_SOURCE` is a defined file | YES      |
 | `CODE_HANDLER_ENDPOINT`         | `none`                            |                                                          stateless cloud service endpoint to execute the code block | YES      |
-| `INTEGRATIONS_HANDLER_ENDPOINT` | `http://localhost:8100`           |                      cloud endpoint for zapier/google blocks - not available if `alexa-client` is ran as standalone | YES      |
+| `INTEGRATIONS_HANDLER_ENDPOINT` | `http://localhost:8100`           |                     cloud endpoint for zapier/google blocks - not available if `alexa-runtime` is ran as standalone | YES      |
 | `API_HANDLER_ENDPOINT`          | `http://localhost:8803`           |                                                         stateless cloud endpoint for the API block to make requests | YES      |
 | `DATADOG_API_KEY`               | `none`                            |                                                                                datadog API key for logging purposes | YES      |
 | `LOG_LEVEL`                     | `none` \| `warn`                  |                                                                                        logging verbosity and detail | NO       |
@@ -57,9 +57,9 @@ export your voiceflow project from the creator tool. Each time you update your p
 
 ![Screenshot from 2020-09-07 12-14-44](https://user-images.githubusercontent.com/5643574/92405522-c3c6c100-f103-11ea-8ba8-6c10173e3419.png)
 
-It should save a VF-Project JSON file from your browser that would be named similar to this: `VF-Project-nPDdD6qZJ9.json`
+It should save a .vfr (voiceflow runtime) JSON file from your browser that would be named similar to this: `VF-Project-nPDdD6qZJ9.vfr`
 
-fork `voiceflow/alexa-client` and clone to your local machine. Ensure `nodejs`, `npm`, and `yarn` are set up on your local machine. Run
+fork `voiceflow/alexa-runtime` and clone to your local machine. Ensure `nodejs`, `npm`, and `yarn` are set up on your local machine. Run
 
 ```
 yarn
@@ -78,7 +78,6 @@ Also add the following file to the local repository:
 > PROJECT_SOURCE='[YOUR EXPORTED PROJECT FILE HERE (i.e. VF-Project-nPDdD6qZJ9.json)]'
 >
 > PORT=4000
-> SECRETS_PROVIDER="local"
 > SESSIONS_DYNAMO_TABLE="none"
 > VF_DATA_ENDPOINT="none"
 >
@@ -95,7 +94,7 @@ Also add the following file to the local repository:
 
 Install a localhost tunnel tool such as [ngrok](https://ngrok.com/), [localtunnel](https://github.com/localtunnel/localtunnel), or [bespoken proxy](https://read.bespoken.io/cli/commands/#bst-proxy-http). This will allow you expose a localhost endpoint on the internet for Alexa to hit. For the purposes of this guide, we will implement `ngrok`
 
-Run your local instance of `voiceflow/alexa-client` with
+Run your local instance of `voiceflow/alexa-runtime` with
 
 ```
 yarn local
@@ -122,10 +121,10 @@ You should now be able to test your skill using the Alexa Developer Console Skil
 
 # Notable Code Locations
 
-[lib/controllers/alexa.ts](https://github.com/voiceflow/alexa-client/blob/0c0025f102dfdfcbd1e442bb0f336a4604171d22/lib/controllers/alexa.ts#L20) - this is where the raw request and response are handled. You can log the request object and response object to help debug.
+[lib/controllers/alexa.ts](https://github.com/voiceflow/alexa-runtime/blob/0c0025f102dfdfcbd1e442bb0f336a4604171d22/lib/controllers/alexa.ts#L20) - this is where the raw request and response are handled. You can log the request object and response object to help debug.
 
-[lib/services/voiceflow/handlers](https://github.com/voiceflow/alexa-client/tree/master/lib/services/voiceflow/handlers) - handlers for all the various blocks and defining their behavior
+[lib/services/voiceflow/handlers](https://github.com/voiceflow/alexa-runtime/tree/master/lib/services/voiceflow/handlers) - handlers for all the various blocks and defining their behavior
 
-[lib/services/alexa/request/lifecycle](https://github.com/voiceflow/alexa-client/tree/master/lib/services/alexa/request/lifecycle) - various side effects during the request/response lifecycle
+[lib/services/alexa/request/lifecycle](https://github.com/voiceflow/alexa-runtime/tree/master/lib/services/alexa/request/lifecycle) - various side effects during the request/response lifecycle
 
-[lib/services/alexa/local.ts](https://github.com/voiceflow/alexa-client/blob/master/lib/services/alexa/local.ts) - If `SESSIONS_SOURCE='local'`, this is where user state is being saved, can be logged.
+[lib/services/alexa/local.ts](https://github.com/voiceflow/alexa-runtime/blob/master/lib/services/alexa/local.ts) - If `SESSIONS_SOURCE='local'`, this is where user state is being saved, can be logged.
