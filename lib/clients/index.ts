@@ -17,7 +17,7 @@ export interface ClientMap extends StaticType {
   dataAPI: DataAPI<AlexaProgram, AlexaVersion>;
   metrics: MetricsType;
   mongo: MongoDB | null;
-  prototypeDataAPI: PrototypeServerDataApi;
+  prototypeDataAPI: DataAPI<AlexaProgram, AlexaVersion>;
 }
 
 /**
@@ -34,10 +34,14 @@ const buildClients = (config: Config): ClientMap => {
   const multimodal = Multimodal(dataAPI);
   const metrics = Metrics(config);
   const mongo = MongoPersistenceAdapter.enabled(config) ? new MongoDB(config) : null;
-  const prototypeDataAPI = new PrototypeServerDataApi(
-    { platform: 'alexa', adminToken: config.ADMIN_SERVER_DATA_API_TOKEN, dataEndpoint: config.VF_DATA_ENDPOINT },
-    { axios: Static.axios }
-  );
+
+  // TODO: remove after general assistant implements prototype
+  const prototypeDataAPI = config.PROJECT_SOURCE
+    ? dataAPI
+    : new PrototypeServerDataApi(
+        { platform: 'alexa', adminToken: config.ADMIN_SERVER_DATA_API_TOKEN, dataEndpoint: config.VF_DATA_ENDPOINT },
+        { axios: Static.axios }
+      );
 
   return {
     ...Static,
