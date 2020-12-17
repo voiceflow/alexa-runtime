@@ -3,8 +3,9 @@ import 'regenerator-runtime/runtime';
 
 import { ServiceManager } from './backend';
 import config from './config';
-import log from './logger';
 import Server from './server';
+
+const log = console;
 
 (async () => {
   const serviceManager = new ServiceManager(config);
@@ -20,7 +21,7 @@ import Server from './server';
   });
 
   process.on('unhandledRejection', (r, p) => {
-    log.warn(r, 'Unhandled rejection at: ', p);
+    log.error(r, 'Unhandled rejection at: ', p);
   });
 
   try {
