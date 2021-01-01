@@ -10,10 +10,7 @@ const ErrorHandlerGenerator = (metrics: MetricsType): ErrorHandlerType => ({
   handle: (input: HandlerInput, error: Error) => {
     // TODO: fully implement error handler
 
-    console.log('== START ERROR HANDLER ==');
-    console.log(input.requestEnvelope.request);
-    console.error(error);
-    console.log('== END ERROR HANDLER ==');
+    console.error(error, input.requestEnvelope.request.type);
 
     const { versionID } = input.context as { versionID: string };
     metrics.error(versionID);
