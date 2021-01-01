@@ -42,9 +42,24 @@ export const PlaybackControllerHandlerGenerator = (utils: typeof utilsObj): Requ
         intent.name = IntentName.FALLBACK;
     }
 
-    request.intent = intent;
+    // the input request object is non-extensible, read only - create a new one
+    const newInput = {
+      ...input,
+      requestEnvelope: {
+        ...input.requestEnvelope,
+        request: {
+          ...input.requestEnvelope.request,
+          type: 'IntentRequest',
+          intent,
+        } as IntentRequest,
+      },
+    };
 
-    return utils.IntentHandler.handle(input);
+    const response = await utils.IntentHandler.handle(newInput);
+    delete response.outputSpeech;
+    delete response.reprompt;
+
+    return response;
   },
 });
 

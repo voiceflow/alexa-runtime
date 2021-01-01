@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { ErrorHandler as ErrorHandlerType, HandlerInput } from 'ask-sdk';
 
 import { MetricsType } from '@/lib/clients/metrics';
@@ -9,8 +10,10 @@ const ErrorHandlerGenerator = (metrics: MetricsType): ErrorHandlerType => ({
   handle: (input: HandlerInput, error: Error) => {
     // TODO: fully implement error handler
 
-    // eslint-disable-next-line no-console
-    console.error(input.requestEnvelope.request.type, JSON.stringify(error));
+    console.log('== START ERROR HANDLER ==');
+    console.log(input.requestEnvelope.request);
+    console.error(error);
+    console.log('== END ERROR HANDLER ==');
 
     const { versionID } = input.context as { versionID: string };
     metrics.error(versionID);
