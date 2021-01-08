@@ -36,7 +36,7 @@ describe('alexa manager unit tests', () => {
         interceptors: { ResponseInterceptor: 'ResponseInterceptor', RequestInterceptorGenerator: sinon.stub().returns('RequestInterceptor') },
         builder: { custom: sinon.stub().returns({ addRequestHandlers }) },
         adapters: {
-          DynamoDbPersistenceAdapter: sinon.stub().returns({ foo: 'bar' }),
+          CustomDynamoDbPersistenceAdapter: sinon.stub().returns({ foo: 'bar' }),
         },
         APIClient: sinon.stub().returns({ api: 'client' }),
       };
@@ -66,7 +66,7 @@ describe('alexa manager unit tests', () => {
       expect(addResponseInterceptors.args).to.eql([[utils.interceptors.ResponseInterceptor]]);
       expect(withPersistenceAdapter.args).to.eql([[{ foo: 'bar' }]]);
       expect(create.callCount).to.eql(1);
-      expect(utils.adapters.DynamoDbPersistenceAdapter.args).to.eql([
+      expect(utils.adapters.CustomDynamoDbPersistenceAdapter.args).to.eql([
         [
           {
             createTable: false,
