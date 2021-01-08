@@ -16,7 +16,7 @@ import AccountLinkingHandler, { AccountLinkingResponseBuilder } from './accountL
 import CancelPaymentHandler, { CancelPaymentResponseBuilder } from './cancelPayment';
 import CaptureHandler from './capture';
 import CardHandler, { CardResponseBuilder } from './card';
-import CodeHandler from './code2';
+import CodeHandler from './code';
 import DirectiveHandler, { DirectiveResponseBuilder } from './directive';
 import DisplayHandler, { DisplayResponseBuilder } from './display';
 import DisplayHandlerV2 from './displayV2';
@@ -57,7 +57,7 @@ export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HAND
   DisplayHandler(),
   DisplayHandlerV2(),
   StreamHandler(),
-  CodeHandler({ CODE_HANDLER_ENDPOINT }),
+  CodeHandler({ endpoint: CODE_HANDLER_ENDPOINT }),
   EndHandler(),
   FlowHandler(),
   IfHandler(),
