@@ -1,5 +1,4 @@
 import {
-  CodeHandler,
   EndHandler,
   FlowHandler,
   IfHandler,
@@ -17,6 +16,7 @@ import AccountLinkingHandler, { AccountLinkingResponseBuilder } from './accountL
 import CancelPaymentHandler, { CancelPaymentResponseBuilder } from './cancelPayment';
 import CaptureHandler from './capture';
 import CardHandler, { CardResponseBuilder } from './card';
+import CodeHandler from './code';
 import DirectiveHandler, { DirectiveResponseBuilder } from './directive';
 import DisplayHandler, { DisplayResponseBuilder } from './display';
 import DisplayHandlerV2 from './displayV2';
