@@ -31,15 +31,7 @@ defaults:
 
 orbs:
   codecov: codecov/codecov@1.0.2
-  vfcommon: voiceflow/common@0.0.16
-
-commands:
-  clone_s3_assets:
-    steps:
-      - run:
-          name: Clone s3 assets
-          command: |
-            aws s3 sync s3://com.voiceflow.ci.assets/alexa ~/project/tests/smokeTest/recordedSessions
+  vfcommon: voiceflow/common@0.0.44
 
 jobs:
   test:
@@ -48,22 +40,23 @@ jobs:
       - checkout
       - vfcommon/install_node_modules
       - vfcommon/setup_dynamodb
-      - run:
-          name: "Build package"
-          command: |
-            yarn build
-      - run:
-          name: "Run tests"
-          command: |
-            yarn test
+      - vfcommon/lint_source
+      - vfcommon/lint_dockerfile
+      - vfcommon/build
+      - vfcommon/unit_tests
       - codecov/upload:
           file: nyc_coverage/lcov.info
+          flags: unit
+      - vfcommon/integration_tests
+      - codecov/upload:
+          file: nyc_coverage/lcov.info
+          flags: integration
       # temp steps
       - vfcommon/install_aws_cli
-      - clone_s3_assets
-      - run:
-          name: Run smoke tests
-          command: yarn test:smoke
+      - vfcommon/clone_s3_assets:
+          from: s3://com.voiceflow.ci.assets/alexa
+          to: ~/project/tests/smokeTest/recordedSessions
+      - vfcommon/smoke_tests
 
   build-push-image:
     executor: vfcommon/build-executor

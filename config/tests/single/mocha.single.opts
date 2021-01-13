@@ -3,5 +3,3 @@
 --use_strict
 --exit
 --recursive
-tests/setup.ts
-tests/**/*.{unit,it}.ts
