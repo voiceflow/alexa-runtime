@@ -148,10 +148,10 @@
     "preview:check": "echo \"alexaruntime\"",
     "preview:new": "scripts/deploy_dev_environments.sh",
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
-    "test": "yarn test:unit && yarn test:integration",
-    "test:unit": "NODE_ENV=test nyc ts-mocha --paths --opts ./config/tests/unit/mocha.unit.opts",
-    "test:integration": "NODE_ENV=test nyc ts-mocha --paths --opts ./config/tests/integration/mocha.it.opts",
-    "test:single": "NODE_ENV=test ts-mocha --paths --opts ./config/tests/single/mocha.single.opts",
-    "test:smoke": "NODE_ENV=test ts-node --files -r tsconfig-paths/register tests/smokeTest/initSmokeTest.ts"
+    "test": "NODE_ENV=test nyc ts-mocha --paths --opts ./config/tests/mocha.opts tests/**/*.{unit,it}.ts",
+    "test:integration": "NODE_ENV=test nyc ts-mocha --paths --opts ./config/tests/mocha.opts tests/**/*.it.ts",
+    "test:single": "NODE_ENV=test ts-mocha --paths --opts ./config/tests/mocha.opts",
+    "test:smoke": "NODE_ENV=test ts-node --files -r tsconfig-paths/register tests/smokeTest/initSmokeTest.ts",
+    "test:unit": "NODE_ENV=test nyc ts-mocha --paths --opts ./config/tests/mocha.opts tests/**/*.unit.ts"
   }
 }

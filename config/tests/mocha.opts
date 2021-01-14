@@ -3,3 +3,4 @@
 --use_strict
 --exit
 --recursive
+tests/setup.ts
