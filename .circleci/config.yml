@@ -55,7 +55,7 @@ jobs:
       - vfcommon/install_aws_cli
       - vfcommon/clone_s3_assets:
           from: s3://com.voiceflow.ci.assets/alexa
-          to: ~/project/tests/smokeTest/recordedSessions
+          to: ~/project/tests/smoke/recordedSessions
       - vfcommon/smoke_tests
 
   build-push-image:
