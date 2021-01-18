@@ -208,7 +208,7 @@ describe('stream handler unit tests', () => {
       });
 
       it('no AudioPlayer', () => {
-        const runtime = { storage: { get: sinon.stub().returns(null) }, turn: { get: sinon.stub().returns({ requestEnvelope: { runtime: {} } }) } };
+        const runtime = { storage: { get: sinon.stub().returns(null) }, turn: { get: sinon.stub().returns({ requestEnvelope: { context: {} } }) } };
         StreamResponseBuilder(runtime as any, null as any);
         expect(runtime.turn.get.args).to.eql([[T.HANDLER_INPUT]]);
         expect(runtime.storage.get.args).to.eql([[S.STREAM_PLAY]]);
@@ -219,7 +219,7 @@ describe('stream handler unit tests', () => {
       it('stream play action NOEFFECT', () => {
         const streamPlay = { action: StreamAction.NOEFFECT };
         const offsetInMilliseconds = 100;
-        const input = { requestEnvelope: { runtime: { AudioPlayer: { offsetInMilliseconds } as { offsetInMilliseconds: number } | undefined } } };
+        const input = { requestEnvelope: { context: { AudioPlayer: { offsetInMilliseconds } as { offsetInMilliseconds: number } | undefined } } };
         const runtime = { storage: { get: sinon.stub().returns(streamPlay), produce: sinon.stub() }, turn: { get: sinon.stub().returns(input) } };
         const builder = { withShouldEndSession: sinon.stub() };
         StreamResponseBuilder(runtime as any, builder as any);
@@ -244,7 +244,7 @@ describe('stream handler unit tests', () => {
       it('stream play action PAUSE', () => {
         const streamPlay = { action: StreamAction.PAUSE };
         const offsetInMilliseconds = 100;
-        const input = { requestEnvelope: { runtime: { AudioPlayer: { offsetInMilliseconds } } } };
+        const input = { requestEnvelope: { context: { AudioPlayer: { offsetInMilliseconds } } } };
         const runtime = { storage: { get: sinon.stub().returns(streamPlay), produce: sinon.stub() }, turn: { get: sinon.stub().returns(input) } };
         const builder = { withShouldEndSession: sinon.stub(), addAudioPlayerStopDirective: sinon.stub() };
         StreamResponseBuilder(runtime as any, builder as any);
@@ -255,7 +255,7 @@ describe('stream handler unit tests', () => {
       it('stream play action END', () => {
         const streamPlay = { action: StreamAction.END };
         const offsetInMilliseconds = 100;
-        const input = { requestEnvelope: { runtime: { AudioPlayer: { offsetInMilliseconds } } } };
+        const input = { requestEnvelope: { context: { AudioPlayer: { offsetInMilliseconds } } } };
         const runtime = {
           storage: { delete: sinon.stub(), get: sinon.stub().returns(streamPlay), produce: sinon.stub() },
           turn: { get: sinon.stub().returns(input) },
@@ -273,7 +273,7 @@ describe('stream handler unit tests', () => {
           const responseBuilder = StreamResponseBuilderGenerator(utils);
           const streamPlay = { action: StreamAction.START };
           const offsetInMilliseconds = 100;
-          const input = { requestEnvelope: { runtime: { AudioPlayer: { offsetInMilliseconds } } } };
+          const input = { requestEnvelope: { context: { AudioPlayer: { offsetInMilliseconds } } } };
           const runtime = {
             storage: { get: sinon.stub().returns(streamPlay), produce: sinon.stub() },
             turn: { get: sinon.stub().returns(input) },
@@ -290,7 +290,7 @@ describe('stream handler unit tests', () => {
           const responseBuilder = StreamResponseBuilderGenerator(utils);
           const streamPlay = { action: StreamAction.START };
           const offsetInMilliseconds = 100;
-          const input = { requestEnvelope: { runtime: { AudioPlayer: { offsetInMilliseconds } } } };
+          const input = { requestEnvelope: { context: { AudioPlayer: { offsetInMilliseconds } } } };
           const runtime = {
             storage: { get: sinon.stub().returns(streamPlay), produce: sinon.stub() },
             turn: { get: sinon.stub().returns(input) },
@@ -308,7 +308,7 @@ describe('stream handler unit tests', () => {
           const responseBuilder = StreamResponseBuilderGenerator(utils);
           const streamPlay = { action: StreamAction.RESUME };
           const offsetInMilliseconds = 100;
-          const input = { requestEnvelope: { runtime: { AudioPlayer: { offsetInMilliseconds } } } };
+          const input = { requestEnvelope: { context: { AudioPlayer: { offsetInMilliseconds } } } };
           const runtime = {
             storage: { get: sinon.stub().returns(streamPlay), produce: sinon.stub() },
             turn: { get: sinon.stub().returns(input) },
@@ -330,7 +330,7 @@ describe('stream handler unit tests', () => {
           const responseBuilder = StreamResponseBuilderGenerator(utils);
           const streamPlay = { action: StreamAction.RESUME };
           const offsetInMilliseconds = 100;
-          const input = { requestEnvelope: { runtime: { AudioPlayer: { offsetInMilliseconds } } } };
+          const input = { requestEnvelope: { context: { AudioPlayer: { offsetInMilliseconds } } } };
           const runtime = {
             storage: { get: sinon.stub().returns(streamPlay), produce: sinon.stub() },
             turn: { get: sinon.stub().returns(input) },

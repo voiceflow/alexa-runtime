@@ -18,7 +18,7 @@ describe('reminder handler unit test', () => {
 
   describe('handle', () => {
     it('no apiEndpoint', async () => {
-      const input = { requestEnvelope: { runtime: { System: {} } } };
+      const input = { requestEnvelope: { context: { System: {} } } };
       const runtime = { turn: { get: sinon.stub().returns(input) } };
 
       const node = { fail_id: 'fail-id' };
@@ -27,7 +27,7 @@ describe('reminder handler unit test', () => {
     });
 
     it('no apiAccessToken', async () => {
-      const input = { requestEnvelope: { runtime: { System: { apiEndpoint: 'endpoint' } } } };
+      const input = { requestEnvelope: { context: { System: { apiEndpoint: 'endpoint' } } } };
       const runtime = { turn: { get: sinon.stub().returns(input) } };
 
       const node = { fail_id: 'fail-id' };
@@ -41,7 +41,7 @@ describe('reminder handler unit test', () => {
 
       const apiEndpoint = 'apiEndpoint';
       const apiAccessToken = 'apiAccessToken';
-      const input = { requestEnvelope: { runtime: { System: { apiEndpoint, apiAccessToken } } } };
+      const input = { requestEnvelope: { context: { System: { apiEndpoint, apiAccessToken } } } };
       const locale = 'en';
       const runtime = { turn: { get: sinon.stub().returns(input) }, storage: { get: sinon.stub().returns(locale) } };
       const node = { success_id: 'success-id', reminder: 'reminder' };

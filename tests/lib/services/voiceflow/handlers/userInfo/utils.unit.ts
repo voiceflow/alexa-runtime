@@ -250,18 +250,18 @@ describe('user info utils unit test', () => {
     });
 
     it('no person', () => {
-      expect(_personIdReadPermission({ requestEnvelope: { runtime: { System: {} } } } as any, null as any, null as any)).to.eql(false);
+      expect(_personIdReadPermission({ requestEnvelope: { context: { System: {} } } } as any, null as any, null as any)).to.eql(false);
     });
 
     it('no permissionVariable', () => {
-      const handlerInput = { requestEnvelope: { runtime: { System: { person: { personId: 'person-id' } } } } };
+      const handlerInput = { requestEnvelope: { context: { System: { person: { personId: 'person-id' } } } } };
       expect(_personIdReadPermission(handlerInput as any, null as any, null as any)).to.eql(true);
     });
 
     describe('with permissionVariable', () => {
       it('personId null', () => {
         const personId = null;
-        const handlerInput = { requestEnvelope: { runtime: { System: { person: { personId } } } } };
+        const handlerInput = { requestEnvelope: { context: { System: { person: { personId } } } } };
         const permissionVariable = 'permission-variable';
         const variables = { set: sinon.stub() };
         expect(_personIdReadPermission(handlerInput as any, permissionVariable, variables as any)).to.eql(true);
@@ -270,7 +270,7 @@ describe('user info utils unit test', () => {
 
       it('personId not null', () => {
         const personId = 1;
-        const handlerInput = { requestEnvelope: { runtime: { System: { person: { personId } } } } };
+        const handlerInput = { requestEnvelope: { context: { System: { person: { personId } } } } };
         const permissionVariable = 'permission-variable';
         const variables = { set: sinon.stub() };
         expect(_personIdReadPermission(handlerInput as any, permissionVariable, variables as any)).to.eql(true);
@@ -386,14 +386,14 @@ describe('user info utils unit test', () => {
   describe('_geolocationRead', () => {
     it('no permissions', async () => {
       expect(
-        await _geolocationRead({ requestEnvelope: { runtime: { System: { user: { permissions: null } } } } } as any, null as any, null as any)
+        await _geolocationRead({ requestEnvelope: { context: { System: { user: { permissions: null } } } } } as any, null as any, null as any)
       ).to.eql(false);
     });
 
     it('no scopes', async () => {
       expect(
         await _geolocationRead(
-          { requestEnvelope: { runtime: { System: { user: { permissions: { scopes: null } } } } } } as any,
+          { requestEnvelope: { context: { System: { user: { permissions: { scopes: null } } } } } } as any,
           null as any,
           null as any
         )
@@ -403,7 +403,7 @@ describe('user info utils unit test', () => {
     it('no Geolocation', async () => {
       const handlerInput = {
         requestEnvelope: {
-          runtime: {
+          context: {
             Geolocation: null,
             System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
           },
@@ -417,7 +417,7 @@ describe('user info utils unit test', () => {
       const variables = { set: sinon.stub() };
       const handlerInput = {
         requestEnvelope: {
-          runtime: {
+          context: {
             Geolocation: { locationServices: null },
             System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
           },
@@ -432,7 +432,7 @@ describe('user info utils unit test', () => {
         const permissionVariable = 'permission-variable';
         const handlerInput = {
           requestEnvelope: {
-            runtime: {
+            context: {
               Geolocation: { locationServices: { access: 'random' } },
               System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
             },
@@ -445,7 +445,7 @@ describe('user info utils unit test', () => {
         const permissionVariable = 'permission-variable';
         const handlerInput = {
           requestEnvelope: {
-            runtime: {
+            context: {
               Geolocation: { locationServices: { access: 'ENABLED', status: 'random' } },
               System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
             },
@@ -457,7 +457,7 @@ describe('user info utils unit test', () => {
       it('no permissionVariable', async () => {
         const handlerInput = {
           requestEnvelope: {
-            runtime: {
+            context: {
               Geolocation: { locationServices: { access: 'ENABLED', status: 'RUNNING' } },
               System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
             },
@@ -473,7 +473,7 @@ describe('user info utils unit test', () => {
           const geoObject = { locationServices: { access: 'ENABLED', status: 'RUNNING' }, coordinate: {} };
           const handlerInput = {
             requestEnvelope: {
-              runtime: {
+              context: {
                 Geolocation: geoObject,
                 System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
               },
@@ -489,7 +489,7 @@ describe('user info utils unit test', () => {
           const geoObject = { locationServices: { access: 'ENABLED', status: 'RUNNING' }, coordinate: null };
           const handlerInput = {
             requestEnvelope: {
-              runtime: {
+              context: {
                 Geolocation: geoObject,
                 System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
               },
@@ -513,7 +513,7 @@ describe('user info utils unit test', () => {
       const authorizationValue = 'authorization-value';
       const handlerInput = {
         serviceClientFactory: { apiConfiguration: { apiEndpoint, authorizationValue } },
-        requestEnvelope: { request: { locale }, runtime: { System: { apiEndpoint: `12345678${host}` } } },
+        requestEnvelope: { request: { locale }, context: { System: { apiEndpoint: `12345678${host}` } } },
       };
       const endpoint = 'endpoint';
       expect(apiCall(handlerInput as any, endpoint)).to.eql(output);

@@ -35,7 +35,7 @@ describe('adapterManager unit tests', async () => {
       const adapter = new AdapterManager(null as any, null as any);
       const input = { attributesManager: { getPersistentAttributes: sinon.stub().resolves({}) } };
 
-      await adapter.runtime(input as any);
+      await adapter.state(input as any);
       expect(input.attributesManager.getPersistentAttributes.callCount).to.eql(1);
     });
 
@@ -43,23 +43,23 @@ describe('adapterManager unit tests', async () => {
       const adapter = new AdapterManager(null as any, null as any);
       const input = { attributesManager: { getPersistentAttributes: sinon.stub().resolves({ stack: [] }) } };
 
-      await adapter.runtime(input as any);
+      await adapter.state(input as any);
       expect(input.attributesManager.getPersistentAttributes.callCount).to.eql(1);
     });
 
     it('old format', async () => {
-      const oldContext = { diagrams: [] };
+      const oldState = { diagrams: [] };
       const newContext = { stack: [] };
       const transformContextStub = sinon.stub().resolves(newContext);
 
       const adapter = new AdapterManager(null as any, null as any);
-      adapter.transformContext = transformContextStub;
+      adapter.transformState = transformContextStub;
 
-      const input = { attributesManager: { getPersistentAttributes: sinon.stub().resolves(oldContext), setPersistentAttributes: sinon.stub() } };
+      const input = { attributesManager: { getPersistentAttributes: sinon.stub().resolves(oldState), setPersistentAttributes: sinon.stub() } };
 
-      await adapter.runtime(input as any);
+      await adapter.state(input as any);
       expect(input.attributesManager.getPersistentAttributes.callCount).to.eql(1);
-      expect(transformContextStub.args).to.eql([[oldContext, input]]);
+      expect(transformContextStub.args).to.eql([[oldState, input]]);
       expect(input.attributesManager.setPersistentAttributes.args).to.eql([[newContext]]);
     });
   });
@@ -83,9 +83,9 @@ describe('adapterManager unit tests', async () => {
         const adapter = new AdapterManager(null as any, null as any);
 
         const System = _.get(test.new, 'variables._system');
-        const input = { requestEnvelope: { runtime: { System } } };
+        const input = { requestEnvelope: { context: { System } } };
 
-        expect(await adapter.transformContext(test.old as any, input as any)).to.deep.equalInAnyOrder(test.new);
+        expect(await adapter.transformState(test.old as any, input as any)).to.deep.equalInAnyOrder(test.new);
       });
     });
   });

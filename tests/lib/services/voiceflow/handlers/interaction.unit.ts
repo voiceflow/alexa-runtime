@@ -31,8 +31,8 @@ describe('interaction handler unit tests', async () => {
       const variables = { foo: 'bar' };
 
       expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.id);
-      expect(utils.addRepromptIfExists.args).to.eql([[node, runtime, variables]]);
-      expect(runtime.trace.addTrace.args[0][0]).to.eql({ type: 'choice', payload: { choices: [{ name: 'one' }, { name: 'two' }] } });
+      expect(utils.addRepromptIfExists.args).to.eql([[{ node, runtime, variables }]]);
+      expect(runtime.trace.addTrace.args).to.eql([]);
       expect(runtime.storage.delete.args).to.eql([[S.NO_MATCHES_COUNTER]]);
     });
 
@@ -52,8 +52,8 @@ describe('interaction handler unit tests', async () => {
       const variables = { foo: 'bar' };
 
       expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.id);
-      expect(utils.addRepromptIfExists.args).to.eql([[node, runtime, variables]]);
-      expect(runtime.trace.addTrace.args[0][0]).to.eql({ type: 'choice', payload: { choices: [] } });
+      expect(utils.addRepromptIfExists.args).to.eql([[{ node, runtime, variables }]]);
+      expect(runtime.trace.addTrace.args).to.eql([]);
       expect(runtime.storage.delete.args).to.eql([[S.NO_MATCHES_COUNTER]]);
     });
 
@@ -194,7 +194,7 @@ describe('interaction handler unit tests', async () => {
           const variables = { foo: 'bar' };
 
           expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextIds[0]);
-          expect(runtime.trace.debug.args).to.eql([[`matched choice **${node.interactions[0].intent}** - taking path ${0 + 1}`]]);
+          expect(runtime.trace.debug.args).to.eql([]);
         });
 
         it('choice without mappings but nextIdIndex', () => {
@@ -230,7 +230,7 @@ describe('interaction handler unit tests', async () => {
           const variables = { foo: 'bar' };
 
           expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextIds[1]);
-          expect(runtime.trace.debug.args).to.eql([[`matched choice **${node.interactions[0].intent}** - taking path ${0 + 1}`]]);
+          expect(runtime.trace.debug.args).to.eql([]);
         });
 
         it('choice with mappings', () => {
@@ -268,9 +268,9 @@ describe('interaction handler unit tests', async () => {
           const variables = { merge: sinon.stub() };
 
           expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextIds[0]);
-          expect(utils.mapSlots.args).to.eql([[node.interactions[0].mappings, request.payload.intent.slots]]);
+          expect(utils.mapSlots.args).to.eql([[{ mappings: node.interactions[0].mappings, slots: request.payload.intent.slots }]]);
           expect(variables.merge.args).to.eql([[mappedSlots]]);
-          expect(runtime.trace.debug.args).to.eql([[`matched choice **${node.interactions[0].intent}** - taking path ${0 + 1}`]]);
+          expect(runtime.trace.debug.args).to.eql([]);
         });
       });
     });

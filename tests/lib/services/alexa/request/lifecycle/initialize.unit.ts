@@ -86,7 +86,7 @@ describe('initialize lifecycle unit tests', async () => {
           request: {
             locale: 'en',
           },
-          runtime: { System: { user: { userId: 'user-id' }, device: { supportedInterfaces: 'supported-interfaces' } } },
+          context: { System: { user: { userId: 'user-id' }, device: { supportedInterfaces: 'supported-interfaces' } } },
         },
       };
 

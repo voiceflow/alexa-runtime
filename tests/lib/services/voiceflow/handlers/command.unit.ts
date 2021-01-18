@@ -157,7 +157,7 @@ describe('command handler unit tests', async () => {
         const variables = { merge: sinon.stub() };
 
         expect(commandHandler.handle(runtime as any, variables as any)).to.eql(null);
-        expect(utils.mapSlots.args).to.eql([[res.command.mappings, res.intent.slots]]);
+        expect(utils.mapSlots.args).to.eql([[{ mappings: res.command.mappings, slots: res.intent.slots }]]);
         expect(variables.merge.args).to.eql([[mappedSlots]]);
       });
 

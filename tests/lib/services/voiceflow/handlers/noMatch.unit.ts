@@ -46,7 +46,6 @@ describe('noMatch handler unit tests', () => {
             type: 'speak',
             payload: {
               message: 'the counter is 5.23',
-              choices: undefined,
             },
           },
         ],
@@ -94,7 +93,6 @@ describe('noMatch handler unit tests', () => {
             type: 'speak',
             payload: {
               message: '',
-              choices: undefined,
             },
           },
         ],
@@ -127,7 +125,6 @@ describe('noMatch handler unit tests', () => {
             type: 'speak',
             payload: {
               message: '',
-              choices: [{ name: 'address_intent' }, { name: 'phone_number_intent' }],
             },
           },
         ],

@@ -39,7 +39,7 @@ describe('choice handler unit tests', async () => {
       const variables = { var: '1' };
 
       expect(choiceHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.id);
-      expect(utils.addRepromptIfExists.args).to.eql([[node, runtime, variables]]);
+      expect(utils.addRepromptIfExists.args).to.eql([[{ node, runtime, variables }]]);
       expect(runtime.trace.addTrace.args[0]).to.eql([{ type: 'choice', payload: { choices: [{ name: 'one' }, { name: 'two' }] } }]);
     });
 
@@ -54,7 +54,7 @@ describe('choice handler unit tests', async () => {
       const variables = { var: '1' };
 
       expect(choiceHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.id);
-      expect(utils.addRepromptIfExists.args).to.eql([[node, runtime, variables]]);
+      expect(utils.addRepromptIfExists.args).to.eql([[{ node, runtime, variables }]]);
       expect(runtime.trace.addTrace.args).to.eql([[{ type: 'choice', payload: { choices: [] } }]]);
     });
 

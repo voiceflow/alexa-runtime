@@ -44,7 +44,7 @@ describe('test manager unit tests', () => {
       const createRuntime = sinon.stub().returns(runtime);
 
       const services = {
-        voiceflow: { client: { createRuntime } },
+        runtimeClient: { createRuntime },
         prototypeDataAPI: { getProgram: 'api' },
       };
       const utils = {
@@ -103,7 +103,7 @@ describe('test manager unit tests', () => {
       const createRuntime = sinon.stub().returns(runtime);
 
       const services = {
-        voiceflow: { client: { createRuntime } },
+        runtimeClient: { createRuntime },
         prototypeDataAPI: { getProgram: 'api' },
       };
       const utils = {
@@ -145,7 +145,7 @@ describe('test manager unit tests', () => {
         const createRuntime = sinon.stub().returns(runtime);
 
         const services = {
-          voiceflow: { client: { createRuntime } },
+          runtimeClient: { createRuntime },
           prototypeDataAPI: { getProgram: 'api' },
         };
 
@@ -196,7 +196,7 @@ describe('test manager unit tests', () => {
         const createRuntime = sinon.stub().returns(runtime);
 
         const services = {
-          voiceflow: { client: { createRuntime } },
+          runtimeClient: { createRuntime },
           prototypeDataAPI: { getProgram: 'api' },
         };
 
@@ -247,7 +247,7 @@ describe('test manager unit tests', () => {
         const createRuntime = sinon.stub().returns(runtime);
 
         const services = {
-          voiceflow: { client: { createRuntime } },
+          runtimeClient: { createRuntime },
           prototypeDataAPI: { getProgram: 'api' },
         };
 

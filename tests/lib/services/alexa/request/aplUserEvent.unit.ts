@@ -158,9 +158,9 @@ describe('APL User Event Handler unit tests', () => {
 
         const input = {
           requestEnvelope: { request: { source: {}, arguments: [ENDED_EVENT_PREFIX] } },
-          runtime: {
+          context: {
             versionID: 'version-id',
-            voiceflow: { createRuntime: sinon.stub().returns(runtime) },
+            runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
           },
           attributesManager: {
             getPersistentAttributes: sinon.stub().returns({}),
@@ -188,9 +188,9 @@ describe('APL User Event Handler unit tests', () => {
         const input = {
           responseBuilder: { getResponse: sinon.stub().returns(output) },
           requestEnvelope: { request: { source: {} } },
-          runtime: {
+          context: {
             versionID: 'version-id',
-            voiceflow: { createRuntime: sinon.stub().returns(runtime) },
+            runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
           },
           attributesManager: {
             getPersistentAttributes: sinon.stub().returns({}),
@@ -218,9 +218,9 @@ describe('APL User Event Handler unit tests', () => {
         const input = {
           responseBuilder: { getResponse: sinon.stub().returns(output) },
           requestEnvelope: { request: { source: {}, arguments: [] } },
-          runtime: {
+          context: {
             versionID: 'version-id',
-            voiceflow: { createRuntime: sinon.stub().returns(runtime) },
+            runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
           },
           attributesManager: {
             getPersistentAttributes: sinon.stub().returns({}),

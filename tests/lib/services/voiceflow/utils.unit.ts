@@ -10,7 +10,7 @@ describe('voiceflow manager utils unit tests', async () => {
   describe('addRepromptIfExists', () => {
     it('does not have repropmt', () => {
       const runtime = { turn: { set: sinon.stub() } };
-      addRepromptIfExists({ foo: 'bar' } as any, runtime as any, null as any);
+      addRepromptIfExists({ node: { foo: 'bar' } as any, runtime: runtime as any, variables: null as any });
 
       expect(runtime.turn.set.callCount).to.eql(0);
     });
@@ -21,7 +21,7 @@ describe('voiceflow manager utils unit tests', async () => {
       const varState = { var: 'there' };
       const variables = { getState: sinon.stub().returns(varState) };
 
-      addRepromptIfExists(node as any, runtime as any, variables as any);
+      addRepromptIfExists({ node, runtime: runtime as any, variables: variables as any });
 
       expect(runtime.turn.set.args[0]).to.eql([T.REPROMPT, 'hello there']);
     });
@@ -29,15 +29,15 @@ describe('voiceflow manager utils unit tests', async () => {
 
   describe('mapSlots', () => {
     it('no mappings', () => {
-      expect(mapSlots(null as any, { foo: 'bar' } as any)).to.eql({});
+      expect(mapSlots({ slots: { foo: 'bar' } as any, mappings: null as any })).to.eql({});
     });
 
     it('no slots', () => {
-      expect(mapSlots({ foo: 'bar' } as any, null as any)).to.eql({});
+      expect(mapSlots({ slots: { foo: 'bar' } as any, mappings: null as any })).to.eql({});
     });
 
     it('no mappings and slots', () => {
-      expect(mapSlots(null as any, null as any)).to.eql({});
+      expect(mapSlots({ slots: null as any, mappings: null as any })).to.eql({});
     });
 
     it('works', () => {
@@ -54,7 +54,7 @@ describe('voiceflow manager utils unit tests', async () => {
         slotC: { resolutions: { resolutionsPerAuthority: [{ values: [{ value: { name: 'nested' } }] }] } },
       };
 
-      expect(mapSlots(mappings as any, slots as any)).to.eql({ var1: 1, var2: 'value', var4: 'nested' });
+      expect(mapSlots({ mappings: mappings as any, slots: slots as any })).to.eql({ var1: 1, var2: 'value', var4: 'nested' });
     });
   });
 });

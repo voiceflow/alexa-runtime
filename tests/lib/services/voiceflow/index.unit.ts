@@ -44,9 +44,7 @@ describe('voiceflowManager unit tests', async () => {
       const executeEventsOutput = { foo: 'bar' };
       utils.executeEvents = sinon.stub().returns(executeEventsOutput);
 
-      const voiceflowManager = VoiceflowManager(services as any, config as any, utils as any);
-
-      const { client } = voiceflowManager;
+      const client = VoiceflowManager(services as any, config as any, utils as any);
 
       expect(client).to.eql(clientObj);
       expect(clientObj.setEvent.callCount).to.eql(5);

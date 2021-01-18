@@ -17,15 +17,15 @@ describe('runtime lifecycle unit tests', () => {
     const accessToken = 'access-token';
     const input = {
       attributesManager: { getPersistentAttributes: sinon.stub().returns(rawState) },
-      requestEnvelope: { request: null, runtime: { System: { user: { accessToken } } } },
-      runtime: {
+      requestEnvelope: { request: null, context: { System: { user: { accessToken } } } },
+      context: {
         versionID: 'version-id',
-        voiceflow: { createRuntime: sinon.stub().returns(runtime) },
+        runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
       },
     };
 
     expect(await buildRuntime(input as any)).to.eql(runtime);
-    expect(input.context.voiceflow.createRuntime.args).to.eql([[input.context.versionID, rawState, undefined]]);
+    expect(input.context.runtimeClient.createRuntime.args).to.eql([[input.context.versionID, rawState, undefined]]);
     expect(runtime.turn.set.args).to.eql([
       [T.HANDLER_INPUT, input],
       [T.PREVIOUS_OUTPUT, 'output'],
@@ -46,15 +46,15 @@ describe('runtime lifecycle unit tests', () => {
 
     const input = {
       attributesManager: { getPersistentAttributes: sinon.stub().returns(rawState) },
-      requestEnvelope: { request: { type: 'randomEvent', foo: 'bar' }, runtime: { System: { user: {} } } },
-      runtime: {
+      requestEnvelope: { request: { type: 'randomEvent', foo: 'bar' }, context: { System: { user: {} } } },
+      context: {
         versionID: 'version-id',
-        voiceflow: { createRuntime: sinon.stub().returns(runtime) },
+        runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
       },
     };
 
     expect(await buildRuntime(input as any)).to.eql(runtime);
-    expect(input.context.voiceflow.createRuntime.args).to.eql([
+    expect(input.context.runtimeClient.createRuntime.args).to.eql([
       [input.context.versionID, rawState, { type: RequestType.EVENT, payload: { event: 'randomEvent', data: input.requestEnvelope.request } }],
     ]);
   });
@@ -68,15 +68,15 @@ describe('runtime lifecycle unit tests', () => {
 
     const input = {
       attributesManager: { getPersistentAttributes: sinon.stub().returns(rawState) },
-      requestEnvelope: { request: { intent: 'intent', type: Request.INTENT }, runtime: { System: { user: {} } } },
-      runtime: {
+      requestEnvelope: { request: { intent: 'intent', type: Request.INTENT }, context: { System: { user: {} } } },
+      context: {
         versionID: 'version-id',
-        voiceflow: { createRuntime: sinon.stub().returns(runtime) },
+        runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
       },
     };
 
     expect(await buildRuntime(input as any)).to.eql(runtime);
-    expect(input.context.voiceflow.createRuntime.args).to.eql([
+    expect(input.context.runtimeClient.createRuntime.args).to.eql([
       [input.context.versionID, rawState, { type: RequestType.INTENT, payload: input.requestEnvelope.request }],
     ]);
   });
