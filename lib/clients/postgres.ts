@@ -16,7 +16,7 @@ class PostgresDB extends AbstractClient {
       host: this.config.PG_HOST!,
       database: this.config.PG_DBNAME!,
       password: this.config.PG_PASSWORD!,
-      port: this.config.PG_PORT!,
+      port: +this.config.PG_PORT!,
     });
 
     await this.client.query(

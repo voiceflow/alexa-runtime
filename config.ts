@@ -52,7 +52,7 @@ const CONFIG: Config = {
   PG_HOST: optionalProcessEnv('PG_HOST'),
   PG_DBNAME: optionalProcessEnv('PG_DBNAME'),
   PG_PASSWORD: optionalProcessEnv('PG_PASSWORD'),
-  PG_PORT: +(optionalProcessEnv('PG_PORT') || 5432),
+  PG_PORT: optionalProcessEnv('PG_PORT'),
 };
 
 export default CONFIG;
