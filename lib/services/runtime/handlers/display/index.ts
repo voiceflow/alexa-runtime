@@ -38,9 +38,9 @@ const utilsObj = {
 
 export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (utils) => ({
   canHandle: (node) => !!node.display_id,
-  handle: async (node, context) => {
-    const supportedInterfaces: SupportedInterfaces | undefined = context.storage.get(S.SUPPORTED_INTERFACES);
-    const variables = context.variables.getState();
+  handle: async (node, runtime) => {
+    const supportedInterfaces: SupportedInterfaces | undefined = runtime.storage.get(S.SUPPORTED_INTERFACES);
+    const variables = runtime.variables.getState();
 
     const nextId = node.nextId ?? null;
 
@@ -48,7 +48,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
       return nextId;
     }
 
-    const services = context.services as FullServiceMap;
+    const services = runtime.services as FullServiceMap;
     const displayID = node.display_id as number;
     const dataSource = node.datasource ?? '';
 
@@ -70,7 +70,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
       dataSourceVariables: utils.getVariables(dataSource),
     };
 
-    context.storage.set(S.DISPLAY_INFO, displayInfo);
+    runtime.storage.set(S.DISPLAY_INFO, displayInfo);
 
     const document = await services.multimodal.getDisplayDocument(displayID);
 
@@ -85,8 +85,8 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
     const hasOnEndEvent = onEndEvents.some((event) => event.type === EVENT_SEND_EVENT && event.arguments?.some?.(isVideoEvent(ENDED_EVENT_PREFIX)));
 
     if (hasOnEndEvent) {
-      context.stack.top().setNodeID(node.nextId ?? null);
-      context.end();
+      runtime.stack.top().setNodeID(node.nextId ?? null);
+      runtime.end();
 
       return null;
     }

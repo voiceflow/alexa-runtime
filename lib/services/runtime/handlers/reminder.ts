@@ -105,16 +105,16 @@ export const ReminderHandler: HandlerFactory<Node, typeof utilsObj> = (utils) =>
   canHandle: (node) => {
     return !!node.reminder;
   },
-  handle: async (node, context, variables) => {
+  handle: async (node, runtime, variables) => {
     let nextId: NodeID;
 
     try {
-      const handlerInput = context.turn.get<AlexaHandlerInput>(T.HANDLER_INPUT);
+      const handlerInput = runtime.turn.get<AlexaHandlerInput>(T.HANDLER_INPUT);
       const { apiEndpoint, apiAccessToken } = handlerInput?.requestEnvelope.context.System ?? {};
 
       if (!apiEndpoint || !apiAccessToken) throw new Error('invalid login token');
 
-      const reminderObject = utils._createReminderObject(node.reminder, variables.getState(), context.storage.get<string>(S.LOCALE)!);
+      const reminderObject = utils._createReminderObject(node.reminder, variables.getState(), runtime.storage.get<string>(S.LOCALE)!);
 
       await utils.axios.post(`${apiEndpoint}/v1/alerts/reminders`, reminderObject, {
         headers: {

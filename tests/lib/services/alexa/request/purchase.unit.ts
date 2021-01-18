@@ -35,12 +35,12 @@ describe('purchase handler unit tests', () => {
       expect(utils.updateRuntime.args[0][0]).to.eql(input);
       // assert updateRuntime callback
       const fn = utils.updateRuntime.args[0][1];
-      const context = {
+      const runtime = {
         storage: { produce: sinon.stub() },
       };
-      fn(context);
+      fn(runtime);
 
-      const fn2 = context.storage.produce.args[0][0];
+      const fn2 = runtime.storage.produce.args[0][0];
       const draft = { [S.PAYMENT]: { status: null } };
       fn2(draft);
       expect(draft[S.PAYMENT]).to.eql({ status: purchaseResult });
@@ -61,12 +61,12 @@ describe('purchase handler unit tests', () => {
       expect(await handler.handle(input as any)).to.eql(output);
       // assert updateRuntime callback
       const fn = utils.updateRuntime.args[0][1];
-      const context = {
+      const runtime = {
         storage: { produce: sinon.stub() },
       };
-      fn(context);
+      fn(runtime);
 
-      const fn2 = context.storage.produce.args[0][0];
+      const fn2 = runtime.storage.produce.args[0][0];
       const draft = { [S.PAYMENT]: { status: null } };
       fn2(draft);
       expect(draft[S.PAYMENT]).to.eql({ status: purchaseResult });
@@ -86,12 +86,12 @@ describe('purchase handler unit tests', () => {
       expect(await handler.handle(input as any)).to.eql(output);
       // assert updateRuntime callback
       const fn = utils.updateRuntime.args[0][1];
-      const context = {
+      const runtime = {
         storage: { produce: sinon.stub() },
       };
-      fn(context);
+      fn(runtime);
 
-      const fn2 = context.storage.produce.args[0][0];
+      const fn2 = runtime.storage.produce.args[0][0];
       const draft = { [S.PAYMENT]: { status: null } };
       fn2(draft);
       expect(draft[S.PAYMENT]).to.eql({ status: false });
@@ -111,12 +111,12 @@ describe('purchase handler unit tests', () => {
       expect(await handler.handle(input as any)).to.eql(output);
       // assert updateRuntime callback
       const fn = utils.updateRuntime.args[0][1];
-      const context = {
+      const runtime = {
         storage: { produce: sinon.stub() },
       };
-      fn(context);
+      fn(runtime);
 
-      const fn2 = context.storage.produce.args[0][0];
+      const fn2 = runtime.storage.produce.args[0][0];
       const draft = { foo: 'bar' };
       fn2(draft);
       expect(draft).to.eql({ foo: 'bar' });

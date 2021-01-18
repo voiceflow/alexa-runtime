@@ -65,10 +65,10 @@ describe('permission handler unit test', () => {
         // assert callback
         const fn = utils.updateRuntime.args[0][1];
 
-        const context = { storage: { set: sinon.stub() } };
-        fn(context);
+        const runtime = { storage: { set: sinon.stub() } };
+        fn(runtime);
 
-        expect(context.storage.set.args).to.eql([[S.PERMISSIONS, ['p1', 'p2', 'p3']]]);
+        expect(runtime.storage.set.args).to.eql([[S.PERMISSIONS, ['p1', 'p2', 'p3']]]);
       });
     });
   });

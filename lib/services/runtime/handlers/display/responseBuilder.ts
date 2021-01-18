@@ -9,15 +9,15 @@ import { ENDED_EVENT_PREFIX, RENDER_DOCUMENT_DIRECTIVE_TYPE, STARTED_EVENT_PREFI
 import { DisplayInfo, VideoCommand, VideoCommandType } from './types';
 import { deepFindVideos, getEventToSend } from './utils';
 
-export const DocumentResponseBuilder: ResponseBuilder = async (context, builder) => {
-  const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
+export const DocumentResponseBuilder: ResponseBuilder = async (runtime, builder) => {
+  const displayInfo = runtime.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
 
   if (!displayInfo?.shouldUpdate || (displayInfo.currentDisplay === undefined && !displayInfo.document)) {
     return;
   }
 
-  const variables = context.variables.getState();
-  const services = context.services as FullServiceMap;
+  const variables = runtime.variables.getState();
+  const services = runtime.services as FullServiceMap;
 
   let dataSources: object | undefined;
 
@@ -77,12 +77,12 @@ export const DocumentResponseBuilder: ResponseBuilder = async (context, builder)
 
     builder.addDirective({
       type: RENDER_DOCUMENT_DIRECTIVE_TYPE,
-      token: context.versionID,
+      token: runtime.versionID,
       document: document || undefined,
       datasources: dataSources,
     });
 
-    context.storage.produce((state) => {
+    runtime.storage.produce((state) => {
       const dInfo = state[S.DISPLAY_INFO] as DisplayInfo;
 
       dInfo.lastVariables = variables;
@@ -95,8 +95,8 @@ export const DocumentResponseBuilder: ResponseBuilder = async (context, builder)
   }
 };
 
-export const CommandsResponseBuilder: ResponseBuilder = async (context, builder) => {
-  const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
+export const CommandsResponseBuilder: ResponseBuilder = async (runtime, builder) => {
+  const displayInfo = runtime.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
 
   if (!displayInfo?.commands) {
     return;
@@ -107,27 +107,27 @@ export const CommandsResponseBuilder: ResponseBuilder = async (context, builder)
   if (commands.length) {
     commands.forEach(({ type, command, componentId }) => {
       if (type === VideoCommandType.CONTROL_MEDIA && command === VideoCommand.PLAY) {
-        context.storage.produce((storage) => {
+        runtime.storage.produce((storage) => {
           storage[S.DISPLAY_INFO].playingVideos[componentId] = { started: Date.now() };
         });
       }
     });
     builder.addDirective({
       type: 'Alexa.Presentation.APL.ExecuteCommands',
-      token: context.versionID,
+      token: runtime.versionID,
       commands,
     });
   }
 
-  context.storage.produce((state) => {
+  runtime.storage.produce((state) => {
     const dInfo = state[S.DISPLAY_INFO] as DisplayInfo;
     delete dInfo.commands;
   });
 };
 
-const DisplayResponseBuilder: ResponseBuilder = async (context, builder) => {
-  await DocumentResponseBuilder(context, builder);
-  await CommandsResponseBuilder(context, builder);
+const DisplayResponseBuilder: ResponseBuilder = async (runtime, builder) => {
+  await DocumentResponseBuilder(runtime, builder);
+  await CommandsResponseBuilder(runtime, builder);
 };
 
 export default DisplayResponseBuilder;

@@ -19,7 +19,7 @@ describe('payment handler unit tests', () => {
 
   describe('handle', () => {
     it('works correctly', () => {
-      const context = { storage: { set: sinon.stub() } };
+      const runtime = { storage: { set: sinon.stub() } };
       const node = {
         product_id: 'produc-id',
         success_id: 'success-id',
@@ -27,8 +27,8 @@ describe('payment handler unit tests', () => {
         id: 'node-id',
       };
 
-      expect(paymentHandler.handle(node as any, context as any, null as any, null as any)).to.eql(node.id);
-      expect(context.storage.set.args).to.eql([
+      expect(paymentHandler.handle(node as any, runtime as any, null as any, null as any)).to.eql(node.id);
+      expect(runtime.storage.set.args).to.eql([
         [
           S.PAYMENT,
           {
@@ -44,24 +44,24 @@ describe('payment handler unit tests', () => {
 
   describe('response builder', () => {
     it('no payment', () => {
-      const context = { storage: { get: sinon.stub().returns(null) } };
-      PaymentResponseBuilder(context as any, null as any);
-      expect(context.storage.get.args).to.eql([[S.PAYMENT]]);
+      const runtime = { storage: { get: sinon.stub().returns(null) } };
+      PaymentResponseBuilder(runtime as any, null as any);
+      expect(runtime.storage.get.args).to.eql([[S.PAYMENT]]);
     });
 
     it('with status', () => {
-      const context = { storage: { get: sinon.stub().returns({ status: 'random' }) } };
-      PaymentResponseBuilder(context as any, null as any);
-      expect(context.storage.get.args).to.eql([[S.PAYMENT]]);
+      const runtime = { storage: { get: sinon.stub().returns({ status: 'random' }) } };
+      PaymentResponseBuilder(runtime as any, null as any);
+      expect(runtime.storage.get.args).to.eql([[S.PAYMENT]]);
     });
 
     it('no status', () => {
       const payment = { productId: 'product-id' };
-      const context = { storage: { get: sinon.stub().returns(payment) } };
+      const runtime = { storage: { get: sinon.stub().returns(payment) } };
       const withShouldEndSession = sinon.stub();
       const builder = { addDirective: sinon.stub().returns({ withShouldEndSession }) };
-      PaymentResponseBuilder(context as any, builder as any);
-      expect(context.storage.get.args).to.eql([[S.PAYMENT]]);
+      PaymentResponseBuilder(runtime as any, builder as any);
+      expect(runtime.storage.get.args).to.eql([[S.PAYMENT]]);
       expect(builder.addDirective.args).to.eql([
         [
           {

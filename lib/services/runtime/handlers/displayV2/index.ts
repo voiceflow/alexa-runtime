@@ -18,14 +18,14 @@ const utilsObj = {
 
 export const DisplayHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => !!node.document && !!node.datasource,
-  handle: async (node, context) => {
-    const supportedInterfaces: SupportedInterfaces | undefined = context.storage.get(S.SUPPORTED_INTERFACES);
+  handle: async (node, runtime) => {
+    const supportedInterfaces: SupportedInterfaces | undefined = runtime.storage.get(S.SUPPORTED_INTERFACES);
     const nextId = node.nextId ?? null;
 
     if (!supportedInterfaces?.[APL_INTERFACE_NAME]) {
       return nextId;
     }
-    const variables = context.variables.getState();
+    const variables = runtime.variables.getState();
 
     const dataSource = node.datasource ?? '';
 
@@ -53,7 +53,7 @@ export const DisplayHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => 
     if (!document) {
       return nextId;
     }
-    context.storage.set(S.DISPLAY_INFO, displayInfo);
+    runtime.storage.set(S.DISPLAY_INFO, displayInfo);
 
     let documentData;
     try {
@@ -70,8 +70,8 @@ export const DisplayHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => 
     const hasOnEndEvent = onEndEvents.some((event) => event.type === EVENT_SEND_EVENT && event.arguments?.includes?.(ENDED_EVENT_PREFIX));
 
     if (hasOnEndEvent) {
-      context.stack.top().setNodeID(node.nextId ?? null);
-      context.end();
+      runtime.stack.top().setNodeID(node.nextId ?? null);
+      runtime.end();
 
       return null;
     }

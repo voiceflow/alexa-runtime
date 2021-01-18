@@ -84,12 +84,12 @@ const responseUtils = {
   _streamMetaData,
 };
 
-export const StreamResponseBuilderGenerator = (u: typeof responseUtils): ResponseBuilder => (context, builder) => {
-  const handlerInput = context.turn.get<AlexaHandlerInput>(T.HANDLER_INPUT);
-  const streamPlay = context.storage.get<StreamPlay>(S.STREAM_PLAY);
+export const StreamResponseBuilderGenerator = (u: typeof responseUtils): ResponseBuilder => (runtime, builder) => {
+  const handlerInput = runtime.turn.get<AlexaHandlerInput>(T.HANDLER_INPUT);
+  const streamPlay = runtime.storage.get<StreamPlay>(S.STREAM_PLAY);
 
   if (handlerInput?.requestEnvelope.context?.AudioPlayer && streamPlay) {
-    context.storage.produce((draft) => {
+    runtime.storage.produce((draft) => {
       draft[S.STREAM_PLAY].offset = handlerInput.requestEnvelope.context.AudioPlayer?.offsetInMilliseconds;
     });
   }
@@ -105,7 +105,7 @@ export const StreamResponseBuilderGenerator = (u: typeof responseUtils): Respons
       case StreamAction.START: {
         const { url, token, offset, metaData } = u._streamMetaData(streamPlay);
         if (!!url && !!token) {
-          context.storage.produce((draft) => {
+          runtime.storage.produce((draft) => {
             draft[S.STREAM_PLAY].token = token;
           });
           builder.addAudioPlayerPlayDirective(AudioDirective.REPLACE_ALL, url, token, offset || 0, undefined, metaData);
@@ -113,8 +113,8 @@ export const StreamResponseBuilderGenerator = (u: typeof responseUtils): Respons
         break;
       }
       case StreamAction.END:
-        context.storage.delete(S.STREAM_PAUSE);
-        context.storage.delete(S.STREAM_PLAY);
+        runtime.storage.delete(S.STREAM_PAUSE);
+        runtime.storage.delete(S.STREAM_PLAY);
         builder.addAudioPlayerStopDirective();
         break;
       case StreamAction.PAUSE:
@@ -136,11 +136,11 @@ export const StreamHandler: HandlerFactory<Node, typeof handlerUtils> = (u) => (
   canHandle: (node) => {
     return !!node.play;
   },
-  handle: (node, context, variables) => {
+  handle: (node, runtime, variables) => {
     const variablesMap = variables.getState();
     const audioUrl = u.replaceVariables(node.play, variablesMap);
 
-    context.storage.set(S.STREAM_PLAY, {
+    runtime.storage.set(S.STREAM_PLAY, {
       action: StreamAction.START,
       url: audioUrl,
       loop: node.loop,
@@ -158,20 +158,20 @@ export const StreamHandler: HandlerFactory<Node, typeof handlerUtils> = (u) => (
       background_img: u.replaceVariables(node.background_img, variablesMap),
     } as StreamPlay);
 
-    const streamPause = context.storage.get<StreamPauseStorage>(S.STREAM_PAUSE);
+    const streamPause = runtime.storage.get<StreamPauseStorage>(S.STREAM_PAUSE);
 
     if (streamPause) {
       if (node.PAUSE_ID === streamPause.id) {
-        context.storage.produce((draft) => {
+        runtime.storage.produce((draft) => {
           draft[S.STREAM_PLAY].offset = streamPause.offset;
           draft[S.STREAM_PLAY].action = StreamAction.PAUSE;
         });
       }
 
-      context.storage.delete(S.STREAM_PAUSE);
+      runtime.storage.delete(S.STREAM_PAUSE);
     }
 
-    context.end();
+    runtime.end();
 
     return null;
   },

@@ -20,7 +20,7 @@ describe('directive handler unit tests', () => {
   describe('handle', () => {
     it('works correctly', () => {
       const turnStore = {};
-      const context = {
+      const runtime = {
         turn: { produce: (produce: (draft: any) => void) => produce(turnStore) },
         trace: { debug: sinon.stub() },
       };
@@ -31,17 +31,17 @@ describe('directive handler unit tests', () => {
         nextId: 'foo',
       };
 
-      expect(directiveHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
+      expect(directiveHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextId);
       expect(turnStore).to.eql({ [T.DIRECTIVES]: [{ foo: 'bar' }] });
       expect(variables.getState.callCount).to.eql(1);
-      expect(context.trace.debug.callCount).to.eql(1);
+      expect(runtime.trace.debug.callCount).to.eql(1);
     });
 
     it('multiple directives', () => {
       const turnStore = {
         [T.DIRECTIVES]: ['first_directive'],
       };
-      const context = {
+      const runtime = {
         turn: { produce: (produce: (draft: any) => void) => produce(turnStore) },
         trace: { debug: sinon.stub() },
       };
@@ -52,14 +52,14 @@ describe('directive handler unit tests', () => {
         nextId: 'foo',
       };
 
-      expect(directiveHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
+      expect(directiveHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextId);
       expect(turnStore).to.eql({ [T.DIRECTIVES]: ['first_directive', { foo: 'bar' }] });
       expect(variables.getState.callCount).to.eql(1);
-      expect(context.trace.debug.callCount).to.eql(1);
+      expect(runtime.trace.debug.callCount).to.eql(1);
     });
 
     it('invalid JSON', () => {
-      const context = {
+      const runtime = {
         turn: { produce: sinon.stub() },
         trace: { debug: sinon.stub() },
       };
@@ -70,35 +70,35 @@ describe('directive handler unit tests', () => {
         nextId: 'foo',
       };
 
-      expect(directiveHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
+      expect(directiveHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextId);
       expect(variables.getState.callCount).to.eql(1);
-      expect(context.turn.produce.callCount).to.eql(0);
-      expect(context.trace.debug.callCount).to.eql(1);
+      expect(runtime.turn.produce.callCount).to.eql(0);
+      expect(runtime.trace.debug.callCount).to.eql(1);
     });
   });
 
   describe('response builder', () => {
     it('no directives', () => {
-      const context = { turn: { get: sinon.stub().returns(null) } };
+      const runtime = { turn: { get: sinon.stub().returns(null) } };
       const builder = { addDirective: sinon.stub() };
-      DirectiveResponseBuilder(context as any, builder as any);
-      expect(context.turn.get.args).to.eql([[T.DIRECTIVES]]);
+      DirectiveResponseBuilder(runtime as any, builder as any);
+      expect(runtime.turn.get.args).to.eql([[T.DIRECTIVES]]);
       expect(builder.addDirective.callCount).to.eql(0);
     });
 
     it('empty directives', () => {
-      const context = { turn: { get: sinon.stub().returns([]) } };
+      const runtime = { turn: { get: sinon.stub().returns([]) } };
       const builder = { addDirective: sinon.stub() };
-      DirectiveResponseBuilder(context as any, builder as any);
-      expect(context.turn.get.args).to.eql([[T.DIRECTIVES]]);
+      DirectiveResponseBuilder(runtime as any, builder as any);
+      expect(runtime.turn.get.args).to.eql([[T.DIRECTIVES]]);
       expect(builder.addDirective.callCount).to.eql(0);
     });
 
     it('with directives', () => {
-      const context = { turn: { get: sinon.stub().returns(['a', 'b', 'c']) } };
+      const runtime = { turn: { get: sinon.stub().returns(['a', 'b', 'c']) } };
       const builder = { addDirective: sinon.stub() };
-      DirectiveResponseBuilder(context as any, builder as any);
-      expect(context.turn.get.args).to.eql([[T.DIRECTIVES]]);
+      DirectiveResponseBuilder(runtime as any, builder as any);
+      expect(runtime.turn.get.args).to.eql([[T.DIRECTIVES]]);
       expect(builder.addDirective.args[0][0]).to.eql('a');
       expect(builder.addDirective.args[1][0]).to.eql('b');
       expect(builder.addDirective.args[2][0]).to.eql('c');

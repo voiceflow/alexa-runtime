@@ -13,9 +13,9 @@ export type PaymentStorage = {
   successPath?: NodeID;
 };
 
-export const PaymentResponseBuilder: ResponseBuilder = (context, builder) => {
+export const PaymentResponseBuilder: ResponseBuilder = (runtime, builder) => {
   // check payment
-  const payment = context.storage.get<PaymentStorage>(S.PAYMENT);
+  const payment = runtime.storage.get<PaymentStorage>(S.PAYMENT);
 
   if (payment && !payment.status) {
     // return an early response if there is a payment node
@@ -36,12 +36,12 @@ export const PaymentResponseBuilder: ResponseBuilder = (context, builder) => {
 
 const PaymentHandler: HandlerFactory<Node> = () => ({
   canHandle: (node) => 'product_id' in node && !!node.product_id,
-  handle: (node, context) => {
+  handle: (node, runtime) => {
     if (!('product_id' in node)) {
       return node.nextId ?? null;
     }
 
-    context.storage.set<PaymentStorage>(S.PAYMENT, {
+    runtime.storage.set<PaymentStorage>(S.PAYMENT, {
       status: null,
       failPath: node.fail_id,
       productId: node.product_id,

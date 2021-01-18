@@ -36,7 +36,7 @@ export const RequestInterceptorGenerator = (metrics: MetricsType, adapter: Adapt
 
     metrics.invocation(versionID);
 
-    await adapter.context(handlerInput);
+    await adapter.state(handlerInput);
   },
 });
 

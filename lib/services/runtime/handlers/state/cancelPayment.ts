@@ -5,11 +5,11 @@ import { S } from '@/lib/constants';
 import { CancelPaymentStorage } from '../cancelPayment';
 
 const cancelPaymentStateHandler: HandlerFactory<any> = () => ({
-  canHandle: (_, context) => !!context.storage.get<CancelPaymentStorage>(S.CANCEL_PAYMENT),
-  handle: (_, context) => {
-    const cancelPayment = context.storage.get<CancelPaymentStorage>(S.CANCEL_PAYMENT);
+  canHandle: (_, runtime) => !!runtime.storage.get<CancelPaymentStorage>(S.CANCEL_PAYMENT),
+  handle: (_, runtime) => {
+    const cancelPayment = runtime.storage.get<CancelPaymentStorage>(S.CANCEL_PAYMENT);
 
-    context.storage.delete(S.CANCEL_PAYMENT);
+    runtime.storage.delete(S.CANCEL_PAYMENT);
 
     if (cancelPayment?.status === 'ACCEPTED') {
       return cancelPayment.successPath ?? null;

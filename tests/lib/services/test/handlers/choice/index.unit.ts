@@ -35,12 +35,12 @@ describe('choice handler unit tests', async () => {
       const choiceHandler = ChoiceHandler(utils as any);
 
       const node = { id: 'node-id', inputs: [['one'], ['two']] };
-      const context = { trace: { addTrace: sinon.stub() }, turn: { get: sinon.stub().returns(null) } };
+      const runtime = { trace: { addTrace: sinon.stub() }, turn: { get: sinon.stub().returns(null) } };
       const variables = { var: '1' };
 
-      expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.id);
-      expect(utils.addRepromptIfExists.args).to.eql([[node, context, variables]]);
-      expect(context.trace.addTrace.args[0]).to.eql([{ type: 'choice', payload: { choices: [{ name: 'one' }, { name: 'two' }] } }]);
+      expect(choiceHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.id);
+      expect(utils.addRepromptIfExists.args).to.eql([[{ node, runtime, variables }]]);
+      expect(runtime.trace.addTrace.args[0]).to.eql([{ type: 'choice', payload: { choices: [{ name: 'one' }, { name: 'two' }] } }]);
     });
 
     it('request is not intent', () => {
@@ -50,12 +50,12 @@ describe('choice handler unit tests', async () => {
       const choiceHandler = ChoiceHandler(utils as any);
 
       const node = { id: 'node-id', inputs: [] };
-      const context = { trace: { addTrace: sinon.stub() }, turn: { get: sinon.stub().returns({ type: 'random-type' }) } };
+      const runtime = { trace: { addTrace: sinon.stub() }, turn: { get: sinon.stub().returns({ type: 'random-type' }) } };
       const variables = { var: '1' };
 
-      expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.id);
-      expect(utils.addRepromptIfExists.args).to.eql([[node, context, variables]]);
-      expect(context.trace.addTrace.args).to.eql([[{ type: 'choice', payload: { choices: [] } }]]);
+      expect(choiceHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.id);
+      expect(utils.addRepromptIfExists.args).to.eql([[{ node, runtime, variables }]]);
+      expect(runtime.trace.addTrace.args).to.eql([[{ type: 'choice', payload: { choices: [] } }]]);
     });
 
     describe('request type is intent', () => {
@@ -81,11 +81,11 @@ describe('choice handler unit tests', async () => {
           type: RequestType.INTENT,
           payload: {},
         };
-        const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
+        const runtime = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
         const variables = { var: '1' };
 
-        expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
-        expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
+        expect(choiceHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(null);
+        expect(runtime.turn.delete.args).to.eql([[T.REQUEST]]);
       });
 
       it('has score', () => {
@@ -107,10 +107,10 @@ describe('choice handler unit tests', async () => {
           type: RequestType.INTENT,
           payload: { input: 'yup' },
         };
-        const context = { trace: { debug: sinon.stub() }, turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
+        const runtime = { trace: { debug: sinon.stub() }, turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
         const variables = { var: '1' };
 
-        expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextIds[1]);
+        expect(choiceHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextIds[1]);
         expect(utils.getBestScore.args).to.eql([
           [
             request.payload.input,
@@ -134,8 +134,8 @@ describe('choice handler unit tests', async () => {
             ],
           ],
         ]);
-        expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
-        expect(context.trace.debug.args).to.eql([[`matched choice **${resultChoice.value}** - taking path ${resultChoice.index + 1}`]]);
+        expect(runtime.turn.delete.args).to.eql([[T.REQUEST]]);
+        expect(runtime.trace.debug.args).to.eql([[`matched choice **${resultChoice.value}** - taking path ${resultChoice.index + 1}`]]);
       });
 
       describe('no score', () => {
@@ -162,12 +162,12 @@ describe('choice handler unit tests', async () => {
             type: RequestType.INTENT,
             payload: { input: 'yup' },
           };
-          const context = { turn: { get: sinon.stub().returns(request) } };
+          const runtime = { turn: { get: sinon.stub().returns(request) } };
           const variables = { var: '1' };
 
-          expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(output);
-          expect(utils.commandHandler.canHandle.args).to.eql([[context]]);
-          expect(utils.commandHandler.handle.args).to.eql([[context, variables]]);
+          expect(choiceHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(output);
+          expect(utils.commandHandler.canHandle.args).to.eql([[runtime]]);
+          expect(utils.commandHandler.handle.args).to.eql([[runtime, variables]]);
         });
 
         describe('command cannot handle', () => {
@@ -195,11 +195,11 @@ describe('choice handler unit tests', async () => {
               type: RequestType.INTENT,
               payload: { input: 'yup' },
             };
-            const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
+            const runtime = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
             const variables = { var: '1' };
 
-            expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.elseId);
-            expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
+            expect(choiceHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.elseId);
+            expect(runtime.turn.delete.args).to.eql([[T.REQUEST]]);
           });
 
           it('without elseId', () => {
@@ -225,11 +225,11 @@ describe('choice handler unit tests', async () => {
               type: RequestType.INTENT,
               payload: { input: 'yup' },
             };
-            const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
+            const runtime = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
             const variables = { var: '1' };
 
-            expect(choiceHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
-            expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
+            expect(choiceHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(null);
+            expect(runtime.turn.delete.args).to.eql([[T.REQUEST]]);
           });
         });
       });

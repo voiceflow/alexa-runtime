@@ -10,14 +10,14 @@ const utilsObj = {
 };
 
 export const OneShotIntentHandler: HandlerFactory<any, typeof utilsObj> = (utils) => ({
-  canHandle: (_, context) => {
-    if (context.turn.get(T.NEW_STACK) && context.getRequest()?.type === RequestType.INTENT) {
-      return utils.commandHandler.canHandle(context);
+  canHandle: (_, runtime) => {
+    if (runtime.turn.get(T.NEW_STACK) && runtime.getRequest()?.type === RequestType.INTENT) {
+      return utils.commandHandler.canHandle(runtime);
     }
 
     return false;
   },
-  handle: (_, context, variables) => utils.commandHandler.handle(context, variables),
+  handle: (_, runtime, variables) => utils.commandHandler.handle(runtime, variables),
 });
 
 export default () => OneShotIntentHandler(utilsObj);

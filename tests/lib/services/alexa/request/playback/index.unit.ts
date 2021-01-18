@@ -20,9 +20,9 @@ describe('playback controller handler unit tests', () => {
     it('Command.NEXT', async () => {
       const output = 'output';
 
-      const context = 'context';
+      const runtime = 'runtime';
       const utils = {
-        buildContext: sinon.stub().returns(context),
+        buildRuntime: sinon.stub().returns(runtime),
         IntentHandler: { handle: sinon.stub().returns(output) },
       };
 
@@ -36,9 +36,9 @@ describe('playback controller handler unit tests', () => {
     it('Command.PREV', async () => {
       const output = 'output';
 
-      const context = 'context';
+      const runtime = 'runtime';
       const utils = {
-        buildContext: sinon.stub().returns(context),
+        buildRuntime: sinon.stub().returns(runtime),
         IntentHandler: { handle: sinon.stub().returns(output) },
       };
 
@@ -52,9 +52,9 @@ describe('playback controller handler unit tests', () => {
     it('Command.PLAY', async () => {
       const output = 'output';
 
-      const context = 'context';
+      const runtime = 'runtime';
       const utils = {
-        buildContext: sinon.stub().returns(context),
+        buildRuntime: sinon.stub().returns(runtime),
         IntentHandler: { handle: sinon.stub().returns(output) },
       };
 
@@ -68,9 +68,9 @@ describe('playback controller handler unit tests', () => {
     it('Command.PAUSE', async () => {
       const output = 'output';
 
-      const context = 'context';
+      const runtime = 'runtime';
       const utils = {
-        buildContext: sinon.stub().returns(context),
+        buildRuntime: sinon.stub().returns(runtime),
         IntentHandler: { handle: sinon.stub().returns(output) },
       };
 
@@ -84,9 +84,9 @@ describe('playback controller handler unit tests', () => {
     it('Other Intent', async () => {
       const output = 'output';
 
-      const context = 'context';
+      const runtime = 'runtime';
       const utils = {
-        buildContext: sinon.stub().returns(context),
+        buildRuntime: sinon.stub().returns(runtime),
         IntentHandler: { handle: sinon.stub().returns(output) },
       };
 

@@ -2,7 +2,7 @@ import { HandlerInput } from 'ask-sdk';
 import _ from 'lodash';
 
 import { AbstractManager } from '../utils';
-import { NewContextRaw, OldContextRaw } from './types';
+import { NewStateRaw, OldStateRaw } from './types';
 import { afterStorageModifier, beforeContextModifier, stackAdapter, storageAdapter, variablesAdapter } from './utils';
 
 /**
@@ -10,26 +10,26 @@ import { afterStorageModifier, beforeContextModifier, stackAdapter, storageAdapt
  * The intention is to remove this adapter once we switch all users over
  */
 class AdapterManager extends AbstractManager {
-  async context(input: HandlerInput) {
+  async state(input: HandlerInput) {
     // getPersistentAttributes hits dynamo only once during a TURN. the results from dynamo are cached
     // and used for sequent calls to getPersistentAttributes
-    const context = await input.attributesManager.getPersistentAttributes();
+    const state = await input.attributesManager.getPersistentAttributes();
 
-    if (!_.isEmpty(context) && !context.stack) {
-      const transformedContext = await this.transformContext(context as OldContextRaw, input);
+    if (!_.isEmpty(state) && !state.stack) {
+      const transformedContext = await this.transformState(state as OldStateRaw, input);
 
       // set transformed context
       input.attributesManager.setPersistentAttributes(transformedContext);
     }
   }
 
-  async transformContext(context: OldContextRaw, input: HandlerInput): Promise<NewContextRaw | {}> {
+  async transformState(state: OldStateRaw, input: HandlerInput): Promise<NewStateRaw | {}> {
     try {
-      context = beforeContextModifier(context);
+      state = beforeContextModifier(state);
 
-      const stack = stackAdapter(context);
-      const variables = variablesAdapter(context, { system: input.requestEnvelope.context.System });
-      let storage = storageAdapter(context, { accessToken: input.requestEnvelope.context.System.user.accessToken });
+      const stack = stackAdapter(state);
+      const variables = variablesAdapter(state, { system: input.requestEnvelope.context.System });
+      let storage = storageAdapter(state, { accessToken: input.requestEnvelope.context.System.user.accessToken });
 
       storage = afterStorageModifier(storage, variables);
 
