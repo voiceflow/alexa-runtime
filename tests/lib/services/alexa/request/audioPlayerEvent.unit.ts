@@ -355,13 +355,13 @@ describe('audio player event handler unit test', () => {
           storageGet.withArgs(S.STREAM_TEMP).returns(null);
 
           const runtime = { storage: { get: storageGet }, getRawState: sinon.stub().returns({}) };
-          const tempContext = { storage: { get: sinon.stub().returns({ action: 'random' }), set: sinon.stub() } };
+          const tempRuntime = { storage: { get: sinon.stub().returns({ action: 'random' }), set: sinon.stub() } };
           const runtimeClient = {
             createRuntime: sinon
               .stub()
               .onFirstCall()
               .returns(runtime)
-              .returns(tempContext),
+              .returns(tempRuntime),
           };
           const input = {
             context: { versionID: 'version-id', runtimeClient },
@@ -372,7 +372,7 @@ describe('audio player event handler unit test', () => {
 
           expect(await handler.handle(input as any)).to.eql(output);
           expect(runtimeClient.createRuntime.callCount).to.eql(2);
-          expect(tempContext.storage.set.args).to.eql([[S.STREAM_PLAY, { action: StreamAction.NEXT }]]);
+          expect(tempRuntime.storage.set.args).to.eql([[S.STREAM_PLAY, { action: StreamAction.NEXT }]]);
           expect(utils.update.callCount).to.eql(1);
         });
 
@@ -386,13 +386,13 @@ describe('audio player event handler unit test', () => {
           storageGet.withArgs(S.STREAM_TEMP).returns(null);
 
           const runtime = { storage: { get: storageGet }, getRawState: sinon.stub().returns({}) };
-          const tempContext = { storage: { get: sinon.stub().returns(null), set: sinon.stub() } };
+          const tempRuntime = { storage: { get: sinon.stub().returns(null), set: sinon.stub() } };
           const runtimeClient = {
             createRuntime: sinon
               .stub()
               .onFirstCall()
               .returns(runtime)
-              .returns(tempContext),
+              .returns(tempRuntime),
           };
           const input = {
             context: { versionID: 'version-id', runtimeClient },
@@ -414,17 +414,17 @@ describe('audio player event handler unit test', () => {
           storageGet.withArgs(S.STREAM_TEMP).returns(null);
 
           const runtime = { storage: { get: storageGet, set: sinon.stub() }, getRawState: sinon.stub().returns({}) };
-          const tempContextRaw = 'temp-raw';
-          const tempContext = {
+          const tempRuntimeRaw = 'temp-raw';
+          const tempRuntime = {
             storage: { get: sinon.stub().returns({ action: StreamAction.START }), set: sinon.stub() },
-            getRawState: sinon.stub().returns(tempContextRaw),
+            getRawState: sinon.stub().returns(tempRuntimeRaw),
           };
           const runtimeClient = {
             createRuntime: sinon
               .stub()
               .onFirstCall()
               .returns(runtime)
-              .returns(tempContext),
+              .returns(tempRuntime),
           };
           const input = {
             context: { versionID: 'version-id', runtimeClient },
@@ -434,7 +434,7 @@ describe('audio player event handler unit test', () => {
           };
 
           expect(await handler.handle(input as any)).to.eql(output);
-          expect(runtime.storage.set.args).to.eql([[S.STREAM_TEMP, tempContextRaw]]);
+          expect(runtime.storage.set.args).to.eql([[S.STREAM_TEMP, tempRuntimeRaw]]);
         });
 
         it('temp and url but no token', async () => {
@@ -447,17 +447,17 @@ describe('audio player event handler unit test', () => {
           storageGet.withArgs(S.STREAM_TEMP).returns(null);
 
           const runtime = { storage: { get: storageGet, set: sinon.stub() }, getRawState: sinon.stub().returns({}) };
-          const tempContextRaw = 'temp-raw';
-          const tempContext = {
+          const tempRuntimeRaw = 'temp-raw';
+          const tempRuntime = {
             storage: { get: sinon.stub().returns({ action: StreamAction.START }), set: sinon.stub() },
-            getRawState: sinon.stub().returns(tempContextRaw),
+            getRawState: sinon.stub().returns(tempRuntimeRaw),
           };
           const runtimeClient = {
             createRuntime: sinon
               .stub()
               .onFirstCall()
               .returns(runtime)
-              .returns(tempContext),
+              .returns(tempRuntime),
           };
           const input = {
             context: { versionID: 'version-id', runtimeClient },
@@ -467,7 +467,7 @@ describe('audio player event handler unit test', () => {
           };
 
           expect(await handler.handle(input as any)).to.eql(output);
-          expect(runtime.storage.set.args).to.eql([[S.STREAM_TEMP, tempContextRaw]]);
+          expect(runtime.storage.set.args).to.eql([[S.STREAM_TEMP, tempRuntimeRaw]]);
         });
 
         it('temp, url and token', async () => {
@@ -482,17 +482,17 @@ describe('audio player event handler unit test', () => {
           storageGet.withArgs(S.STREAM_TEMP).returns(null);
 
           const runtime = { storage: { get: storageGet, set: sinon.stub() }, getRawState: sinon.stub().returns({}) };
-          const tempContextRaw = 'temp-raw';
-          const tempContext = {
+          const tempRuntimeRaw = 'temp-raw';
+          const tempRuntime = {
             storage: { produce: sinon.stub(), get: sinon.stub().returns({ action: StreamAction.START }), set: sinon.stub() },
-            getRawState: sinon.stub().returns(tempContextRaw),
+            getRawState: sinon.stub().returns(tempRuntimeRaw),
           };
           const runtimeClient = {
             createRuntime: sinon
               .stub()
               .onFirstCall()
               .returns(runtime)
-              .returns(tempContext),
+              .returns(tempRuntime),
           };
           const input = {
             context: { versionID: 'version-id', runtimeClient },
@@ -506,7 +506,7 @@ describe('audio player event handler unit test', () => {
             [AudioDirective.ENQUEUE, metadata.url, metadata.token, 0, streamPlay.token, metadata.metaData],
           ]);
 
-          const tempProduceCallback = tempContext.storage.produce.args[0][0];
+          const tempProduceCallback = tempRuntime.storage.produce.args[0][0];
           const draft = { [S.STREAM_PLAY]: { token: 'random' } };
           tempProduceCallback(draft);
           expect(draft[S.STREAM_PLAY].token).to.eql(metadata.token);
