@@ -23,7 +23,7 @@ describe('cancel purchase handler unit tests', () => {
 
       const utils = {
         IntentHandler: { handle: sinon.stub().returns(output) },
-        updateContext: sinon.stub(),
+        updateRuntime: sinon.stub(),
       };
 
       const handler = CancelPurchaseHandlerGenerator(utils as any);
@@ -32,15 +32,15 @@ describe('cancel purchase handler unit tests', () => {
       const input = { requestEnvelope: { request: { payload: { purchaseResult } } } };
       expect(await handler.handle(input as any)).to.eql(output);
       expect(utils.IntentHandler.handle.args).to.eql([[input]]);
-      expect(utils.updateContext.args[0][0]).to.eql(input);
-      // assert updateContext callback
-      const fn = utils.updateContext.args[0][1];
-      const context = {
+      expect(utils.updateRuntime.args[0][0]).to.eql(input);
+      // assert updateRuntime callback
+      const fn = utils.updateRuntime.args[0][1];
+      const runtime = {
         storage: { produce: sinon.stub() },
       };
-      fn(context);
+      fn(runtime);
 
-      const fn2 = context.storage.produce.args[0][0];
+      const fn2 = runtime.storage.produce.args[0][0];
       const draft = { [S.CANCEL_PAYMENT]: { status: null } };
       fn2(draft);
       expect(draft[S.CANCEL_PAYMENT]).to.eql({ status: purchaseResult });
@@ -51,21 +51,21 @@ describe('cancel purchase handler unit tests', () => {
 
       const utils = {
         IntentHandler: { handle: sinon.stub().returns(output) },
-        updateContext: sinon.stub(),
+        updateRuntime: sinon.stub(),
       };
 
       const handler = CancelPurchaseHandlerGenerator(utils as any);
 
       const input = { requestEnvelope: { request: { payload: { purchaseResult: null } } } };
       expect(await handler.handle(input as any)).to.eql(output);
-      // assert updateContext callback
-      const fn = utils.updateContext.args[0][1];
-      const context = {
+      // assert updateRuntime callback
+      const fn = utils.updateRuntime.args[0][1];
+      const runtime = {
         storage: { produce: sinon.stub() },
       };
-      fn(context);
+      fn(runtime);
 
-      const fn2 = context.storage.produce.args[0][0];
+      const fn2 = runtime.storage.produce.args[0][0];
       const draft = { [S.CANCEL_PAYMENT]: { status: null } };
       fn2(draft);
       expect(draft[S.CANCEL_PAYMENT]).to.eql({ status: false });
@@ -76,21 +76,21 @@ describe('cancel purchase handler unit tests', () => {
 
       const utils = {
         IntentHandler: { handle: sinon.stub().returns(output) },
-        updateContext: sinon.stub(),
+        updateRuntime: sinon.stub(),
       };
 
       const handler = CancelPurchaseHandlerGenerator(utils as any);
 
       const input = { requestEnvelope: { request: {} } };
       expect(await handler.handle(input as any)).to.eql(output);
-      // assert updateContext callback
-      const fn = utils.updateContext.args[0][1];
-      const context = {
+      // assert updateRuntime callback
+      const fn = utils.updateRuntime.args[0][1];
+      const runtime = {
         storage: { produce: sinon.stub() },
       };
-      fn(context);
+      fn(runtime);
 
-      const fn2 = context.storage.produce.args[0][0];
+      const fn2 = runtime.storage.produce.args[0][0];
       const draft = { [S.CANCEL_PAYMENT]: { status: null } };
       fn2(draft);
       expect(draft[S.CANCEL_PAYMENT]).to.eql({ status: false });
@@ -101,21 +101,21 @@ describe('cancel purchase handler unit tests', () => {
 
       const utils = {
         IntentHandler: { handle: sinon.stub().returns(output) },
-        updateContext: sinon.stub(),
+        updateRuntime: sinon.stub(),
       };
 
       const handler = CancelPurchaseHandlerGenerator(utils as any);
 
       const input = { requestEnvelope: { request: {} } };
       expect(await handler.handle(input as any)).to.eql(output);
-      // assert updateContext callback
-      const fn = utils.updateContext.args[0][1];
-      const context = {
+      // assert updateRuntime callback
+      const fn = utils.updateRuntime.args[0][1];
+      const runtime = {
         storage: { produce: sinon.stub() },
       };
-      fn(context);
+      fn(runtime);
 
-      const fn2 = context.storage.produce.args[0][0];
+      const fn2 = runtime.storage.produce.args[0][0];
       const draft = { foo: 'bar' };
       fn2(draft);
       expect(draft).to.eql({ foo: 'bar' });

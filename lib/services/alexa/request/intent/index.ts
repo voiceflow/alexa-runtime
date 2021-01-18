@@ -1,11 +1,11 @@
-import { HandlerInput, RequestHandler } from 'ask-sdk';
+import { RequestHandler } from 'ask-sdk';
 
-import { Request } from '../../types';
-import { buildContext, buildResponse, initialize, update } from '../lifecycle';
+import { AlexaHandlerInput, Request } from '../../types';
+import { buildResponse, buildRuntime, initialize, update } from '../lifecycle';
 import behavior from './behavior';
 
 const utilsObj = {
-  buildContext,
+  buildRuntime,
   initialize,
   update,
   buildResponse,
@@ -13,28 +13,28 @@ const utilsObj = {
 };
 
 export const IntentHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
-  canHandle(input: HandlerInput): boolean {
+  canHandle(input: AlexaHandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
     return type === Request.INTENT;
   },
-  async handle(input: HandlerInput) {
-    const context = await utils.buildContext(input);
+  async handle(input: AlexaHandlerInput) {
+    const runtime = await utils.buildRuntime(input);
 
-    if (context.stack.isEmpty()) {
-      await utils.initialize(context, input);
+    if (runtime.stack.isEmpty()) {
+      await utils.initialize(runtime, input);
     }
 
     // eslint-disable-next-line no-restricted-syntax
     for (const handler of utils.behavior) {
-      if (handler.canHandle(input, context)) {
-        return handler.handle(input, context);
+      if (handler.canHandle(input, runtime)) {
+        return handler.handle(input, runtime);
       }
     }
 
-    await utils.update(context);
+    await utils.update(runtime);
 
-    return utils.buildResponse(context, input);
+    return utils.buildResponse(runtime, input);
   },
 });
 

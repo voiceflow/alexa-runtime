@@ -11,15 +11,15 @@ import {
   StartHandler,
 } from '@voiceflow/runtime';
 
-import AccountLinkingHandler from '@/lib/services/voiceflow/handlers/accountLinking';
-import CaptureHandler from '@/lib/services/voiceflow/handlers/capture';
-import CardHandler from '@/lib/services/voiceflow/handlers/card';
-import DirectiveHandler from '@/lib/services/voiceflow/handlers/directive';
-import InteractionHandler from '@/lib/services/voiceflow/handlers/interaction';
-import PermissionCardHandler from '@/lib/services/voiceflow/handlers/permissionCard';
-import SpeakHandler from '@/lib/services/voiceflow/handlers/speak';
-import StreamStateHandler from '@/lib/services/voiceflow/handlers/state/stream';
-import StreamHandler from '@/lib/services/voiceflow/handlers/stream';
+import AccountLinkingHandler from '@/lib/services/runtime/handlers/accountLinking';
+import CaptureHandler from '@/lib/services/runtime/handlers/capture';
+import CardHandler from '@/lib/services/runtime/handlers/card';
+import DirectiveHandler from '@/lib/services/runtime/handlers/directive';
+import InteractionHandler from '@/lib/services/runtime/handlers/interaction';
+import PermissionCardHandler from '@/lib/services/runtime/handlers/permissionCard';
+import SpeakHandler from '@/lib/services/runtime/handlers/speak';
+import StreamStateHandler from '@/lib/services/runtime/handlers/state/stream';
+import StreamHandler from '@/lib/services/runtime/handlers/stream';
 import { Config } from '@/types';
 
 import CancelPaymentHandler from './cancelPayment';

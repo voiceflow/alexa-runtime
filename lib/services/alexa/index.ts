@@ -1,4 +1,4 @@
-import { DefaultApiClient, HandlerInput, SkillBuilders } from 'ask-sdk';
+import { DefaultApiClient, SkillBuilders } from 'ask-sdk';
 
 import { MetricsType } from '@/lib/clients/metrics';
 import { Source } from '@/lib/constants';
@@ -21,20 +21,22 @@ import {
   PurchaseHandler,
   SessionEndedHandler,
 } from './request';
+import { AlexaHandlerInput } from './types';
 
 export const ResponseInterceptor = {
-  async process(handlerInput: HandlerInput) {
+  async process(handlerInput: AlexaHandlerInput) {
     // save session attributes to persistent attributes
     await handlerInput.attributesManager.savePersistentAttributes();
   },
 };
 
 export const RequestInterceptorGenerator = (metrics: MetricsType, adapter: AdapterManager) => ({
-  async process(handlerInput: HandlerInput) {
-    const { versionID } = handlerInput.context as { versionID: string };
+  async process(handlerInput: AlexaHandlerInput) {
+    const { versionID } = handlerInput.context;
+
     metrics.invocation(versionID);
 
-    await adapter.context(handlerInput);
+    await adapter.state(handlerInput);
   },
 });
 

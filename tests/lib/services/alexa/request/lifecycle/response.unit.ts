@@ -19,7 +19,7 @@ describe('response lifecycle unit tests', () => {
     turnGet.onFirstCall().returns(null);
     turnGet.onSecondCall().returns(true);
 
-    const context = {
+    const runtime = {
       storage: { get: storageGet },
       turn: { get: turnGet, set: sinon.stub() },
       stack: { isEmpty: sinon.stub().returns(true) },
@@ -32,18 +32,18 @@ describe('response lifecycle unit tests', () => {
     const reprompt = sinon.stub().returns({ withShouldEndSession });
     const input = {
       responseBuilder: { getResponse: sinon.stub().returns(output), speak: sinon.stub().returns({ reprompt }) },
-      requestEnvelope: { context: { System: { user: { accessToken } } } },
+      requestEnvelope: { runtime: { System: { user: { accessToken } } } },
       attributesManager: { setPersistentAttributes: sinon.stub() },
     };
 
-    expect(await response(context as any, input as any)).to.eql(output);
-    expect(context.turn.set.args).to.eql([[T.END, true]]);
-    expect(context.storage.get.args).to.eql([[S.OUTPUT], [S.OUTPUT]]);
+    expect(await response(runtime as any, input as any)).to.eql(output);
+    expect(runtime.turn.set.args).to.eql([[T.END, true]]);
+    expect(runtime.storage.get.args).to.eql([[S.OUTPUT], [S.OUTPUT]]);
     expect(input.responseBuilder.speak.args).to.eql([['speak']]);
     expect(reprompt.args).to.eql([['speak']]);
     expect(withShouldEndSession.args).to.eql([[true]]);
-    expect(responseHandler1.args).to.eql([[context, input.responseBuilder]]);
-    expect(responseHandler2.args).to.eql([[context, input.responseBuilder]]);
+    expect(responseHandler1.args).to.eql([[runtime, input.responseBuilder]]);
+    expect(responseHandler2.args).to.eql([[runtime, input.responseBuilder]]);
     expect(input.attributesManager.setPersistentAttributes.args).to.eql([[finalState]]);
   });
 
@@ -52,7 +52,7 @@ describe('response lifecycle unit tests', () => {
 
     const response = responseGenerator(utils);
 
-    const context = {
+    const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
       turn: { get: sinon.stub().returns(true) },
       stack: { isEmpty: sinon.stub().returns(false) },
@@ -65,10 +65,10 @@ describe('response lifecycle unit tests', () => {
         getResponse: sinon.stub().returns(output),
         speak: sinon.stub().returns({ reprompt: sinon.stub().returns({ withShouldEndSession: sinon.stub() }) }),
       },
-      requestEnvelope: { context: { System: { user: { accessToken: 'access-token' } } } },
+      requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } } },
       attributesManager: { setPersistentAttributes: sinon.stub() },
     };
 
-    expect(await response(context as any, input as any)).to.eql(output);
+    expect(await response(runtime as any, input as any)).to.eql(output);
   });
 });

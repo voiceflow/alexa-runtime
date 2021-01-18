@@ -12,13 +12,13 @@
     }
   },
   "dependencies": {
-    "@voiceflow/alexa-types": "1.32.2",
-    "@voiceflow/api-sdk": "1.17.1",
+    "@voiceflow/alexa-types": "1.36.2",
+    "@voiceflow/api-sdk": "1.21.0",
     "@voiceflow/backend-utils": "^2.2.0",
     "@voiceflow/common": "^6.2.0",
-    "@voiceflow/general-types": "1.10.2",
+    "@voiceflow/general-types": "1.16.2",
     "@voiceflow/logger": "^1.4.1",
-    "@voiceflow/runtime": "1.12.0",
+    "@voiceflow/runtime": "1.18.5",
     "@voiceflow/verror": "^1.1.0",
     "alexa-verifier-middleware": "^1.0.2",
     "ask-sdk": "^2.9.0",

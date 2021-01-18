@@ -19,10 +19,10 @@ describe('launch handler unit tests', () => {
     it('works correclty', async () => {
       const output = 'output';
 
-      const context = { foo: 'bar' };
+      const runtime = { foo: 'bar' };
 
       const utils = {
-        buildContext: sinon.stub().returns(context),
+        buildRuntime: sinon.stub().returns(runtime),
         initialize: sinon.stub(),
         update: sinon.stub(),
         buildResponse: sinon.stub().returns(output),
@@ -33,10 +33,10 @@ describe('launch handler unit tests', () => {
       const input = { input: 'obj' };
 
       expect(await handler.handle(input as any)).to.eql(output);
-      expect(utils.buildContext.args).to.eql([[input]]);
-      expect(utils.initialize.args).to.eql([[context, input]]);
-      expect(utils.update.args).to.eql([[context]]);
-      expect(utils.buildResponse.args).to.eql([[context, input]]);
+      expect(utils.buildRuntime.args).to.eql([[input]]);
+      expect(utils.initialize.args).to.eql([[runtime, input]]);
+      expect(utils.update.args).to.eql([[runtime]]);
+      expect(utils.buildResponse.args).to.eql([[runtime, input]]);
     });
   });
 });
