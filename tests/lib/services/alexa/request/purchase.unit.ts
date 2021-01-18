@@ -23,7 +23,7 @@ describe('purchase handler unit tests', () => {
 
       const utils = {
         IntentHandler: { handle: sinon.stub().returns(output) },
-        updateContext: sinon.stub(),
+        updateRuntime: sinon.stub(),
       };
 
       const handler = PurchaseHandlerGenerator(utils as any);
@@ -32,9 +32,9 @@ describe('purchase handler unit tests', () => {
       const input = { requestEnvelope: { request: { status: { code: 200 }, payload: { purchaseResult } } } };
       expect(await handler.handle(input as any)).to.eql(output);
       expect(utils.IntentHandler.handle.args).to.eql([[input]]);
-      expect(utils.updateContext.args[0][0]).to.eql(input);
-      // assert updateContext callback
-      const fn = utils.updateContext.args[0][1];
+      expect(utils.updateRuntime.args[0][0]).to.eql(input);
+      // assert updateRuntime callback
+      const fn = utils.updateRuntime.args[0][1];
       const context = {
         storage: { produce: sinon.stub() },
       };
@@ -51,7 +51,7 @@ describe('purchase handler unit tests', () => {
 
       const utils = {
         IntentHandler: { handle: sinon.stub().returns(output) },
-        updateContext: sinon.stub(),
+        updateRuntime: sinon.stub(),
       };
 
       const handler = PurchaseHandlerGenerator(utils as any);
@@ -59,8 +59,8 @@ describe('purchase handler unit tests', () => {
       const purchaseResult = { foo: 'bar' };
       const input = { requestEnvelope: { request: { payload: { purchaseResult } } } };
       expect(await handler.handle(input as any)).to.eql(output);
-      // assert updateContext callback
-      const fn = utils.updateContext.args[0][1];
+      // assert updateRuntime callback
+      const fn = utils.updateRuntime.args[0][1];
       const context = {
         storage: { produce: sinon.stub() },
       };
@@ -77,15 +77,15 @@ describe('purchase handler unit tests', () => {
 
       const utils = {
         IntentHandler: { handle: sinon.stub().returns(output) },
-        updateContext: sinon.stub(),
+        updateRuntime: sinon.stub(),
       };
 
       const handler = PurchaseHandlerGenerator(utils as any);
 
       const input = { requestEnvelope: { request: { status: { code: 200 } } } };
       expect(await handler.handle(input as any)).to.eql(output);
-      // assert updateContext callback
-      const fn = utils.updateContext.args[0][1];
+      // assert updateRuntime callback
+      const fn = utils.updateRuntime.args[0][1];
       const context = {
         storage: { produce: sinon.stub() },
       };
@@ -102,15 +102,15 @@ describe('purchase handler unit tests', () => {
 
       const utils = {
         IntentHandler: { handle: sinon.stub().returns(output) },
-        updateContext: sinon.stub(),
+        updateRuntime: sinon.stub(),
       };
 
       const handler = PurchaseHandlerGenerator(utils as any);
 
       const input = { requestEnvelope: { request: {} } };
       expect(await handler.handle(input as any)).to.eql(output);
-      // assert updateContext callback
-      const fn = utils.updateContext.args[0][1];
+      // assert updateRuntime callback
+      const fn = utils.updateRuntime.args[0][1];
       const context = {
         storage: { produce: sinon.stub() },
       };

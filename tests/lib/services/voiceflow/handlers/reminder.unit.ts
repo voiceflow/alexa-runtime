@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S, T } from '@/lib/constants';
-import { _createReminderObject, ReminderHandler, ReminderType } from '@/lib/services/voiceflow/handlers/reminder';
+import { _createReminderObject, ReminderHandler, ReminderType } from '@/lib/services/runtime/handlers/reminder';
 
 describe('reminder handler unit test', () => {
   describe('canHandle', () => {

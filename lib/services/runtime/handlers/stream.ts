@@ -1,10 +1,10 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/stream';
 import { utils } from '@voiceflow/common';
 import { HandlerFactory, replaceVariables } from '@voiceflow/runtime';
-import { HandlerInput } from 'ask-sdk';
 import _ from 'lodash';
 
 import { S, T } from '@/lib/constants';
+import { AlexaHandlerInput } from '@/lib/services/alexa/types';
 
 import { ResponseBuilder } from '../types';
 
@@ -85,7 +85,7 @@ const responseUtils = {
 };
 
 export const StreamResponseBuilderGenerator = (u: typeof responseUtils): ResponseBuilder => (context, builder) => {
-  const handlerInput = context.turn.get<HandlerInput>(T.HANDLER_INPUT);
+  const handlerInput = context.turn.get<AlexaHandlerInput>(T.HANDLER_INPUT);
   const streamPlay = context.storage.get<StreamPlay>(S.STREAM_PLAY);
 
   if (handlerInput?.requestEnvelope.context?.AudioPlayer && streamPlay) {

@@ -19,11 +19,11 @@ const utilsObj = {
 
 export const CaptureHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => !!node.variable,
-  handle: (node, context, variables) => {
-    const request = context.turn.get<IntentRequest>(T.REQUEST);
+  handle: (node, runtime, variables) => {
+    const request = runtime.turn.get<IntentRequest>(T.REQUEST);
 
     if (request?.type !== RequestType.INTENT) {
-      utils.addRepromptIfExists(node, context, variables);
+      utils.addRepromptIfExists({ node, runtime, variables });
       // quit cycleStack without ending session by stopping on itself
       return node.id;
     }
@@ -31,11 +31,12 @@ export const CaptureHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => 
     let nextId: string | null = null;
 
     // check if there is a command in the stack that fulfills intent
-    if (utils.commandHandler.canHandle(context)) {
-      return utils.commandHandler.handle(context, variables);
+    if (utils.commandHandler.canHandle(runtime)) {
+      return utils.commandHandler.handle(runtime, variables);
     }
-    if (utils.repeatHandler.canHandle(context)) {
-      return utils.repeatHandler.handle(context);
+
+    if (utils.repeatHandler.canHandle(runtime)) {
+      return utils.repeatHandler.handle(runtime);
     }
 
     // "input" is only passed through the prototype tool
@@ -57,7 +58,7 @@ export const CaptureHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => 
     ({ nextId = null } = node);
 
     // request for this turn has been processed, delete request
-    context.turn.delete(T.REQUEST);
+    runtime.turn.delete(T.REQUEST);
 
     return nextId;
   },

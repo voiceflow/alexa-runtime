@@ -4,8 +4,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T, TEST_VERSION_ID, V } from '@/lib/constants';
+import { StreamAction } from '@/lib/services/runtime/handlers/stream';
 import TestManager from '@/lib/services/test';
-import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
 
 describe('test manager unit tests', () => {
   let clock: sinon.SinonFakeTimers;
@@ -41,10 +41,10 @@ describe('test manager unit tests', () => {
         trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
       };
 
-      const createContext = sinon.stub().returns(context);
+      const createRuntime = sinon.stub().returns(context);
 
       const services = {
-        voiceflow: { client: { createContext } },
+        voiceflow: { client: { createRuntime } },
         prototypeDataAPI: { getProgram: 'api' },
       };
       const utils = {
@@ -58,7 +58,7 @@ describe('test manager unit tests', () => {
       const state = { foo2: 'bar2' };
       const request = { foo3: 'bar3' };
       expect(await testManager.invoke(state as any, request as any)).to.eql({ ...rawState, trace });
-      expect(createContext.args).to.eql([
+      expect(createRuntime.args).to.eql([
         [
           TEST_VERSION_ID,
           state,
@@ -100,10 +100,10 @@ describe('test manager unit tests', () => {
         trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
       };
 
-      const createContext = sinon.stub().returns(context);
+      const createRuntime = sinon.stub().returns(context);
 
       const services = {
-        voiceflow: { client: { createContext } },
+        voiceflow: { client: { createRuntime } },
         prototypeDataAPI: { getProgram: 'api' },
       };
       const utils = {
@@ -142,10 +142,10 @@ describe('test manager unit tests', () => {
           trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
         };
 
-        const createContext = sinon.stub().returns(context);
+        const createRuntime = sinon.stub().returns(context);
 
         const services = {
-          voiceflow: { client: { createContext } },
+          voiceflow: { client: { createRuntime } },
           prototypeDataAPI: { getProgram: 'api' },
         };
 
@@ -193,10 +193,10 @@ describe('test manager unit tests', () => {
           trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
         };
 
-        const createContext = sinon.stub().returns(context);
+        const createRuntime = sinon.stub().returns(context);
 
         const services = {
-          voiceflow: { client: { createContext } },
+          voiceflow: { client: { createRuntime } },
           prototypeDataAPI: { getProgram: 'api' },
         };
 
@@ -244,10 +244,10 @@ describe('test manager unit tests', () => {
           trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
         };
 
-        const createContext = sinon.stub().returns(context);
+        const createRuntime = sinon.stub().returns(context);
 
         const services = {
-          voiceflow: { client: { createContext } },
+          voiceflow: { client: { createRuntime } },
           prototypeDataAPI: { getProgram: 'api' },
         };
 

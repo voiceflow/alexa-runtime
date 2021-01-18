@@ -1,8 +1,10 @@
-import { Context } from '@voiceflow/runtime';
-import { HandlerInput } from 'ask-sdk';
 import { Response } from 'ask-sdk-model';
 
+import { AlexaRuntime } from '@/lib/services/runtime/types';
+
+import { AlexaHandlerInput } from '../../../types';
+
 export interface ContextRequestHandler {
-  canHandle: (input: HandlerInput, context: Context) => boolean;
-  handle: (input: HandlerInput, context: Context) => Promise<Response> | Response;
+  canHandle: (input: AlexaHandlerInput, runtime: AlexaRuntime) => boolean;
+  handle: (input: AlexaHandlerInput, runtime: AlexaRuntime) => Promise<Response> | Response;
 }

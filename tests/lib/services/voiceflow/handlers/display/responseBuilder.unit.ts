@@ -2,9 +2,9 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import { DOCUMENT_VIDEO_TYPE, RENDER_DOCUMENT_DIRECTIVE_TYPE } from '@/lib/services/voiceflow/handlers/display/constants';
-import DisplayResponseBuilder, { CommandsResponseBuilder, DocumentResponseBuilder } from '@/lib/services/voiceflow/handlers/display/responseBuilder';
-import { VideoCommand, VideoCommandType } from '@/lib/services/voiceflow/handlers/display/types';
+import { DOCUMENT_VIDEO_TYPE, RENDER_DOCUMENT_DIRECTIVE_TYPE } from '@/lib/services/runtime/handlers/display/constants';
+import DisplayResponseBuilder, { CommandsResponseBuilder, DocumentResponseBuilder } from '@/lib/services/runtime/handlers/display/responseBuilder';
+import { VideoCommand, VideoCommandType } from '@/lib/services/runtime/handlers/display/types';
 
 describe('DisplayResponseBuilder unit tests', () => {
   describe('DisplayResponseBuilder', () => {

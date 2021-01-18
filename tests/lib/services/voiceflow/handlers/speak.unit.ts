@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { F, S } from '@/lib/constants';
-import SpeakHandler from '@/lib/services/voiceflow/handlers/speak';
+import SpeakHandler from '@/lib/services/runtime/handlers/speak';
 
 describe('speak handler unit tests', async () => {
   const speakHandler = SpeakHandler();

@@ -1,11 +1,18 @@
-export interface Audio {
-  url: string;
-  title?: string;
-  description?: string;
-  icon?: string;
-  background?: string;
-  offset: number;
-}
+import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
+import { DataAPI } from '@voiceflow/runtime';
+import { HandlerInput } from 'ask-sdk';
+
+import { AlexaRuntimeClient } from '@/lib/services/runtime/types';
+
+export type AlexaContext = {
+  api: DataAPI<AlexaProgram, AlexaVersion>;
+  versionID: string;
+  runtimeClient: AlexaRuntimeClient;
+};
+
+export type AlexaHandlerInput = Omit<HandlerInput, 'context'> & {
+  context: AlexaContext;
+};
 
 export enum Request {
   INTENT = 'IntentRequest',

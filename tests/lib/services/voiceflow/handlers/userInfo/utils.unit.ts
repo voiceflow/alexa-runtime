@@ -16,7 +16,7 @@ import isPermissionGranted, {
   _profileNumberReadPermission,
   isPermissionGrantedGenerator,
   PRODUCT,
-} from '@/lib/services/voiceflow/handlers/userInfo/utils';
+} from '@/lib/services/runtime/handlers/userInfo/utils';
 
 describe('user info utils unit test', () => {
   describe('isPermissionGranted', () => {

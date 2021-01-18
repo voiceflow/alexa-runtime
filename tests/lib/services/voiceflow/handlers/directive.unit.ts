@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T } from '@/lib/constants';
-import DirectiveHandler, { DirectiveResponseBuilder } from '@/lib/services/voiceflow/handlers/directive';
+import DirectiveHandler, { DirectiveResponseBuilder } from '@/lib/services/runtime/handlers/directive';
 
 describe('directive handler unit tests', () => {
   const directiveHandler = DirectiveHandler();

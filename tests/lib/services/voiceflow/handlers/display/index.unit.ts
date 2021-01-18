@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '@/lib/services/voiceflow/handlers/display/constants';
-import DefaultDisplayHandler, { DisplayHandler, getVariables } from '@/lib/services/voiceflow/handlers/display/index';
+import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '@/lib/services/runtime/handlers/display/constants';
+import DefaultDisplayHandler, { DisplayHandler, getVariables } from '@/lib/services/runtime/handlers/display/index';
 
 describe('displayHandler.unit tests', () => {
   const displayHandler = DefaultDisplayHandler();

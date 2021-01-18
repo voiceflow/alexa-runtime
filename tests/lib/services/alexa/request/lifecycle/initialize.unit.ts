@@ -4,7 +4,7 @@ import sinon from 'sinon';
 
 import { F, S, T } from '@/lib/constants';
 import { initializeGenerator, VAR_VF } from '@/lib/services/alexa/request/lifecycle/initialize';
-import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
+import { StreamAction } from '@/lib/services/runtime/handlers/stream';
 
 const VERSION_ID = 'version-id';
 

@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T } from '@/lib/constants';
-import { CaptureHandler } from '@/lib/services/voiceflow/handlers/capture';
-import { RequestType } from '@/lib/services/voiceflow/types';
+import { CaptureHandler } from '@/lib/services/runtime/handlers/capture';
+import { RequestType } from '@/lib/services/runtime/types';
 
 describe('capture handler unit tests', async () => {
   afterEach(() => sinon.restore());

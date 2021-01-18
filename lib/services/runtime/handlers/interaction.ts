@@ -22,18 +22,19 @@ const utilsObj = {
 
 export const InteractionHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => !!node.interactions,
-  handle: (node, context, variables) => {
-    const request = context.turn.get(T.REQUEST) as IntentRequest;
+  handle: (node, runtime, variables) => {
+    const request = runtime.turn.get<IntentRequest>(T.REQUEST);
 
     if (request?.type !== RequestType.INTENT) {
-      utils.addRepromptIfExists(node, context, variables);
-      context.trace.addTrace<TraceFrame>({
+      utils.addRepromptIfExists({ node, runtime, variables });
+
+      runtime.trace.addTrace<TraceFrame>({
         type: TraceType.CHOICE,
-        payload: { choices: node.interactions.map(({ intent }) => ({ name: intent })) },
+        payload: { choices: node.interactions.map(({ event }) => ({ name: event.intent })) },
       });
 
       // clean up no matches counter on new interaction
-      context.storage.delete(S.NO_MATCHES_COUNTER);
+      runtime.storage.delete(S.NO_MATCHES_COUNTER);
 
       // quit cycleStack without ending session by stopping on itself
       return node.id;
@@ -45,40 +46,41 @@ export const InteractionHandler: HandlerFactory<Node, typeof utilsObj> = (utils)
     const { intent } = request.payload;
 
     // check if there is a choice in the node that fulfills intent
-    node.interactions.forEach((choice, i: number) => {
-      if (choice.intent && utils.formatIntentName(choice.intent) === intent.name) {
-        variableMap = choice.mappings ?? null;
-        nextId = node.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
 
-        context.trace.debug(`matched choice **${choice.intent}** - taking path ${i + 1}`);
+    node.interactions.forEach((choice, i: number) => {
+      if (choice.event.intent && utils.formatIntentName(choice.event.intent) === intent.name) {
+        variableMap = choice.event.mappings ?? null;
+        ({ nextId } = choice);
+
+        runtime.trace.debug(`matched choice **${choice.event.intent}** - taking path ${i + 1}`);
       }
     });
 
     if (variableMap && intent.slots) {
       // map request mappings to variables
-      variables.merge(utils.mapSlots(variableMap, intent.slots));
+      variables.merge(utils.mapSlots({ slots: intent.slots, mappings: variableMap }));
     }
 
     // check if there is a command in the stack that fulfills intent
     if (nextId === undefined) {
-      if (utils.commandHandler.canHandle(context)) {
-        return utils.commandHandler.handle(context, variables);
+      if (utils.commandHandler.canHandle(runtime)) {
+        return utils.commandHandler.handle(runtime, variables);
       }
-      if (utils.repeatHandler.canHandle(context)) {
-        return utils.repeatHandler.handle(context);
+      if (utils.repeatHandler.canHandle(runtime)) {
+        return utils.repeatHandler.handle(runtime);
       }
     }
 
     // request for this turn has been processed, delete request
-    context.turn.delete(T.REQUEST);
+    runtime.turn.delete(T.REQUEST);
 
     // check for noMatches to handle
-    if (nextId === undefined && utils.noMatchHandler.canHandle(node, context)) {
-      return utils.noMatchHandler.handle(node, context, variables);
+    if (nextId === undefined && utils.noMatchHandler.canHandle(node, runtime)) {
+      return utils.noMatchHandler.handle(node, runtime, variables);
     }
 
     // clean up no matches counter
-    context.storage.delete(S.NO_MATCHES_COUNTER);
+    runtime.storage.delete(S.NO_MATCHES_COUNTER);
 
     return (nextId !== undefined ? nextId : node.elseId) || null;
   },

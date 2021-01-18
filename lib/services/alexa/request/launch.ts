@@ -1,6 +1,7 @@
-import { HandlerInput, RequestHandler } from 'ask-sdk';
+import { RequestHandler } from 'ask-sdk';
 
-import { buildContext, buildResponse, initialize, update } from './lifecycle';
+import { AlexaHandlerInput } from '../types';
+import { buildResponse, buildRuntime, initialize, update } from './lifecycle';
 
 export enum Request {
   LAUNCH = 'LaunchRequest',
@@ -8,26 +9,26 @@ export enum Request {
 }
 
 const utilsObj = {
-  buildContext,
+  buildRuntime,
   initialize,
   update,
   buildResponse,
 };
 
 export const LaunchHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
-  canHandle(input: HandlerInput): boolean {
+  canHandle(input: AlexaHandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
     return type === Request.LAUNCH || type === Request.CAN_FULFILL_INTENT;
   },
-  async handle(input: HandlerInput) {
-    const context = await utils.buildContext(input);
+  async handle(input: AlexaHandlerInput) {
+    const runtime = await utils.buildRuntime(input);
 
-    await utils.initialize(context, input);
+    await utils.initialize(runtime, input);
 
-    await utils.update(context);
+    await utils.update(runtime);
 
-    return utils.buildResponse(context, input);
+    return utils.buildResponse(runtime, input);
   },
 });
 

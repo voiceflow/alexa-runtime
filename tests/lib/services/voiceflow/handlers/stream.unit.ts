@@ -9,7 +9,7 @@ import {
   StreamHandler,
   StreamResponseBuilder,
   StreamResponseBuilderGenerator,
-} from '@/lib/services/voiceflow/handlers/stream';
+} from '@/lib/services/runtime/handlers/stream';
 
 describe('stream handler unit tests', () => {
   describe('canHandle', () => {

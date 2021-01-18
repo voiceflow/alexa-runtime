@@ -8,10 +8,10 @@ const CodeHandlerWrapper: HandlerFactory<Node, { endpoint: string }> = ({ endpoi
     canHandle: (...args) => {
       return codeHandler.canHandle(...args);
     },
-    handle: async (node, context, variables, program) => {
+    handle: async (node, runtime, variables, program) => {
       // eval/debug statements here
 
-      return codeHandler.handle(node, context, variables, program) as any;
+      return codeHandler.handle(node, runtime, variables, program) as any;
     },
   };
 };

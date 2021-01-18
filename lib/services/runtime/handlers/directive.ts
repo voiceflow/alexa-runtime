@@ -7,8 +7,8 @@ import { T } from '@/lib/constants';
 
 import { ResponseBuilder } from '../types';
 
-export const DirectiveResponseBuilder: ResponseBuilder = (context, builder) => {
-  const directives = context.turn.get(T.DIRECTIVES) as undefined | Directive[];
+export const DirectiveResponseBuilder: ResponseBuilder = (runtime, builder) => {
+  const directives = runtime.turn.get(T.DIRECTIVES) as undefined | Directive[];
   if (directives) {
     directives.forEach((directive) => {
       builder.addDirective(directive);
@@ -24,18 +24,18 @@ export const DirectiveHandler: HandlerFactory<Node, typeof utilsObj> = (utils) =
   canHandle: (node) => {
     return _isString(node.directive);
   },
-  handle: (node, context, variables) => {
+  handle: (node, runtime, variables) => {
     const { directive: unparsedDirective } = node;
 
     const directiveString = utils.replaceVariables(unparsedDirective, variables.getState());
     try {
       const directive = JSON.parse(directiveString) as Directive;
-      context.turn.produce((draft) => {
+      runtime.turn.produce((draft) => {
         draft[T.DIRECTIVES] = [...(draft[T.DIRECTIVES] || []), directive];
       });
-      context.trace.debug(`sending directive JSON:\n\`${directiveString}\``);
+      runtime.trace.debug(`sending directive JSON:\n\`${directiveString}\``);
     } catch (err) {
-      context.trace.debug(`invalid directive JSON:\n\`${directiveString}\`\n\`${err}\``);
+      runtime.trace.debug(`invalid directive JSON:\n\`${directiveString}\`\n\`${err}\``);
     }
 
     return node.nextId;

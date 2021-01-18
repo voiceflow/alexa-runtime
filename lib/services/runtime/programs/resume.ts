@@ -2,7 +2,7 @@ import { Voice } from '@voiceflow/alexa-types';
 import { NodeType, Prompt } from '@voiceflow/general-types';
 import { Frame, Program } from '@voiceflow/runtime';
 
-import { IntentName } from '@/lib/services/voiceflow/types';
+import { IntentName } from '@/lib/services/runtime/types';
 
 export const RESUME_PROGRAM_ID = '__RESUME_FLOW__';
 

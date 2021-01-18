@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import { stateDidExecute } from '@/lib/services/voiceflow/handlers/display/events';
+import { stateDidExecute } from '@/lib/services/runtime/handlers/display/events';
 
 describe('display handler events unit tests', () => {
   describe('stateDidExecute', () => {

@@ -6,12 +6,12 @@ import { DisplayInfo } from './types';
 import { shouldRebuildDisplay } from './utils';
 
 // eslint-disable-next-line import/prefer-default-export
-export const stateDidExecute: EventCallback<EventType.stateDidExecute> = ({ context, variables }) => {
-  const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
+export const stateDidExecute: EventCallback<EventType.stateDidExecute> = ({ runtime, variables }) => {
+  const displayInfo = runtime.storage.get<DisplayInfo | undefined>(S.DISPLAY_INFO);
 
   if (displayInfo && shouldRebuildDisplay(displayInfo.dataSourceVariables, variables.getState(), displayInfo.lastVariables)) {
-    context.storage.produce((state) => {
-      const dInfo = state[S.DISPLAY_INFO] as DisplayInfo;
+    runtime.storage.produce<{ [S.DISPLAY_INFO]: DisplayInfo }>((state) => {
+      const dInfo = state[S.DISPLAY_INFO];
 
       dInfo.shouldUpdate = true;
     });

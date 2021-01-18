@@ -1,11 +1,19 @@
 import { SlotMapping } from '@voiceflow/api-sdk';
-import { Context, formatIntentName, replaceVariables, Store, transformStringVariableToNumber } from '@voiceflow/runtime';
+import { formatIntentName, replaceVariables, Runtime, Store, transformStringVariableToNumber } from '@voiceflow/runtime';
 import { Slot } from 'ask-sdk-model';
 import _ from 'lodash';
 
 import { T } from '@/lib/constants';
 
-export const mapSlots = (mappings: SlotMapping[], slots: { [key: string]: Slot }, overwrite = false): object => {
+export const mapSlots = ({
+  slots,
+  mappings,
+  overwrite = false,
+}: {
+  slots: { [key: string]: Slot };
+  mappings: SlotMapping[];
+  overwrite?: boolean;
+}): object => {
   const variables: Record<string, any> = {};
 
   if (mappings && slots) {
@@ -27,8 +35,16 @@ export const mapSlots = (mappings: SlotMapping[], slots: { [key: string]: Slot }
   return variables;
 };
 
-export const addRepromptIfExists = <B extends { reprompt?: string }>(node: B, context: Context, variables: Store): void => {
+export const addRepromptIfExists = <B extends { reprompt?: string }>({
+  node,
+  runtime,
+  variables,
+}: {
+  node: B;
+  runtime: Runtime;
+  variables: Store;
+}): void => {
   if (node.reprompt) {
-    context.turn.set(T.REPROMPT, replaceVariables(node.reprompt, variables.getState()));
+    runtime.turn.set(T.REPROMPT, replaceVariables(node.reprompt, variables.getState()));
   }
 };

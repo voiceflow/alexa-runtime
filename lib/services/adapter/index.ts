@@ -14,6 +14,7 @@ class AdapterManager extends AbstractManager {
     // getPersistentAttributes hits dynamo only once during a TURN. the results from dynamo are cached
     // and used for sequent calls to getPersistentAttributes
     const context = await input.attributesManager.getPersistentAttributes();
+
     if (!_.isEmpty(context) && !context.stack) {
       const transformedContext = await this.transformContext(context as OldContextRaw, input);
 

@@ -1,10 +1,11 @@
-import { Context, Request } from '@voiceflow/runtime';
+import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
+import Client, { DataAPI, Runtime } from '@voiceflow/runtime';
 import { ResponseBuilder as ASKResponseBuilder } from 'ask-sdk';
 import { Intent } from 'ask-sdk-model';
 
 export enum RequestType {
-  INTENT = 'INTENT',
   EVENT = 'EVENT',
+  INTENT = 'INTENT',
 }
 
 export enum IntentName {
@@ -26,24 +27,30 @@ export enum IntentName {
   LOOP_OFF = 'AMAZON.LoopOffIntent',
 }
 
-export interface IntentRequestPayload {
+export type IntentRequestPayload = {
   intent: Intent;
   input?: string; // test tool only
-}
+};
 
-export interface IntentRequest extends Request {
+export type IntentRequest = {
   type: RequestType.INTENT;
   payload: IntentRequestPayload;
-}
+};
 
-export interface EventRequestPayload {
+export type EventRequestPayload = {
   event: string;
   data?: object;
-}
+};
 
-export interface EventRequest extends Request {
+export type EventRequest = {
   type: RequestType.EVENT;
   payload: EventRequestPayload;
-}
+};
 
-export type ResponseBuilder = (context: Context, builder: ASKResponseBuilder) => void | boolean | Promise<void | boolean>;
+export type AlexaRuntimeRequest = IntentRequest | EventRequest | undefined;
+
+export type AlexaRuntimeClient = Client<AlexaRuntimeRequest, DataAPI<AlexaProgram, AlexaVersion>>;
+
+export type AlexaRuntime = Runtime<AlexaRuntimeRequest, DataAPI<AlexaProgram, AlexaVersion>>;
+
+export type ResponseBuilder = (runtime: AlexaRuntime, builder: ASKResponseBuilder) => void | boolean | Promise<void | boolean>;

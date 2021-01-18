@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import PaymentHandler, { PaymentResponseBuilder } from '@/lib/services/voiceflow/handlers/payment';
+import PaymentHandler, { PaymentResponseBuilder } from '@/lib/services/runtime/handlers/payment';
 
 describe('payment handler unit tests', () => {
   const paymentHandler = PaymentHandler();

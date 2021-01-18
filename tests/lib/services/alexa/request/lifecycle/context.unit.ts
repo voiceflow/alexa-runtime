@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import { S, T } from '@/lib/constants';
 import buildContext from '@/lib/services/alexa/request/lifecycle/context';
 import { Request } from '@/lib/services/alexa/types';
-import { RequestType } from '@/lib/services/voiceflow/types';
+import { RequestType } from '@/lib/services/runtime/types';
 
 describe('context lifecycle unit tests', () => {
   it('no request', async () => {
@@ -20,12 +20,12 @@ describe('context lifecycle unit tests', () => {
       requestEnvelope: { request: null, context: { System: { user: { accessToken } } } },
       context: {
         versionID: 'version-id',
-        voiceflow: { createContext: sinon.stub().returns(context) },
+        voiceflow: { createRuntime: sinon.stub().returns(context) },
       },
     };
 
     expect(await buildContext(input as any)).to.eql(context);
-    expect(input.context.voiceflow.createContext.args).to.eql([[input.context.versionID, rawState, undefined]]);
+    expect(input.context.voiceflow.createRuntime.args).to.eql([[input.context.versionID, rawState, undefined]]);
     expect(context.turn.set.args).to.eql([
       [T.HANDLER_INPUT, input],
       [T.PREVIOUS_OUTPUT, 'output'],
@@ -49,12 +49,12 @@ describe('context lifecycle unit tests', () => {
       requestEnvelope: { request: { type: 'randomEvent', foo: 'bar' }, context: { System: { user: {} } } },
       context: {
         versionID: 'version-id',
-        voiceflow: { createContext: sinon.stub().returns(context) },
+        voiceflow: { createRuntime: sinon.stub().returns(context) },
       },
     };
 
     expect(await buildContext(input as any)).to.eql(context);
-    expect(input.context.voiceflow.createContext.args).to.eql([
+    expect(input.context.voiceflow.createRuntime.args).to.eql([
       [input.context.versionID, rawState, { type: RequestType.EVENT, payload: { event: 'randomEvent', data: input.requestEnvelope.request } }],
     ]);
   });
@@ -71,12 +71,12 @@ describe('context lifecycle unit tests', () => {
       requestEnvelope: { request: { intent: 'intent', type: Request.INTENT }, context: { System: { user: {} } } },
       context: {
         versionID: 'version-id',
-        voiceflow: { createContext: sinon.stub().returns(context) },
+        voiceflow: { createRuntime: sinon.stub().returns(context) },
       },
     };
 
     expect(await buildContext(input as any)).to.eql(context);
-    expect(input.context.voiceflow.createContext.args).to.eql([
+    expect(input.context.voiceflow.createRuntime.args).to.eql([
       [input.context.versionID, rawState, { type: RequestType.INTENT, payload: input.requestEnvelope.request }],
     ]);
   });

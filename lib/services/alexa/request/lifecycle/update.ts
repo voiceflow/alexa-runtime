@@ -1,10 +1,10 @@
 import { RepeatType } from '@voiceflow/general-types';
-import { Context } from '@voiceflow/runtime';
 
 import { S, T, V } from '@/lib/constants';
+import { AlexaRuntime } from '@/lib/services/runtime/types';
 
-const update = async (context: Context): Promise<void> => {
-  const { turn, variables, storage } = context;
+const update = async (runtime: AlexaRuntime): Promise<void> => {
+  const { turn, variables, storage } = runtime;
 
   const repeatNumber = storage?.get(S.REPEAT);
 
@@ -16,10 +16,10 @@ const update = async (context: Context): Promise<void> => {
     storage.set(S.REPEAT, repeat);
   }
 
-  turn.set(T.REQUEST, context.getRequest());
+  turn.set(T.REQUEST, runtime.getRequest());
   variables.set(V.TIMESTAMP, Math.floor(Date.now() / 1000));
 
-  await context.update();
+  await runtime.update();
 };
 
 export default update;

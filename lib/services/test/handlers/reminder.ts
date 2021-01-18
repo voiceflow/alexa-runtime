@@ -5,11 +5,11 @@ export const ReminderHandlerGenerator: HandlerFactory<Node> = () => ({
   canHandle: (node) => {
     return !!node.reminder;
   },
-  handle: (node, context) => {
-    context.trace.debug('__reminder__ - entered');
+  handle: (node, runtime) => {
+    runtime.trace.debug('__reminder__ - entered');
 
     if (node.success_id || node.fail_id) {
-      context.trace.debug(
+      runtime.trace.debug(
         node.success_id ? '__reminder__ - success path triggered' : '__reminder__ - success path not provided, redirecting to the fail path'
       );
     }

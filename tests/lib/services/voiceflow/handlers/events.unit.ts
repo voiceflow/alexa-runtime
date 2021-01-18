@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import { executeEvents } from '@/lib/services/voiceflow/handlers/events';
+import { executeEvents } from '@/lib/services/runtime/handlers/events';
 
 describe('executeEvents', () => {
   it('event type in map', async () => {

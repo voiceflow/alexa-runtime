@@ -3,7 +3,7 @@ import sinon from 'sinon';
 
 import PlaybackControllerHandler, { PlaybackControllerHandlerGenerator } from '@/lib/services/alexa/request/playback';
 import { Command } from '@/lib/services/alexa/request/playback/types';
-import { IntentName } from '@/lib/services/voiceflow/types';
+import { IntentName } from '@/lib/services/runtime/types';
 
 describe('playback controller handler unit tests', () => {
   describe('canHandle', () => {

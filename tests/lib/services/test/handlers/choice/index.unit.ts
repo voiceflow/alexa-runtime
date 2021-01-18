@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T } from '@/lib/constants';
+import { RequestType } from '@/lib/services/runtime/types';
 import { ChoiceHandler } from '@/lib/services/test/handlers/choice';
-import { RequestType } from '@/lib/services/voiceflow/types';
 
 describe('choice handler unit tests', async () => {
   afterEach(() => sinon.restore());

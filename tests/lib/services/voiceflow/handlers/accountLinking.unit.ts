@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S, T } from '@/lib/constants';
-import AccountLinkingHandler, { AccountLinkingResponseBuilder } from '@/lib/services/voiceflow/handlers/accountLinking';
+import AccountLinkingHandler, { AccountLinkingResponseBuilder } from '@/lib/services/runtime/handlers/accountLinking';
 
 describe('permission card handler unit tests', () => {
   const accountLinkingHandler = AccountLinkingHandler();

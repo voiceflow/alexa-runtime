@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { F, S, TEST_VERSION_ID } from '@/lib/constants';
-import VoiceflowManager from '@/lib/services/voiceflow';
+import VoiceflowManager from '@/lib/services/runtime';
 
 describe('voiceflowManager unit tests', async () => {
   afterEach(() => sinon.restore());

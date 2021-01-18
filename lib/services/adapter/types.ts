@@ -1,7 +1,7 @@
 import { interfaces, SupportedInterfaces } from 'ask-sdk-model';
 
-import { Command as DisplayCommand, DisplayInfo } from '../voiceflow/handlers/display/types';
-import { StreamAction, StreamPlay } from '../voiceflow/handlers/stream';
+import { Command as DisplayCommand, DisplayInfo } from '../runtime/handlers/display/types';
+import { StreamAction, StreamPlay } from '../runtime/handlers/stream';
 
 export type OldCommands = {
   [key: string]: {

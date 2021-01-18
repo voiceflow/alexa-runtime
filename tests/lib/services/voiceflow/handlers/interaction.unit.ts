@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S, T } from '@/lib/constants';
-import { InteractionHandler } from '@/lib/services/voiceflow/handlers/interaction';
-import { RequestType } from '@/lib/services/voiceflow/types';
+import { InteractionHandler } from '@/lib/services/runtime/handlers/interaction';
+import { RequestType } from '@/lib/services/runtime/types';
 
 describe('interaction handler unit tests', async () => {
   afterEach(() => sinon.restore());

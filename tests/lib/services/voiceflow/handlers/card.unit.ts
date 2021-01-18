@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T } from '@/lib/constants';
-import { addVariables, CardHandler, CardResponseBuilder } from '@/lib/services/voiceflow/handlers/card';
+import { addVariables, CardHandler, CardResponseBuilder } from '@/lib/services/runtime/handlers/card';
 
 describe('card handler unit tests', async () => {
   afterEach(() => sinon.restore());

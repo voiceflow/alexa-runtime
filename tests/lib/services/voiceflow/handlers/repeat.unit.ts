@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { F, S, T } from '@/lib/constants';
-import RepeatHandler from '@/lib/services/voiceflow/handlers/repeat';
+import RepeatHandler from '@/lib/services/runtime/handlers/repeat';
 
 describe('repeat handler', () => {
   const repeatHandler = RepeatHandler();

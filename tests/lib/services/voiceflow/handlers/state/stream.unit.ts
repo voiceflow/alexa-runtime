@@ -2,9 +2,9 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S, T } from '@/lib/constants';
-import DefaultStreamStateHandler, { StreamFailPhrase, StreamStateHandler } from '@/lib/services/voiceflow/handlers/state/stream';
-import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
-import { IntentName } from '@/lib/services/voiceflow/types';
+import DefaultStreamStateHandler, { StreamFailPhrase, StreamStateHandler } from '@/lib/services/runtime/handlers/state/stream';
+import { StreamAction } from '@/lib/services/runtime/handlers/stream';
+import { IntentName } from '@/lib/services/runtime/types';
 
 describe('stream state handler unit tests', () => {
   const streamStateHandler = DefaultStreamStateHandler();

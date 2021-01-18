@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import VideoControlHandler from '@/lib/services/alexa/request/intent/behavior/videoControl';
-import { VideoCommand, VideoCommandType } from '@/lib/services/voiceflow/handlers/display/types';
-import { IntentName } from '@/lib/services/voiceflow/types';
+import { VideoCommand, VideoCommandType } from '@/lib/services/runtime/handlers/display/types';
+import { IntentName } from '@/lib/services/runtime/types';
 
 describe('video control handler', () => {
   describe('canHandle', () => {

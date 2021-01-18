@@ -1,10 +1,9 @@
-import { AlexaCommands, AlexaNodes, AlexaVersionData } from '@voiceflow/alexa-types';
-import { Program, Version } from '@voiceflow/api-sdk';
+import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
 import { ServerDataApi } from '@voiceflow/runtime';
 
-class PrototypeServerDataApi extends ServerDataApi<Program<AlexaNodes, AlexaCommands>, Version<AlexaVersionData>> {
+class PrototypeServerDataApi extends ServerDataApi<AlexaProgram, AlexaVersion> {
   public getProgram = async (programID: string) => {
-    const { data } = await this.client.get<Program<AlexaNodes, AlexaCommands>>(`/test/diagrams/${programID}`);
+    const { data } = await this.client.get<AlexaProgram>(`/test/diagrams/${programID}`);
 
     return data;
   };

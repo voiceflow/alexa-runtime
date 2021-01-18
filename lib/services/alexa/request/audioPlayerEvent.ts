@@ -1,10 +1,11 @@
 /* eslint-disable max-depth */
-import Client, { State } from '@voiceflow/runtime';
-import { HandlerInput, RequestHandler } from 'ask-sdk';
+import { State } from '@voiceflow/runtime';
+import { RequestHandler } from 'ask-sdk';
 
 import { S } from '@/lib/constants';
 
-import { _streamMetaData, AudioDirective, StreamAction, StreamPlay } from '../../voiceflow/handlers/stream';
+import { _streamMetaData, AudioDirective, StreamAction, StreamPlay } from '../../runtime/handlers/stream';
+import { AlexaHandlerInput } from '../types';
 import { update } from './lifecycle';
 
 export enum Request {
@@ -25,16 +26,16 @@ const utilsObj = {
 };
 
 export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
-  canHandle(input: HandlerInput): boolean {
+  canHandle(input: AlexaHandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
     return type.startsWith(Request.AUDIO_PLAYER);
   },
-  async handle(input: HandlerInput) {
-    const { versionID, voiceflow } = input.context as { versionID: string; voiceflow: Client };
+  async handle(input: AlexaHandlerInput) {
+    const { versionID, runtimeClient } = input.context;
     const rawState = await input.attributesManager.getPersistentAttributes();
-    let context = voiceflow.createContext(versionID, rawState as State);
-    const { storage } = context;
+    let runtime = runtimeClient.createRuntime(versionID, rawState as State);
+    const { storage } = runtime;
 
     const { request } = input.requestEnvelope;
 
@@ -45,13 +46,13 @@ export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): Reques
     switch (audioPlayerEventName) {
       case AudioEvent.PlaybackStarted:
         if (storage.get(S.STREAM_FINISHED) && storage.get(S.STREAM_TEMP)) {
-          context = voiceflow.createContext(versionID, storage.get(S.STREAM_TEMP) as State);
+          runtime = runtimeClient.createRuntime(versionID, storage.get(S.STREAM_TEMP) as State);
         } else {
           storage.delete(S.STREAM_FINISHED);
         }
         break;
       case AudioEvent.PlaybackFinished:
-        context.storage.set(S.STREAM_FINISHED, true);
+        runtime.storage.set(S.STREAM_FINISHED, true);
         break;
       case AudioEvent.PlaybackStopped:
         break;
@@ -72,7 +73,7 @@ export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): Reques
           }
         } else if (streamPlay.action === StreamAction.START && !storage.get(S.STREAM_TEMP)) {
           // check for next stream
-          const tempContext = voiceflow.createContext(versionID, rawState as State);
+          const tempContext = runtimeClient.createRuntime(versionID, rawState as State);
           tempContext.storage.set(S.STREAM_PLAY, { ...tempContext.storage.get<StreamPlay>(S.STREAM_PLAY), action: StreamAction.NEXT });
 
           await utils.update(tempContext);
@@ -107,7 +108,7 @@ export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): Reques
         throw new Error('cannot handle event');
     }
 
-    input.attributesManager.setPersistentAttributes(context.getRawState());
+    input.attributesManager.setPersistentAttributes(runtime.getRawState());
     return builder.getResponse();
   },
 });

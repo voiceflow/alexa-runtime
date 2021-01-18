@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import { EMPTY_AUDIO_STRING, NoMatchHandler } from '@/lib/services/voiceflow/handlers/noMatch';
+import { EMPTY_AUDIO_STRING, NoMatchHandler } from '@/lib/services/runtime/handlers/noMatch';
 
 describe('noMatch handler unit tests', () => {
   describe('canHandle', () => {

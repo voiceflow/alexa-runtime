@@ -48,7 +48,7 @@ describe('permission handler unit test', () => {
     describe('enters if', () => {
       it('works correctly', async () => {
         const utils = {
-          updateContext: sinon.stub(),
+          updateRuntime: sinon.stub(),
         };
 
         const handler = PermissionHandlerGenerator(utils);
@@ -60,10 +60,10 @@ describe('permission handler unit test', () => {
           responseBuilder: { getResponse: sinon.stub().returns(output) },
         };
         expect(await handler.handle(input as any)).to.eql(output);
-        expect(utils.updateContext.args[0][0]).to.eql(input);
+        expect(utils.updateRuntime.args[0][0]).to.eql(input);
 
         // assert callback
-        const fn = utils.updateContext.args[0][1];
+        const fn = utils.updateRuntime.args[0][1];
 
         const context = { storage: { set: sinon.stub() } };
         fn(context);

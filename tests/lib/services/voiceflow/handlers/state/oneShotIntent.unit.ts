@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T } from '@/lib/constants';
-import { OneShotIntentHandler } from '@/lib/services/voiceflow/handlers/state/oneShotIntent';
-import { RequestType } from '@/lib/services/voiceflow/types';
+import { OneShotIntentHandler } from '@/lib/services/runtime/handlers/state/oneShotIntent';
+import { RequestType } from '@/lib/services/runtime/types';
 
 describe('one shot intent handler unit tests', () => {
   const oneShotIntentHandler = OneShotIntentHandler(null as any);

@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { F, T } from '@/lib/constants';
-import DefaultCommandHandler, { CommandHandler, getCommand } from '@/lib/services/voiceflow/handlers/command';
-import { IntentName, RequestType } from '@/lib/services/voiceflow/types';
+import DefaultCommandHandler, { CommandHandler, getCommand } from '@/lib/services/runtime/handlers/command';
+import { IntentName, RequestType } from '@/lib/services/runtime/types';
 
 describe('command handler unit tests', async () => {
   afterEach(() => sinon.restore());

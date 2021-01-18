@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T } from '@/lib/constants';
-import { addRepromptIfExists, mapSlots } from '@/lib/services/voiceflow/utils';
+import { addRepromptIfExists, mapSlots } from '@/lib/services/runtime/utils';
 
 describe('voiceflow manager utils unit tests', async () => {
   afterEach(() => sinon.restore());

@@ -5,8 +5,8 @@ import { T } from '@/lib/constants';
 
 import { ResponseBuilder } from '../types';
 
-export const CardResponseBuilder: ResponseBuilder = (context, builder) => {
-  const card: Required<Card> | undefined = context.turn.get(T.CARD);
+export const CardResponseBuilder: ResponseBuilder = (runtime, builder) => {
+  const card: Required<Card> | undefined = runtime.turn.get(T.CARD);
 
   if (!card) {
     return;
@@ -28,7 +28,7 @@ const utilsObj = {
 
 export const CardHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => !!node.card,
-  handle: (node, context, variables) => {
+  handle: (node, runtime, variables) => {
     const { card } = node;
     const type = card.type ?? CardType.SIMPLE;
 
@@ -54,7 +54,7 @@ export const CardHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
       newCard.image.smallImageUrl = utils.addVariables(card.image.smallImageUrl, variables, newCard.image.largeImageUrl);
     }
 
-    context.turn.set(T.CARD, newCard);
+    runtime.turn.set(T.CARD, newCard);
 
     return node.nextId ?? null;
   },

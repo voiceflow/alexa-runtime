@@ -1,11 +1,11 @@
 import { PermissionType } from '@voiceflow/alexa-types';
 import { Permission } from '@voiceflow/alexa-types/build/nodes/userInfo';
-import { Context, Store } from '@voiceflow/runtime';
-import { HandlerInput } from 'ask-sdk';
+import { Runtime, Store } from '@voiceflow/runtime';
 import { services } from 'ask-sdk-model';
 import axios, { AxiosStatic } from 'axios';
 
 import { Storage as S, Turn as T } from '@/lib/constants/flags';
+import { AlexaHandlerInput } from '@/lib/services/alexa/types';
 
 export enum PRODUCT {
   ENTITLED = 'ENTITLED',
@@ -20,7 +20,7 @@ export enum PRODUCT {
   NOT_PURCHASABLE = 'NOT_PURCHASABLE',
 }
 
-export const _alexaApiCallGenerator = (http: AxiosStatic) => (handlerInput: HandlerInput, endpoint: string) => {
+export const _alexaApiCallGenerator = (http: AxiosStatic) => (handlerInput: AlexaHandlerInput, endpoint: string) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
   const { apiConfiguration } = handlerInput.serviceClientFactory;
@@ -38,7 +38,7 @@ export const _alexaApiCallGenerator = (http: AxiosStatic) => (handlerInput: Hand
 
 const _alexaApiCall = _alexaApiCallGenerator(axios);
 
-export const _ispPermissionGenerator = (apiCall: typeof _alexaApiCall) => async (handlerInput: HandlerInput): Promise<boolean> => {
+export const _ispPermissionGenerator = (apiCall: typeof _alexaApiCall) => async (handlerInput: AlexaHandlerInput): Promise<boolean> => {
   try {
     const voicePurchasingEndpoint = '/v1/users/~current/skills/~current/settings/voicePurchasing.enabled';
     const status = await apiCall(handlerInput, voicePurchasingEndpoint);
@@ -60,7 +60,7 @@ const _transactionPermissionGenerator = async ({
   apiCall: typeof _alexaApiCall;
   variables: Store;
   transaction?: { value: string };
-  handlerInput: HandlerInput;
+  handlerInput: AlexaHandlerInput;
   productValue: string;
 }) => {
   if (!transaction?.value) {
@@ -89,7 +89,7 @@ const _transactionPermissionGenerator = async ({
 };
 
 export const _productPermissionGenerator = (apiCall: typeof _alexaApiCall) => async (
-  handlerInput: HandlerInput,
+  handlerInput: AlexaHandlerInput,
   permission: Partial<Permission>,
   permissionVariable: string | undefined,
   locale: string,
@@ -147,7 +147,7 @@ export const _accountLinkingPermission = async (accessToken: string, permissionV
   return false;
 };
 
-export const _personIdReadPermission = (handlerInput: HandlerInput, permissionVariable: string | undefined, variables: Store): boolean => {
+export const _personIdReadPermission = (handlerInput: AlexaHandlerInput, permissionVariable: string | undefined, variables: Store): boolean => {
   try {
     const { person } = handlerInput.requestEnvelope.context.System;
     if (!person) return false;
@@ -165,7 +165,7 @@ export const _personIdReadPermission = (handlerInput: HandlerInput, permissionVa
 };
 
 export const _profileEmailReadPermission = async (
-  handlerInput: HandlerInput,
+  handlerInput: AlexaHandlerInput,
   permissionVariable: string | undefined,
   variables: Store
 ): Promise<boolean> => {
@@ -186,7 +186,7 @@ export const _profileEmailReadPermission = async (
 };
 
 export const _profileNameReadPermission = async (
-  handlerInput: HandlerInput,
+  handlerInput: AlexaHandlerInput,
   permissionVariable: string | undefined,
   variables: Store
 ): Promise<boolean> => {
@@ -207,7 +207,7 @@ export const _profileNameReadPermission = async (
 };
 
 export const _profileNumberReadPermission = async (
-  handlerInput: HandlerInput,
+  handlerInput: AlexaHandlerInput,
   permissionVariable: string | undefined,
   variables: Store
 ): Promise<boolean> => {
@@ -229,7 +229,11 @@ export const _profileNumberReadPermission = async (
   }
 };
 
-export const _geolocationRead = async (handlerInput: HandlerInput, permissionVariable: string | undefined, variables: Store): Promise<boolean> => {
+export const _geolocationRead = async (
+  handlerInput: AlexaHandlerInput,
+  permissionVariable: string | undefined,
+  variables: Store
+): Promise<boolean> => {
   const skillPermissionGranted = handlerInput.requestEnvelope.context.System.user.permissions?.scopes?.['alexa::devices:all:geolocation:read'].status;
 
   if (skillPermissionGranted !== 'GRANTED') {
@@ -269,18 +273,18 @@ const utilsObj = {
 
 export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
   permission: Partial<Permission> | null,
-  context: Context,
+  runtime: Runtime,
   variables: Store
 ): Promise<boolean> => {
   if (!permission) return false;
 
   const permissionValue = permission.selected?.value;
-  const handlerInput = context.turn.get<HandlerInput>(T.HANDLER_INPUT);
+  const handlerInput = runtime.turn.get<AlexaHandlerInput>(T.HANDLER_INPUT);
 
   if (
     !permissionValue ||
     !handlerInput ||
-    ((!Array.isArray(context.storage.get<string[]>(S.PERMISSIONS)) || !context.storage.get<string[]>(S.PERMISSIONS)!.includes(permissionValue)) &&
+    ((!Array.isArray(runtime.storage.get<string[]>(S.PERMISSIONS)) || !runtime.storage.get<string[]>(S.PERMISSIONS)!.includes(permissionValue)) &&
       !permissionValue.startsWith('UNOFFICIAL') &&
       !permissionValue.startsWith('alexa::person_id'))
   )
@@ -309,11 +313,11 @@ export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
   }
 
   if (permissionValue === PermissionType.UNOFFICIAL_PRODUCT && permission.product?.value) {
-    return utils._productPermission(handlerInput, permission, permissionVariable, context.storage.get<string>(S.LOCALE)!, variables);
+    return utils._productPermission(handlerInput, permission, permissionVariable, runtime.storage.get<string>(S.LOCALE)!, variables);
   }
 
   if (permissionValue === PermissionType.UNOFFICIAL_ACCOUNT_LINKING) {
-    return utils._accountLinkingPermission(context.storage.get<string>(S.ACCESS_TOKEN)!, permissionVariable, variables);
+    return utils._accountLinkingPermission(runtime.storage.get<string>(S.ACCESS_TOKEN)!, permissionVariable, variables);
   }
 
   if (permissionValue === PermissionType.ALEXA_PERSON_ID_READ) {

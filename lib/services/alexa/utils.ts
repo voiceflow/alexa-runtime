@@ -1,13 +1,18 @@
-import Client, { Context, State } from '@voiceflow/runtime';
-import { HandlerInput } from 'ask-sdk';
+import { State } from '@voiceflow/runtime';
+
+import { AlexaRuntime } from '@/lib/services/runtime/types';
+
+import { AlexaHandlerInput } from './types';
 
 // eslint-disable-next-line import/prefer-default-export
-export const updateContext = async (input: HandlerInput, produce: (context: Context) => Promise<void> | void) => {
-  const { versionID, voiceflow } = input.context as { versionID: string; voiceflow: Client };
+export const updateRuntime = async (input: AlexaHandlerInput, produce: (runtime: AlexaRuntime) => Promise<void> | void) => {
+  const { versionID, runtimeClient } = input.context;
+
   const rawState = await input.attributesManager.getPersistentAttributes();
 
-  const context = voiceflow.createContext(versionID, rawState as State);
-  await produce(context);
+  const runtime = runtimeClient.createRuntime(versionID, rawState as State);
 
-  input.attributesManager.setPersistentAttributes(context.getRawState());
+  await produce(runtime);
+
+  input.attributesManager.setPersistentAttributes(runtime.getRawState());
 };

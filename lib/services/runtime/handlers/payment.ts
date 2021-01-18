@@ -4,7 +4,7 @@ import { HandlerFactory } from '@voiceflow/runtime';
 import { interfaces } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
-import { ResponseBuilder } from '@/lib/services/voiceflow/types';
+import { ResponseBuilder } from '@/lib/services/runtime/types';
 
 export type PaymentStorage = {
   status: null | false | interfaces.monetization.v1.PurchaseResult;

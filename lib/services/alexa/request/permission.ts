@@ -1,20 +1,21 @@
-import { HandlerInput, RequestHandler } from 'ask-sdk';
+import { RequestHandler } from 'ask-sdk';
 
 import { S } from '@/lib/constants';
 
-import { Request } from '../types';
-import { updateContext } from '../utils';
+import { AlexaHandlerInput, Request } from '../types';
+import { updateRuntime } from '../utils';
 
 const utilsObj = {
-  updateContext,
+  updateRuntime,
 };
 
 export const PermissionHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
-  canHandle(input: HandlerInput): boolean {
+  canHandle(input: AlexaHandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
+
     return type.startsWith(Request.SKILL_EVENT_ROOT);
   },
-  async handle(input: HandlerInput) {
+  async handle(input: AlexaHandlerInput) {
     const { request } = input.requestEnvelope;
 
     if (
@@ -30,8 +31,8 @@ export const PermissionHandlerGenerator = (utils: typeof utilsObj): RequestHandl
         return acc;
       }, []);
 
-      await utils.updateContext(input, (context) => {
-        context.storage.set(S.PERMISSIONS, permissions);
+      await utils.updateRuntime(input, (runtime) => {
+        runtime.storage.set(S.PERMISSIONS, permissions);
       });
     }
 

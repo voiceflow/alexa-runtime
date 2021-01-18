@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { UserInfoHandler } from '@/lib/services/voiceflow/handlers/userInfo';
+import { UserInfoHandler } from '@/lib/services/runtime/handlers/userInfo';
 
 describe('user info handler unit test', () => {
   describe('canHandle', () => {

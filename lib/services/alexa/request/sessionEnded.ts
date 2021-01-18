@@ -1,10 +1,11 @@
-import { HandlerInput, RequestHandler } from 'ask-sdk';
+import { RequestHandler } from 'ask-sdk';
 import { SessionEndedRequest } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
-import { DisplayInfo } from '@/lib/services/voiceflow/handlers/display/types';
+import { DisplayInfo } from '@/lib/services/runtime/handlers/display/types';
 
-import { updateContext } from '../utils';
+import { AlexaHandlerInput } from '../types';
+import { updateRuntime } from '../utils';
 
 export enum Request {
   SESSION_ENDED = 'SessionEndedRequest',
@@ -22,43 +23,45 @@ export enum RequestReason {
 const utilsObj = {
   // eslint-disable-next-line no-console
   log: console.warn,
-  updateContext,
+  updateRuntime,
 };
 
 export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
-  canHandle(input: HandlerInput): boolean {
+  canHandle(input: AlexaHandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
     return type === Request.SESSION_ENDED;
   },
-  async handle(input: HandlerInput) {
+  async handle(input: AlexaHandlerInput) {
     const request = input.requestEnvelope.request as SessionEndedRequest;
     const errorType = request.error?.type;
 
-    await utils.updateContext(input, (context) => {
+    await utils.updateRuntime(input, (runtime) => {
       if (errorType === ErrorType.INVALID_RESPONSE || errorType === ErrorType.INTERNAL_SERVICE_ERROR) {
         // eslint-disable-next-line no-console
         utils.log(
           'errorType=%s, versionID=%s, storage=%s, turn=%s, variables=%s, stack=%s, trace=%s',
           errorType,
-          context.versionID,
-          JSON.stringify(context.storage.getState()),
-          JSON.stringify(context.turn.getState()),
-          JSON.stringify(context.variables.getState()),
-          JSON.stringify(context.stack.getState()),
-          JSON.stringify(context.trace.get())
+          runtime.versionID,
+          JSON.stringify(runtime.storage.getState()),
+          JSON.stringify(runtime.turn.getState()),
+          JSON.stringify(runtime.variables.getState()),
+          JSON.stringify(runtime.stack.getState()),
+          JSON.stringify(runtime.trace.get())
         );
       }
 
       if (request.reason === RequestReason.ERROR) {
         // eslint-disable-next-line no-console
-        utils.log('error=%s, versionID=%s', JSON.stringify(request), context.versionID);
+        utils.log('error=%s, versionID=%s', JSON.stringify(request), runtime.versionID);
       }
 
-      const displayInfo = context.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
+      const displayInfo = runtime.storage.get<DisplayInfo | undefined>(S.DISPLAY_INFO);
+
       if (displayInfo?.playingVideos) {
-        context.storage.produce((state) => {
-          const dInfo = state[S.DISPLAY_INFO] as DisplayInfo;
+        runtime.storage.produce<{ [S.DISPLAY_INFO]: DisplayInfo }>((state) => {
+          const dInfo = state[S.DISPLAY_INFO];
+
           dInfo.playingVideos = {};
         });
       }

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import CancelPaymentStateHandler from '@/lib/services/voiceflow/handlers/state/cancelPayment';
+import CancelPaymentStateHandler from '@/lib/services/runtime/handlers/state/cancelPayment';
 
 describe('cancelPayment state handler unit tests', () => {
   const cancelPaymentStateHandler = CancelPaymentStateHandler();

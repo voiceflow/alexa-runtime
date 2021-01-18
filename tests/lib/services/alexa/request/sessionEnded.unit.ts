@@ -20,17 +20,17 @@ describe('session ended handler unit tests', () => {
   describe('handle', () => {
     describe('no errors', () => {
       it('no displayInfo', async () => {
-        const utils = { updateContext: sinon.stub() };
+        const utils = { updateRuntime: sinon.stub() };
         const handler = SessionEndedHandlerGenerator(utils as any);
 
         const output = 'output';
         const input = { responseBuilder: { getResponse: sinon.stub().returns(output) }, requestEnvelope: { request: {} } };
 
         expect(await handler.handle(input as any)).to.eql(output);
-        expect(utils.updateContext.args[0][0]).to.eql(input);
-        const fn = utils.updateContext.args[0][1];
+        expect(utils.updateRuntime.args[0][0]).to.eql(input);
+        const fn = utils.updateRuntime.args[0][1];
 
-        // assert updateContext callback
+        // assert updateRuntime callback
         const context = { storage: { get: sinon.stub().returns(null) } };
         fn(context);
         expect(context.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
@@ -38,34 +38,34 @@ describe('session ended handler unit tests', () => {
 
       describe('with displayInfo', () => {
         it('no playingVideos', async () => {
-          const utils = { updateContext: sinon.stub() };
+          const utils = { updateRuntime: sinon.stub() };
           const handler = SessionEndedHandlerGenerator(utils as any);
 
           const output = 'output';
           const input = { responseBuilder: { getResponse: sinon.stub().returns(output) }, requestEnvelope: { request: {} } };
 
           expect(await handler.handle(input as any)).to.eql(output);
-          expect(utils.updateContext.args[0][0]).to.eql(input);
-          const fn = utils.updateContext.args[0][1];
+          expect(utils.updateRuntime.args[0][0]).to.eql(input);
+          const fn = utils.updateRuntime.args[0][1];
 
-          // assert updateContext callback
+          // assert updateRuntime callback
           const context = { storage: { get: sinon.stub().returns({ foo: 'bar' }) } };
           fn(context);
           expect(context.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
         });
 
         it('with playingVideos', async () => {
-          const utils = { updateContext: sinon.stub() };
+          const utils = { updateRuntime: sinon.stub() };
           const handler = SessionEndedHandlerGenerator(utils as any);
 
           const output = 'output';
           const input = { responseBuilder: { getResponse: sinon.stub().returns(output) }, requestEnvelope: { request: {} } };
 
           expect(await handler.handle(input as any)).to.eql(output);
-          expect(utils.updateContext.args[0][0]).to.eql(input);
-          const fn = utils.updateContext.args[0][1];
+          expect(utils.updateRuntime.args[0][0]).to.eql(input);
+          const fn = utils.updateRuntime.args[0][1];
 
-          // assert updateContext callback
+          // assert updateRuntime callback
           const context = { storage: { get: sinon.stub().returns({ playingVideos: { foo: 'bar' } }), produce: sinon.stub() } };
           fn(context);
           expect(context.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
@@ -79,7 +79,7 @@ describe('session ended handler unit tests', () => {
 
     describe('with errors', () => {
       it('works correctly', async () => {
-        const utils = { updateContext: sinon.stub(), log: sinon.stub() };
+        const utils = { updateRuntime: sinon.stub(), log: sinon.stub() };
         const handler = SessionEndedHandlerGenerator(utils as any);
 
         const output = 'output';
@@ -90,8 +90,8 @@ describe('session ended handler unit tests', () => {
         };
 
         expect(await handler.handle(input as any)).to.eql(output);
-        const fn = utils.updateContext.args[0][1];
-        // assert updateContext callback
+        const fn = utils.updateRuntime.args[0][1];
+        // assert updateRuntime callback
         const storageState = 'storage-state';
         const turnState = 'turn-state';
         const variablesState = 'variables-state';

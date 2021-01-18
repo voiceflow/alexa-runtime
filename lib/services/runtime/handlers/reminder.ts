@@ -1,11 +1,11 @@
 import { Node, NodeData, RecurrenceFreq } from '@voiceflow/alexa-types/build/nodes/reminder';
 import { NodeID } from '@voiceflow/general-types';
 import { HandlerFactory, replaceVariables } from '@voiceflow/runtime';
-import { HandlerInput } from 'ask-sdk';
 import axios from 'axios';
 import moment from 'moment';
 
 import { S, T } from '@/lib/constants';
+import { AlexaHandlerInput } from '@/lib/services/alexa/types';
 
 export enum ReminderType {
   SCHEDULED_ABSOLUTE = 'SCHEDULED_ABSOLUTE',
@@ -109,8 +109,8 @@ export const ReminderHandler: HandlerFactory<Node, typeof utilsObj> = (utils) =>
     let nextId: NodeID;
 
     try {
-      const handlerInput = context.turn.get(T.HANDLER_INPUT) as HandlerInput;
-      const { apiEndpoint, apiAccessToken } = handlerInput.requestEnvelope.context.System;
+      const handlerInput = context.turn.get<AlexaHandlerInput>(T.HANDLER_INPUT);
+      const { apiEndpoint, apiAccessToken } = handlerInput?.requestEnvelope.context.System ?? {};
 
       if (!apiEndpoint || !apiAccessToken) throw new Error('invalid login token');
 

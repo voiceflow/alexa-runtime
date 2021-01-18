@@ -3,7 +3,7 @@ import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
 import AudioPlayerEventHandler, { AudioEvent, AudioPlayerEventHandlerGenerator, Request } from '@/lib/services/alexa/request/audioPlayerEvent';
-import { AudioDirective, StreamAction } from '@/lib/services/voiceflow/handlers/stream';
+import { AudioDirective, StreamAction } from '@/lib/services/runtime/handlers/stream';
 
 describe('audio player event handler unit test', () => {
   describe('canHandle', () => {
@@ -19,7 +19,7 @@ describe('audio player event handler unit test', () => {
   describe('handle', () => {
     it('no event name', async () => {
       const context = { storage: null };
-      const voiceflow = { createContext: sinon.stub().returns(context) };
+      const voiceflow = { createRuntime: sinon.stub().returns(context) };
       const input = {
         context: { versionID: 'version-id', voiceflow },
         attributesManager: { getPersistentAttributes: sinon.stub().resolves({}) },
@@ -35,7 +35,7 @@ describe('audio player event handler unit test', () => {
       const rawState = 'raw-state';
 
       const context = { storage: null, getRawState: sinon.stub().returns(rawState) };
-      const voiceflow = { createContext: sinon.stub().returns(context) };
+      const voiceflow = { createRuntime: sinon.stub().returns(context) };
       const input = {
         context: { versionID: 'version-id', voiceflow },
         attributesManager: { getPersistentAttributes: sinon.stub().resolves(initialRawState), setPersistentAttributes: sinon.stub() },
@@ -45,7 +45,7 @@ describe('audio player event handler unit test', () => {
 
       expect(await AudioPlayerEventHandler.handle(input as any)).to.eql(output);
       expect(input.attributesManager.getPersistentAttributes.callCount).to.eql(1);
-      expect(voiceflow.createContext.args).to.eql([[input.context.versionID, initialRawState]]);
+      expect(voiceflow.createRuntime.args).to.eql([[input.context.versionID, initialRawState]]);
       expect(input.attributesManager.setPersistentAttributes.args).to.eql([[rawState]]);
     });
 
@@ -53,7 +53,7 @@ describe('audio player event handler unit test', () => {
       const output = 'output';
 
       const context = { storage: null, getRawState: sinon.stub().returns({}) };
-      const voiceflow = { createContext: sinon.stub().returns(context) };
+      const voiceflow = { createRuntime: sinon.stub().returns(context) };
       const input = {
         context: { versionID: 'version-id', voiceflow },
         attributesManager: { getPersistentAttributes: sinon.stub().resolves({}), setPersistentAttributes: sinon.stub() },
@@ -68,7 +68,7 @@ describe('audio player event handler unit test', () => {
       const output = 'output';
 
       const context = { storage: { set: sinon.stub() }, getRawState: sinon.stub().returns({}) };
-      const voiceflow = { createContext: sinon.stub().returns(context) };
+      const voiceflow = { createRuntime: sinon.stub().returns(context) };
       const input = {
         context: { versionID: 'version-id', voiceflow },
         attributesManager: { getPersistentAttributes: sinon.stub().resolves({}), setPersistentAttributes: sinon.stub() },
@@ -85,7 +85,7 @@ describe('audio player event handler unit test', () => {
         const output = 'output';
 
         const context = { storage: { get: sinon.stub().returns(null), delete: sinon.stub() }, getRawState: sinon.stub().returns({}) };
-        const voiceflow = { createContext: sinon.stub().returns(context) };
+        const voiceflow = { createRuntime: sinon.stub().returns(context) };
         const input = {
           context: { versionID: 'version-id', voiceflow },
           attributesManager: { getPersistentAttributes: sinon.stub().resolves({}), setPersistentAttributes: sinon.stub() },
@@ -112,7 +112,7 @@ describe('audio player event handler unit test', () => {
           },
           getRawState: sinon.stub().returns({}),
         };
-        const voiceflow = { createContext: sinon.stub().returns(context) };
+        const voiceflow = { createRuntime: sinon.stub().returns(context) };
         const input = {
           context: { versionID: 'version-id', voiceflow },
           attributesManager: { getPersistentAttributes: sinon.stub().resolves({}), setPersistentAttributes: sinon.stub() },
@@ -139,7 +139,7 @@ describe('audio player event handler unit test', () => {
         const secondRaw = 'second-raw';
         const newContext = { getRawState: sinon.stub().returns(secondRaw) };
         const voiceflow = {
-          createContext: sinon
+          createRuntime: sinon
             .stub()
             .onFirstCall()
             .returns(context)
@@ -155,7 +155,7 @@ describe('audio player event handler unit test', () => {
 
         expect(await AudioPlayerEventHandler.handle(input as any)).to.eql(output);
         expect(context.storage.get.callCount).to.eql(3);
-        expect(voiceflow.createContext.callCount).to.eql(2);
+        expect(voiceflow.createRuntime.callCount).to.eql(2);
         expect(input.attributesManager.setPersistentAttributes.args).to.eql([[secondRaw]]);
       });
     });
@@ -165,7 +165,7 @@ describe('audio player event handler unit test', () => {
         const output = 'output';
 
         const context = { storage: { get: sinon.stub().returns(null) }, getRawState: sinon.stub().returns({}) };
-        const voiceflow = { createContext: sinon.stub().returns(context) };
+        const voiceflow = { createRuntime: sinon.stub().returns(context) };
         const input = {
           context: { versionID: 'version-id', voiceflow },
           attributesManager: { getPersistentAttributes: sinon.stub().resolves({}), setPersistentAttributes: sinon.stub() },
@@ -180,7 +180,7 @@ describe('audio player event handler unit test', () => {
         const output = 'output';
 
         const context = { storage: { get: sinon.stub().returns({}) }, getRawState: sinon.stub().returns({}) };
-        const voiceflow = { createContext: sinon.stub().returns(context) };
+        const voiceflow = { createRuntime: sinon.stub().returns(context) };
         const input = {
           context: { versionID: 'version-id', voiceflow },
           attributesManager: { getPersistentAttributes: sinon.stub().resolves({}), setPersistentAttributes: sinon.stub() },
@@ -198,7 +198,7 @@ describe('audio player event handler unit test', () => {
           const output = 'output';
 
           const context = { storage: { get: sinon.stub().returns({ loop: true }) }, getRawState: sinon.stub().returns({}) };
-          const voiceflow = { createContext: sinon.stub().returns(context) };
+          const voiceflow = { createRuntime: sinon.stub().returns(context) };
           const input = {
             context: { versionID: 'version-id', voiceflow },
             attributesManager: { getPersistentAttributes: sinon.stub().resolves({}), setPersistentAttributes: sinon.stub() },
@@ -215,7 +215,7 @@ describe('audio player event handler unit test', () => {
           const output = 'output';
 
           const context = { storage: { get: sinon.stub().returns({ loop: true }) }, getRawState: sinon.stub().returns({}) };
-          const voiceflow = { createContext: sinon.stub().returns(context) };
+          const voiceflow = { createRuntime: sinon.stub().returns(context) };
           const input = {
             context: { versionID: 'version-id', voiceflow },
             attributesManager: { getPersistentAttributes: sinon.stub().resolves({}), setPersistentAttributes: sinon.stub() },
@@ -233,7 +233,7 @@ describe('audio player event handler unit test', () => {
           const output = 'output';
 
           const context = { storage: { produce: sinon.stub(), get: sinon.stub().returns({ loop: true }) }, getRawState: sinon.stub().returns({}) };
-          const voiceflow = { createContext: sinon.stub().returns(context) };
+          const voiceflow = { createRuntime: sinon.stub().returns(context) };
           const input = {
             context: { versionID: 'version-id', voiceflow },
             attributesManager: { getPersistentAttributes: sinon.stub().resolves({}), setPersistentAttributes: sinon.stub() },
@@ -269,7 +269,7 @@ describe('audio player event handler unit test', () => {
             },
             getRawState: sinon.stub().returns({}),
           };
-          const voiceflow = { createContext: sinon.stub().returns(context) };
+          const voiceflow = { createRuntime: sinon.stub().returns(context) };
           const input = {
             context: { versionID: 'version-id', voiceflow },
             attributesManager: { getPersistentAttributes: sinon.stub().resolves({}), setPersistentAttributes: sinon.stub() },
@@ -295,7 +295,7 @@ describe('audio player event handler unit test', () => {
             },
             getRawState: sinon.stub().returns({}),
           };
-          const voiceflow = { createContext: sinon.stub().returns(context) };
+          const voiceflow = { createRuntime: sinon.stub().returns(context) };
           const input = {
             context: { versionID: 'version-id', voiceflow },
             attributesManager: { getPersistentAttributes: sinon.stub().resolves({}), setPersistentAttributes: sinon.stub() },
@@ -324,7 +324,7 @@ describe('audio player event handler unit test', () => {
             },
             getRawState: sinon.stub().returns({}),
           };
-          const voiceflow = { createContext: sinon.stub().returns(context) };
+          const voiceflow = { createRuntime: sinon.stub().returns(context) };
           const input = {
             context: { versionID: 'version-id', voiceflow },
             attributesManager: { getPersistentAttributes: sinon.stub().resolves({}), setPersistentAttributes: sinon.stub() },
@@ -357,7 +357,7 @@ describe('audio player event handler unit test', () => {
           const context = { storage: { get: storageGet }, getRawState: sinon.stub().returns({}) };
           const tempContext = { storage: { get: sinon.stub().returns({ action: 'random' }), set: sinon.stub() } };
           const voiceflow = {
-            createContext: sinon
+            createRuntime: sinon
               .stub()
               .onFirstCall()
               .returns(context)
@@ -371,7 +371,7 @@ describe('audio player event handler unit test', () => {
           };
 
           expect(await handler.handle(input as any)).to.eql(output);
-          expect(voiceflow.createContext.callCount).to.eql(2);
+          expect(voiceflow.createRuntime.callCount).to.eql(2);
           expect(tempContext.storage.set.args).to.eql([[S.STREAM_PLAY, { action: StreamAction.NEXT }]]);
           expect(utils.update.callCount).to.eql(1);
         });
@@ -388,7 +388,7 @@ describe('audio player event handler unit test', () => {
           const context = { storage: { get: storageGet }, getRawState: sinon.stub().returns({}) };
           const tempContext = { storage: { get: sinon.stub().returns(null), set: sinon.stub() } };
           const voiceflow = {
-            createContext: sinon
+            createRuntime: sinon
               .stub()
               .onFirstCall()
               .returns(context)
@@ -420,7 +420,7 @@ describe('audio player event handler unit test', () => {
             getRawState: sinon.stub().returns(tempContextRaw),
           };
           const voiceflow = {
-            createContext: sinon
+            createRuntime: sinon
               .stub()
               .onFirstCall()
               .returns(context)
@@ -453,7 +453,7 @@ describe('audio player event handler unit test', () => {
             getRawState: sinon.stub().returns(tempContextRaw),
           };
           const voiceflow = {
-            createContext: sinon
+            createRuntime: sinon
               .stub()
               .onFirstCall()
               .returns(context)
@@ -488,7 +488,7 @@ describe('audio player event handler unit test', () => {
             getRawState: sinon.stub().returns(tempContextRaw),
           };
           const voiceflow = {
-            createContext: sinon
+            createRuntime: sinon
               .stub()
               .onFirstCall()
               .returns(context)

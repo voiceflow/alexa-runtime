@@ -1,25 +1,29 @@
-import { HandlerInput, RequestHandler } from 'ask-sdk';
+import { RequestHandler } from 'ask-sdk';
 
+import { AlexaHandlerInput } from '../../types';
 import IntentHandler from '../intent';
-import { buildContext } from '../lifecycle';
-import handleEvent, { getEvent } from './context';
+import { buildRuntime } from '../lifecycle';
+import handleEvent, { getEvent } from './runtime';
 
 const utilsObj = {
-  buildContext,
+  buildRuntime,
   getEvent,
   IntentHandler,
 };
 
 export const EventHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
-  async canHandle(input: HandlerInput): Promise<boolean> {
-    const context = await utils.buildContext(input);
-    return !!utils.getEvent(context);
+  async canHandle(input: AlexaHandlerInput): Promise<boolean> {
+    const runtime = await utils.buildRuntime(input);
+
+    return !!utils.getEvent(runtime);
   },
-  handle: async (input: HandlerInput) => {
-    // based on the event, modify the context
-    const context = await utils.buildContext(input);
-    await handleEvent(context);
-    input.attributesManager.setPersistentAttributes(context.getRawState());
+  handle: async (input: AlexaHandlerInput) => {
+    // based on the event, modify the runtime
+    const runtime = await utils.buildRuntime(input);
+
+    await handleEvent(runtime);
+
+    input.attributesManager.setPersistentAttributes(runtime.getRawState());
 
     return IntentHandler.handle(input);
   },

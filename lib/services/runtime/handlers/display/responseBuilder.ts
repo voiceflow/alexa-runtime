@@ -3,7 +3,7 @@ import randomstring from 'randomstring';
 
 import { S } from '@/lib/constants';
 import { FullServiceMap } from '@/lib/services';
-import { ResponseBuilder } from '@/lib/services/voiceflow/types';
+import { ResponseBuilder } from '@/lib/services/runtime/types';
 
 import { ENDED_EVENT_PREFIX, RENDER_DOCUMENT_DIRECTIVE_TYPE, STARTED_EVENT_PREFIX, VIDEO_ID_PREFIX } from './constants';
 import { DisplayInfo, VideoCommand, VideoCommandType } from './types';

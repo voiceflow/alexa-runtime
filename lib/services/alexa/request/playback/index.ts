@@ -1,24 +1,23 @@
-import { HandlerInput, RequestHandler } from 'ask-sdk';
+import { RequestHandler } from 'ask-sdk';
 import { Intent, IntentRequest } from 'ask-sdk-model';
 
-import { IntentName } from '@/lib/services/voiceflow/types';
+import { IntentName } from '@/lib/services/runtime/types';
 
+import { AlexaHandlerInput } from '../../types';
 import IntentHandler from '../intent';
-import { buildContext } from '../lifecycle';
 import { Command } from './types';
 
 const utilsObj = {
-  buildContext,
   IntentHandler,
 };
 
 export const PlaybackControllerHandlerGenerator = (utils: typeof utilsObj): RequestHandler => ({
-  canHandle(input: HandlerInput): boolean {
+  canHandle(input: AlexaHandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
     return type.startsWith('PlaybackController');
   },
-  handle: async (input: HandlerInput) => {
+  handle: async (input: AlexaHandlerInput) => {
     const request = input.requestEnvelope.request as IntentRequest;
 
     // translate PlaybackController commands into intents
