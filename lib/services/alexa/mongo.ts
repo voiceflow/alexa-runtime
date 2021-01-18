@@ -3,7 +3,6 @@ import { RequestEnvelope } from 'ask-sdk-model';
 
 import { Config } from '@/types';
 
-// import { ObjectId } from 'mongodb';
 import MongoDb from '../../clients/mongodb';
 import { Source } from '../../constants';
 /**

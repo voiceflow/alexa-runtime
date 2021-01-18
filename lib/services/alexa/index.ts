@@ -8,6 +8,7 @@ import { Config, Services } from '../utils';
 import CustomDynamoDbPersistenceAdapter from './customDynamoAdapter';
 import { MemoryPersistenceAdapter } from './local';
 import MongoPersistenceAdapter from './mongo';
+import PostgresPersistenceAdapter from './postgres';
 import {
   APLUserEventHandler,
   AudioPlayerEventHandler,
@@ -61,6 +62,7 @@ const utilsObj = {
     MemoryPersistenceAdapter,
     CustomDynamoDbPersistenceAdapter,
     MongoPersistenceAdapter,
+    PostgresPersistenceAdapter,
   },
 };
 
@@ -74,6 +76,8 @@ const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
     persistenceAdapter = new utils.adapters.MemoryPersistenceAdapter();
   } else if (MongoPersistenceAdapter.enabled(config)) {
     persistenceAdapter = new utils.adapters.MongoPersistenceAdapter(services.mongo!);
+  } else if (PostgresPersistenceAdapter.enabled(config)) {
+    persistenceAdapter = new utils.adapters.PostgresPersistenceAdapter(services.pg!);
   } else {
     persistenceAdapter = new utils.adapters.CustomDynamoDbPersistenceAdapter({
       createTable: false,

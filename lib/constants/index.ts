@@ -7,4 +7,5 @@ export enum Source {
   LOCAL = 'local',
   MONGO = 'mongo',
   DYNAMO = 'dynamo',
+  POSTGRES = 'postgres',
 }
