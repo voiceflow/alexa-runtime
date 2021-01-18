@@ -2,12 +2,14 @@ import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
 import { DataAPI, LocalDataApi, ServerDataApi } from '@voiceflow/runtime';
 
 import MongoPersistenceAdapter from '@/lib/services/alexa/mongo';
+import PostgresPersistenceAdapter from '@/lib/services/alexa/postgres';
 import { Config } from '@/types';
 
 import Dynamo, { DynamoType } from './dynamo';
 import Metrics, { MetricsType } from './metrics';
 import MongoDB from './mongodb';
 import Multimodal, { MultimodalType } from './multimodal';
+import PostgresDB from './postgres';
 import PrototypeServerDataApi from './prototypeServerDataApi';
 import Static, { StaticType } from './static';
 
@@ -17,6 +19,7 @@ export interface ClientMap extends StaticType {
   dataAPI: DataAPI<AlexaProgram, AlexaVersion>;
   metrics: MetricsType;
   mongo: MongoDB | null;
+  pg: PostgresDB | null;
   prototypeDataAPI: DataAPI<AlexaProgram, AlexaVersion>;
 }
 
@@ -34,6 +37,7 @@ const buildClients = (config: Config): ClientMap => {
   const multimodal = Multimodal(dataAPI);
   const metrics = Metrics(config);
   const mongo = MongoPersistenceAdapter.enabled(config) ? new MongoDB(config) : null;
+  const pg = PostgresPersistenceAdapter.enabled(config) ? new PostgresDB(config) : null;
 
   // TODO: remove after general assistant implements prototype
   const prototypeDataAPI = config.PROJECT_SOURCE
@@ -46,6 +50,7 @@ const buildClients = (config: Config): ClientMap => {
   return {
     ...Static,
     mongo,
+    pg,
     dynamo,
     dataAPI,
     metrics,
@@ -58,10 +63,12 @@ export const initClients = async (_config: Config, clients: ClientMap) => {
   await clients.dataAPI.init();
   await clients.prototypeDataAPI.init();
   await clients.mongo?.start();
+  await clients.pg?.start();
 };
 
 export const stopClients = async (_config: Config, clients: ClientMap) => {
   await clients.mongo?.stop();
+  await clients.pg?.stop();
 };
 
 export default buildClients;

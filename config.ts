@@ -46,6 +46,13 @@ const CONFIG: Config = {
 
   MONGO_URI: optionalProcessEnv('MONGO_URI'),
   MONGO_DB: optionalProcessEnv('MONGO_DB'),
+
+  // postgres sessions store
+  PG_USERNAME: optionalProcessEnv('PG_USERNAME'),
+  PG_HOST: optionalProcessEnv('PG_HOST'),
+  PG_DBNAME: optionalProcessEnv('PG_DBNAME'),
+  PG_PASSWORD: optionalProcessEnv('PG_PASSWORD'),
+  PG_PORT: optionalProcessEnv('PG_PORT'),
 };
 
 export default CONFIG;

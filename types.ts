@@ -37,6 +37,13 @@ export interface Config {
 
   MONGO_URI: string | null;
   MONGO_DB: string | null;
+
+  // postgres
+  PG_USERNAME: string | null;
+  PG_HOST: string | null;
+  PG_DBNAME: string | null;
+  PG_PASSWORD: string | null;
+  PG_PORT: string | null;
 }
 
 export interface Request<P extends {} = {}> extends Express.Request<P> {
