@@ -4,7 +4,7 @@ import { MemoryPersistenceAdapter } from '@/lib/services/alexa/local';
 
 describe('alexa local utils unit tests', () => {
   const USER_ID = 'user-id';
-  const generateRequestEnvelope = (userId = USER_ID) => ({ context: { System: { user: { userId } } } } as any);
+  const generateRequestEnvelope = (userId = USER_ID) => ({ runtime: { System: { user: { userId } } } } as any);
 
   describe('MemoryPersistenceAdapter', () => {
     it('getAttributes', async () => {

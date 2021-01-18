@@ -30,12 +30,12 @@ import {
 describe('adapterManager unit tests', async () => {
   afterEach(() => sinon.restore());
 
-  describe('context', () => {
+  describe('runtime', () => {
     it('empty', async () => {
       const adapter = new AdapterManager(null as any, null as any);
       const input = { attributesManager: { getPersistentAttributes: sinon.stub().resolves({}) } };
 
-      await adapter.context(input as any);
+      await adapter.runtime(input as any);
       expect(input.attributesManager.getPersistentAttributes.callCount).to.eql(1);
     });
 
@@ -43,7 +43,7 @@ describe('adapterManager unit tests', async () => {
       const adapter = new AdapterManager(null as any, null as any);
       const input = { attributesManager: { getPersistentAttributes: sinon.stub().resolves({ stack: [] }) } };
 
-      await adapter.context(input as any);
+      await adapter.runtime(input as any);
       expect(input.attributesManager.getPersistentAttributes.callCount).to.eql(1);
     });
 
@@ -57,7 +57,7 @@ describe('adapterManager unit tests', async () => {
 
       const input = { attributesManager: { getPersistentAttributes: sinon.stub().resolves(oldContext), setPersistentAttributes: sinon.stub() } };
 
-      await adapter.context(input as any);
+      await adapter.runtime(input as any);
       expect(input.attributesManager.getPersistentAttributes.callCount).to.eql(1);
       expect(transformContextStub.args).to.eql([[oldContext, input]]);
       expect(input.attributesManager.setPersistentAttributes.args).to.eql([[newContext]]);
@@ -83,7 +83,7 @@ describe('adapterManager unit tests', async () => {
         const adapter = new AdapterManager(null as any, null as any);
 
         const System = _.get(test.new, 'variables._system');
-        const input = { requestEnvelope: { context: { System } } };
+        const input = { requestEnvelope: { runtime: { System } } };
 
         expect(await adapter.transformContext(test.old as any, input as any)).to.deep.equalInAnyOrder(test.new);
       });

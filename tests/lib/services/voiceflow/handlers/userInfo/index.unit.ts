@@ -34,14 +34,14 @@ describe('user info handler unit test', () => {
           const handler = UserInfoHandler(utils);
 
           const node = { permissions: ['permission1', 'permission2', 'permission3'], success_id: 'success-id' };
-          const context = 'context';
+          const runtime = 'runtime';
           const variables = 'variables';
 
-          expect(await handler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.success_id);
+          expect(await handler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.success_id);
           expect(utils.isPermissionGranted.args).to.eql([
-            [node.permissions[0], context, variables],
-            [node.permissions[1], context, variables],
-            [node.permissions[2], context, variables],
+            [node.permissions[0], runtime, variables],
+            [node.permissions[1], runtime, variables],
+            [node.permissions[2], runtime, variables],
           ]);
         });
 

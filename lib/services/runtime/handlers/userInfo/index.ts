@@ -9,7 +9,7 @@ const utilsObj = {
 
 export const UserInfoHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => 'permissions' in node && !!node.permissions,
-  handle: async (node, context, variables) => {
+  handle: async (node, runtime, variables) => {
     if (!('permissions' in node)) {
       return node.nextId ?? null;
     }
@@ -17,7 +17,7 @@ export const UserInfoHandler: HandlerFactory<Node, typeof utilsObj> = (utils) =>
     let nextId = node.fail_id ?? null;
 
     if (Array.isArray(node.permissions) && node.permissions.length) {
-      const requests = node.permissions.map((p) => utils.isPermissionGranted(p, context, variables));
+      const requests = node.permissions.map((p) => utils.isPermissionGranted(p, runtime, variables));
       const results = await Promise.all(requests);
 
       if (!results.includes(false)) {

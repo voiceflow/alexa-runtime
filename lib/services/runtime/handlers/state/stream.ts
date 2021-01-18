@@ -32,52 +32,52 @@ const utilsObj = {
 };
 
 export const StreamStateHandler: HandlerFactory<any, typeof utilsObj> = (utils) => ({
-  canHandle: (_, context) => !!(context.storage.get(S.STREAM_PLAY) && context.storage.get<StreamPlay>(S.STREAM_PLAY)!.action !== StreamAction.END),
-  handle: (_, context, variables) => {
-    const request = context.turn.get(T.REQUEST) as IntentRequest;
+  canHandle: (_, runtime) => !!(runtime.storage.get(S.STREAM_PLAY) && runtime.storage.get<StreamPlay>(S.STREAM_PLAY)!.action !== StreamAction.END),
+  handle: (_, runtime, variables) => {
+    const request = runtime.turn.get(T.REQUEST) as IntentRequest;
     const intentName = request?.payload?.intent?.name || null;
-    const streamPlay = context.storage.get<StreamPlay>(S.STREAM_PLAY)!;
+    const streamPlay = runtime.storage.get<StreamPlay>(S.STREAM_PLAY)!;
 
     let nextId;
 
     if (intentName === IntentName.PAUSE) {
       if (streamPlay.nextId) {
         // If it is linked to something else, save current pause state
-        context.storage.set<StreamPauseStorage>(S.STREAM_PAUSE, {
+        runtime.storage.set<StreamPauseStorage>(S.STREAM_PAUSE, {
           id: streamPlay.PAUSE_ID,
           offset: streamPlay.offset,
         });
 
         ({ nextId } = streamPlay);
-        context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
+        runtime.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
           draft[S.STREAM_PLAY].action = StreamAction.END;
         });
       } else {
         // Literally just PAUSE
-        context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
+        runtime.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
           draft[S.STREAM_PLAY].action = StreamAction.PAUSE;
         });
-        context.end();
+        runtime.end();
       }
     } else if (intentName === IntentName.RESUME) {
-      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
+      runtime.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.RESUME;
       });
-      context.end();
+      runtime.end();
     } else if (intentName === IntentName.STARTOVER || intentName === IntentName.REPEAT) {
-      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
+      runtime.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.START;
         draft[S.STREAM_PLAY].offset = 0;
       });
-      context.end();
+      runtime.end();
     } else if (intentName === IntentName.NEXT || streamPlay.action === StreamAction.NEXT) {
       if (streamPlay.NEXT) {
         nextId = streamPlay.NEXT;
       }
 
-      context.storage.delete(S.STREAM_TEMP);
+      runtime.storage.delete(S.STREAM_TEMP);
 
-      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
+      runtime.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
     } else if (intentName === IntentName.PREV) {
@@ -85,46 +85,46 @@ export const StreamStateHandler: HandlerFactory<any, typeof utilsObj> = (utils) 
         nextId = streamPlay.PREVIOUS;
       }
 
-      context.storage.delete(S.STREAM_TEMP);
+      runtime.storage.delete(S.STREAM_TEMP);
 
-      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
+      runtime.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
     } else if (intentName === IntentName.CANCEL) {
-      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
+      runtime.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.PAUSE;
       });
-      context.end();
-    } else if (utils.commandHandler.canHandle(context)) {
-      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
+      runtime.end();
+    } else if (utils.commandHandler.canHandle(runtime)) {
+      runtime.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.END;
       });
-      return utils.commandHandler.handle(context, variables);
+      return utils.commandHandler.handle(runtime, variables);
     } else {
-      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
+      runtime.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].action = StreamAction.NOEFFECT;
       });
 
-      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay; output: string }>((draft) => {
-        draft.output += StreamFailPhrase[context.storage.get<string>(S.LOCALE)!] || StreamFailPhrase['en-US'];
+      runtime.storage.produce<{ [S.STREAM_PLAY]: StreamPlay; output: string }>((draft) => {
+        draft.output += StreamFailPhrase[runtime.storage.get<string>(S.LOCALE)!] || StreamFailPhrase['en-US'];
       });
 
-      context.end();
+      runtime.end();
     }
 
-    const updatedStreamPlay = context.storage.get<StreamPlay>(S.STREAM_PLAY);
+    const updatedStreamPlay = runtime.storage.get<StreamPlay>(S.STREAM_PLAY);
 
     if (updatedStreamPlay) {
       const variablesMap = variables.getState();
 
-      context.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
+      runtime.storage.produce<{ [S.STREAM_PLAY]: StreamPlay }>((draft) => {
         draft[S.STREAM_PLAY].title = utils.replaceVariables(updatedStreamPlay.regex_title, variablesMap);
         draft[S.STREAM_PLAY].description = utils.replaceVariables(updatedStreamPlay.regex_description, variablesMap);
       });
     }
 
     // request for this turn has been processed, delete request
-    context.turn.delete(T.REQUEST);
+    runtime.turn.delete(T.REQUEST);
 
     return nextId ?? null;
   },

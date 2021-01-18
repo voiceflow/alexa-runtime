@@ -18,16 +18,16 @@ describe('Test displayHandler unit tests', () => {
 
   describe('handle', () => {
     it('no nextId', () => {
-      const context = { trace: { debug: sinon.stub() } };
-      expect(displayHandler.handle({} as any, context as any, null as any, null as any)).to.eql(null);
-      expect(context.trace.debug.args).to.eql([['__display__ - entered']]);
+      const runtime = { trace: { debug: sinon.stub() } };
+      expect(displayHandler.handle({} as any, runtime as any, null as any, null as any)).to.eql(null);
+      expect(runtime.trace.debug.args).to.eql([['__display__ - entered']]);
     });
 
     it('nextId', () => {
       const node = { nextId: 'next-id' };
-      const context = { trace: { debug: sinon.stub() } };
-      expect(displayHandler.handle(node as any, context as any, null as any, null as any)).to.eql(node.nextId);
-      expect(context.trace.debug.args).to.eql([['__display__ - entered'], ['__display__ - redirecting to the next step']]);
+      const runtime = { trace: { debug: sinon.stub() } };
+      expect(displayHandler.handle(node as any, runtime as any, null as any, null as any)).to.eql(node.nextId);
+      expect(runtime.trace.debug.args).to.eql([['__display__ - entered'], ['__display__ - redirecting to the next step']]);
     });
   });
 });

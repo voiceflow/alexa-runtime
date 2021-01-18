@@ -1,6 +1,6 @@
 import { interfaces } from 'ask-sdk-model';
 
-import { Commands, NewContextStack, NewContextStorage, NewContextVariables, OldCommands, OldContextRaw } from './types';
+import { Commands, NewStateStack, NewStateStorage, NewStateVariables, OldCommands, OldStateRaw } from './types';
 
 export const commandAdapter = (oldCommands: OldCommands): Commands =>
   Object.keys(oldCommands).reduce((commandsAcc, key) => {
@@ -16,7 +16,7 @@ export const commandAdapter = (oldCommands: OldCommands): Commands =>
     return commandsAcc;
   }, [] as Commands);
 
-export const stackAdapter = (oldContext: OldContextRaw): NewContextStack =>
+export const stackAdapter = (oldContext: OldStateRaw): NewStateStack =>
   oldContext.diagrams?.reduce((acc, d, index) => {
     const frame = {
       nodeID: d.line === false ? null : d.line,
@@ -32,7 +32,7 @@ export const stackAdapter = (oldContext: OldContextRaw): NewContextStack =>
     };
 
     if (index === oldContext.diagrams.length - 1) {
-      // nodeID for top of the stack frame is kept in line_id in old context
+      // nodeID for top of the stack frame is kept in line_id in old runtime
       frame.nodeID = oldContext.line_id;
       // old server only keeps what the last diagram spoke
       if (oldContext.last_speak) frame.storage.speak = oldContext.last_speak;
@@ -41,11 +41,11 @@ export const stackAdapter = (oldContext: OldContextRaw): NewContextStack =>
     acc.push(frame);
 
     return acc;
-  }, [] as NewContextStack) || [];
+  }, [] as NewStateStack) || [];
 
 type StorageAdapterOptions = { accessToken: string | undefined };
 
-export const storageAdapter = (oldContext: OldContextRaw, { accessToken }: StorageAdapterOptions): NewContextStorage => ({
+export const storageAdapter = (oldContext: OldStateRaw, { accessToken }: StorageAdapterOptions): NewStateStorage => ({
   output: oldContext.output,
   sessions: oldContext.sessions,
   repeat: oldContext.repeat,
@@ -118,29 +118,29 @@ export const storageAdapter = (oldContext: OldContextRaw, { accessToken }: Stora
 
 type VariablesAdapterOptions = { system: interfaces.system.SystemState };
 
-export const variablesAdapter = (oldContext: OldContextRaw, { system }: VariablesAdapterOptions): NewContextVariables =>
+export const variablesAdapter = (oldContext: OldStateRaw, { system }: VariablesAdapterOptions): NewStateVariables =>
   oldContext.globals[0]
     ? { ...oldContext.globals[0], _system: system }
     : { voiceflow: { events: [], permissions: [], capabilities: {} }, _system: system };
 
-// modify context before running adapters
-export const beforeContextModifier = ({ ...context }: OldContextRaw) => {
-  // modifier when old context has temp
-  if (context.temp) {
-    const { temp, next_line, next_play, ...tempState } = context;
+// modify runtime before running adapters
+export const beforeContextModifier = ({ ...runtime }: OldStateRaw) => {
+  // modifier when old runtime has temp
+  if (runtime.temp) {
+    const { temp, next_line, next_play, ...tempState } = runtime;
     tempState.play = next_play;
     tempState.line_id = next_line || null;
     tempState.diagrams = temp.diagrams;
     tempState.globals = temp.globals;
     tempState.randoms = temp.randoms;
-    context = tempState;
+    runtime = tempState;
   }
 
-  return context;
+  return runtime;
 };
 
 // modify storage after running adapters
-export const afterStorageModifier = ({ ...storage }: NewContextStorage, { ...variables }: NewContextVariables) => {
+export const afterStorageModifier = ({ ...storage }: NewStateStorage, { ...variables }: NewStateVariables) => {
   // modifier when new storage has displayInfo
   if (storage.displayInfo) storage.displayInfo.lastVariables = variables;
 

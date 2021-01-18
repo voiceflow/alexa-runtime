@@ -31,9 +31,9 @@ describe('session ended handler unit tests', () => {
         const fn = utils.updateRuntime.args[0][1];
 
         // assert updateRuntime callback
-        const context = { storage: { get: sinon.stub().returns(null) } };
-        fn(context);
-        expect(context.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
+        const runtime = { storage: { get: sinon.stub().returns(null) } };
+        fn(runtime);
+        expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
       });
 
       describe('with displayInfo', () => {
@@ -49,9 +49,9 @@ describe('session ended handler unit tests', () => {
           const fn = utils.updateRuntime.args[0][1];
 
           // assert updateRuntime callback
-          const context = { storage: { get: sinon.stub().returns({ foo: 'bar' }) } };
-          fn(context);
-          expect(context.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
+          const runtime = { storage: { get: sinon.stub().returns({ foo: 'bar' }) } };
+          fn(runtime);
+          expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
         });
 
         it('with playingVideos', async () => {
@@ -66,10 +66,10 @@ describe('session ended handler unit tests', () => {
           const fn = utils.updateRuntime.args[0][1];
 
           // assert updateRuntime callback
-          const context = { storage: { get: sinon.stub().returns({ playingVideos: { foo: 'bar' } }), produce: sinon.stub() } };
-          fn(context);
-          expect(context.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
-          const fn2 = context.storage.produce.args[0][0];
+          const runtime = { storage: { get: sinon.stub().returns({ playingVideos: { foo: 'bar' } }), produce: sinon.stub() } };
+          fn(runtime);
+          expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
+          const fn2 = runtime.storage.produce.args[0][0];
           const state = { [S.DISPLAY_INFO]: { playingVideos: { foo: 'bar' } } };
           fn2(state);
           expect(state).to.eql({ [S.DISPLAY_INFO]: { playingVideos: {} } });
@@ -98,7 +98,7 @@ describe('session ended handler unit tests', () => {
         const stackState = 'stack-state';
         const traceState = 'trace-state';
 
-        const context = {
+        const runtime = {
           versionID: 'version-id',
           storage: { get: sinon.stub().returns(null), getState: sinon.stub().returns(storageState) },
           turn: { getState: sinon.stub().returns(turnState) },
@@ -107,19 +107,19 @@ describe('session ended handler unit tests', () => {
           trace: { get: sinon.stub().returns(traceState) },
         };
 
-        fn(context);
+        fn(runtime);
         expect(utils.log.args).to.eql([
           [
             'errorType=%s, versionID=%s, storage=%s, turn=%s, variables=%s, stack=%s, trace=%s',
             errorType,
-            context.versionID,
-            JSON.stringify(context.storage.getState()),
-            JSON.stringify(context.turn.getState()),
-            JSON.stringify(context.variables.getState()),
-            JSON.stringify(context.stack.getState()),
-            JSON.stringify(context.trace.get()),
+            runtime.versionID,
+            JSON.stringify(runtime.storage.getState()),
+            JSON.stringify(runtime.turn.getState()),
+            JSON.stringify(runtime.variables.getState()),
+            JSON.stringify(runtime.stack.getState()),
+            JSON.stringify(runtime.trace.get()),
           ],
-          ['error=%s, versionID=%s', JSON.stringify(input.requestEnvelope.request), context.versionID],
+          ['error=%s, versionID=%s', JSON.stringify(input.requestEnvelope.request), runtime.versionID],
         ]);
       });
     });

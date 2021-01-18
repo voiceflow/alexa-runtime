@@ -29,11 +29,11 @@ describe('capture handler unit tests', async () => {
       const captureHandler = CaptureHandler(utils as any);
 
       const node = { id: 'node-id' };
-      const context = { turn: { get: sinon.stub().returns(null) } };
+      const runtime = { turn: { get: sinon.stub().returns(null) } };
       const variables = { foo: 'bar' };
 
-      expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.id);
-      expect(utils.addRepromptIfExists.args).to.eql([[node, context, variables]]);
+      expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.id);
+      expect(utils.addRepromptIfExists.args).to.eql([[node, runtime, variables]]);
     });
 
     it('request type not intent', () => {
@@ -46,11 +46,11 @@ describe('capture handler unit tests', async () => {
       const captureHandler = CaptureHandler(utils as any);
 
       const node = { id: 'node-id' };
-      const context = { turn: { get: sinon.stub().returns({ type: 'random' }) } };
+      const runtime = { turn: { get: sinon.stub().returns({ type: 'random' }) } };
       const variables = { foo: 'bar' };
 
-      expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.id);
-      expect(utils.addRepromptIfExists.args).to.eql([[node, context, variables]]);
+      expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.id);
+      expect(utils.addRepromptIfExists.args).to.eql([[node, runtime, variables]]);
     });
 
     describe('request type is intent', () => {
@@ -67,12 +67,12 @@ describe('capture handler unit tests', async () => {
         const captureHandler = CaptureHandler(utils as any);
 
         const node = { id: 'node-id' };
-        const context = { turn: { get: sinon.stub().returns({ type: RequestType.INTENT }) } };
+        const runtime = { turn: { get: sinon.stub().returns({ type: RequestType.INTENT }) } };
         const variables = { foo: 'bar' };
 
-        expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(output);
-        expect(utils.commandHandler.canHandle.args).to.eql([[context]]);
-        expect(utils.commandHandler.handle.args).to.eql([[context, variables]]);
+        expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(output);
+        expect(utils.commandHandler.canHandle.args).to.eql([[runtime]]);
+        expect(utils.commandHandler.handle.args).to.eql([[runtime, variables]]);
       });
 
       describe('command cant handle', () => {
@@ -88,11 +88,11 @@ describe('capture handler unit tests', async () => {
 
           const node = { nextId: 'next-id' };
           const request = { type: RequestType.INTENT, payload: { intent: { slots: [] } } };
-          const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
+          const runtime = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
           const variables = { foo: 'bar' };
 
-          expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
-          expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
+          expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextId);
+          expect(runtime.turn.delete.args).to.eql([[T.REQUEST]]);
         });
 
         it('no slot', () => {
@@ -107,11 +107,11 @@ describe('capture handler unit tests', async () => {
 
           const node = { nextId: 'next-id' };
           const request = { type: RequestType.INTENT, payload: { intent: { slots: [null] } } };
-          const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
+          const runtime = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
           const variables = { foo: 'bar' };
 
-          expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
-          expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
+          expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextId);
+          expect(runtime.turn.delete.args).to.eql([[T.REQUEST]]);
         });
 
         it('input not number', () => {
@@ -130,13 +130,13 @@ describe('capture handler unit tests', async () => {
           const node = { nextId: 'next-id', variable: 'var' };
           const input = 'input';
           const request = { type: RequestType.INTENT, payload: { intent: { slots: [{ value: input }] } } };
-          const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
+          const runtime = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
           const variables = { set: sinon.stub() };
 
-          expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(node.nextId);
+          expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextId);
           expect(utils.wordsToNumbers.args).to.eql([[input]]);
           expect(variables.set.args).to.eql([[node.variable, input]]);
-          expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
+          expect(runtime.turn.delete.args).to.eql([[T.REQUEST]]);
         });
 
         it('input is number', () => {
@@ -155,13 +155,13 @@ describe('capture handler unit tests', async () => {
           const node = { variable: 'var' };
           const input = 'input';
           const request = { type: RequestType.INTENT, payload: { intent: { slots: [{ value: input }] } } };
-          const context = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
+          const runtime = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
           const variables = { set: sinon.stub() };
 
-          expect(captureHandler.handle(node as any, context as any, variables as any, null as any)).to.eql(null);
+          expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(null);
           expect(utils.wordsToNumbers.args).to.eql([[input]]);
           expect(variables.set.args).to.eql([[node.variable, word]]);
-          expect(context.turn.delete.args).to.eql([[T.REQUEST]]);
+          expect(runtime.turn.delete.args).to.eql([[T.REQUEST]]);
         });
       });
     });

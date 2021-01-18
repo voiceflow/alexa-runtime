@@ -66,10 +66,10 @@ describe('voiceflowManager unit tests', async () => {
 
         const fn = clientObj.setEvent.args[0][1];
 
-        const context = { versionID: 'random-version-id' };
+        const runtime = { versionID: 'random-version-id' };
         const stop = sinon.stub();
 
-        fn({ context, stop });
+        fn({ runtime, stop });
 
         expect(stop.callCount).to.eql(1);
       });
@@ -81,10 +81,10 @@ describe('voiceflowManager unit tests', async () => {
 
         const fn = clientObj.setEvent.args[0][1];
 
-        const context = { versionID: TEST_VERSION_ID };
+        const runtime = { versionID: TEST_VERSION_ID };
         const stop = sinon.stub();
 
-        fn({ context, stop });
+        fn({ runtime, stop });
 
         expect(stop.callCount).to.eql(0);
       });
@@ -98,11 +98,11 @@ describe('voiceflowManager unit tests', async () => {
 
         const fn = clientObj.setEvent.args[1][1];
 
-        const context = { trace: { addTrace: sinon.stub() }, stack: { top: sinon.stub().returns(null) } };
+        const runtime = { trace: { addTrace: sinon.stub() }, stack: { top: sinon.stub().returns(null) } };
 
-        fn({ context });
+        fn({ runtime });
 
-        expect(context.trace.addTrace.args).to.eql([[{ type: 'flow', payload: { diagramID: undefined } }]]);
+        expect(runtime.trace.addTrace.args).to.eql([[{ type: 'flow', payload: { diagramID: undefined } }]]);
       });
 
       it('with top frame', () => {
@@ -113,14 +113,14 @@ describe('voiceflowManager unit tests', async () => {
         const fn = clientObj.setEvent.args[1][1];
 
         const programID = 'diagram-id';
-        const context = {
+        const runtime = {
           trace: { addTrace: sinon.stub() },
           stack: { top: sinon.stub().returns({ getProgramID: sinon.stub().returns(programID) }) },
         };
 
-        fn({ context });
+        fn({ runtime });
 
-        expect(context.trace.addTrace.args).to.eql([[{ type: 'flow', payload: { diagramID: programID } }]]);
+        expect(runtime.trace.addTrace.args).to.eql([[{ type: 'flow', payload: { diagramID: programID } }]]);
       });
     });
 
@@ -131,15 +131,15 @@ describe('voiceflowManager unit tests', async () => {
         VoiceflowManager(services as any, config as any, utils as any);
 
         const fn = clientObj.setEvent.args[2][1];
-        const context = {
+        const runtime = {
           stack: {
             top: sinon.stub().returns(null),
           },
         };
 
-        fn({ context });
+        fn({ runtime });
 
-        expect(context.stack.top.callCount).to.eql(1);
+        expect(runtime.stack.top.callCount).to.eql(1);
       });
 
       it('called command false', async () => {
@@ -152,13 +152,13 @@ describe('voiceflowManager unit tests', async () => {
         const storageTop = {
           get: sinon.stub().returns(false),
         };
-        const context = {
+        const runtime = {
           stack: {
             top: sinon.stub().returns({ storage: storageTop }),
           },
         };
 
-        fn({ context });
+        fn({ runtime });
 
         expect(storageTop.get.args[0]).to.eql([F.CALLED_COMMAND]);
       });
@@ -178,13 +178,13 @@ describe('voiceflowManager unit tests', async () => {
           get: topStorageGet,
           delete: sinon.stub(),
         };
-        const context = {
+        const runtime = {
           stack: {
             top: sinon.stub().returns({ storage: storageTop }),
           },
         };
 
-        fn({ context });
+        fn({ runtime });
 
         expect(topStorageGet.args[0]).to.eql([F.CALLED_COMMAND]);
         expect(storageTop.delete.args[0]).to.eql([F.CALLED_COMMAND]);
@@ -207,7 +207,7 @@ describe('voiceflowManager unit tests', async () => {
           get: topStorageGet,
           delete: sinon.stub(),
         };
-        const context = {
+        const runtime = {
           trace: { addTrace: sinon.stub() },
           stack: {
             top: sinon.stub().returns({ storage: storageTop }),
@@ -217,14 +217,14 @@ describe('voiceflowManager unit tests', async () => {
           },
         };
 
-        fn({ context });
+        fn({ runtime });
 
         expect(topStorageGet.args[0]).to.eql([F.CALLED_COMMAND]);
         expect(storageTop.delete.args[0]).to.eql([F.CALLED_COMMAND]);
         expect(topStorageGet.args[1]).to.eql([F.SPEAK]);
-        expect(context.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: fSpeak } }]]);
+        expect(runtime.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: fSpeak } }]]);
 
-        const fn2 = context.storage.produce.args[0][0];
+        const fn2 = runtime.storage.produce.args[0][0];
 
         const initialDraft = 'initial';
         const draft = {

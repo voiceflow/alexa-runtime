@@ -31,9 +31,9 @@ describe('APL User Event Handler unit tests', () => {
       expect(utils.updateRuntime.args[0][0]).to.eql(input);
 
       const updateContextCallback = utils.updateRuntime.args[0][1];
-      const context = { storage: { produce: sinon.stub() } };
-      updateContextCallback(context);
-      expect(context.storage.produce.callCount).to.eql(1);
+      const runtime = { storage: { produce: sinon.stub() } };
+      updateContextCallback(runtime);
+      expect(runtime.storage.produce.callCount).to.eql(1);
     });
 
     describe('produce callback', () => {
@@ -51,11 +51,11 @@ describe('APL User Event Handler unit tests', () => {
         expect(utils.updateRuntime.args[0][0]).to.eql(input);
 
         const updateContextCallback = utils.updateRuntime.args[0][1];
-        const context = { storage: { produce: sinon.stub() } };
-        updateContextCallback(context);
-        expect(context.storage.produce.callCount).to.eql(1);
+        const runtime = { storage: { produce: sinon.stub() } };
+        updateContextCallback(runtime);
+        expect(runtime.storage.produce.callCount).to.eql(1);
 
-        const produceCallback = context.storage.produce.args[0][0];
+        const produceCallback = runtime.storage.produce.args[0][0];
 
         const state = { [S.DISPLAY_INFO]: { playingVideos: { id: 1, foo: 'bar' } } };
         produceCallback(state);
@@ -82,11 +82,11 @@ describe('APL User Event Handler unit tests', () => {
         expect(utils.updateRuntime.args[0][0]).to.eql(input);
 
         const updateContextCallback = utils.updateRuntime.args[0][1];
-        const context = { storage: { produce: sinon.stub() } };
-        updateContextCallback(context);
-        expect(context.storage.produce.callCount).to.eql(1);
+        const runtime = { storage: { produce: sinon.stub() } };
+        updateContextCallback(runtime);
+        expect(runtime.storage.produce.callCount).to.eql(1);
 
-        const produceCallback = context.storage.produce.args[0][0];
+        const produceCallback = runtime.storage.produce.args[0][0];
 
         const state = {};
         produceCallback(state);
@@ -128,11 +128,11 @@ describe('APL User Event Handler unit tests', () => {
         expect(await handler.handle(input as any)).to.eql(output);
 
         const updateContextCallback = utils.updateRuntime.args[0][1];
-        const context = { storage: { produce: sinon.stub() } };
-        updateContextCallback(context);
-        expect(context.storage.produce.callCount).to.eql(1);
+        const runtime = { storage: { produce: sinon.stub() } };
+        updateContextCallback(runtime);
+        expect(runtime.storage.produce.callCount).to.eql(1);
 
-        const produceCallback = context.storage.produce.args[0][0];
+        const produceCallback = runtime.storage.produce.args[0][0];
 
         const state = {};
         produceCallback(state);
@@ -147,7 +147,7 @@ describe('APL User Event Handler unit tests', () => {
         const handler = APLUserEventHandlerGenerator(utils as any);
 
         const state = { [S.DISPLAY_INFO]: {} };
-        const context = {
+        const runtime = {
           getRawState: sinon.stub().returns({}),
           storage: {
             produce: (fn: any) => {
@@ -158,9 +158,9 @@ describe('APL User Event Handler unit tests', () => {
 
         const input = {
           requestEnvelope: { request: { source: {}, arguments: [ENDED_EVENT_PREFIX] } },
-          context: {
+          runtime: {
             versionID: 'version-id',
-            voiceflow: { createRuntime: sinon.stub().returns(context) },
+            voiceflow: { createRuntime: sinon.stub().returns(runtime) },
           },
           attributesManager: {
             getPersistentAttributes: sinon.stub().returns({}),
@@ -176,7 +176,7 @@ describe('APL User Event Handler unit tests', () => {
         const handler = APLUserEventHandlerGenerator(utils as any);
 
         const state = { [S.DISPLAY_INFO]: {} };
-        const context = {
+        const runtime = {
           getRawState: sinon.stub().returns({}),
           storage: {
             produce: (fn: any) => {
@@ -188,9 +188,9 @@ describe('APL User Event Handler unit tests', () => {
         const input = {
           responseBuilder: { getResponse: sinon.stub().returns(output) },
           requestEnvelope: { request: { source: {} } },
-          context: {
+          runtime: {
             versionID: 'version-id',
-            voiceflow: { createRuntime: sinon.stub().returns(context) },
+            voiceflow: { createRuntime: sinon.stub().returns(runtime) },
           },
           attributesManager: {
             getPersistentAttributes: sinon.stub().returns({}),
@@ -206,7 +206,7 @@ describe('APL User Event Handler unit tests', () => {
         const handler = APLUserEventHandlerGenerator(utils as any);
 
         const state = { [S.DISPLAY_INFO]: {} };
-        const context = {
+        const runtime = {
           getRawState: sinon.stub().returns({}),
           storage: {
             produce: (fn: any) => {
@@ -218,9 +218,9 @@ describe('APL User Event Handler unit tests', () => {
         const input = {
           responseBuilder: { getResponse: sinon.stub().returns(output) },
           requestEnvelope: { request: { source: {}, arguments: [] } },
-          context: {
+          runtime: {
             versionID: 'version-id',
-            voiceflow: { createRuntime: sinon.stub().returns(context) },
+            voiceflow: { createRuntime: sinon.stub().returns(runtime) },
           },
           attributesManager: {
             getPersistentAttributes: sinon.stub().returns({}),

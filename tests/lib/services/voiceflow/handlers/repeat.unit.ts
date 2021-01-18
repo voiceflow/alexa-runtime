@@ -12,10 +12,10 @@ describe('repeat handler', () => {
 
   describe('can handle', () => {
     it('true', () => {
-      const context = { turn: { get: sinon.stub().returns(intentRequest) }, storage: { get: sinon.stub().returns(RepeatType.ALL) } };
-      expect(repeatHandler.canHandle(context as any)).to.eql(true);
-      expect(context.storage.get.args[0][0]).to.eql(S.REPEAT);
-      expect(context.turn.get.args[0][0]).to.eql(T.REQUEST);
+      const runtime = { turn: { get: sinon.stub().returns(intentRequest) }, storage: { get: sinon.stub().returns(RepeatType.ALL) } };
+      expect(repeatHandler.canHandle(runtime as any)).to.eql(true);
+      expect(runtime.storage.get.args[0][0]).to.eql(S.REPEAT);
+      expect(runtime.turn.get.args[0][0]).to.eql(T.REQUEST);
     });
 
     it('false', () => {
@@ -40,7 +40,7 @@ describe('repeat handler', () => {
           storage: { get: sinon.stub().returns('foo') },
         };
 
-        const context = {
+        const runtime = {
           storage: {
             get: sinon.stub().returns(RepeatType.OFF),
             produce: sinon.stub(),
@@ -53,14 +53,14 @@ describe('repeat handler', () => {
           },
         };
 
-        repeatHandler.handle(context as any);
+        repeatHandler.handle(runtime as any);
 
-        expect(context.storage.get.args[0][0]).to.eql(S.REPEAT);
-        expect(context.stack.top.callCount).to.eql(1);
+        expect(runtime.storage.get.args[0][0]).to.eql(S.REPEAT);
+        expect(runtime.stack.top.callCount).to.eql(1);
         expect(frame.storage.get.args[0][0]).to.eql(F.SPEAK);
-        expect(context.turn.get.callCount).to.eql(0);
+        expect(runtime.turn.get.callCount).to.eql(0);
 
-        const fn = context.storage.produce.args[0][0];
+        const fn = runtime.storage.produce.args[0][0];
 
         const draft = {
           [S.OUTPUT]: 'before ',
@@ -76,7 +76,7 @@ describe('repeat handler', () => {
           storage: { get: sinon.stub().returns('foo') },
         };
 
-        const context = {
+        const runtime = {
           storage: {
             get: sinon.stub().returns(RepeatType.ALL),
             produce: sinon.stub(),
@@ -89,14 +89,14 @@ describe('repeat handler', () => {
           },
         };
 
-        repeatHandler.handle(context as any);
+        repeatHandler.handle(runtime as any);
 
-        expect(context.storage.get.args[0][0]).to.eql(S.REPEAT);
-        expect(context.stack.top.callCount).to.eql(1);
+        expect(runtime.storage.get.args[0][0]).to.eql(S.REPEAT);
+        expect(runtime.stack.top.callCount).to.eql(1);
         expect(frame.storage.get.callCount).to.eql(0);
-        expect(context.turn.get.args[0][0]).to.eql(T.PREVIOUS_OUTPUT);
+        expect(runtime.turn.get.args[0][0]).to.eql(T.PREVIOUS_OUTPUT);
 
-        const fn = context.storage.produce.args[0][0];
+        const fn = runtime.storage.produce.args[0][0];
 
         const draft = {
           [S.OUTPUT]: 'before ',

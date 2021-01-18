@@ -23,7 +23,7 @@ describe('test manager unit tests', () => {
       const rawState = { foo: 'bar' };
       const trace = { foo1: 'bar1' };
 
-      const context = {
+      const runtime = {
         setEvent: sinon.stub(),
         turn: {
           get: sinon.stub().returns(false), // T.END false
@@ -41,7 +41,7 @@ describe('test manager unit tests', () => {
         trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
       };
 
-      const createRuntime = sinon.stub().returns(context);
+      const createRuntime = sinon.stub().returns(runtime);
 
       const services = {
         voiceflow: { client: { createRuntime } },
@@ -69,21 +69,21 @@ describe('test manager unit tests', () => {
           },
         ],
       ]);
-      expect(context.setEvent.args[0][0]).to.eql(EventType.handlerWillHandle);
-      const fn = context.setEvent.args[0][1];
-      const event = { context: { foo4: 'bar3' }, node: { id: 'node-id' } };
+      expect(runtime.setEvent.args[0][0]).to.eql(EventType.handlerWillHandle);
+      const fn = runtime.setEvent.args[0][1];
+      const event = { runtime: { foo4: 'bar3' }, node: { id: 'node-id' } };
       fn(event);
-      expect(context.trace.addTrace.args).to.eql([[{ type: 'block', payload: { blockID: event.node.id } }]]);
-      expect(context.turn.set.args).to.eql([[T.REQUEST, request]]);
-      expect(context.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
-      expect(context.update.callCount).to.eql(1);
+      expect(runtime.trace.addTrace.args).to.eql([[{ type: 'block', payload: { blockID: event.node.id } }]]);
+      expect(runtime.turn.set.args).to.eql([[T.REQUEST, request]]);
+      expect(runtime.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
+      expect(runtime.update.callCount).to.eql(1);
     });
 
     it('stack empty', async () => {
       const rawState = { foo: 'bar' };
       const trace = { foo1: 'bar1' };
 
-      const context = {
+      const runtime = {
         setEvent: sinon.stub(),
         turn: {
           set: sinon.stub(),
@@ -100,7 +100,7 @@ describe('test manager unit tests', () => {
         trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
       };
 
-      const createRuntime = sinon.stub().returns(context);
+      const createRuntime = sinon.stub().returns(runtime);
 
       const services = {
         voiceflow: { client: { createRuntime } },
@@ -116,7 +116,7 @@ describe('test manager unit tests', () => {
 
       expect(await testManager.invoke({} as any, {} as any)).to.eql({ ...rawState, trace });
       expect(utils.Handlers.callCount).to.eql(1);
-      expect(context.trace.addTrace.args[0]).to.eql([{ type: 'end' }]);
+      expect(runtime.trace.addTrace.args[0]).to.eql([{ type: 'end' }]);
     });
 
     describe('with stream', () => {
@@ -125,7 +125,7 @@ describe('test manager unit tests', () => {
         const trace = { foo1: 'bar1' };
         const stream = { action: StreamAction.START, url: 'url', token: 'token', loop: true };
 
-        const context = {
+        const runtime = {
           setEvent: sinon.stub(),
           turn: {
             set: sinon.stub(),
@@ -142,7 +142,7 @@ describe('test manager unit tests', () => {
           trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
         };
 
-        const createRuntime = sinon.stub().returns(context);
+        const createRuntime = sinon.stub().returns(runtime);
 
         const services = {
           voiceflow: { client: { createRuntime } },
@@ -159,7 +159,7 @@ describe('test manager unit tests', () => {
 
         expect(await testManager.invoke({} as any, {} as any)).to.eql({ ...rawState, trace });
         expect(utils.Handlers.callCount).to.eql(1);
-        expect(context.trace.addTrace.args[0]).to.eql([
+        expect(runtime.trace.addTrace.args[0]).to.eql([
           {
             type: 'stream',
             payload: {
@@ -176,7 +176,7 @@ describe('test manager unit tests', () => {
         const trace = { foo1: 'bar1' };
         const stream = { action: StreamAction.RESUME, url: 'url', token: 'token', loop: false };
 
-        const context = {
+        const runtime = {
           setEvent: sinon.stub(),
           turn: {
             set: sinon.stub(),
@@ -193,7 +193,7 @@ describe('test manager unit tests', () => {
           trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
         };
 
-        const createRuntime = sinon.stub().returns(context);
+        const createRuntime = sinon.stub().returns(runtime);
 
         const services = {
           voiceflow: { client: { createRuntime } },
@@ -210,7 +210,7 @@ describe('test manager unit tests', () => {
 
         expect(await testManager.invoke({} as any, {} as any)).to.eql({ ...rawState, trace });
         expect(utils.Handlers.callCount).to.eql(1);
-        expect(context.trace.addTrace.args[0]).to.eql([
+        expect(runtime.trace.addTrace.args[0]).to.eql([
           {
             type: 'stream',
             payload: {
@@ -227,7 +227,7 @@ describe('test manager unit tests', () => {
         const trace = { foo1: 'bar1' };
         const stream = { action: StreamAction.PAUSE, url: 'url', token: 'token', loop: false };
 
-        const context = {
+        const runtime = {
           setEvent: sinon.stub(),
           turn: {
             set: sinon.stub(),
@@ -244,7 +244,7 @@ describe('test manager unit tests', () => {
           trace: { get: sinon.stub().returns(trace), addTrace: sinon.stub() },
         };
 
-        const createRuntime = sinon.stub().returns(context);
+        const createRuntime = sinon.stub().returns(runtime);
 
         const services = {
           voiceflow: { client: { createRuntime } },
@@ -260,7 +260,7 @@ describe('test manager unit tests', () => {
         const testManager = TestManager(services as any, config as any, utils as any);
 
         expect(await testManager.invoke({} as any, {} as any)).to.eql({ ...rawState, trace });
-        expect(context.trace.addTrace.args[0]).to.eql([
+        expect(runtime.trace.addTrace.args[0]).to.eql([
           {
             type: 'stream',
             payload: {

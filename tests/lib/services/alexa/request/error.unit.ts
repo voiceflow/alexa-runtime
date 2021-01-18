@@ -18,7 +18,7 @@ describe('error handler unit tests', () => {
       const withShouldEndSession = sinon.stub().returns({ getResponse });
       const reprompt = sinon.stub().returns({ withShouldEndSession });
       const input = {
-        context: { versionID },
+        runtime: { versionID },
         responseBuilder: { speak: sinon.stub().returns({ reprompt }) },
         requestEnvelope: { request: {} },
       };

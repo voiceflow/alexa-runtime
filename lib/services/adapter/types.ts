@@ -48,7 +48,7 @@ type OldDiagrams = Array<{
   speak: string;
 }>;
 
-export type OldContextRaw = {
+export type OldStateRaw = {
   line_id: string | null;
   output: string;
   last_speak?: string;
@@ -124,9 +124,9 @@ export type Frame = {
   commands: Commands;
 };
 
-export type NewContextStack = Array<Frame>;
+export type NewStateStack = Array<Frame>;
 
-export type NewContextStorage = {
+export type NewStateStorage = {
   output: string;
   sessions: number;
   repeat: number;
@@ -156,7 +156,7 @@ export type NewContextStorage = {
     offset: number;
   };
   streamFinished?: true;
-  streamTemp?: NewContextRaw;
+  streamTemp?: NewStateRaw;
 };
 
 export type NewVoiceflowVars = {
@@ -166,14 +166,14 @@ export type NewVoiceflowVars = {
   capabilities: SupportedInterfaces; // supported_interfaces
 };
 
-export type NewContextVariables = {
+export type NewStateVariables = {
   [key: string]: any;
   voiceflow: NewVoiceflowVars;
   _system: interfaces.system.SystemState;
 };
 
-export type NewContextRaw = {
-  stack: NewContextStack;
-  storage: NewContextStorage;
-  variables: NewContextVariables;
+export type NewStateRaw = {
+  stack: NewStateStack;
+  storage: NewStateStorage;
+  variables: NewStateVariables;
 };
