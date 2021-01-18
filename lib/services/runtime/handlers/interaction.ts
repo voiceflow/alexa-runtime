@@ -1,6 +1,5 @@
+import { Node } from '@voiceflow/alexa-types/build/nodes/interaction';
 import { SlotMapping } from '@voiceflow/api-sdk';
-import { TraceType } from '@voiceflow/general-types';
-import { Node, TraceFrame } from '@voiceflow/general-types/build/nodes/interaction';
 import { formatIntentName, HandlerFactory } from '@voiceflow/runtime';
 
 import { S, T } from '@/lib/constants';
@@ -28,11 +27,6 @@ export const InteractionHandler: HandlerFactory<Node, typeof utilsObj> = (utils)
     if (request?.type !== RequestType.INTENT) {
       utils.addRepromptIfExists({ node, runtime, variables });
 
-      runtime.trace.addTrace<TraceFrame>({
-        type: TraceType.CHOICE,
-        payload: { choices: node.interactions.map(({ event }) => ({ name: event.intent })) },
-      });
-
       // clean up no matches counter on new interaction
       runtime.storage.delete(S.NO_MATCHES_COUNTER);
 
@@ -46,13 +40,10 @@ export const InteractionHandler: HandlerFactory<Node, typeof utilsObj> = (utils)
     const { intent } = request.payload;
 
     // check if there is a choice in the node that fulfills intent
-
     node.interactions.forEach((choice, i: number) => {
-      if (choice.event.intent && utils.formatIntentName(choice.event.intent) === intent.name) {
-        variableMap = choice.event.mappings ?? null;
-        ({ nextId } = choice);
-
-        runtime.trace.debug(`matched choice **${choice.event.intent}** - taking path ${i + 1}`);
+      if (choice.intent && utils.formatIntentName(choice.intent) === intent.name) {
+        variableMap = choice.mappings ?? null;
+        nextId = node.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
       }
     });
 
