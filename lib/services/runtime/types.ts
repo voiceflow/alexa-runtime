@@ -29,7 +29,6 @@ export enum IntentName {
 
 export type IntentRequestPayload = {
   intent: Intent;
-  input?: string; // test tool only
 };
 
 export type IntentRequest = {
