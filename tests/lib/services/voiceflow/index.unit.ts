@@ -3,7 +3,7 @@ import { EventType } from '@voiceflow/runtime';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { F, S, TEST_VERSION_ID } from '@/lib/constants';
+import { F, S } from '@/lib/constants';
 import VoiceflowManager from '@/lib/services/runtime';
 
 describe('voiceflowManager unit tests', async () => {
@@ -57,7 +57,7 @@ describe('voiceflowManager unit tests', async () => {
     });
 
     describe('traceWillAdd', () => {
-      it('not test id', () => {
+      it('works', () => {
         const { clientObj, services, config, utils } = generateFakes();
 
         VoiceflowManager(services as any, config as any, utils as any);
@@ -70,21 +70,6 @@ describe('voiceflowManager unit tests', async () => {
         fn({ runtime, stop });
 
         expect(stop.callCount).to.eql(1);
-      });
-
-      it('test id', () => {
-        const { clientObj, services, config, utils } = generateFakes();
-
-        VoiceflowManager(services as any, config as any, utils as any);
-
-        const fn = clientObj.setEvent.args[0][1];
-
-        const runtime = { versionID: TEST_VERSION_ID };
-        const stop = sinon.stub();
-
-        fn({ runtime, stop });
-
-        expect(stop.callCount).to.eql(0);
       });
     });
 

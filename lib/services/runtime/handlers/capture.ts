@@ -39,11 +39,10 @@ export const CaptureHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => 
       return utils.repeatHandler.handle(runtime);
     }
 
-    // "input" is only passed through the prototype tool
-    const { intent, input } = request.payload;
+    const { intent } = request.payload;
 
     // try to match the first slot of the intent to the variable
-    const value = (_.keys(intent.slots).length === 1 && _.values(intent.slots)[0]?.value) || input;
+    const value = _.keys(intent.slots).length === 1 && _.values(intent.slots)[0]?.value;
 
     if (value) {
       const num = utils.wordsToNumbers(value);
