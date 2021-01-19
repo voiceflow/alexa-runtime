@@ -10,7 +10,7 @@ describe('client unit tests', () => {
 
   describe('initClients', () => {
     it('mongo/pg state disabled', async () => {
-      const clients = { dataAPI: { init: sinon.stub() }, prototypeDataAPI: { init: sinon.stub() } };
+      const clients = { dataAPI: { init: sinon.stub() } };
 
       await initClients({ SESSIONS_SOURCE: 'dynamo' } as any, clients as any);
 
@@ -20,7 +20,6 @@ describe('client unit tests', () => {
     it('mongo/pg state enabled', async () => {
       const clients = {
         dataAPI: { init: sinon.stub() },
-        prototypeDataAPI: { init: sinon.stub() },
         mongo: { start: sinon.stub() },
         pg: { start: sinon.stub() },
       };
