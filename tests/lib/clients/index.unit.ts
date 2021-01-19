@@ -10,18 +10,16 @@ describe('client unit tests', () => {
 
   describe('initClients', () => {
     it('mongo/pg state disabled', async () => {
-      const clients = { dataAPI: { init: sinon.stub() }, prototypeDataAPI: { init: sinon.stub() } };
+      const clients = { dataAPI: { init: sinon.stub() } };
 
       await initClients({ SESSIONS_SOURCE: 'dynamo' } as any, clients as any);
 
       expect(clients.dataAPI.init.callCount).to.eql(1);
-      expect(clients.prototypeDataAPI.init.callCount).to.eql(1);
     });
 
     it('mongo/pg state enabled', async () => {
       const clients = {
         dataAPI: { init: sinon.stub() },
-        prototypeDataAPI: { init: sinon.stub() },
         mongo: { start: sinon.stub() },
         pg: { start: sinon.stub() },
       };
@@ -29,7 +27,6 @@ describe('client unit tests', () => {
       await initClients({ SESSIONS_SOURCE: 'mongo' } as any, clients as any);
 
       expect(clients.dataAPI.init.callCount).to.eql(1);
-      expect(clients.prototypeDataAPI.init.callCount).to.eql(1);
 
       expect(clients.mongo.start.callCount).to.eql(1);
       expect(clients.pg.start.callCount).to.eql(1);

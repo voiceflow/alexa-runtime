@@ -42,15 +42,6 @@ describe('metrics client unit tests', () => {
     expect(increment.args).to.eql([['alexa.request']]);
   });
 
-  it('testRequest', () => {
-    const metrics = MetricsClient({} as any);
-    const increment = sinon.stub();
-    _.set(metrics, 'client', { increment });
-
-    metrics.testRequest();
-    expect(increment.args).to.eql([['test.request']]);
-  });
-
   it('error', () => {
     const metrics = MetricsClient({} as any);
     const increment = sinon.stub();

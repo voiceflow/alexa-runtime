@@ -10,7 +10,6 @@ import Metrics, { MetricsType } from './metrics';
 import MongoDB from './mongodb';
 import Multimodal, { MultimodalType } from './multimodal';
 import PostgresDB from './postgres';
-import PrototypeServerDataApi from './prototypeServerDataApi';
 import Static, { StaticType } from './static';
 
 export interface ClientMap extends StaticType {
@@ -20,7 +19,6 @@ export interface ClientMap extends StaticType {
   metrics: MetricsType;
   mongo: MongoDB | null;
   pg: PostgresDB | null;
-  prototypeDataAPI: DataAPI<AlexaProgram, AlexaVersion>;
 }
 
 /**
@@ -39,14 +37,6 @@ const buildClients = (config: Config): ClientMap => {
   const mongo = MongoPersistenceAdapter.enabled(config) ? new MongoDB(config) : null;
   const pg = PostgresPersistenceAdapter.enabled(config) ? new PostgresDB(config) : null;
 
-  // TODO: remove after general assistant implements prototype
-  const prototypeDataAPI = config.PROJECT_SOURCE
-    ? dataAPI
-    : new PrototypeServerDataApi(
-        { platform: 'alexa', adminToken: config.ADMIN_SERVER_DATA_API_TOKEN, dataEndpoint: config.VF_DATA_ENDPOINT },
-        { axios: Static.axios }
-      );
-
   return {
     ...Static,
     mongo,
@@ -55,13 +45,11 @@ const buildClients = (config: Config): ClientMap => {
     dataAPI,
     metrics,
     multimodal,
-    prototypeDataAPI,
   };
 };
 
 export const initClients = async (_config: Config, clients: ClientMap) => {
   await clients.dataAPI.init();
-  await clients.prototypeDataAPI.init();
   await clients.mongo?.start();
   await clients.pg?.start();
 };
