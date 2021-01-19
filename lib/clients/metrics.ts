@@ -17,10 +17,6 @@ export class Metrics {
     this.client.increment('alexa.request');
   }
 
-  testRequest() {
-    this.client.increment('test.request');
-  }
-
   error(versionID: string) {
     this.client.increment('alexa.request.error', 1, [`skill_id:${versionID}`]);
   }

@@ -3,7 +3,7 @@ import { TraceFrame as FlowTraceFrame } from '@voiceflow/general-types/build/nod
 import { TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
 import Client, { EventType } from '@voiceflow/runtime';
 
-import { F, S, TEST_VERSION_ID } from '@/lib/constants';
+import { F, S } from '@/lib/constants';
 import { executeEvents } from '@/lib/services/runtime/handlers/events';
 import { RESUME_PROGRAM_ID, ResumeDiagram } from '@/lib/services/runtime/programs/resume';
 
@@ -29,8 +29,8 @@ const RuntimeClientManager = (services: Services, config: Config, utils = utilsO
     handlers,
   });
 
-  client.setEvent(EventType.traceWillAdd, ({ runtime, stop }) => {
-    if (runtime.versionID !== TEST_VERSION_ID) stop();
+  client.setEvent(EventType.traceWillAdd, ({ stop }) => {
+    stop();
   });
 
   client.setEvent(EventType.stackDidChange, ({ runtime }) => {
