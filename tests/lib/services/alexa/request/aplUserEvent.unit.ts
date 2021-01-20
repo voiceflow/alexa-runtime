@@ -3,8 +3,8 @@ import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
 import APLUserEventHandler, { APLUserEventHandlerGenerator, Request, SourceHandler } from '@/lib/services/alexa/request/aplUserEvent';
-import { updateContext } from '@/lib/services/alexa/utils';
-import { DOCUMENT_VIDEO_TYPE, ENDED_EVENT_PREFIX } from '@/lib/services/voiceflow/handlers/display/constants';
+import { updateRuntime } from '@/lib/services/alexa/utils';
+import { DOCUMENT_VIDEO_TYPE, ENDED_EVENT_PREFIX } from '@/lib/services/runtime/handlers/display/constants';
 
 describe('APL User Event Handler unit tests', () => {
   describe('canHandle', () => {
@@ -19,7 +19,7 @@ describe('APL User Event Handler unit tests', () => {
 
   describe('handle', () => {
     it('hasDisplayInfo false', async () => {
-      const utils = { updateContext: sinon.stub() };
+      const utils = { updateRuntime: sinon.stub() };
       const handler = APLUserEventHandlerGenerator(utils as any);
 
       const output = 'output';
@@ -28,17 +28,17 @@ describe('APL User Event Handler unit tests', () => {
         responseBuilder: { getResponse: sinon.stub().returns(output) },
       };
       expect(await handler.handle(input as any)).to.eql(output);
-      expect(utils.updateContext.args[0][0]).to.eql(input);
+      expect(utils.updateRuntime.args[0][0]).to.eql(input);
 
-      const updateContextCallback = utils.updateContext.args[0][1];
-      const context = { storage: { produce: sinon.stub() } };
-      updateContextCallback(context);
-      expect(context.storage.produce.callCount).to.eql(1);
+      const updateContextCallback = utils.updateRuntime.args[0][1];
+      const runtime = { storage: { produce: sinon.stub() } };
+      updateContextCallback(runtime);
+      expect(runtime.storage.produce.callCount).to.eql(1);
     });
 
     describe('produce callback', () => {
       it('end handler', async () => {
-        const utils = { updateContext: sinon.stub() };
+        const utils = { updateRuntime: sinon.stub() };
         const handler = APLUserEventHandlerGenerator(utils as any);
 
         const output = 'output';
@@ -48,14 +48,14 @@ describe('APL User Event Handler unit tests', () => {
           responseBuilder: { getResponse: sinon.stub().returns(output) },
         };
         expect(await handler.handle(input as any)).to.eql(output);
-        expect(utils.updateContext.args[0][0]).to.eql(input);
+        expect(utils.updateRuntime.args[0][0]).to.eql(input);
 
-        const updateContextCallback = utils.updateContext.args[0][1];
-        const context = { storage: { produce: sinon.stub() } };
-        updateContextCallback(context);
-        expect(context.storage.produce.callCount).to.eql(1);
+        const updateContextCallback = utils.updateRuntime.args[0][1];
+        const runtime = { storage: { produce: sinon.stub() } };
+        updateContextCallback(runtime);
+        expect(runtime.storage.produce.callCount).to.eql(1);
 
-        const produceCallback = context.storage.produce.args[0][0];
+        const produceCallback = runtime.storage.produce.args[0][0];
 
         const state = { [S.DISPLAY_INFO]: { playingVideos: { id: 1, foo: 'bar' } } };
         produceCallback(state);
@@ -69,7 +69,7 @@ describe('APL User Event Handler unit tests', () => {
       it('play handler', async () => {
         const clock = sinon.useFakeTimers(Date.now()); // fake Date.now
 
-        const utils = { updateContext: sinon.stub() };
+        const utils = { updateRuntime: sinon.stub() };
         const handler = APLUserEventHandlerGenerator(utils as any);
 
         const output = 'output';
@@ -79,14 +79,14 @@ describe('APL User Event Handler unit tests', () => {
           responseBuilder: { getResponse: sinon.stub().returns(output) },
         };
         expect(await handler.handle(input as any)).to.eql(output);
-        expect(utils.updateContext.args[0][0]).to.eql(input);
+        expect(utils.updateRuntime.args[0][0]).to.eql(input);
 
-        const updateContextCallback = utils.updateContext.args[0][1];
-        const context = { storage: { produce: sinon.stub() } };
-        updateContextCallback(context);
-        expect(context.storage.produce.callCount).to.eql(1);
+        const updateContextCallback = utils.updateRuntime.args[0][1];
+        const runtime = { storage: { produce: sinon.stub() } };
+        updateContextCallback(runtime);
+        expect(runtime.storage.produce.callCount).to.eql(1);
 
-        const produceCallback = context.storage.produce.args[0][0];
+        const produceCallback = runtime.storage.produce.args[0][0];
 
         const state = {};
         produceCallback(state);
@@ -117,7 +117,7 @@ describe('APL User Event Handler unit tests', () => {
       });
 
       it('no source', async () => {
-        const utils = { updateContext: sinon.stub() };
+        const utils = { updateRuntime: sinon.stub() };
         const handler = APLUserEventHandlerGenerator(utils as any);
 
         const output = 'output';
@@ -127,12 +127,12 @@ describe('APL User Event Handler unit tests', () => {
         };
         expect(await handler.handle(input as any)).to.eql(output);
 
-        const updateContextCallback = utils.updateContext.args[0][1];
-        const context = { storage: { produce: sinon.stub() } };
-        updateContextCallback(context);
-        expect(context.storage.produce.callCount).to.eql(1);
+        const updateContextCallback = utils.updateRuntime.args[0][1];
+        const runtime = { storage: { produce: sinon.stub() } };
+        updateContextCallback(runtime);
+        expect(runtime.storage.produce.callCount).to.eql(1);
 
-        const produceCallback = context.storage.produce.args[0][0];
+        const produceCallback = runtime.storage.produce.args[0][0];
 
         const state = {};
         produceCallback(state);
@@ -143,11 +143,11 @@ describe('APL User Event Handler unit tests', () => {
     describe('hasDisplayInfo true', () => {
       it('intent handler handles', async () => {
         const output = 'output';
-        const utils = { updateContext, IntentHandler: { handle: sinon.stub().returns(output) } };
+        const utils = { updateRuntime, IntentHandler: { handle: sinon.stub().returns(output) } };
         const handler = APLUserEventHandlerGenerator(utils as any);
 
         const state = { [S.DISPLAY_INFO]: {} };
-        const context = {
+        const runtime = {
           getRawState: sinon.stub().returns({}),
           storage: {
             produce: (fn: any) => {
@@ -160,7 +160,7 @@ describe('APL User Event Handler unit tests', () => {
           requestEnvelope: { request: { source: {}, arguments: [ENDED_EVENT_PREFIX] } },
           context: {
             versionID: 'version-id',
-            voiceflow: { createContext: sinon.stub().returns(context) },
+            runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
           },
           attributesManager: {
             getPersistentAttributes: sinon.stub().returns({}),
@@ -172,11 +172,11 @@ describe('APL User Event Handler unit tests', () => {
 
       it('no arguments', async () => {
         const output = 'output';
-        const utils = { updateContext };
+        const utils = { updateRuntime };
         const handler = APLUserEventHandlerGenerator(utils as any);
 
         const state = { [S.DISPLAY_INFO]: {} };
-        const context = {
+        const runtime = {
           getRawState: sinon.stub().returns({}),
           storage: {
             produce: (fn: any) => {
@@ -190,7 +190,7 @@ describe('APL User Event Handler unit tests', () => {
           requestEnvelope: { request: { source: {} } },
           context: {
             versionID: 'version-id',
-            voiceflow: { createContext: sinon.stub().returns(context) },
+            runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
           },
           attributesManager: {
             getPersistentAttributes: sinon.stub().returns({}),
@@ -202,11 +202,11 @@ describe('APL User Event Handler unit tests', () => {
 
       it('no ENDED_EVENT_PREFIX in  arguments', async () => {
         const output = 'output';
-        const utils = { updateContext };
+        const utils = { updateRuntime };
         const handler = APLUserEventHandlerGenerator(utils as any);
 
         const state = { [S.DISPLAY_INFO]: {} };
-        const context = {
+        const runtime = {
           getRawState: sinon.stub().returns({}),
           storage: {
             produce: (fn: any) => {
@@ -220,7 +220,7 @@ describe('APL User Event Handler unit tests', () => {
           requestEnvelope: { request: { source: {}, arguments: [] } },
           context: {
             versionID: 'version-id',
-            voiceflow: { createContext: sinon.stub().returns(context) },
+            runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
           },
           attributesManager: {
             getPersistentAttributes: sinon.stub().returns({}),

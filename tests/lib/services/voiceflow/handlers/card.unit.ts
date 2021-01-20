@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { T } from '@/lib/constants';
-import { addVariables, CardHandler, CardResponseBuilder } from '@/lib/services/voiceflow/handlers/card';
+import { addVariables, CardHandler, CardResponseBuilder } from '@/lib/services/runtime/handlers/card';
 
 describe('card handler unit tests', async () => {
   afterEach(() => sinon.restore());
@@ -47,17 +47,17 @@ describe('card handler unit tests', async () => {
         },
         nextId: 'next-id',
       };
-      const context = {
+      const runtime = {
         turn: { set: sinon.stub() },
       };
       const variables = { foo: 'bar' };
 
-      const result = cardHandler.handle(node as any, context as any, variables as any, null as any);
+      const result = cardHandler.handle(node as any, runtime as any, variables as any, null as any);
 
       expect(result).to.eql(node.nextId);
       expect(utils.addVariables.args[0]).to.eql([node.card.content, variables]);
       expect(utils.addVariables.args[1]).to.eql([node.card.title, variables]);
-      expect(context.turn.set.args[0]).to.eql([
+      expect(runtime.turn.set.args[0]).to.eql([
         T.CARD,
         {
           type: CardType.SIMPLE,
@@ -83,14 +83,14 @@ describe('card handler unit tests', async () => {
           type: 'random-type',
         },
       };
-      const context = {
+      const runtime = {
         turn: { set: sinon.stub() },
       };
       const variables = { foo: 'bar' };
 
-      cardHandler.handle(node as any, context as any, variables as any, null as any);
+      cardHandler.handle(node as any, runtime as any, variables as any, null as any);
 
-      expect(context.turn.set.args[0][1].type).to.eql(node.card.type);
+      expect(runtime.turn.set.args[0][1].type).to.eql(node.card.type);
     });
 
     it('type STANDARD but no image', async () => {
@@ -105,14 +105,14 @@ describe('card handler unit tests', async () => {
           type: CardType.STANDARD,
         },
       };
-      const context = {
+      const runtime = {
         turn: { set: sinon.stub() },
       };
       const variables = { foo: 'bar' };
 
-      cardHandler.handle(node as any, context as any, variables as any, null as any);
+      cardHandler.handle(node as any, runtime as any, variables as any, null as any);
 
-      expect(context.turn.set.args[0][1].image).to.eql({ largeImageUrl: '', smallImageUrl: '' });
+      expect(runtime.turn.set.args[0][1].image).to.eql({ largeImageUrl: '', smallImageUrl: '' });
     });
 
     it('type STANDARD with image', async () => {
@@ -131,27 +131,27 @@ describe('card handler unit tests', async () => {
           },
         },
       };
-      const context = {
+      const runtime = {
         turn: { set: sinon.stub() },
       };
       const variables = { foo: 'bar' };
 
-      cardHandler.handle(node as any, context as any, variables as any, null as any);
+      cardHandler.handle(node as any, runtime as any, variables as any, null as any);
 
       expect(utils.addVariables.args[2]).to.eql([node.card.image.largeImageUrl, variables]);
-      expect(context.turn.set.args[0][1].image).to.eql({ largeImageUrl: 'url', smallImageUrl: 'url' });
+      expect(runtime.turn.set.args[0][1].image).to.eql({ largeImageUrl: 'url', smallImageUrl: 'url' });
     });
   });
 
   describe('responseBuilder', () => {
     it('no card', async () => {
-      const context = {
+      const runtime = {
         turn: { get: sinon.stub().returns(null) },
       };
 
-      CardResponseBuilder(context as any, null as any);
+      CardResponseBuilder(runtime as any, null as any);
 
-      expect(context.turn.get.args[0]).to.eql([T.CARD]);
+      expect(runtime.turn.get.args[0]).to.eql([T.CARD]);
     });
 
     it('unknow card type', async () => {
@@ -159,13 +159,13 @@ describe('card handler unit tests', async () => {
         type: 'random',
       };
 
-      const context = {
+      const runtime = {
         turn: { get: sinon.stub().returns(card) },
       };
 
-      CardResponseBuilder(context as any, null as any);
+      CardResponseBuilder(runtime as any, null as any);
 
-      expect(context.turn.get.args[0]).to.eql([T.CARD]);
+      expect(runtime.turn.get.args[0]).to.eql([T.CARD]);
     });
 
     it('simple card', async () => {
@@ -175,15 +175,15 @@ describe('card handler unit tests', async () => {
         texr: 'CONTENT',
       };
 
-      const context = {
+      const runtime = {
         turn: { get: sinon.stub().returns(card) },
       };
 
       const builder = { withSimpleCard: sinon.stub() };
 
-      CardResponseBuilder(context as any, builder as any);
+      CardResponseBuilder(runtime as any, builder as any);
 
-      expect(context.turn.get.args[0]).to.eql([T.CARD]);
+      expect(runtime.turn.get.args[0]).to.eql([T.CARD]);
       expect(builder.withSimpleCard.args).to.eql([[card.title, card.content]]);
     });
 
@@ -198,15 +198,15 @@ describe('card handler unit tests', async () => {
         },
       };
 
-      const context = {
+      const runtime = {
         turn: { get: sinon.stub().returns(card) },
       };
 
       const builder = { withStandardCard: sinon.stub() };
 
-      CardResponseBuilder(context as any, builder as any);
+      CardResponseBuilder(runtime as any, builder as any);
 
-      expect(context.turn.get.args[0]).to.eql([T.CARD]);
+      expect(runtime.turn.get.args[0]).to.eql([T.CARD]);
       expect(builder.withStandardCard.args).to.eql([[card.title, card.text, card.image.smallImageUrl, card.image.largeImageUrl]]);
     });
   });

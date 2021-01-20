@@ -18,17 +18,17 @@ describe('update lifecycle unit tests', () => {
   describe('update', () => {
     it('works correctly', async () => {
       const request = { foo: 'bar' };
-      const context = {
+      const runtime = {
         variables: { set: sinon.stub() },
         turn: { set: sinon.stub() },
         update: sinon.stub(),
         getRequest: sinon.stub().returns(request),
       };
 
-      await update(context as any);
-      expect(context.turn.set.args).to.eql([[T.REQUEST, request]]);
-      expect(context.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
-      expect(context.update.callCount).to.eql(1);
+      await update(runtime as any);
+      expect(runtime.turn.set.args).to.eql([[T.REQUEST, request]]);
+      expect(runtime.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
+      expect(runtime.update.callCount).to.eql(1);
     });
   });
 });

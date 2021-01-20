@@ -3,14 +3,12 @@ import { Config } from '@/types';
 import { ClientMap } from '../clients';
 import Adapter from './adapter';
 import Alexa from './alexa';
-import Test from './test';
-import Voiceflow from './voiceflow';
+import Runtime from './runtime';
 
 export interface ServiceMap {
-  adapter: Adapter;
   alexa: ReturnType<typeof Alexa>;
-  voiceflow: ReturnType<typeof Voiceflow>;
-  test: ReturnType<typeof Test>;
+  adapter: Adapter;
+  runtimeClient: ReturnType<typeof Runtime>;
 }
 
 export interface FullServiceMap extends ClientMap, ServiceMap {}
@@ -23,10 +21,9 @@ const buildServices = (config: Config, clients: ClientMap): FullServiceMap => {
     ...clients,
   } as FullServiceMap;
 
-  services.voiceflow = Voiceflow(services, config);
+  services.runtimeClient = Runtime(services, config);
   services.adapter = new Adapter(services, config);
   services.alexa = Alexa(services, config);
-  services.test = Test(services, config);
 
   return services;
 };

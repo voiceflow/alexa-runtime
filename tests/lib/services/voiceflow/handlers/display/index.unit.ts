@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '@/lib/services/voiceflow/handlers/display/constants';
-import DefaultDisplayHandler, { DisplayHandler, getVariables } from '@/lib/services/voiceflow/handlers/display/index';
+import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '@/lib/services/runtime/handlers/display/constants';
+import DefaultDisplayHandler, { DisplayHandler, getVariables } from '@/lib/services/runtime/handlers/display/index';
 
 describe('displayHandler.unit tests', () => {
   const displayHandler = DefaultDisplayHandler();
@@ -20,25 +20,25 @@ describe('displayHandler.unit tests', () => {
 
   describe('handle', () => {
     it('supportedInterfaces is null', async () => {
-      const context = { storage: { get: sinon.stub().returns(null) }, variables: { getState: sinon.stub().returns(null) } };
-      expect(await displayHandler.handle({} as any, context as any, null as any, null as any)).to.eql(null);
+      const runtime = { storage: { get: sinon.stub().returns(null) }, variables: { getState: sinon.stub().returns(null) } };
+      expect(await displayHandler.handle({} as any, runtime as any, null as any, null as any)).to.eql(null);
     });
 
     it('supportedInterfaces does not have APL_INTERFACE_NAME', async () => {
-      const context = { storage: { get: sinon.stub().returns({}) }, variables: { getState: sinon.stub().returns(null) } };
+      const runtime = { storage: { get: sinon.stub().returns({}) }, variables: { getState: sinon.stub().returns(null) } };
       const nextId = 'next-id';
-      expect(await displayHandler.handle({ nextId } as any, context as any, null as any, null as any)).to.eql(nextId);
+      expect(await displayHandler.handle({ nextId } as any, runtime as any, null as any, null as any)).to.eql(nextId);
     });
 
     it('no document', async () => {
-      const context = {
+      const runtime = {
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
         variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
       };
       const node = { display_id: 'display-id', apl_commands: 'commands', datasource: '{hello} there, {name}' };
-      expect(await displayHandler.handle(node as any, context as any, null as any, null as any)).to.eql(null);
-      expect(context.storage.set.args).to.eql([
+      expect(await displayHandler.handle(node as any, runtime as any, null as any, null as any)).to.eql(null);
+      expect(runtime.storage.set.args).to.eql([
         [
           S.DISPLAY_INFO,
           {
@@ -51,19 +51,19 @@ describe('displayHandler.unit tests', () => {
           },
         ],
       ]);
-      expect(context.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id]]);
+      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id]]);
     });
 
     it('valid json command', async () => {
-      const context = {
+      const runtime = {
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
         variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
       };
       const rawCommand = ['a', 'b'];
       const node = { display_id: 'display-id', apl_commands: JSON.stringify(rawCommand), datasource: '{hello} there, {name}' };
-      expect(await displayHandler.handle(node as any, context as any, null as any, null as any)).to.eql(null);
-      expect(context.storage.set.args).to.eql([
+      expect(await displayHandler.handle(node as any, runtime as any, null as any, null as any)).to.eql(null);
+      expect(runtime.storage.set.args).to.eql([
         [
           S.DISPLAY_INFO,
           {
@@ -76,19 +76,19 @@ describe('displayHandler.unit tests', () => {
           },
         ],
       ]);
-      expect(context.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id]]);
+      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id]]);
     });
 
     it('undefined command', async () => {
-      const context = {
+      const runtime = {
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
         variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
       };
 
       const node = { display_id: 'display-id', datasource: '{hello} there, {name}' };
-      expect(await displayHandler.handle(node as any, context as any, null as any, null as any)).to.eql(null);
-      expect(context.storage.set.args).to.eql([
+      expect(await displayHandler.handle(node as any, runtime as any, null as any, null as any)).to.eql(null);
+      expect(runtime.storage.set.args).to.eql([
         [
           S.DISPLAY_INFO,
           {
@@ -101,7 +101,7 @@ describe('displayHandler.unit tests', () => {
           },
         ],
       ]);
-      expect(context.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id]]);
+      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id]]);
     });
 
     describe('with document', () => {
@@ -111,14 +111,14 @@ describe('displayHandler.unit tests', () => {
         const handler = DisplayHandler(utils as any);
 
         const document = 'document';
-        const context = {
+        const runtime = {
           storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
           variables: { getState: sinon.stub().returns(null) },
           services: { multimodal: { getDisplayDocument: sinon.stub().returns(document) } },
         };
         const node = { display_id: 'display-id', apl_commands: 'commands', datasource: 'random' };
-        expect(await handler.handle(node as any, context as any, null as any, null as any)).to.eql(null);
-        expect(context.storage.set.args[0][1].dataSourceVariables).to.eql([]); // assert datasource with no variables in string
+        expect(await handler.handle(node as any, runtime as any, null as any, null as any)).to.eql(null);
+        expect(runtime.storage.set.args[0][1].dataSourceVariables).to.eql([]); // assert datasource with no variables in string
         expect(utils.deepFindVideos.args).to.eql([[document]]);
       });
 
@@ -164,7 +164,7 @@ describe('displayHandler.unit tests', () => {
 
         const document = 'document';
         const setNodeID = sinon.stub();
-        const context = {
+        const runtime = {
           end: sinon.stub(),
           stack: { top: sinon.stub().returns({ setNodeID }) },
           storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
@@ -172,9 +172,9 @@ describe('displayHandler.unit tests', () => {
           services: { multimodal: { getDisplayDocument: sinon.stub().returns(document) } },
         };
         const node = { display_id: 'display-id', apl_commands: 'commands', nextId: 'next-id' };
-        expect(await handler.handle(node as any, context as any, null as any, null as any)).to.eql(null);
+        expect(await handler.handle(node as any, runtime as any, null as any, null as any)).to.eql(null);
         expect(setNodeID.args).to.eql([[node.nextId]]);
-        expect(context.end.callCount).to.eql(1);
+        expect(runtime.end.callCount).to.eql(1);
       });
 
       it('has hasOnEndEvent but no nextId', async () => {
@@ -195,7 +195,7 @@ describe('displayHandler.unit tests', () => {
 
         const document = 'document';
         const setNodeID = sinon.stub();
-        const context = {
+        const runtime = {
           end: sinon.stub(),
           stack: { top: sinon.stub().returns({ setNodeID }) },
           storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
@@ -203,9 +203,9 @@ describe('displayHandler.unit tests', () => {
           services: { multimodal: { getDisplayDocument: sinon.stub().returns(document) } },
         };
         const node = { display_id: 'display-id', apl_commands: 'commands' };
-        expect(await handler.handle(node as any, context as any, null as any, null as any)).to.eql(null);
+        expect(await handler.handle(node as any, runtime as any, null as any, null as any)).to.eql(null);
         expect(setNodeID.args).to.eql([[null]]);
-        expect(context.end.callCount).to.eql(1);
+        expect(runtime.end.callCount).to.eql(1);
       });
     });
   });

@@ -1,12 +1,13 @@
-import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
 import { RepeatType, SessionType, TraceType } from '@voiceflow/general-types';
 import { TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
-import { Context, DataAPI, Frame, Store } from '@voiceflow/runtime';
-import { HandlerInput } from 'ask-sdk';
+import { Frame, Store } from '@voiceflow/runtime';
 
 import { F, S, T, V } from '@/lib/constants';
-import { StreamAction } from '@/lib/services/voiceflow/handlers/stream';
-import { createResumeFrame, RESUME_PROGRAM_ID } from '@/lib/services/voiceflow/programs/resume';
+import { StreamAction } from '@/lib/services/runtime/handlers/stream';
+import { createResumeFrame, RESUME_PROGRAM_ID } from '@/lib/services/runtime/programs/resume';
+import { AlexaRuntime } from '@/lib/services/runtime/types';
+
+import { AlexaHandlerInput } from '../../types';
 
 export const VAR_VF = 'voiceflow';
 
@@ -21,10 +22,7 @@ const utilsObj = {
   },
 };
 
-export const initializeGenerator = (utils: typeof utilsObj) => async (
-  context: Context<DataAPI<AlexaProgram, AlexaVersion>>,
-  input: HandlerInput
-): Promise<void> => {
+export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: AlexaRuntime, input: AlexaHandlerInput): Promise<void> => {
   const { requestEnvelope } = input;
 
   // fetch the metadata for this version (project)
@@ -32,9 +30,9 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (
     platformData: { settings, slots },
     variables: versionVariables,
     rootDiagramID,
-  } = await context.api.getVersion(context.getVersionID());
+  } = await runtime.api.getVersion(runtime.getVersionID());
 
-  const { stack, storage, variables } = context;
+  const { stack, storage, variables } = runtime;
 
   storage.delete(S.STREAM_TEMP);
 
@@ -98,7 +96,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (
     stack.push(new utils.client.Frame({ programID: rootDiagramID }));
 
     // we've created a brand new stack
-    context.turn.set(T.NEW_STACK, true);
+    runtime.turn.set(T.NEW_STACK, true);
   } else if (session.type === SessionType.RESUME && session.resume) {
     // resume prompt flow - use command flow logic
     stack.top().storage.set(F.CALLED_COMMAND, true);
@@ -111,12 +109,12 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (
 
     stack.push(utils.resume.createResumeFrame(session.resume, session.follow));
   } else {
-    // give context to where the user left off with last speak node
+    // give runtime to where the user left off with last speak node
     stack.top().storage.delete(F.CALLED_COMMAND);
     const lastSpeak = stack.top().storage.get<string>(F.SPEAK) ?? '';
 
     storage.set(S.OUTPUT, lastSpeak);
-    context.trace.addTrace<SpeakTraceFrame>({
+    runtime.trace.addTrace<SpeakTraceFrame>({
       type: TraceType.SPEAK,
       payload: { message: lastSpeak },
     });

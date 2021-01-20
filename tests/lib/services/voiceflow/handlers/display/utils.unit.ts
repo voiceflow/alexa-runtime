@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
-import { DOCUMENT_VIDEO_TYPE, EVENT_SEND_EVENT } from '@/lib/services/voiceflow/handlers/display/constants';
-import { deepFind, deepFindVideos, getEventToSend, shouldRebuildDisplay } from '@/lib/services/voiceflow/handlers/display/utils';
+import { DOCUMENT_VIDEO_TYPE, EVENT_SEND_EVENT } from '@/lib/services/runtime/handlers/display/constants';
+import { deepFind, deepFindVideos, getEventToSend, shouldRebuildDisplay } from '@/lib/services/runtime/handlers/display/utils';
 
 describe('display handler utils unit tests', () => {
   describe('getEventToSend', () => {

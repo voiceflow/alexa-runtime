@@ -1,4 +1,4 @@
-import { DefaultApiClient, HandlerInput, SkillBuilders } from 'ask-sdk';
+import { DefaultApiClient, SkillBuilders } from 'ask-sdk';
 
 import { MetricsType } from '@/lib/clients/metrics';
 import { Source } from '@/lib/constants';
@@ -8,6 +8,7 @@ import { Config, Services } from '../utils';
 import CustomDynamoDbPersistenceAdapter from './customDynamoAdapter';
 import { MemoryPersistenceAdapter } from './local';
 import MongoPersistenceAdapter from './mongo';
+import PostgresPersistenceAdapter from './postgres';
 import {
   APLUserEventHandler,
   AudioPlayerEventHandler,
@@ -21,20 +22,22 @@ import {
   PurchaseHandler,
   SessionEndedHandler,
 } from './request';
+import { AlexaHandlerInput } from './types';
 
 export const ResponseInterceptor = {
-  async process(handlerInput: HandlerInput) {
+  async process(handlerInput: AlexaHandlerInput) {
     // save session attributes to persistent attributes
     await handlerInput.attributesManager.savePersistentAttributes();
   },
 };
 
 export const RequestInterceptorGenerator = (metrics: MetricsType, adapter: AdapterManager) => ({
-  async process(handlerInput: HandlerInput) {
-    const { versionID } = handlerInput.context as { versionID: string };
+  async process(handlerInput: AlexaHandlerInput) {
+    const { versionID } = handlerInput.context;
+
     metrics.invocation(versionID);
 
-    await adapter.context(handlerInput);
+    await adapter.state(handlerInput);
   },
 });
 
@@ -59,6 +62,7 @@ const utilsObj = {
     MemoryPersistenceAdapter,
     CustomDynamoDbPersistenceAdapter,
     MongoPersistenceAdapter,
+    PostgresPersistenceAdapter,
   },
 };
 
@@ -72,6 +76,8 @@ const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
     persistenceAdapter = new utils.adapters.MemoryPersistenceAdapter();
   } else if (MongoPersistenceAdapter.enabled(config)) {
     persistenceAdapter = new utils.adapters.MongoPersistenceAdapter(services.mongo!);
+  } else if (PostgresPersistenceAdapter.enabled(config)) {
+    persistenceAdapter = new utils.adapters.PostgresPersistenceAdapter(services.pg!);
   } else {
     persistenceAdapter = new utils.adapters.CustomDynamoDbPersistenceAdapter({
       createTable: false,

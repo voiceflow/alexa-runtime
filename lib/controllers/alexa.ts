@@ -1,5 +1,6 @@
 import { Validator } from '@voiceflow/backend-utils';
 
+import { AlexaContext } from '@/lib/services/alexa/types';
 import { Request } from '@/types';
 
 import { validate } from '../utils';
@@ -18,11 +19,17 @@ class AlexaController extends AbstractController {
 
   @validate({ VERSION_ID: AlexaController.VALIDATIONS.PARAMS.versionID })
   async handler(req: Request<{ versionID: string }>) {
-    const { alexa, voiceflow, metrics, dataAPI } = this.services;
+    const { alexa, runtimeClient, metrics, dataAPI } = this.services;
 
     metrics.request();
 
-    return alexa.skill.invoke(req.body, { versionID: req.params.versionID, voiceflow: voiceflow.client, api: dataAPI });
+    const alexaContext: AlexaContext = {
+      api: dataAPI,
+      versionID: req.params.versionID,
+      runtimeClient,
+    };
+
+    return alexa.skill.invoke(req.body, alexaContext);
   }
 }
 

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { createResumeFrame, promptToSSML, RESUME_PROGRAM_ID, ResumeVariables } from '@/lib/services/voiceflow/programs/resume';
+import { createResumeFrame, promptToSSML, RESUME_PROGRAM_ID, ResumeVariables } from '@/lib/services/runtime/programs/resume';
 
 describe('resume diagram', () => {
   describe('promptToSSML', () => {

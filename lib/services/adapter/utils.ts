@@ -1,6 +1,6 @@
 import { interfaces } from 'ask-sdk-model';
 
-import { Commands, NewContextStack, NewContextStorage, NewContextVariables, OldCommands, OldContextRaw } from './types';
+import { Commands, NewStateStack, NewStateStorage, NewStateVariables, OldCommands, OldStateRaw } from './types';
 
 export const commandAdapter = (oldCommands: OldCommands): Commands =>
   Object.keys(oldCommands).reduce((commandsAcc, key) => {
@@ -16,8 +16,8 @@ export const commandAdapter = (oldCommands: OldCommands): Commands =>
     return commandsAcc;
   }, [] as Commands);
 
-export const stackAdapter = (oldContext: OldContextRaw): NewContextStack =>
-  oldContext.diagrams?.reduce((acc, d, index) => {
+export const stackAdapter = (oldState: OldStateRaw): NewStateStack =>
+  oldState.diagrams?.reduce((acc, d, index) => {
     const frame = {
       nodeID: d.line === false ? null : d.line,
       programID: d.id,
@@ -26,121 +26,121 @@ export const stackAdapter = (oldContext: OldContextRaw): NewContextStack =>
         // speak is only added in the old server during commands
         ...(d.speak && { speak: d.speak, calledCommand: true }),
         // output map is stored in previous frame in old server
-        ...(oldContext.diagrams[index - 1]?.output_map && { outputMap: oldContext.diagrams[index - 1].output_map }),
+        ...(oldState.diagrams[index - 1]?.output_map && { outputMap: oldState.diagrams[index - 1].output_map }),
       } as any,
       commands: commandAdapter(d.commands),
     };
 
-    if (index === oldContext.diagrams.length - 1) {
-      // nodeID for top of the stack frame is kept in line_id in old context
-      frame.nodeID = oldContext.line_id;
+    if (index === oldState.diagrams.length - 1) {
+      // nodeID for top of the stack frame is kept in line_id in old runtime
+      frame.nodeID = oldState.line_id;
       // old server only keeps what the last diagram spoke
-      if (oldContext.last_speak) frame.storage.speak = oldContext.last_speak;
+      if (oldState.last_speak) frame.storage.speak = oldState.last_speak;
     }
 
     acc.push(frame);
 
     return acc;
-  }, [] as NewContextStack) || [];
+  }, [] as NewStateStack) || [];
 
 type StorageAdapterOptions = { accessToken: string | undefined };
 
-export const storageAdapter = (oldContext: OldContextRaw, { accessToken }: StorageAdapterOptions): NewContextStorage => ({
-  output: oldContext.output,
-  sessions: oldContext.sessions,
-  repeat: oldContext.repeat,
-  locale: oldContext.locale,
-  user: oldContext.user,
-  alexa_permissions: oldContext.alexa_permissions,
-  supported_interfaces: oldContext.supported_interfaces,
+export const storageAdapter = (oldState: OldStateRaw, { accessToken }: StorageAdapterOptions): NewStateStorage => ({
+  output: oldState.output,
+  sessions: oldState.sessions,
+  repeat: oldState.repeat,
+  locale: oldState.locale,
+  user: oldState.user,
+  alexa_permissions: oldState.alexa_permissions,
+  supported_interfaces: oldState.supported_interfaces,
   // conditionally add attributes
   ...(accessToken && { accessToken }),
-  ...(oldContext.randoms && { randoms: oldContext.randoms }),
-  ...(oldContext.permissions && { permissions: oldContext.permissions }),
-  ...(oldContext.payment && {
+  ...(oldState.randoms && { randoms: oldState.randoms }),
+  ...(oldState.permissions && { permissions: oldState.permissions }),
+  ...(oldState.payment && {
     payment: {
-      productId: oldContext.payment.productId,
-      successPath: oldContext.payment.success,
-      failPath: oldContext.payment.fail,
-      status: oldContext.payment.result || null,
+      productId: oldState.payment.productId,
+      successPath: oldState.payment.success,
+      failPath: oldState.payment.fail,
+      status: oldState.payment.result || null,
     },
   }),
-  ...(oldContext.cancel_payment && {
+  ...(oldState.cancel_payment && {
     cancelPayment: {
-      productId: oldContext.cancel_payment.productId,
-      successPath: oldContext.cancel_payment.success,
-      failPath: oldContext.cancel_payment.fail,
-      status: oldContext.cancel_payment.result || null,
+      productId: oldState.cancel_payment.productId,
+      successPath: oldState.cancel_payment.success,
+      failPath: oldState.cancel_payment.fail,
+      status: oldState.cancel_payment.result || null,
     },
   }),
-  ...(oldContext.display_info && {
+  ...(oldState.display_info && {
     displayInfo: {
-      playingVideos: oldContext.display_info.playing_videos,
-      dataSource: oldContext.display_info.datasource,
-      commands: oldContext.display_info.commands,
-      shouldUpdate: oldContext.display_info.should_update,
-      currentDisplay: oldContext.display_info.current_display,
-      lastDataSource: oldContext.display_info.last_datasource,
-      dataSourceVariables: oldContext.display_info.datasource_variables,
-      shouldUpdateOnResume: oldContext.display_info.should_update_on_resume,
+      playingVideos: oldState.display_info.playing_videos,
+      dataSource: oldState.display_info.datasource,
+      commands: oldState.display_info.commands,
+      shouldUpdate: oldState.display_info.should_update,
+      currentDisplay: oldState.display_info.current_display,
+      lastDataSource: oldState.display_info.last_datasource,
+      dataSourceVariables: oldState.display_info.datasource_variables,
+      shouldUpdateOnResume: oldState.display_info.should_update_on_resume,
       // lastVariables -> to populate with variables
     },
   }),
-  ...(oldContext.play && {
+  ...(oldState.play && {
     streamPlay: {
-      action: oldContext.play.action,
-      url: oldContext.play.url,
-      loop: oldContext.play.loop,
-      offset: oldContext.play.offset,
-      nextId: oldContext.play.nextId,
-      token: oldContext.play.token,
-      PAUSE_ID: oldContext.play.PAUSE_ID,
-      NEXT: oldContext.play.NEXT,
-      PREVIOUS: oldContext.play.PREVIOUS,
-      title: oldContext.play.title,
-      description: oldContext.play.description,
-      regex_title: oldContext.play.regex_title,
-      regex_description: oldContext.play.regex_description,
-      icon_img: oldContext.play.icon_img,
-      background_img: oldContext.play.background_img,
+      action: oldState.play.action,
+      url: oldState.play.url,
+      loop: oldState.play.loop,
+      offset: oldState.play.offset,
+      nextId: oldState.play.nextId,
+      token: oldState.play.token,
+      PAUSE_ID: oldState.play.PAUSE_ID,
+      NEXT: oldState.play.NEXT,
+      PREVIOUS: oldState.play.PREVIOUS,
+      title: oldState.play.title,
+      description: oldState.play.description,
+      regex_title: oldState.play.regex_title,
+      regex_description: oldState.play.regex_description,
+      icon_img: oldState.play.icon_img,
+      background_img: oldState.play.background_img,
     },
   }),
-  ...(oldContext.pause && {
+  ...(oldState.pause && {
     streamPause: {
-      id: oldContext.pause.id,
-      offset: oldContext.pause.offset,
+      id: oldState.pause.id,
+      offset: oldState.pause.offset,
     },
   }),
-  ...(oldContext.finished !== undefined && {
-    streamFinished: oldContext.finished,
+  ...(oldState.finished !== undefined && {
+    streamFinished: oldState.finished,
   }),
 });
 
 type VariablesAdapterOptions = { system: interfaces.system.SystemState };
 
-export const variablesAdapter = (oldContext: OldContextRaw, { system }: VariablesAdapterOptions): NewContextVariables =>
-  oldContext.globals[0]
-    ? { ...oldContext.globals[0], _system: system }
+export const variablesAdapter = (oldState: OldStateRaw, { system }: VariablesAdapterOptions): NewStateVariables =>
+  oldState.globals[0]
+    ? { ...oldState.globals[0], _system: system }
     : { voiceflow: { events: [], permissions: [], capabilities: {} }, _system: system };
 
-// modify context before running adapters
-export const beforeContextModifier = ({ ...context }: OldContextRaw) => {
-  // modifier when old context has temp
-  if (context.temp) {
-    const { temp, next_line, next_play, ...tempState } = context;
+// modify runtime before running adapters
+export const beforeContextModifier = ({ ...runtime }: OldStateRaw) => {
+  // modifier when old runtime has temp
+  if (runtime.temp) {
+    const { temp, next_line, next_play, ...tempState } = runtime;
     tempState.play = next_play;
     tempState.line_id = next_line || null;
     tempState.diagrams = temp.diagrams;
     tempState.globals = temp.globals;
     tempState.randoms = temp.randoms;
-    context = tempState;
+    runtime = tempState;
   }
 
-  return context;
+  return runtime;
 };
 
 // modify storage after running adapters
-export const afterStorageModifier = ({ ...storage }: NewContextStorage, { ...variables }: NewContextVariables) => {
+export const afterStorageModifier = ({ ...storage }: NewStateStorage, { ...variables }: NewStateVariables) => {
   // modifier when new storage has displayInfo
   if (storage.displayInfo) storage.displayInfo.lastVariables = variables;
 

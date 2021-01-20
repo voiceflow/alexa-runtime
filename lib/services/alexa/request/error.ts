@@ -1,18 +1,20 @@
 /* eslint-disable no-console */
-import { ErrorHandler as ErrorHandlerType, HandlerInput } from 'ask-sdk';
+import { ErrorHandler as ErrorHandlerType } from 'ask-sdk';
 
 import { MetricsType } from '@/lib/clients/metrics';
+
+import { AlexaHandlerInput } from '../types';
 
 const ERROR_MESSAGE = 'something went wrong with this skill, please check again later';
 
 const ErrorHandlerGenerator = (metrics: MetricsType): ErrorHandlerType => ({
   canHandle: (): boolean => true,
-  handle: (input: HandlerInput, error: Error) => {
+  handle: (input: AlexaHandlerInput, error: Error) => {
     // TODO: fully implement error handler
 
     console.error(error, input.requestEnvelope.request.type);
 
-    const { versionID } = input.context as { versionID: string };
+    const { versionID } = input.context;
     metrics.error(versionID);
 
     return input.responseBuilder
