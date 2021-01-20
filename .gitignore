@@ -56,8 +56,8 @@ local_secrets.yaml
 build
 
 
-/tests/smokeTest/recordedSessions/*
-!/tests/smokeTest/recordedSessions/readme.md
+/tests/smoke/recordedSessions/*
+!/tests/smoke/recordedSessions/readme.md
 
 /projects/*
 !/projects/README.md

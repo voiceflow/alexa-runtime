@@ -144,13 +144,18 @@
     "deploy:staging": "git push origin $(git branch | grep \\* | cut -d ' ' -f2):staging -f",
     "gen-certs": "scripts/generate_certs.sh",
     "lint": "eslint \"./**/*.{js,ts}\"",
+    "lint:dockerfiles": "hadolint --ignore DL3018 ./Dockerfile",
+    "lint:fix": "yarn lint --fix",
+    "lint:quiet": "yarn lint --quiet",
     "local": "NODE_ENV=local ts-node --files -r tsconfig-paths/register start.ts",
     "local:watch": "NODE_ENV=local forever --watch -c \"ts-node --files -r tsconfig-paths/register\" start.ts",
     "preview:check": "echo \"alexaruntime\"",
     "preview:new": "scripts/deploy_dev_environments.sh",
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
-    "test": "NODE_ENV=test nyc ts-mocha --paths --opts mocha.opts",
-    "test:single": "NODE_ENV=test ts-mocha --paths --opts mocha-single.opts",
-    "test:smoke": "NODE_ENV=test ts-node --files -r tsconfig-paths/register tests/smokeTest/initSmokeTest.ts"
+    "test": "NODE_ENV=test nyc ts-mocha --paths --opts ./config/tests/mocha.opts 'tests/**/*.{unit,it}.ts'",
+    "test:integration": "NODE_ENV=test nyc ts-mocha --paths --opts ./config/tests/mocha.opts 'tests/**/*.it.ts'",
+    "test:single": "NODE_ENV=test ts-mocha --paths --opts ./config/tests/mocha.opts",
+    "test:smoke": "NODE_ENV=test ts-node --files -r tsconfig-paths/register tests/smoke/initSmokeTest.ts",
+    "test:unit": "NODE_ENV=test nyc ts-mocha --paths --opts ./config/tests/mocha.opts 'tests/**/*.unit.ts'"
   }
 }
