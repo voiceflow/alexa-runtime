@@ -21,6 +21,9 @@ export const IntentHandlerGenerator = (utils: typeof utilsObj): RequestHandler =
   async handle(input: AlexaHandlerInput) {
     const runtime = await utils.buildRuntime(input);
 
+    const frama0 = runtime.stack.getFrames()[0].getState();
+    console.log('WTF-1', { programID: frama0.programID, nodeID: frama0.nodeID });
+
     if (runtime.stack.isEmpty()) {
       await utils.initialize(runtime, input);
     }
@@ -31,6 +34,9 @@ export const IntentHandlerGenerator = (utils: typeof utilsObj): RequestHandler =
         return handler.handle(input, runtime);
       }
     }
+
+    const frame = runtime.stack.getFrames()[0].getState();
+    console.log('WTF', { programID: frame.programID, nodeID: frame.nodeID });
 
     await utils.update(runtime);
 
