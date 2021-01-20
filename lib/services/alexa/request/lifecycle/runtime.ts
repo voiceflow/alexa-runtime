@@ -9,7 +9,7 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
   const { versionID, runtimeClient } = input.context;
   const { attributesManager, requestEnvelope } = input;
 
-  const rawState = (await attributesManager.getPersistentAttributes(requestEnvelope.session?.new)) as State;
+  const rawState = (await attributesManager.getPersistentAttributes()) as State;
 
   const alexaRequest = requestEnvelope.request;
 
