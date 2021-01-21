@@ -1,6 +1,8 @@
 import { Pool } from 'pg';
 import format from 'pg-format';
 
+import config from '@/config';
+
 import { AbstractClient } from './utils';
 
 class PostgresDB extends AbstractClient {
@@ -37,5 +39,8 @@ class PostgresDB extends AbstractClient {
     await this.client!.end();
   }
 }
+
+export const StaticPostgresDB = new PostgresDB(config);
+StaticPostgresDB.start();
 
 export default PostgresDB;
