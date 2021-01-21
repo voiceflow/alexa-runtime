@@ -90,6 +90,12 @@ Also add the following file to the local repository:
 >
 > ADMIN_SERVER_DATA_API_TOKEN="none"
 > DATADOG_API_KEY="none"
+>
+> PG_USERNAME='PG_USERNAME'
+> PG_HOST='PG_HOST'
+> PG_DBNAME='PG_DBNAME'
+> PG_PASSWORD='PG_PASSWORD'
+> PG_PORT='PG_PORT'
 > ```
 
 Install a localhost tunnel tool such as [ngrok](https://ngrok.com/), [localtunnel](https://github.com/localtunnel/localtunnel), or [bespoken proxy](https://read.bespoken.io/cli/commands/#bst-proxy-http). This will allow you expose a localhost endpoint on the internet for Alexa to hit. For the purposes of this guide, we will implement `ngrok`

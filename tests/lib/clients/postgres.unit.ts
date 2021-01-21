@@ -40,7 +40,9 @@ describe('postgres client unit tests', () => {
     ]);
     expect(pg.client).to.eql(client);
     expect(client.query.args).to.eql([
-      [`CREATE TABLE IF NOT EXISTS ${pg.sessionsTable}(id VARCHAR(255) PRIMARY KEY, attributes JSONB DEFAULT '{}'::JSONB)`],
+      [
+        `CREATE TABLE IF NOT EXISTS ${pg.sessionsTable}(id VARCHAR(255) PRIMARY KEY, attributes JSONB DEFAULT '{}'::JSONB, modified TIMESTAMP DEFAULT NOW())`,
+      ],
     ]);
   });
 

@@ -28,7 +28,7 @@ class PostgresPersistenceAdapter implements PersistenceAdapter {
 
     await this.pg.client.query(
       this.pg.format(
-        'INSERT INTO %I (id, attributes) VALUES (%L, %L) ON CONFLICT(id) DO UPDATE SET attributes = %L',
+        'INSERT INTO %I (id, attributes) VALUES (%L, %L) ON CONFLICT(id) DO UPDATE SET attributes = %L, modified = NOW()',
         this.pg.sessionsTable,
         userId,
         attributes,

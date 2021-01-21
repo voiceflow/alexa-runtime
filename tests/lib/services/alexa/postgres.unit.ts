@@ -45,7 +45,7 @@ describe('postgres persistence unit tests', () => {
 
       expect(pg.client.query.args).to.eql([
         [
-          'INSERT INTO _sessions (id, attributes) VALUES (\'user-id\', \'{"foo":"bar"}\'::jsonb) ON CONFLICT(id) DO UPDATE SET attributes = \'{"foo":"bar"}\'::jsonb',
+          'INSERT INTO _sessions (id, attributes) VALUES (\'user-id\', \'{"foo":"bar"}\'::jsonb) ON CONFLICT(id) DO UPDATE SET attributes = \'{"foo":"bar"}\'::jsonb, modified = NOW()',
         ],
       ]);
     });

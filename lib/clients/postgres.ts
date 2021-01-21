@@ -20,7 +20,10 @@ class PostgresDB extends AbstractClient {
     });
 
     await this.client.query(
-      this.format("CREATE TABLE IF NOT EXISTS %I(id VARCHAR(255) PRIMARY KEY, attributes JSONB DEFAULT '{}'::JSONB)", this.sessionsTable)
+      this.format(
+        "CREATE TABLE IF NOT EXISTS %I(id VARCHAR(255) PRIMARY KEY, attributes JSONB DEFAULT '{}'::JSONB, modified TIMESTAMP DEFAULT NOW())",
+        this.sessionsTable
+      )
     );
   }
 
