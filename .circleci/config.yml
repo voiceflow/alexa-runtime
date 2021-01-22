@@ -31,7 +31,8 @@ defaults:
 
 orbs:
   codecov: codecov/codecov@1.0.2
-  vfcommon: voiceflow/common@0.0.52
+  vfcommon: voiceflow/common@0.0.54
+  sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
   test:
@@ -41,6 +42,7 @@ jobs:
       - vfcommon/install_node_modules
       - vfcommon/setup_dynamodb
       - vfcommon/lint_source
+      - vfcommon/lint_report
       - vfcommon/lint_dockerfile
       - vfcommon/build
       - vfcommon/unit_tests
@@ -57,6 +59,7 @@ jobs:
           from: s3://com.voiceflow.ci.assets/alexa
           to: ~/project/tests/smoke/recordedSessions
       - vfcommon/smoke_tests
+      - sonarcloud/scan
 
   build-push-image:
     executor: vfcommon/build-executor
