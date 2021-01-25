@@ -44,6 +44,8 @@ export interface Config {
   PG_DBNAME: string | null;
   PG_PASSWORD: string | null;
   PG_PORT: string | null;
+
+  CONFIG_ID_HASH: string | null;
 }
 
 export interface Request<P extends {} = {}> extends Express.Request<P> {

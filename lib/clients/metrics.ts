@@ -1,9 +1,12 @@
 import { BufferedMetricsLogger } from 'datadog-metrics';
+import Hashids from 'hashids';
 
 import { Config } from '@/types';
 
 export class Metrics {
   private client: BufferedMetricsLogger;
+
+  private hashids: Hashids | null;
 
   constructor(config: Config, Logger: typeof BufferedMetricsLogger) {
     this.client = new Logger({
@@ -11,6 +14,8 @@ export class Metrics {
       prefix: `vf_server.${config.NODE_ENV}.`,
       flushIntervalSeconds: 5,
     });
+
+    this.hashids = config.CONFIG_ID_HASH ? new Hashids(config.CONFIG_ID_HASH, 10) : null;
   }
 
   request() {
@@ -18,11 +23,17 @@ export class Metrics {
   }
 
   error(versionID: string) {
-    this.client.increment('alexa.request.error', 1, [`skill_id:${versionID}`]);
+    this.client.increment('alexa.request.error', 1, [`skill_id:${this._decodeVersionID(versionID)}`]);
   }
 
   invocation(versionID: string) {
-    this.client.increment('alexa.invocation', 1, [`skill_id:${versionID}`]);
+    this.client.increment('alexa.invocation', 1, [`skill_id:${this._decodeVersionID(versionID)}`]);
+  }
+
+  _decodeVersionID(versionID: string) {
+    if (versionID.length === 24 || !this.hashids) return versionID;
+
+    return this.hashids.decode(versionID)[0];
   }
 }
 

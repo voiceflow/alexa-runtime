@@ -33,6 +33,18 @@ describe('metrics client unit tests', () => {
     ]);
   });
 
+  it('new with hash', () => {
+    const NODE_ENV = 'test';
+    const loggerStub = sinon.stub().returns({
+      increment: () => {
+        //
+      },
+    });
+
+    const metrics = new Metrics({ ...config, NODE_ENV, CONFIG_ID_HASH: 'hash' } as any, loggerStub as any);
+    expect(_.get(metrics, 'hashids') !== undefined).to.eql(true);
+  });
+
   it('request', () => {
     const metrics = MetricsClient({} as any);
     const increment = sinon.stub();
@@ -46,6 +58,7 @@ describe('metrics client unit tests', () => {
     const metrics = MetricsClient({} as any);
     const increment = sinon.stub();
     _.set(metrics, 'client', { increment });
+    sinon.stub(metrics, '_decodeVersionID').returnsArg(0);
 
     const versionID = 'version_id';
     metrics.error(versionID);
@@ -56,9 +69,30 @@ describe('metrics client unit tests', () => {
     const metrics = MetricsClient({} as any);
     const increment = sinon.stub();
     _.set(metrics, 'client', { increment });
+    sinon.stub(metrics, '_decodeVersionID').returnsArg(0);
 
     const versionID = 'version_id';
     metrics.invocation(versionID);
     expect(increment.args).to.eql([['alexa.invocation', 1, [`skill_id:${versionID}`]]]);
+  });
+
+  describe('_decodeVersionID', () => {
+    it('no hashids', () => {
+      const metrics = MetricsClient({} as any);
+      const versionID = 'version-id';
+      expect(metrics._decodeVersionID(versionID)).to.eql(versionID);
+    });
+
+    it('object id', () => {
+      const metrics = MetricsClient({ CONFIG_ID_HASH: 'hash-key' } as any);
+      const versionID = '5f74a6f5e4a40c344b1ef366';
+      expect(metrics._decodeVersionID(versionID)).to.eql(versionID);
+    });
+
+    it('with hashids', () => {
+      const metrics = MetricsClient({ CONFIG_ID_HASH: 'hash-key' } as any);
+      const versionID = 5;
+      expect(metrics._decodeVersionID(_.get(metrics, 'hashids').encode(versionID))).to.eql(versionID);
+    });
   });
 });
