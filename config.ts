@@ -53,6 +53,8 @@ const CONFIG: Config = {
   PG_DBNAME: optionalProcessEnv('PG_DBNAME'),
   PG_PASSWORD: optionalProcessEnv('PG_PASSWORD'),
   PG_PORT: optionalProcessEnv('PG_PORT'),
+
+  CONFIG_ID_HASH: optionalProcessEnv('CONFIG_ID_HASH'),
 };
 
 export default CONFIG;
