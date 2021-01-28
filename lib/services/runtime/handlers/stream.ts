@@ -1,6 +1,6 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/stream';
-import { utils } from '@voiceflow/common';
-import { HandlerFactory, replaceVariables } from '@voiceflow/runtime';
+import { generateHash, replaceVariables, sanitizeVariables } from '@voiceflow/common';
+import { HandlerFactory } from '@voiceflow/runtime';
 import _ from 'lodash';
 
 import { S, T } from '@/lib/constants';
@@ -75,7 +75,7 @@ export const _streamMetaData = (streamPlay: StreamPlay) => {
     };
   }
 
-  const token = utils.general.generateHash([url, title, description, icon_img, background_img]);
+  const token = generateHash([url, title, description, icon_img, background_img]);
 
   return { metaData, token, url, offset };
 };
