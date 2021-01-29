@@ -1,4 +1,4 @@
-import { replaceVariables } from '@voiceflow/runtime';
+import { replaceVariables } from '@voiceflow/common';
 import randomstring from 'randomstring';
 
 import { S } from '@/lib/constants';

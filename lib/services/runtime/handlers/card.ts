@@ -1,5 +1,6 @@
 import { Card, CardType, Node } from '@voiceflow/alexa-types/build/nodes/card';
-import { HandlerFactory, replaceVariables, Store } from '@voiceflow/runtime';
+import { replaceVariables } from '@voiceflow/common';
+import { HandlerFactory, Store } from '@voiceflow/runtime';
 
 import { T } from '@/lib/constants';
 
