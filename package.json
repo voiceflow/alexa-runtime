@@ -117,7 +117,7 @@
   "homepage": "https://github.com/voiceflow/alexa-runtime#readme",
   "husky": {
     "hooks": {
-      "_pre-commit": "lint-staged",
+      "pre-commit": "lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-push": "git-branch-check"
     }
