@@ -1,6 +1,8 @@
 import { HandlerInput } from 'ask-sdk';
 import _ from 'lodash';
 
+import log from '@/logger';
+
 import { AbstractManager } from '../utils';
 import { NewStateRaw, OldStateRaw } from './types';
 import { afterStorageModifier, beforeContextModifier, stackAdapter, storageAdapter, variablesAdapter } from './utils';
@@ -39,8 +41,7 @@ class AdapterManager extends AbstractManager {
         variables,
       };
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log('context adapter err: ', err.message);
+      log.error('context adapter err: ', err.message);
       return {};
     }
   }

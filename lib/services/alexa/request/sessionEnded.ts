@@ -3,6 +3,7 @@ import { SessionEndedRequest } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
 import { DisplayInfo } from '@/lib/services/runtime/handlers/display/types';
+import log from '@/logger';
 
 import { AlexaHandlerInput } from '../types';
 import { updateRuntime } from '../utils';
@@ -21,8 +22,7 @@ export enum RequestReason {
 }
 
 const utilsObj = {
-  // eslint-disable-next-line no-console
-  log: console.warn,
+  log: log.warn,
   updateRuntime,
 };
 
