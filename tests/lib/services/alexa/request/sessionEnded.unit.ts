@@ -79,7 +79,7 @@ describe('session ended handler unit tests', () => {
 
     describe('with errors', () => {
       it('works correctly', async () => {
-        const utils = { updateRuntime: sinon.stub(), log: sinon.stub() };
+        const utils = { updateRuntime: sinon.stub(), log: { warn: sinon.stub() } };
         const handler = SessionEndedHandlerGenerator(utils as any);
 
         const output = 'output';
@@ -108,7 +108,7 @@ describe('session ended handler unit tests', () => {
         };
 
         fn(runtime);
-        expect(utils.log.args).to.eql([
+        expect(utils.log.warn.args).to.eql([
           [
             'errorType=%s, versionID=%s, storage=%s, turn=%s, variables=%s, stack=%s, trace=%s',
             errorType,
