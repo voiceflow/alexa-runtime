@@ -17,7 +17,7 @@ export interface Config {
   DYNAMO_ENDPOINT: string | null;
   CODE_HANDLER_ENDPOINT: string;
   INTEGRATIONS_HANDLER_ENDPOINT: string;
-  API_HANDLER_ENDPOINT: string;
+  API_HANDLER_ENDPOINT: string | null;
 
   // Release information
   GIT_SHA: string | null;

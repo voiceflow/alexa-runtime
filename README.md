@@ -46,7 +46,7 @@ repeat all steps each time a user speaks to the alexa skill, to perform a conver
 | `VF_DATA_ENDPOINT`              | `http://localhost:8200`           | cloud endpoint to read Voiceflow version and program metadata, doesn't matter if `PROJECT_SOURCE` is a defined file | YES      |
 | `CODE_HANDLER_ENDPOINT`         | `none`                            |                                                          stateless cloud service endpoint to execute the code block | YES      |
 | `INTEGRATIONS_HANDLER_ENDPOINT` | `http://localhost:8100`           |                     cloud endpoint for zapier/google blocks - not available if `alexa-runtime` is ran as standalone | YES      |
-| `API_HANDLER_ENDPOINT`          | `http://localhost:8803`           |                                                         stateless cloud endpoint for the API block to make requests | YES      |
+| `API_HANDLER_ENDPOINT`          | `http://localhost:8803`           |                                                         stateless cloud endpoint for the API block to make requests | NO       |
 | `DATADOG_API_KEY`               | `none`                            |                                                                                datadog API key for logging purposes | YES      |
 | `LOG_LEVEL`                     | `none` \| `warn`                  |                                                                                        logging verbosity and detail | NO       |
 | `MIDDLEWARE_VERBOSITY`          | `none` \| `warn` \| `debug`       |                                                                       request/response logging verbosity and detail | NO       |
@@ -85,7 +85,6 @@ Also add the following file to the local repository:
 >
 > CODE_HANDLER_ENDPOINT="none"
 > INTEGRATIONS_HANDLER_ENDPOINT="none"
-> API_HANDLER_ENDPOINT="none"
 >
 > LOG_LEVEL="warn"
 > MIDDLEWARE_VERBOSITY="none"

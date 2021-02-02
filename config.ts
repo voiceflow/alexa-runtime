@@ -20,7 +20,7 @@ const CONFIG: Config = {
   DYNAMO_ENDPOINT: getOptionalProcessEnv('DYNAMO_ENDPOINT'),
   CODE_HANDLER_ENDPOINT: getRequiredProcessEnv('CODE_HANDLER_ENDPOINT'),
   INTEGRATIONS_HANDLER_ENDPOINT: getRequiredProcessEnv('INTEGRATIONS_HANDLER_ENDPOINT'),
-  API_HANDLER_ENDPOINT: getRequiredProcessEnv('API_HANDLER_ENDPOINT'),
+  API_HANDLER_ENDPOINT: getOptionalProcessEnv('API_HANDLER_ENDPOINT'),
 
   // Release information
   GIT_SHA: getOptionalProcessEnv('GIT_SHA'),
