@@ -27,7 +27,9 @@ export class Metrics {
   }
 
   invocation(versionID: string) {
-    this.client.increment('alexa.invocation', 1, [`skill_id:${this._decodeVersionID(versionID)}`]);
+    const decodedVersionID = this._decodeVersionID(versionID);
+    this.client.increment('alexa.invocation', 1, [`skill_id:${decodedVersionID}`]);
+    return decodedVersionID;
   }
 
   _decodeVersionID(versionID: string) {
