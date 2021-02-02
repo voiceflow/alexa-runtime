@@ -15,7 +15,7 @@ export interface Config {
   ADMIN_SERVER_DATA_API_TOKEN: string;
 
   DYNAMO_ENDPOINT: string | null;
-  CODE_HANDLER_ENDPOINT: string;
+  CODE_HANDLER_ENDPOINT: string | null;
   INTEGRATIONS_HANDLER_ENDPOINT: string;
   API_HANDLER_ENDPOINT: string | null;
 
