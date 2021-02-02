@@ -35,9 +35,9 @@ export const RequestInterceptorGenerator = (metrics: MetricsType, adapter: Adapt
   async process(handlerInput: AlexaHandlerInput) {
     const { versionID } = handlerInput.context;
 
-    metrics.invocation(versionID);
+    const decodedVersionID = metrics.invocation(versionID);
 
-    await adapter.state(handlerInput);
+    await adapter.state(handlerInput, decodedVersionID);
   },
 });
 
