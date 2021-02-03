@@ -23,7 +23,7 @@ class AdapterManager extends AbstractManager {
       // set transformed context
       input.attributesManager.setPersistentAttributes(transformedContext);
 
-      log.warn('transformed context (skillId, userId)', versionID, input.requestEnvelope?.context?.System?.user?.userId);
+      log.warn('transformed context (skillId=%s, userId=%s)', versionID, input.requestEnvelope?.context?.System?.user?.userId);
     }
   }
 
@@ -43,7 +43,7 @@ class AdapterManager extends AbstractManager {
         variables,
       };
     } catch (err) {
-      log.error('context adapter err: ', err.message);
+      log.error('context adapter err: %s', err.message);
       return {};
     }
   }
