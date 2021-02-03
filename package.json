@@ -109,7 +109,13 @@
     "typescript": "^3.9.7"
   },
   "homepage": "https://github.com/voiceflow/alexa-runtime#readme",
+  "keywords": [
+    "express",
+    "voiceflow",
+    "voiceflow-runtime"
+  ],
   "license": "ISC",
+  "main": "build/start.js",
   "prettier": "@voiceflow/prettier-config",
   "repository": {
     "type": "git",
