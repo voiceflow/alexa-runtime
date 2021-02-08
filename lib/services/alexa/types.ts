@@ -16,6 +16,7 @@ export type AlexaHandlerInput = Omit<HandlerInput, 'context'> & {
 
 export enum Request {
   INTENT = 'IntentRequest',
+  AUDIO_PLAYER = 'AudioPlayer.',
   SKILL_EVENT_ROOT = 'AlexaSkillEvent.',
   PERMISSION_ACCEPTED = 'AlexaSkillEvent.SkillPermissionAccepted',
   PERMISSION_CHANGED = 'AlexaSkillEvent.SkillPermissionChanged',

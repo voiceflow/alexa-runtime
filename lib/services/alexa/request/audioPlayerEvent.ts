@@ -5,12 +5,8 @@ import { RequestHandler } from 'ask-sdk';
 import { S } from '@/lib/constants';
 
 import { _streamMetaData, AudioDirective, StreamAction, StreamPlay } from '../../runtime/handlers/stream';
-import { AlexaHandlerInput } from '../types';
+import { AlexaHandlerInput, Request } from '../types';
 import { update } from './lifecycle';
-
-export enum Request {
-  AUDIO_PLAYER = 'AudioPlayer.',
-}
 
 export enum AudioEvent {
   PlaybackStarted = 'PlaybackStarted',

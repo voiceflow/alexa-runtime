@@ -4,6 +4,7 @@ import { HandlerFactory } from '@voiceflow/runtime';
 import { interfaces } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
+import { SEND_REQUEST_DIRECTIVE } from '@/lib/services/alexa/constants';
 import { ResponseBuilder } from '@/lib/services/runtime/types';
 
 export type PaymentStorage = {
@@ -21,7 +22,7 @@ export const PaymentResponseBuilder: ResponseBuilder = (runtime, builder) => {
     // return an early response if there is a payment node
     builder
       .addDirective({
-        type: 'Connections.SendRequest',
+        type: SEND_REQUEST_DIRECTIVE,
         name: 'Buy',
         payload: {
           InSkillProduct: {

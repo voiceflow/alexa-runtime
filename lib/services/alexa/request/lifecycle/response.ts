@@ -4,7 +4,8 @@ import { S, T } from '@/lib/constants';
 import { responseHandlers } from '@/lib/services/runtime/handlers';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
 
-import { AlexaHandlerInput } from '../../types';
+import { DirectivesInvalidWithAudioPlayer } from '../../constants';
+import { AlexaHandlerInput, Request } from '../../types';
 
 const utilsObj = {
   responseHandlers,
@@ -31,7 +32,17 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
 
   attributesManager.setPersistentAttributes(runtime.getFinalState());
 
-  return responseBuilder.getResponse();
+  const response = responseBuilder.getResponse();
+
+  const { directives } = response;
+  if (Array.isArray(directives)) {
+    // remove AudioPlayer directives if there is a conflicting directive
+    if (directives.some(({ type }) => DirectivesInvalidWithAudioPlayer.has(type))) {
+      response.directives = directives.filter(({ type }) => !type.startsWith(Request.AUDIO_PLAYER));
+    }
+  }
+
+  return response;
 };
 
 export default responseGenerator(utilsObj);
