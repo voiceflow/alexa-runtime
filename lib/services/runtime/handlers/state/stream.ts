@@ -1,5 +1,6 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { HandlerFactory, replaceVariables } from '@voiceflow/runtime';
+import { replaceVariables } from '@voiceflow/common';
+import { HandlerFactory } from '@voiceflow/runtime';
 
 import { S, T } from '@/lib/constants';
 

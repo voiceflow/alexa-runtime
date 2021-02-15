@@ -21,7 +21,7 @@ const log = console;
   });
 
   process.on('unhandledRejection', (r, p) => {
-    log.error(r, 'Unhandled rejection at: ', p);
+    log.error('%s Unhandled rejection at: %s', r, p);
   });
 
   try {

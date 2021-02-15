@@ -3,6 +3,7 @@ import { SessionEndedRequest } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
 import { DisplayInfo } from '@/lib/services/runtime/handlers/display/types';
+import log from '@/logger';
 
 import { AlexaHandlerInput } from '../types';
 import { updateRuntime } from '../utils';
@@ -21,8 +22,7 @@ export enum RequestReason {
 }
 
 const utilsObj = {
-  // eslint-disable-next-line no-console
-  log: console.warn,
+  log,
   updateRuntime,
 };
 
@@ -38,8 +38,7 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
 
     await utils.updateRuntime(input, (runtime) => {
       if (errorType === ErrorType.INVALID_RESPONSE || errorType === ErrorType.INTERNAL_SERVICE_ERROR) {
-        // eslint-disable-next-line no-console
-        utils.log(
+        utils.log.warn(
           'errorType=%s, versionID=%s, storage=%s, turn=%s, variables=%s, stack=%s, trace=%s',
           errorType,
           runtime.versionID,
@@ -52,8 +51,7 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
       }
 
       if (request.reason === RequestReason.ERROR) {
-        // eslint-disable-next-line no-console
-        utils.log('error=%s, versionID=%s', JSON.stringify(request), runtime.versionID);
+        utils.log.warn('error=%s, versionID=%s', JSON.stringify(request), runtime.versionID);
       }
 
       const displayInfo = runtime.storage.get<DisplayInfo | undefined>(S.DISPLAY_INFO);

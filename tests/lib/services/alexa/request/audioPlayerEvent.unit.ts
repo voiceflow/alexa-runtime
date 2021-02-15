@@ -2,7 +2,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import AudioPlayerEventHandler, { AudioEvent, AudioPlayerEventHandlerGenerator, Request } from '@/lib/services/alexa/request/audioPlayerEvent';
+import AudioPlayerEventHandler, { AudioEvent, AudioPlayerEventHandlerGenerator } from '@/lib/services/alexa/request/audioPlayerEvent';
+import { Request } from '@/lib/services/alexa/types';
 import { AudioDirective, StreamAction } from '@/lib/services/runtime/handlers/stream';
 
 describe('audio player event handler unit test', () => {

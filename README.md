@@ -44,9 +44,9 @@ repeat all steps each time a user speaks to the alexa skill, to perform a conver
 | `DYNAMO_ENDPOINT`               | `http://localhost:8000`           |                           DynamoDB endpoint for end user session storage, doesn't matter if `SESSION_SOUCE='local'` | NO       |
 | `SESSIONS_DYNAMO_TABLE`         | `com.getvoiceflow.local.sessions` |                              DynamoDB table for end user session storage, doesn't matter if `SESSION_SOUCE='local'` | YES      |
 | `VF_DATA_ENDPOINT`              | `http://localhost:8200`           | cloud endpoint to read Voiceflow version and program metadata, doesn't matter if `PROJECT_SOURCE` is a defined file | YES      |
-| `CODE_HANDLER_ENDPOINT`         | `none`                            |                                                          stateless cloud service endpoint to execute the code block | YES      |
+| `CODE_HANDLER_ENDPOINT`         | `http://localhost:8804`           |                                                          stateless cloud service endpoint to execute the code block | NO       |
 | `INTEGRATIONS_HANDLER_ENDPOINT` | `http://localhost:8100`           |                     cloud endpoint for zapier/google blocks - not available if `alexa-runtime` is ran as standalone | YES      |
-| `API_HANDLER_ENDPOINT`          | `http://localhost:8803`           |                                                         stateless cloud endpoint for the API block to make requests | YES      |
+| `API_HANDLER_ENDPOINT`          | `http://localhost:8803`           |                                                         stateless cloud endpoint for the API block to make requests | NO       |
 | `DATADOG_API_KEY`               | `none`                            |                                                                                datadog API key for logging purposes | YES      |
 | `LOG_LEVEL`                     | `none` \| `warn`                  |                                                                                        logging verbosity and detail | NO       |
 | `MIDDLEWARE_VERBOSITY`          | `none` \| `warn` \| `debug`       |                                                                       request/response logging verbosity and detail | NO       |
@@ -83,9 +83,7 @@ Also add the following file to the local repository:
 > SESSIONS_DYNAMO_TABLE="none"
 > VF_DATA_ENDPOINT="none"
 >
-> CODE_HANDLER_ENDPOINT="none"
 > INTEGRATIONS_HANDLER_ENDPOINT="none"
-> API_HANDLER_ENDPOINT="none"
 >
 > LOG_LEVEL="warn"
 > MIDDLEWARE_VERBOSITY="none"

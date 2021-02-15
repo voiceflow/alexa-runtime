@@ -1,6 +1,8 @@
 import { HandlerInput } from 'ask-sdk';
 import _ from 'lodash';
 
+import log from '@/logger';
+
 import { AbstractManager } from '../utils';
 import { NewStateRaw, OldStateRaw } from './types';
 import { afterStorageModifier, beforeContextModifier, stackAdapter, storageAdapter, variablesAdapter } from './utils';
@@ -10,7 +12,7 @@ import { afterStorageModifier, beforeContextModifier, stackAdapter, storageAdapt
  * The intention is to remove this adapter once we switch all users over
  */
 class AdapterManager extends AbstractManager {
-  async state(input: HandlerInput) {
+  async state(input: HandlerInput, versionID: number | string | bigint) {
     // getPersistentAttributes hits dynamo only once during a TURN. the results from dynamo are cached
     // and used for sequent calls to getPersistentAttributes
     const state = await input.attributesManager.getPersistentAttributes();
@@ -20,6 +22,8 @@ class AdapterManager extends AbstractManager {
 
       // set transformed context
       input.attributesManager.setPersistentAttributes(transformedContext);
+
+      log.warn('transformed context (skillId=%s, userId=%s)', versionID, input.requestEnvelope?.context?.System?.user?.userId);
     }
   }
 
@@ -39,8 +43,7 @@ class AdapterManager extends AbstractManager {
         variables,
       };
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log('context adapter err: ', err.message);
+      log.error('context adapter err: %s', err.message);
       return {};
     }
   }

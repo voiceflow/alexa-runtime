@@ -2,6 +2,7 @@
 import { ErrorHandler as ErrorHandlerType } from 'ask-sdk';
 
 import { MetricsType } from '@/lib/clients/metrics';
+import log from '@/logger';
 
 import { AlexaHandlerInput } from '../types';
 
@@ -12,7 +13,7 @@ const ErrorHandlerGenerator = (metrics: MetricsType): ErrorHandlerType => ({
   handle: (input: AlexaHandlerInput, error: Error) => {
     // TODO: fully implement error handler
 
-    console.error(error, input.requestEnvelope.request.type);
+    log.error(error, input.requestEnvelope.request.type);
 
     const { versionID } = input.context;
     metrics.error(versionID);

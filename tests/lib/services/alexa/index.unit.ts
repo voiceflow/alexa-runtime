@@ -291,18 +291,19 @@ describe('alexa manager unit tests', () => {
     describe('process', () => {
       it('works correctly', async () => {
         const versionID = '1';
+        const decodedVersionID = 1;
 
         const input = {
           context: { versionID },
         };
 
-        const metrics = { invocation: sinon.stub() };
+        const metrics = { invocation: sinon.stub().returns(decodedVersionID) };
         const adapter = { state: sinon.stub() };
 
         await RequestInterceptorGenerator(metrics as any, adapter as any).process(input as any);
 
         expect(metrics.invocation.args).to.eql([[versionID]]);
-        expect(adapter.state.args).to.eql([[input]]);
+        expect(adapter.state.args).to.eql([[input, decodedVersionID]]);
       });
     });
   });
