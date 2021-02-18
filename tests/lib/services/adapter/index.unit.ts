@@ -68,6 +68,7 @@ describe('adapterManager unit tests', async () => {
     const tests = [
       { text: 'malformed', old: oldMalformed, new: newMalformed },
       { text: 'hello world', old: oldBasic, new: newBasic },
+      { text: 'hello world wrapped', old: { attributes: oldBasic }, new: newBasic },
       { text: 'wait on interaction', old: oldInteraction, new: newInteraction },
       { text: 'missing attributes', old: oldMissing, new: newMissing },
       { text: 'outputmap', old: oldOutputMap, new: newOutputMap },
