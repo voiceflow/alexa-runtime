@@ -27,7 +27,11 @@ class AdapterManager extends AbstractManager {
     }
   }
 
-  async transformState(state: OldStateRaw, input: HandlerInput): Promise<NewStateRaw | {}> {
+  async transformState(state: OldStateRaw | { attributes: OldStateRaw; id: string }, input: HandlerInput): Promise<NewStateRaw | {}> {
+    if ('attributes' in state) {
+      state = state.attributes;
+    }
+
     try {
       state = beforeContextModifier(state);
 
