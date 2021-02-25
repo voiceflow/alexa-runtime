@@ -28,10 +28,9 @@ describe('response lifecycle unit tests', () => {
     const accessToken = 'access-token';
     const output = 'output';
 
-    const withShouldEndSession = sinon.stub();
-    const reprompt = sinon.stub().returns({ withShouldEndSession });
+    const reprompt = sinon.stub();
     const input = {
-      responseBuilder: { getResponse: sinon.stub().returns(output), speak: sinon.stub().returns({ reprompt }) },
+      responseBuilder: { getResponse: sinon.stub().returns(output), speak: sinon.stub().returns({ reprompt }), withShouldEndSession: sinon.stub() },
       requestEnvelope: { runtime: { System: { user: { accessToken } } } },
       attributesManager: { setPersistentAttributes: sinon.stub() },
     };
@@ -41,9 +40,9 @@ describe('response lifecycle unit tests', () => {
     expect(runtime.storage.get.args).to.eql([[S.OUTPUT], [S.OUTPUT]]);
     expect(input.responseBuilder.speak.args).to.eql([['speak']]);
     expect(reprompt.args).to.eql([['speak']]);
-    expect(withShouldEndSession.args).to.eql([[true]]);
     expect(responseHandler1.args).to.eql([[runtime, input.responseBuilder]]);
     expect(responseHandler2.args).to.eql([[runtime, input.responseBuilder]]);
+    expect(input.responseBuilder.withShouldEndSession.args).to.eql([[true]]);
     expect(input.attributesManager.setPersistentAttributes.args).to.eql([[finalState]]);
   });
 
@@ -63,7 +62,8 @@ describe('response lifecycle unit tests', () => {
     const input = {
       responseBuilder: {
         getResponse: sinon.stub().returns(output),
-        speak: sinon.stub().returns({ reprompt: sinon.stub().returns({ withShouldEndSession: sinon.stub() }) }),
+        speak: sinon.stub().returns({ reprompt: sinon.stub() }),
+        withShouldEndSession: sinon.stub(),
       },
       requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } } },
       attributesManager: { setPersistentAttributes: sinon.stub() },
