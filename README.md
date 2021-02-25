@@ -5,7 +5,7 @@
 [![sonar quality gate](https://sonarcloud.io/api/project_badges/measure?project=voiceflow_alexa-runtime&metric=alert_status)](https://sonarcloud.io/dashboard?id=voiceflow_alexa-runtime)
 
 `alexa-runtime` is an http webhook service that handles alexa requests and generates a response. It manages the state of the user based on the programs (flows) made on the Voiceflow Creator tool.
-This is an interface between the [voiceflow/runtime]()
+This is an interface between the [voiceflow/runtime](https://github.com/voiceflow/runtime)
 
 > ⚠️ **This repository is still undergoing active development**: Major breaking changes may be pushed periodically and the documentation may become outdated - a stable version has not been released
 
