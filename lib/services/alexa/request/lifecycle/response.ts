@@ -19,10 +19,11 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     turn.set(T.END, true);
   }
 
-  responseBuilder
-    .speak(storage.get<string>(S.OUTPUT) ?? '')
-    .reprompt((turn.get<string>('reprompt') || storage.get<string>(S.OUTPUT)) ?? '')
-    .withShouldEndSession(!!turn.get(T.END));
+  responseBuilder.speak(storage.get<string>(S.OUTPUT) ?? '').reprompt((turn.get<string>('reprompt') || storage.get<string>(S.OUTPUT)) ?? '');
+
+  if (turn.get(T.END)) {
+    responseBuilder.withShouldEndSession(true);
+  }
 
   // eslint-disable-next-line no-restricted-syntax
   for (const handler of utils.responseHandlers) {
