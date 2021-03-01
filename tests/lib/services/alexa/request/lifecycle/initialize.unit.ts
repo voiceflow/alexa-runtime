@@ -310,7 +310,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
           expect(runtime.storage.set.args[5]).to.eql([S.OUTPUT, '']);
-          expect(runtime.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: '' } }]]);
+          expect(runtime.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: '', type: 'message' } }]]);
           expect(runtime.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
 
@@ -328,7 +328,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
           expect(runtime.storage.set.args[5]).to.eql([S.OUTPUT, lastSpeak]);
-          expect(runtime.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: lastSpeak } }]]);
+          expect(runtime.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: lastSpeak, type: 'message' } }]]);
           expect(runtime.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
       });

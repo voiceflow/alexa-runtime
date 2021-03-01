@@ -1,7 +1,7 @@
 import { Node } from '@voiceflow/api-sdk';
 import { replaceVariables, sanitizeVariables } from '@voiceflow/common';
 import { TraceType } from '@voiceflow/general-types';
-import { TraceFrame } from '@voiceflow/general-types/build/nodes/speak';
+import { SpeakType, TraceFrame } from '@voiceflow/general-types/build/nodes/speak';
 import { Runtime, Store } from '@voiceflow/runtime';
 import _ from 'lodash';
 
@@ -39,7 +39,7 @@ export const NoMatchHandler = () => ({
 
     runtime.trace.addTrace<TraceFrame>({
       type: TraceType.SPEAK,
-      payload: { message: output },
+      payload: { message: output, type: SpeakType.MESSAGE },
     });
 
     return node.id;

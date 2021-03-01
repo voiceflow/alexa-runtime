@@ -75,7 +75,7 @@ describe('speak handler unit tests', async () => {
       fn(draft);
 
       expect(draft[S.OUTPUT]).to.eq('previous random 1.23 or here');
-      expect(runtime.trace.addTrace.args).to.eql([[{ type: 'speak', payload: { message: 'random 1.23 or here' } }]]);
+      expect(runtime.trace.addTrace.args).to.eql([[{ type: 'speak', payload: { message: 'random 1.23 or here', type: 'message' } }]]);
     });
 
     it('speak is not string', () => {

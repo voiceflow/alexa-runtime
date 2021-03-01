@@ -1,5 +1,5 @@
 import { RepeatType, SessionType, TraceType } from '@voiceflow/general-types';
-import { TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
+import { SpeakType, TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
 import { Frame, Store } from '@voiceflow/runtime';
 
 import { F, S, T, V } from '@/lib/constants';
@@ -116,7 +116,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
     storage.set(S.OUTPUT, lastSpeak);
     runtime.trace.addTrace<SpeakTraceFrame>({
       type: TraceType.SPEAK,
-      payload: { message: lastSpeak },
+      payload: { message: lastSpeak, type: SpeakType.MESSAGE },
     });
   }
 };

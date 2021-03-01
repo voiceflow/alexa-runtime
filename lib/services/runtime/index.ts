@@ -1,6 +1,6 @@
 import { TraceType } from '@voiceflow/general-types';
 import { TraceFrame as FlowTraceFrame } from '@voiceflow/general-types/build/nodes/flow';
-import { TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
+import { SpeakType, TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
 import Client, { EventType } from '@voiceflow/runtime';
 
 import { F, S } from '@/lib/constants';
@@ -55,7 +55,7 @@ const RuntimeClientManager = (services: Services, config: Config, utils = utilsO
 
         runtime.trace.addTrace<SpeakTraceFrame>({
           type: TraceType.SPEAK,
-          payload: { message: output },
+          payload: { message: output, type: SpeakType.MESSAGE },
         });
       }
     }

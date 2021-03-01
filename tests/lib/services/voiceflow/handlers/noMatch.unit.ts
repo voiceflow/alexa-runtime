@@ -46,6 +46,7 @@ describe('noMatch handler unit tests', () => {
             type: 'speak',
             payload: {
               message: 'the counter is 5.23',
+              type: 'message',
             },
           },
         ],
@@ -93,6 +94,7 @@ describe('noMatch handler unit tests', () => {
             type: 'speak',
             payload: {
               message: '',
+              type: 'message',
             },
           },
         ],
@@ -125,6 +127,7 @@ describe('noMatch handler unit tests', () => {
             type: 'speak',
             payload: {
               message: '',
+              type: 'message',
             },
           },
         ],
