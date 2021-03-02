@@ -28,6 +28,16 @@ defaults:
         ignore: /.*/
       tags:
         only: /^v[0-9]*(\.[0-9]*)*$/
+
+  ignore_dev_env_autorebase_staging_filters:
+    &ignore_dev_env_autorebase_staging_filters
+    branches:
+      ignore:
+        - /rebase-pull-request-.*/
+        - /cherry-pick-rebase-pull-request-.*/
+        - /env-.*/
+        - staging
+
   slack-fail-post-step: &slack-fail-post-step
     post-steps:
       - vfcommon/notify_slack:
@@ -140,10 +150,8 @@ workflows:
           <<: *slack-fail-post-step
           context: dev-test
           filters:
-            branches:
-              ignore:
-                - /env-.*/
-                - staging
+            <<: *ignore_dev_env_autorebase_staging_filters
+
       - vfcommon/release:
           <<: *slack-fail-post-step
           context: dev-test
