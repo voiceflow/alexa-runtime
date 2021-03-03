@@ -6,7 +6,7 @@ WORKDIR /target
 COPY ./ ./
 
 RUN echo $NPM_TOKEN > .npmrc && \
-  yarn install && \
+  yarn install --ignore-scripts && \
   yarn build && \
   rm -rf build/node_modules && \
   rm -f .npmrc 
@@ -31,7 +31,7 @@ WORKDIR /usr/src/app
 COPY --from=build /target/build ./
 
 RUN echo $NPM_TOKEN > .npmrc && \
-  yarn install --production && \
+  yarn install --production --ignore-scripts && \
   rm -f .npmrc && \
   yarn cache clean
 
