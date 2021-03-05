@@ -39,7 +39,7 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
     await utils.updateRuntime(input, (runtime) => {
       if (errorType === ErrorType.INVALID_RESPONSE || errorType === ErrorType.INTERNAL_SERVICE_ERROR) {
         utils.log.warn(
-          'errorType=%s, versionID=%s, storage=%s, turn=%s, variables=%s, stack=%s, trace=%s',
+          'SESSION ENDED errorType=%s, versionID=%s, storage=%s, turn=%s, variables=%s, stack=%s, trace=%s',
           errorType,
           runtime.versionID,
           JSON.stringify(runtime.storage.getState()),
