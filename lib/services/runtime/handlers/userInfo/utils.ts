@@ -48,6 +48,13 @@ export const _ispPermissionGenerator = (apiCall: typeof _alexaApiCall) => async 
   }
 };
 
+export const _remindersPermissions = async (handlerInput?: AlexaHandlerInput): Promise<boolean> =>
+  !!(await handlerInput?.serviceClientFactory
+    ?.getReminderManagementServiceClient()
+    .getReminders()
+    .then(() => true)
+    .catch(() => false));
+
 const _transactionPermissionGenerator = async ({
   result,
   apiCall,
@@ -269,6 +276,7 @@ const utilsObj = {
   _profileNameReadPermission,
   _profileNumberReadPermission,
   _geolocationRead,
+  _remindersPermissions,
 };
 
 export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
@@ -280,6 +288,10 @@ export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
 
   const permissionValue = permission.selected?.value;
   const handlerInput = runtime.turn.get<AlexaHandlerInput>(T.HANDLER_INPUT);
+
+  if (permissionValue === PermissionType.ALEXA_ALERTS_REMINDERS_SKILL_READ_WRITE) {
+    return utils._remindersPermissions(handlerInput);
+  }
 
   if (
     !permissionValue ||
@@ -293,10 +305,6 @@ export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
   const permissionVariable = permission.map_to?.value;
 
   if (permissionValue === PermissionType.ALEXA_DEVICES_ALL_NOTIFICATIONS_WRITE) {
-    return true;
-  }
-
-  if (permissionValue === PermissionType.ALEXA_ALERTS_REMINDERS_SKILL_READ_WRITE) {
     return true;
   }
 

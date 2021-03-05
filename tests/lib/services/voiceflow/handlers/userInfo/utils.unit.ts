@@ -73,9 +73,12 @@ describe('user info utils unit test', () => {
 
     it('PERMISSIONS.REMINDERS_READ_WRITE', async () => {
       const permissionValue = PermissionType.ALEXA_ALERTS_REMINDERS_SKILL_READ_WRITE;
-      const runtime = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const handlerInput = 'handler-input';
+      const runtime = { turn: { get: sinon.stub().returns(handlerInput) }, storage: { get: sinon.stub().returns([permissionValue]) } };
       const permission = { selected: { value: permissionValue } };
-      expect(await isPermissionGranted(permission as any, runtime as any, null as any)).to.eql(true);
+      const utils = { _remindersPermissions: sinon.stub().returns(true) };
+      expect(await isPermissionGrantedGenerator(utils as any)(permission as any, runtime as any, null as any)).to.eql(true);
+      expect(utils._remindersPermissions.args).to.eql([[handlerInput]]);
     });
 
     it('PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_READ', async () => {
