@@ -39,19 +39,17 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
     await utils.updateRuntime(input, (runtime) => {
       if (errorType === ErrorType.INVALID_RESPONSE || errorType === ErrorType.INTERNAL_SERVICE_ERROR) {
         utils.log.warn(
-          'SESSION ENDED errorType=%s, versionID=%s, storage=%s, turn=%s, variables=%s, stack=%s, trace=%s',
-          errorType,
+          'SESSION ENDED versionID=%s, error=%s, storage=%s, turn=%s, variables=%s, stack=%s, trace=%s',
           runtime.versionID,
+          JSON.stringify(request.error),
           JSON.stringify(runtime.storage.getState()),
           JSON.stringify(runtime.turn.getState()),
           JSON.stringify(runtime.variables.getState()),
           JSON.stringify(runtime.stack.getState()),
           JSON.stringify(runtime.trace.get())
         );
-      }
-
-      if (request.reason === RequestReason.ERROR) {
-        utils.log.warn('error=%s, versionID=%s', JSON.stringify(request), runtime.versionID);
+      } else if (request.reason === RequestReason.ERROR) {
+        utils.log.warn('SESSION ENDED versionID=%s, error=%s', runtime.versionID, JSON.stringify(request.error));
       }
 
       const displayInfo = runtime.storage.get<DisplayInfo | undefined>(S.DISPLAY_INFO);
