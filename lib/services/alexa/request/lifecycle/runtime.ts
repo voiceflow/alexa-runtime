@@ -29,8 +29,16 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
   runtime.storage.set(S.OUTPUT, '');
   runtime.storage.set(S.ACCESS_TOKEN, requestEnvelope.context.System.user.accessToken);
 
-  runtime.setEvent(EventType.stateDidCatch, (error) => log.error('RUNTIME STACK ERROR error=%s', error));
-  runtime.setEvent(EventType.handlerDidCatch, (error) => log.error('RUNTIME HANDLER ERROR error=%s', error));
+  runtime.setEvent(EventType.stateDidCatch, (error) => {
+    if (input.context.versionID === '6041446c8f74b3001c175b5c') {
+      log.error('RUNTIME STACK ERROR 6041446c8f74b3001c175b5c error=%s', JSON.stringify(error));
+    }
+  });
+  runtime.setEvent(EventType.handlerDidCatch, (error) => {
+    if (input.context.versionID === '6041446c8f74b3001c175b5c') {
+      log.error('RUNTIME HANDLER ERROR 6041446c8f74b3001c175b5c error=%s', JSON.stringify(error));
+    }
+  });
 
   return runtime;
 };
