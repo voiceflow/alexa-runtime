@@ -12,6 +12,7 @@ describe('runtime lifecycle unit tests', () => {
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('output') },
       turn: { set: sinon.stub() },
+      setEvent: sinon.stub(),
     };
 
     const accessToken = 'access-token';
@@ -35,6 +36,8 @@ describe('runtime lifecycle unit tests', () => {
       [S.OUTPUT, ''],
       [S.ACCESS_TOKEN, accessToken],
     ]);
+    expect(runtime.setEvent.args[0][0]).to.eql('stateDidCatch');
+    expect(runtime.setEvent.args[1][0]).to.eql('handlerDidCatch');
   });
 
   it('with event', async () => {
@@ -42,6 +45,7 @@ describe('runtime lifecycle unit tests', () => {
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('output') },
       turn: { set: sinon.stub() },
+      setEvent: sinon.stub(),
     };
 
     const input = {
@@ -57,6 +61,8 @@ describe('runtime lifecycle unit tests', () => {
     expect(input.context.runtimeClient.createRuntime.args).to.eql([
       [input.context.versionID, rawState, { type: RequestType.EVENT, payload: { event: 'randomEvent', data: input.requestEnvelope.request } }],
     ]);
+    expect(runtime.setEvent.args[0][0]).to.eql('stateDidCatch');
+    expect(runtime.setEvent.args[1][0]).to.eql('handlerDidCatch');
   });
 
   it('with intent', async () => {
@@ -64,6 +70,7 @@ describe('runtime lifecycle unit tests', () => {
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('output') },
       turn: { set: sinon.stub() },
+      setEvent: sinon.stub(),
     };
 
     const input = {
@@ -79,5 +86,7 @@ describe('runtime lifecycle unit tests', () => {
     expect(input.context.runtimeClient.createRuntime.args).to.eql([
       [input.context.versionID, rawState, { type: RequestType.INTENT, payload: input.requestEnvelope.request }],
     ]);
+    expect(runtime.setEvent.args[0][0]).to.eql('stateDidCatch');
+    expect(runtime.setEvent.args[1][0]).to.eql('handlerDidCatch');
   });
 });
