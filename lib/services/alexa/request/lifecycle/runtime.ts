@@ -1,7 +1,8 @@
-import { State } from '@voiceflow/runtime';
+import { EventType, State } from '@voiceflow/runtime';
 
 import { S, T } from '@/lib/constants';
 import { AlexaRuntimeRequest, RequestType } from '@/lib/services/runtime/types';
+import log from '@/logger';
 
 import { AlexaHandlerInput, Request } from '../../types';
 
@@ -27,6 +28,9 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
   runtime.turn.set(T.PREVIOUS_OUTPUT, runtime.storage.get(S.OUTPUT));
   runtime.storage.set(S.OUTPUT, '');
   runtime.storage.set(S.ACCESS_TOKEN, requestEnvelope.context.System.user.accessToken);
+
+  runtime.setEvent(EventType.stateDidCatch, (error) => log.error('RUNTIME STACK ERROR error=%s', error));
+  runtime.setEvent(EventType.handlerDidCatch, (error) => log.error('RUNTIME HANDLER ERROR error=%s', error));
 
   return runtime;
 };

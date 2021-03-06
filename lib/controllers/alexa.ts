@@ -30,11 +30,15 @@ class AlexaController extends AbstractController {
       runtimeClient,
     };
 
+    if (req.params.versionID === '6041446c8f74b3001c175b5c') {
+      log.warn('REQUEST 6041446c8f74b3001c175b5c request=%s', JSON.stringify(req.body.request));
+    }
+
     const response = await alexa.skill.invoke(req.body, alexaContext);
 
     // temporary hard coded for debugging on prod
     if (req.params.versionID === '6041446c8f74b3001c175b5c') {
-      log.warn('DEBUG 6041446c8f74b3001c175b5c request=%s response=%s', JSON.stringify(req.body.request), JSON.stringify(response));
+      log.warn('RESPONSE 6041446c8f74b3001c175b5c requestType=%s response=%s', req.body.request.type, JSON.stringify(response));
     }
     return response;
   }
