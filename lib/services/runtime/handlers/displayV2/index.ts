@@ -4,9 +4,8 @@ import { HandlerFactory } from '@voiceflow/runtime';
 import { SupportedInterfaces } from 'ask-sdk-model';
 import _ from 'lodash';
 
-import { S, T } from '@/lib/constants';
+import { S } from '@/lib/constants';
 
-import { AlexaRuntimeRequest, RequestType } from '../../types';
 import CommandHandler from '../command';
 import { getVariables } from '../display';
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '../display/constants';
@@ -16,8 +15,8 @@ import { deepFindVideos, VideoEvent } from '../display/utils';
 const utilsObj = {
   getVariables,
   deepFindVideos,
-  commandHandler: CommandHandler(),
   replaceVariables,
+  commandHandler: CommandHandler(),
 };
 
 export const DisplayHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
@@ -26,24 +25,14 @@ export const DisplayHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => 
     const supportedInterfaces: SupportedInterfaces | undefined = runtime.storage.get(S.SUPPORTED_INTERFACES);
     const nextId = node.nextId ?? null;
 
-    // if stopped on itself, handle the next request
-    const request = runtime.turn.get<AlexaRuntimeRequest>(T.REQUEST);
-    if (request) {
-      if (request.type === RequestType.INTENT) {
-        if (utils.commandHandler.canHandle(runtime)) {
-          return utils.commandHandler.handle(runtime, variables);
-        }
-        return nextId;
-      }
-      if (request.type === RequestType.EVENT && request.payload.event.startsWith(APL_INTERFACE_NAME)) {
-        runtime.turn.delete(T.REQUEST);
-        return nextId;
-      }
+    if (utils.commandHandler.canHandle(runtime)) {
+      return utils.commandHandler.handle(runtime, variables);
     }
 
     if (!supportedInterfaces?.[APL_INTERFACE_NAME]) {
       return nextId;
     }
+
     const dataSource = node.datasource ?? '';
 
     let commands;
@@ -87,8 +76,10 @@ export const DisplayHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => 
     const hasOnEndEvent = onEndEvents.some((event) => event.type === EVENT_SEND_EVENT && event.arguments?.includes?.(ENDED_EVENT_PREFIX));
 
     if (hasOnEndEvent) {
-      // stop on itself
-      return node.id;
+      runtime.stack.top().setNodeID(node.nextId ?? null);
+      runtime.end();
+
+      return null;
     }
 
     return nextId;
