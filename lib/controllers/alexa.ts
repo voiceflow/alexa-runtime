@@ -1,7 +1,6 @@
 import { Validator } from '@voiceflow/backend-utils';
 
 import { AlexaContext } from '@/lib/services/alexa/types';
-import log from '@/logger';
 import { Request } from '@/types';
 
 import { validate } from '../utils';
@@ -30,17 +29,7 @@ class AlexaController extends AbstractController {
       runtimeClient,
     };
 
-    if (req.params.versionID === '6041446c8f74b3001c175b5c') {
-      log.warn('REQUEST 6041446c8f74b3001c175b5c request=%s', JSON.stringify(req.body.request));
-    }
-
-    const response = await alexa.skill.invoke(req.body, alexaContext);
-
-    // temporary hard coded for debugging on prod
-    if (req.params.versionID === '6041446c8f74b3001c175b5c') {
-      log.warn('RESPONSE 6041446c8f74b3001c175b5c requestType=%s response=%s', req.body.request.type, JSON.stringify(response));
-    }
-    return response;
+    return alexa.skill.invoke(req.body, alexaContext);
   }
 }
 

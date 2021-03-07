@@ -2,7 +2,6 @@ import { DefaultApiClient, SkillBuilders } from 'ask-sdk';
 
 import { MetricsType } from '@/lib/clients/metrics';
 import { Source } from '@/lib/constants';
-import log from '@/logger';
 
 import AdapterManager from '../adapter';
 import { Config, Services } from '../utils';
@@ -27,15 +26,6 @@ import { AlexaHandlerInput } from './types';
 
 export const ResponseInterceptor = {
   async process(handlerInput: AlexaHandlerInput) {
-    if (handlerInput.context?.versionID === '6041446c8f74b3001c175b5c') {
-      const attributes = await handlerInput.attributesManager.getPersistentAttributes();
-      log.warn(
-        'SAVE 6041446c8f74b3001c175b5c request=%s stack=%s',
-        JSON.stringify(handlerInput.requestEnvelope.request),
-        JSON.stringify(attributes?.stack)
-      );
-    }
-
     // save session attributes to persistent attributes
     await handlerInput.attributesManager.savePersistentAttributes();
   },
