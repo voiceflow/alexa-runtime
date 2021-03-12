@@ -13,6 +13,7 @@ import {
 
 import { Config } from '@/types';
 
+import _V1Handler from './_v1';
 import AccountLinkingHandler, { AccountLinkingResponseBuilder } from './accountLinking';
 import CancelPaymentHandler, { CancelPaymentResponseBuilder } from './cancelPayment';
 import CaptureHandler from './capture';
@@ -68,4 +69,5 @@ export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HAND
   SetHandler(),
   StartHandler(),
   NextHandler(),
+  _V1Handler(),
 ];
