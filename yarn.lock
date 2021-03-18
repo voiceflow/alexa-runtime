@@ -899,21 +899,21 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
-"@voiceflow/alexa-types@1.43.1":
-  version "1.43.1"
-  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.43.1.tgz#ea17447840db8d1c8c1828c225c7ff3c90796245"
-  integrity sha512-jLeXF+gRq6rFy0+Y3zkYMjowSjrJD0HeOp+2LqB++r84e26f5vIVLiGxfuQg9GgGen0bip3k+SaJgou8DJmVWw==
+"@voiceflow/alexa-types@1.44.0":
+  version "1.44.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.44.0.tgz#df11ee7a45578454e2036acf791ee0ff69208a03"
+  integrity sha512-AxmSkbEivjCr9MFK2dYFzOgIJn4QWVKGli81y7PiLoCkWQeRaActk9oyoG5nF4astoNLxh9gdS6a9/s6SVyGNg==
   dependencies:
-    "@voiceflow/api-sdk" "1.27.1"
+    "@voiceflow/api-sdk" "1.28.0"
     "@voiceflow/common" "6.5.0"
-    "@voiceflow/general-types" "1.31.3"
+    "@voiceflow/general-types" "1.35.0"
     ask-smapi-model "^1.11.0"
     eslint-plugin-prettier "^3.1.4"
 
-"@voiceflow/api-sdk@1.27.1":
-  version "1.27.1"
-  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.27.1.tgz#61ae6e1e8e91c8655a4823b8b02c64d321238900"
-  integrity sha512-sBK5APq8x0lIUxbRRWGYDvTfNwYqTC/on+YcCz0pNEgzNtEKK3OHotaBISR2ZThjyvsDBaREgQrMfx1NfUn0Fg==
+"@voiceflow/api-sdk@1.28.0":
+  version "1.28.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.28.0.tgz#5b401de5506eb5ca895861d50d3efc5637fd9d2b"
+  integrity sha512-STFaM1H71hsoGJGP76Y/+GWa1GCgAj6cchPIDixOgXOhWCLEdgYXgchoPx+lyzDWxywb9J3Tqd75mqiT75x6Vw==
   dependencies:
     "@types/atob" "^2.1.2"
     "@voiceflow/logger" "^1.5.2"
@@ -974,19 +974,19 @@
     eslint-plugin-xss "^0.1.9"
     typescript "^3.9.7"
 
-"@voiceflow/general-types@1.31.3":
-  version "1.31.3"
-  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.31.3.tgz#1242efdcb72648ec7b9ac124d7e8c1164110f235"
-  integrity sha512-88X7wtYxncHHtWOCHO4JtUsCB7gr2xkE6IpLKSnWBWbo8ADZU4zv1Vnpj6JkSeoFqHuoh5VNXDcgvlgFtuSaUg==
+"@voiceflow/general-types@1.35.0":
+  version "1.35.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.35.0.tgz#6e5fa739295dae018cc320b270d9fc31d75ec404"
+  integrity sha512-xQWfxzdILBw+LzATiZh+lUDIQeBiAU7PsFimNYNriopUXuTqSK0ijJxy3cG0U3Ds2Gch/JHGYsFn0QVXOasASQ==
   dependencies:
-    "@voiceflow/api-sdk" "1.27.1"
+    "@voiceflow/api-sdk" "1.28.0"
 
-"@voiceflow/general-types@1.34.5":
-  version "1.34.5"
-  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.34.5.tgz#bb6a19e9db574e413d60693530bc4abc22c177ab"
-  integrity sha512-elyew4rz8f8EXOk5bnstl+BYCHn0NWlaoA5DdByP/8gimSzjBwy+oFESnK9a6FdE/CRlJdFDX2oIEIweYhKpKw==
+"@voiceflow/general-types@1.36.0":
+  version "1.36.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.36.0.tgz#d0c831989dcbfe0cacfb7babcde24e4f675d9bc1"
+  integrity sha512-HVCsVjoJs89OkN5Xlf98Kc0uTIHzqB3ioAy7ux+2gNeoSFwMwb+INWcCFDJsBaR1ImcZj8ExP8mhaLPFWCBwtA==
   dependencies:
-    "@voiceflow/api-sdk" "1.27.1"
+    "@voiceflow/api-sdk" "1.28.0"
 
 "@voiceflow/git-branch-check@^1.1.3":
   version "1.1.3"
@@ -1044,15 +1044,15 @@
   resolved "https://registry.yarnpkg.com/@voiceflow/prettier-config/-/prettier-config-1.0.5.tgz#307caf65040ae0c0539ecb8531b9e403381f11ab"
   integrity sha512-yM35E7UI0fD8yMgL7JImljvMLZVU+jCz/latc2s2e7Nlbr9kiMpO0FArjkaXVIghhcUeQ0y04lsFUHRu3kMzmA==
 
-"@voiceflow/runtime@1.24.2":
-  version "1.24.2"
-  resolved "https://registry.yarnpkg.com/@voiceflow/runtime/-/runtime-1.24.2.tgz#67068f73c8cf4b78fc21249094a95e291fc20136"
-  integrity sha512-eK5NDRTv7E322IqJiBXbu0ObQvxtRfOOBU7PQIPKlir+xO4KKf1YScTblCcn7mBLj5VhvtFslGDt25l75iKc/w==
+"@voiceflow/runtime@1.25.0":
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/runtime/-/runtime-1.25.0.tgz#9e2785a25ac412626b7412ae9c7ae401bd6bfd1f"
+  integrity sha512-YBQdcixCm7jq30TZRLR1XVHHLT5yFcbJU7hRl8lMjMsY8inSK4s1mMHqK54YuIOu4tooer5wBpZK3uuWcLXZxQ==
   dependencies:
     "@types/safe-json-stringify" "^1.1.0"
-    "@voiceflow/api-sdk" "1.27.1"
+    "@voiceflow/api-sdk" "1.28.0"
     "@voiceflow/common" "6.5.0"
-    "@voiceflow/general-types" "1.31.3"
+    "@voiceflow/general-types" "1.35.0"
     axios "^0.19.0"
     bluebird "^3.7.2"
     form-data "^3.0.0"

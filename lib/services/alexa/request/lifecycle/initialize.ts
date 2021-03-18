@@ -76,7 +76,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
   utils.client.Store.initialize(variables, versionVariables, 0);
   utils.client.Store.initialize(
     variables,
-    slots.map((slot) => slot.name),
+    slots.map((slot: { name: string }) => slot.name),
     0
   );
 
