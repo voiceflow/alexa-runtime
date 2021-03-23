@@ -11,14 +11,46 @@ describe('preliminary handler unit tests', () => {
       expect(PreliminaryHandlerFactory({ eventHandlers: [] } as any).canHandle(null as any, runtime as any, null as any, null as any)).to.eql(false);
     });
 
+    it('is new stack', () => {
+      const runtime = {
+        turn: {
+          get: sinon
+            .stub()
+            .onFirstCall()
+            .returns(null)
+            .onSecondCall()
+            .returns(true),
+        },
+      };
+      expect(PreliminaryHandlerFactory({ eventHandlers: [] } as any).canHandle(null as any, runtime as any, null as any, null as any)).to.eql(false);
+    });
+
     it('handler found', () => {
-      const runtime = { turn: { get: sinon.stub().returns({ payload: { name: 'event1' } }) } };
+      const runtime = {
+        turn: {
+          get: sinon
+            .stub()
+            .onFirstCall()
+            .returns({ payload: { name: 'event1' } })
+            .onSecondCall()
+            .returns(null),
+        },
+      };
       const eventHandlers = [{ canHandle: sinon.stub().returns(true) }];
       expect(PreliminaryHandlerFactory({ eventHandlers } as any).canHandle(null as any, runtime as any, null as any, null as any)).to.eql(false);
     });
 
     it('true', () => {
-      const runtime = { turn: { get: sinon.stub().returns({ payload: { name: 'event1' } }) } };
+      const runtime = {
+        turn: {
+          get: sinon
+            .stub()
+            .onFirstCall()
+            .returns({ payload: { name: 'event1' } })
+            .onSecondCall()
+            .returns(null),
+        },
+      };
       expect(PreliminaryHandlerFactory({ eventHandlers: [] } as any).canHandle(null as any, runtime as any, null as any, null as any)).to.eql(true);
     });
   });
@@ -31,10 +63,9 @@ describe('preliminary handler unit tests', () => {
       };
       const handler = PreliminaryHandlerFactory(utils as any);
 
-      const runtime = { turn: { delete: sinon.stub() } };
+      const runtime = {};
       const variables = { var1: 'val1', var2: 'val2' };
       expect(handler.handle(null as any, runtime as any, variables as any, null as any)).to.eql(nodeID);
-      expect(runtime.turn.delete.args).to.eql([[T.REQUEST]]);
       expect(utils.commandHandler.canHandle.args).to.eql([[runtime]]);
       expect(utils.commandHandler.handle.args).to.eql([[runtime, variables]]);
     });
