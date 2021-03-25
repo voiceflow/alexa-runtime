@@ -3,7 +3,11 @@ declare module '@voiceflow/verror' {
   import HttpStatus from 'http-status';
 
   class VError extends Error {
+    constructor(name: string, code?: number, data?: any);
+
     public name: string;
+
+    public static HTTP_STATUS: HttpStatus.HttpStatus;
 
     public code: string;
 
