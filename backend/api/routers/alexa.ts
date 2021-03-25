@@ -7,7 +7,6 @@ import { ControllerMap, MiddlewareMap } from '@/lib';
 export default (middlewares: MiddlewareMap, controllers: ControllerMap) => {
   const router = express.Router();
 
-  router.get('/test', controllers.alexa.test);
   router.use(middlewares.alexa.verifier);
   router.use(bodyParser.json({ limit: BODY_PARSER_SIZE_LIMIT }));
   router.post('/:versionID', controllers.alexa.handler);
