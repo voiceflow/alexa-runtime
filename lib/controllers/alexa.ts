@@ -31,6 +31,18 @@ class AlexaController extends AbstractController {
 
     return alexa.skill.invoke(req.body, alexaContext);
   }
+
+  async test() {
+    console.log('start');
+    await new Promise<void>((resolve, _reject) =>
+      setTimeout(() => {
+        console.log('setTimeout');
+        resolve();
+      }, 20000)
+    );
+    console.log('after');
+    return 'hello';
+  }
 }
 
 export default AlexaController;
