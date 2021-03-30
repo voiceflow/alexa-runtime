@@ -16,7 +16,10 @@ const update = async (runtime: AlexaRuntime): Promise<void> => {
     storage.set(S.REPEAT, repeat);
   }
 
-  turn.set(T.REQUEST, runtime.getRequest());
+  if (turn.get(T.REQUEST) !== false) {
+    turn.set(T.REQUEST, runtime.getRequest());
+  }
+
   variables.set(V.TIMESTAMP, Math.floor(Date.now() / 1000));
 
   await runtime.update();

@@ -1,6 +1,7 @@
 import { Command } from '@voiceflow/api-sdk';
 import { extractFrameCommand } from '@voiceflow/runtime';
 
+import { T } from '@/lib/constants';
 import { AlexaRuntime, EventRequest, RequestType } from '@/lib/services/runtime/types';
 
 export type EventCommand = Command<'event', { event: string; next: string | null; mappings: { path: string; var: string }[] }>;
@@ -70,6 +71,8 @@ export const handleEvent = (utils: typeof utilsObj) => async (runtime: AlexaRunt
 
   runtime.stack.popTo(index + 1);
   runtime.stack.top().setNodeID(command.next);
+
+  runtime.turn.set(T.REQUEST, false);
 
   command.mappings.forEach((mapping) => {
     runtime.variables.set(mapping.var, getVariable(mapping.path, request.payload.data));
