@@ -39,10 +39,11 @@ export const InteractionHandler: HandlerFactory<Node, typeof utilsObj> = (utils)
     let variableMap: SlotMapping[] | null = null;
 
     const { intent } = request.payload;
+    const cleanedIntentName = intent.name.replace('AMAZON.', '');
 
     // check if there is a choice in the node that fulfills intent
     node.interactions.forEach((choice, i: number) => {
-      if (choice.intent && utils.formatIntentName(choice.intent) === intent.name) {
+      if (choice.intent && utils.formatIntentName(choice.intent) === cleanedIntentName) {
         variableMap = choice.mappings ?? null;
         nextId = node.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
       }
