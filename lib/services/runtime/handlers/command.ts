@@ -19,7 +19,9 @@ export const getCommand = (runtime: Runtime, extractFrame: typeof extractFrameCo
   // don't act on a catchall intent
   if (intentName === IntentName.VOICEFLOW) return null;
 
-  const matcher = (command: Command | null) => command?.intent === intentName;
+  const cleanedIntentName = intentName.replace('AMAZON.', '');
+
+  const matcher = (command: Command | null) => command?.intent === cleanedIntentName;
 
   // If Cancel Intent is not handled turn it into Stop Intent
   // This first loop is AMAZON specific, if cancel intent is not explicitly used anywhere at all, map it to stop intent
