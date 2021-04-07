@@ -187,7 +187,6 @@ jobs:
             aws s3 cp s3://<< parameters.bucket >>/$TRACK /tmp/$TRACK
             SEARCH_TRACK_RESULT=$?
             set -e
-            cat /tmp/$TRACK
 
             # Store the result on a file in tmp folder to use in future steps
             if [[ $SEARCH_TRACK_RESULT -eq 0 ]]; then  
@@ -227,6 +226,7 @@ jobs:
 
               // update the track
               TRACK="tracks/<< parameters.component >>/$CIRCLE_BRANCH"
+              echo $TRACK
               cat /tmp/$TRACK | yq e '.<< parameters.component >>.image.tag = "$IMAGE_TAG"' - | tee /tmp/$TRACK
               aws s3 cp /tmp/$TRACK s3://<< parameters.bucket >>/$TRACK
 
