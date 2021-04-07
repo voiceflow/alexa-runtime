@@ -148,11 +148,11 @@ jobs:
       image_repo:
         description: The container image repository
         type: string
-        default: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
+        default: 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa
       component:
         description: The component type for development environment deployment
         type: string
-        default: "alexa-runtime"
+        default: alexa-runtime
       dockerfile:
         description: Name of the Dockerfile to build
         type: string
