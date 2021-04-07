@@ -234,7 +234,7 @@ jobs:
               TRACK="tracks/<< parameters.component >>/$CIRCLE_BRANCH"
               echo $TRACK
               pip3 install yq
-              yq -y -i --arg tag "${CIRCLE_SHA1}" '."<< parameters.component >>".image.tag=$tag' /tmp/$TRACK
+              yq -y -i --arg tag "${IMAGE_TAG}" '."<< parameters.component >>".image.tag=$tag' /tmp/$TRACK
               aws s3 cp /tmp/$TRACK s3://<< parameters.bucket >>/$TRACK
 
             else
