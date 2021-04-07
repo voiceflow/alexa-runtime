@@ -216,8 +216,11 @@ jobs:
               echo "hello"
               // Build Docker Image
               IMAGE_TAG="k8s-$CIRCLE_SHA1"
+               echo "hello"
               IMAGE_REPO="<< parameters.image_repo >>"
+               echo "hello"
               IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
+               echo "hello"
               SEM_VER="$CIRCLE_BRANCH-$CIRCLE_SHA1"
               $(aws ecr get-login --no-include-email --region us-east-1)
               echo $IMAGE_NAME
