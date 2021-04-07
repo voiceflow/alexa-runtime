@@ -899,21 +899,35 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
-"@voiceflow/alexa-types@1.45.0":
-  version "1.45.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.45.0.tgz#418cc0684ddfa97bec2ec03e680b0b028448bc04"
-  integrity sha512-0/CpucGQWfKqbu1Zjadb3dX7M7Ccx2qzGQeGgfMjoHuGb4C0Av7HxZT6w2fI6h7kVY4tADHGqwgPzGFVh4ca6w==
+"@voiceflow/alexa-types@1.47.1":
+  version "1.47.1"
+  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.47.1.tgz#51c7811be432f65ddbff2d40d9808a54341a1473"
+  integrity sha512-vPQRBvh8JkWPyxpTRtA0oEUTrsn7KM5wFdZpKG+5T5b2YCZj1Fk5ShBjAoQ7o1ag1UWnrIyENB4SFMevaZ8TFw==
   dependencies:
-    "@voiceflow/api-sdk" "1.28.0"
+    "@voiceflow/api-sdk" "1.29.1"
     "@voiceflow/common" "6.5.0"
-    "@voiceflow/general-types" "1.36.0"
+    "@voiceflow/general-types" "1.40.1"
     ask-smapi-model "^1.11.0"
     eslint-plugin-prettier "^3.1.4"
 
-"@voiceflow/api-sdk@1.28.0":
-  version "1.28.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.28.0.tgz#5b401de5506eb5ca895861d50d3efc5637fd9d2b"
-  integrity sha512-STFaM1H71hsoGJGP76Y/+GWa1GCgAj6cchPIDixOgXOhWCLEdgYXgchoPx+lyzDWxywb9J3Tqd75mqiT75x6Vw==
+"@voiceflow/api-sdk@1.22.0":
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.22.0.tgz#363396a2bd37ee541a498fb065d3fd5ffdc3fa85"
+  integrity sha512-1UxcX01Gp3T03EpBNHRnDKRKyziBZQnr6hK7YyKQKJ7TuWLukKeT2j4dWgKave7fcjQdm70CNG7RAOz83Ax/gA==
+  dependencies:
+    "@types/atob" "^2.1.2"
+    "@voiceflow/logger" "^1.1.10"
+    atob "^2.1.2"
+    axios "^0.19.2"
+    core-js "^3.6.5"
+    io-ts "^2.2.8"
+    regenerator-runtime "^0.13.5"
+    superstruct "^0.10.12"
+
+"@voiceflow/api-sdk@1.29.1":
+  version "1.29.1"
+  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.29.1.tgz#68cb2671842ab9c4c2f7adabf5a0fb1e9bdbc06a"
+  integrity sha512-I90/N2iHIo5XPSJOsUR4pyk3fiLcsmyHbEY7AEPbbbGCy+jqmCdOQuHN9hcP1ju/MeUdYRqDNs/gNZbKP6DeTA==
   dependencies:
     "@types/atob" "^2.1.2"
     "@voiceflow/logger" "^1.5.2"
@@ -974,12 +988,19 @@
     eslint-plugin-xss "^0.1.9"
     typescript "^3.9.7"
 
-"@voiceflow/general-types@1.36.0":
-  version "1.36.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.36.0.tgz#d0c831989dcbfe0cacfb7babcde24e4f675d9bc1"
-  integrity sha512-HVCsVjoJs89OkN5Xlf98Kc0uTIHzqB3ioAy7ux+2gNeoSFwMwb+INWcCFDJsBaR1ImcZj8ExP8mhaLPFWCBwtA==
+"@voiceflow/general-types@1.24.0":
+  version "1.24.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.24.0.tgz#83a32b620e5c46bb5406d2e49f097561f1b0ca41"
+  integrity sha512-nis6jFTppbTygZpL5RaaEgpv9crsAkDWeAI3FaatBv5XI0qKcsQSsTYllowyV8aOwEgedhqB8DPBsPQGDeOGBw==
   dependencies:
-    "@voiceflow/api-sdk" "1.28.0"
+    "@voiceflow/api-sdk" "1.22.0"
+
+"@voiceflow/general-types@1.40.1":
+  version "1.40.1"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.40.1.tgz#a24197046e9528cff88afb1a010843e71c61d1ee"
+  integrity sha512-Bj5DQ3tPaksMezXPehzDPcrV6C18Bj3DYMu6o8DxZQUmB+ze7OkTH2OvgUSIf1zpQbtwuAhLN37iYGoXTWR12Q==
+  dependencies:
+    "@voiceflow/api-sdk" "1.29.1"
 
 "@voiceflow/git-branch-check@^1.1.3":
   version "1.1.3"
@@ -1002,7 +1023,7 @@
     nanoid "^3.1.20"
     pino-http "5.3.0"
 
-"@voiceflow/logger@^1.5.2":
+"@voiceflow/logger@^1.1.10", "@voiceflow/logger@^1.5.2":
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/@voiceflow/logger/-/logger-1.5.3.tgz#4af268ddfd245f3f5dc179ef3b4103958ccc2e0e"
   integrity sha512-H7A4MYaDwOqCF7gRIXTvXgbXt5TVAqJDe9TSIsSr+lJCVDFG8icPJVMuM1Q19GZlBEBdlZEoDGHO9xzMCJ99Aw==
@@ -1051,15 +1072,15 @@
   resolved "https://registry.yarnpkg.com/@voiceflow/prettier-config/-/prettier-config-1.0.5.tgz#307caf65040ae0c0539ecb8531b9e403381f11ab"
   integrity sha512-yM35E7UI0fD8yMgL7JImljvMLZVU+jCz/latc2s2e7Nlbr9kiMpO0FArjkaXVIghhcUeQ0y04lsFUHRu3kMzmA==
 
-"@voiceflow/runtime@1.26.0":
-  version "1.26.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/runtime/-/runtime-1.26.0.tgz#1620fc598c2b9102b7be3b848d9594ee99f8144d"
-  integrity sha512-vS4HReHx5l0ZN+qH7yp1hW+A0rejyl038BUp+kPpAcD9YvRd05dkzvfPEZtKLQSvd6bL8maAwHp8SG1EeU8WCw==
+"@voiceflow/runtime@1.23.1":
+  version "1.23.1"
+  resolved "https://registry.yarnpkg.com/@voiceflow/runtime/-/runtime-1.23.1.tgz#79ea212d5dd1d8cd030c3e121d8dd0ae984d9c94"
+  integrity sha512-fTj5r54gdRXm/RqgiCF7zf7TyREYohOfXaehPDETUjpphAj9bJPb1XzICEh5ETKtOzhIl833xwN0dcCet6uvMQ==
   dependencies:
     "@types/safe-json-stringify" "^1.1.0"
-    "@voiceflow/api-sdk" "1.28.0"
+    "@voiceflow/api-sdk" "1.22.0"
     "@voiceflow/common" "6.5.0"
-    "@voiceflow/general-types" "1.36.0"
+    "@voiceflow/general-types" "1.24.0"
     axios "^0.19.0"
     bluebird "^3.7.2"
     form-data "^3.0.0"
@@ -1067,9 +1088,7 @@
     lodash "^4.17.19"
     mathjs "^6.5.0"
     querystring "^0.2.0"
-    require-from-url "^3.1.3"
     safe-json-stringify "^1.2.0"
-    vm2 "^3.9.2"
     workerpool "^5.0.4"
 
 "@voiceflow/verror@^1.1.0":
@@ -1509,7 +1528,7 @@ axe-core@^3.5.4:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-3.5.5.tgz#84315073b53fa3c0c51676c588d59da09a192227"
   integrity sha512-5P0QZ6J5xGikH780pghEdbEKijCTrruK9KxtPZCFWUpef0f6GipO+xEZ5GKCb020mmqgbiNO6TcA55CriL784Q==
 
-axios@^0.19.0:
+axios@^0.19.0, axios@^0.19.2:
   version "0.19.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
   integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
@@ -4108,6 +4127,11 @@ invariant@2.2.4:
   dependencies:
     loose-envify "^1.0.0"
 
+io-ts@^2.2.8:
+  version "2.2.16"
+  resolved "https://registry.yarnpkg.com/io-ts/-/io-ts-2.2.16.tgz#597dffa03db1913fc318c9c6df6931cb4ed808b2"
+  integrity sha512-y5TTSa6VP6le0hhmIyN0dqEXkrZeJLeC5KApJq6VLci3UEKF80lZ+KuoUs02RhBxNWlrqSNxzfI7otLX1Euv8Q==
+
 ipaddr.js@1.9.1:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
@@ -6104,7 +6128,7 @@ regenerator-runtime@^0.11.0:
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
   integrity sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==
 
-regenerator-runtime@^0.13.3, regenerator-runtime@^0.13.4:
+regenerator-runtime@^0.13.3, regenerator-runtime@^0.13.4, regenerator-runtime@^0.13.5:
   version "0.13.7"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.7.tgz#cac2dacc8a1ea675feaabaeb8ae833898ae46f55"
   integrity sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==
@@ -6161,11 +6185,6 @@ require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
   integrity sha1-jGStX9MNqxyXbiNE/+f3kqam30I=
-
-require-from-url@^3.1.3:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/require-from-url/-/require-from-url-3.1.3.tgz#e732912b557163229e47ed4c4db0a9631d7196d5"
-  integrity sha512-SWYVQr6rZMumhsE0MGL3caGtBNDBPQRm7JV4fsxb8Nc+LR42QkmLPP56P+Y9jncZLNrrk4SpE/Ozaf8Jo3ialA==
 
 require-main-filename@^2.0.0:
   version "2.0.0"
@@ -7249,11 +7268,6 @@ vary@^1, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
-
-vm2@^3.9.2:
-  version "3.9.2"
-  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.9.2.tgz#a4085d2d88a808a1b3c06d5478c2db3222a9cc30"
-  integrity sha512-nzyFmHdy2FMg7mYraRytc2jr4QBaUY3TEGe3q3bK8EgS9WC98wxn2jrPxS/ruWm+JGzrEIIeufKweQzVoQEd+Q==
 
 vue-eslint-parser@^2.0.2:
   version "2.0.3"
