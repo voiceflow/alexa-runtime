@@ -191,7 +191,7 @@ jobs:
             TRACK="tracks/<< parameters.component >>/$CIRCLE_BRANCH"
             echo $TRACK
             set +e
-            TRACK_EXECUTION=aws s3 cp s3://<< parameters.bucket >>/$TRACK /tmp/$TRACK
+            aws s3 cp s3://<< parameters.bucket >>/$TRACK /tmp/$TRACK
             SEARCH_TRACK_RESULT=$?
             set -e
             cat /tmp/$TRACK
