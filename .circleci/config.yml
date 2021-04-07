@@ -19,6 +19,9 @@ parameters:
   dev-env-component:
     type: string
     default: "alexaruntime"
+  track-component:
+    type: string
+    default: "alexa-runtime"
 
 # Reusable YAML chunks
 defaults:
@@ -48,7 +51,7 @@ defaults:
           branch_pattern: master
 
 orbs:
-  vfcommon: voiceflow/common@0.0.72
+  vfcommon: voiceflow/common@0.0.85
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
@@ -106,133 +109,12 @@ jobs:
           component: << pipeline.parameters.dev-env-component >>
           ssh_key: << pipeline.parameters.ssh-fingerprint >>
 
-  check_track_exists:
+  update-track:
     executor: vfcommon/build-executor
-    description: Check if a track  exists
-    parameters:
-      component:
-        description: The container image repository
-        type: string
-      bucket:
-        description: The container image repository
-        type: string
-        default: "com.voiceflow.ci.assets"
     steps:
-      - run:
-          name: If container with this git SHA already exists, don't build
-          command: |
-            TRACK="tracks/<< parameters.component >>/$CIRCLE_BRANCH"
-            set +e
-            TRACK_EXECUTION=aws s3 cp s3://<< parameters.bucket >>/$TRACK /tmp/$TRACK > /dev/null 2>&1
-            SEARCH_TRACK_RESULT=$?
-            set -e
-
-            # Store the result on a file in tmp folder to use in future steps
-            if [[ $SEARCH_TRACK_RESULT -eq 0 ]]; then  
-              echo 'export TRACK_EXISTS="true"' > /tmp/TRACK_STATUS  # Track exists, skip following steps
-            else
-              echo 'export TRACK_EXISTS="false"' > /tmp/TRACK_STATUS  # Track exists, skip following steps
-            fi
-
-  build_deploy_dev_env:
-    executor: vfcommon/build-executor
-    description: Deploy an image into a K8s cluster
-    parameters:
-      image_repo:
-        description: The container image repository
-        type: string
-        default: 168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa
-      component:
-        description: The component type for development environment deployment
-        type: string
-        default: alexa-runtime
-      dockerfile:
-        description: Name of the Dockerfile to build
-        type: string
-        default: Dockerfile
-      attach_workspace_folder:
-        description: Folder where the workspace will be attached
-        type: string
-        default: /tmp/vf-build
-      checkout:
-        description: Determines if a checkout will be executed or not
-        type: boolean
-        default: true
-      request_remote_docker:
-        description: Add the option to request a new remote docker, set to false when you concat docker jobs
-        type: boolean
-        default: true
-      bucket:
-        description: The container image repository
-        type: string
-        default: "com.voiceflow.ci.assets"
-    steps:
-      - when:
-          condition: << parameters.checkout >>
-          steps:
-            - checkout # special step to check out source code to working directory
-      - when:
-          condition: << parameters.request_remote_docker >>
-          steps:
-            - setup_remote_docker: # Need this to run DinD
-                version: 19.03.13
-      - attach_workspace:
-          at: << parameters.attach_workspace_folder >>
-      - run:
-          name: check track
-          command: |
-            TRACK="tracks/<< parameters.component >>/$CIRCLE_BRANCH"
-            echo $TRACK
-            set +e
-            aws s3 cp s3://<< parameters.bucket >>/$TRACK /tmp/$TRACK
-            SEARCH_TRACK_RESULT=$?
-            set -e
-
-            # Store the result on a file in tmp folder to use in future steps
-            if [[ $SEARCH_TRACK_RESULT -eq 0 ]]; then  
-              echo 'export TRACK_EXISTS="true"' > /tmp/TRACK_STATUS  # Track exists, skip following steps
-            else
-              echo 'export TRACK_EXISTS="false"' > /tmp/TRACK_STATUS  # Track exists, skip following steps
-            fi
-      - vfcommon/check_image_exists:
-          image_repo: << parameters.image_repo >>
-          request_remote_docker: false
-      - run:
-          name: "Build dev environment image"
-          command: |
-            # Load IMAGE_EXISTS variable from file previously stored in the tmp folder
-            source "/tmp/IMAGE_STATUS"
-            # Load TRACK_EXISTS variable from file previously stored in the tmp folder
-            source "/tmp/TRACK_STATUS"
-
-            if [[ $IMAGE_EXISTS == "false" && $TRACK_EXISTS == "true" ]]; then
-
-              # Build Docker Image
-              IMAGE_TAG="k8s-$CIRCLE_SHA1"
-              IMAGE_REPO="<< parameters.image_repo >>"
-              IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
-              SEM_VER="$CIRCLE_BRANCH-$CIRCLE_SHA1"
-              $(aws ecr get-login --no-include-email --region us-east-1)
-              docker build \
-                --build-arg NPM_TOKEN=//registry.npmjs.org/:_authToken=${NPM_TOKEN} \
-                --build-arg build_BUILD_NUM=${CIRCLE_BUILD_NUM} \
-                --build-arg build_BUILD_URL=${CIRCLE_BUILD_URL}	\
-                --build-arg build_GIT_SHA=${CIRCLE_SHA1} \
-                --build-arg build_SEM_VER=${SEM_VER} \
-                -f << parameters.dockerfile >> \
-                -t $IMAGE_NAME . 
-              docker push $IMAGE_NAME
-
-              # update the track
-              TRACK="tracks/<< parameters.component >>/$CIRCLE_BRANCH"
-              echo $TRACK
-              pip3 install yq
-              yq -y -i --arg tag "${IMAGE_TAG}" '."<< parameters.component >>".image.tag=$tag' /tmp/$TRACK
-              aws s3 cp /tmp/$TRACK s3://<< parameters.bucket >>/$TRACK
-
-            else
-              echo "Image exists! avoiding build!"
-            fi
+      - vfcommon/update_track:
+          image_repo: << pipeline.parameters.container-image-url >>
+          component: << pipeline.parameters.dev-env-component >>
 
 # When should each job run and what are their dependencies?
 workflows:
@@ -264,10 +146,14 @@ workflows:
               only:
                 - /env-.*/
 
-  build-deploy-environment-new:
+  # Update tracks, avoiding tags
+  update-track:
     jobs:
-      - build_deploy_dev_env:
+      - update-track:
           context: dev-test
+          filters:
+            tags:
+              ignore: /.*/
 
   # Master (production)
   test-and-release-app:
