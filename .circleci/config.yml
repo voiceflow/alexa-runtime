@@ -230,11 +230,7 @@ jobs:
                 -t $IMAGE_NAME . 
               docker push $IMAGE_NAME
 
-              // update the track
-              TRACK="tracks/<< parameters.component >>/$CIRCLE_BRANCH"
-              echo $TRACK
-              cat /tmp/$TRACK | yq e '.<< parameters.component >>.image.tag = "$IMAGE_TAG"' - | tee /tmp/$TRACK
-              aws s3 cp /tmp/$TRACK s3://<< parameters.bucket >>/$TRACK
+
 
             else
               echo "Image exists! avoiding build!"
