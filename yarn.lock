@@ -981,6 +981,13 @@
   dependencies:
     "@voiceflow/api-sdk" "1.29.1"
 
+"@voiceflow/general-types@1.40.3":
+  version "1.40.3"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.40.3.tgz#b9ff8f32a66ed7f192bccfb3cebe64a8ed397b3c"
+  integrity sha512-2M9g5wM1qo0l7IFSxqnGYPda8/vcpcVoKNjvCs7/4o4lrOjGPMjP5A3ZvOUAV6JA9AY0kbZQoorrfGzUb6MHeg==
+  dependencies:
+    "@voiceflow/api-sdk" "1.29.1"
+
 "@voiceflow/git-branch-check@^1.1.3":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@voiceflow/git-branch-check/-/git-branch-check-1.1.3.tgz#13bb13b7f8ee3b77cec3a0f2e9303f9d615bc253"
