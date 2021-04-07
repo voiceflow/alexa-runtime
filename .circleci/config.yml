@@ -226,7 +226,7 @@ jobs:
               # update the track
               TRACK="tracks/<< parameters.component >>/$CIRCLE_BRANCH"
               echo $TRACK
-              apk update && apk add yq
+              pip3 install yq
               yq -y -i --arg tag "${CIRCLE_SHA1}" '."<< parameters.component >>".image.tag=$tag' /tmp/$TRACK
               aws s3 cp /tmp/$TRACK s3://<< parameters.bucket >>/$TRACK
 
