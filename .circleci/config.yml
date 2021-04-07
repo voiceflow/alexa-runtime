@@ -206,19 +206,13 @@ jobs:
             source "/tmp/TRACK_STATUS"
 
             if [[ $IMAGE_EXISTS == "false" && $TRACK_EXISTS == "true" ]]; then
-              echo "hello"
-              echo "k8s-$CIRCLE_SHA1"
-              // Build Docker Image
+
+              # Build Docker Image
               IMAGE_TAG="k8s-$CIRCLE_SHA1"
-              echo "$IMAGE_TAG"
               IMAGE_REPO="<< parameters.image_repo >>"
-              echo "$IMAGE_REPO"
               IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
-              echo "$IMAGE_NAME"
               SEM_VER="$CIRCLE_BRANCH-$CIRCLE_SHA1"
-              echo "$SEM_VER"
               $(aws ecr get-login --no-include-email --region us-east-1)
-              echo $IMAGE_NAME
               docker build \
                 --build-arg NPM_TOKEN=//registry.npmjs.org/:_authToken=${NPM_TOKEN} \
                 --build-arg build_BUILD_NUM=${CIRCLE_BUILD_NUM} \
@@ -229,7 +223,7 @@ jobs:
                 -t $IMAGE_NAME . 
               docker push $IMAGE_NAME
 
-              // update the track
+              # update the track
               TRACK="tracks/<< parameters.component >>/$CIRCLE_BRANCH"
               echo $TRACK
               apk update && apk install yq
