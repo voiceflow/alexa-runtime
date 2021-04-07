@@ -204,8 +204,6 @@ jobs:
             source "/tmp/IMAGE_STATUS"
             # Load TRACK_EXISTS variable from file previously stored in the tmp folder
             source "/tmp/TRACK_STATUS"
-            echo $IMAGE_EXISTS
-            echo $TRACK_EXISTS
 
             if [[ $IMAGE_EXISTS == "false" && $TRACK_EXISTS == "true" ]]; then
               // Build Docker Image
@@ -214,6 +212,7 @@ jobs:
               IMAGE_NAME="$IMAGE_REPO:$IMAGE_TAG"
               SEM_VER="$CIRCLE_BRANCH-$CIRCLE_SHA1"
               $(aws ecr get-login --no-include-email --region us-east-1)
+              echo $IMAGE_NAME
               docker build \
                 --build-arg NPM_TOKEN=//registry.npmjs.org/:_authToken=${NPM_TOKEN} \
                 --build-arg build_BUILD_NUM=${CIRCLE_BUILD_NUM} \
