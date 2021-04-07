@@ -214,6 +214,7 @@ jobs:
 
             if [[ $IMAGE_EXISTS == "false" && $TRACK_EXISTS == "true" ]]; then
               echo "hello"
+              echo "k8s-$CIRCLE_SHA1"
               // Build Docker Image
               IMAGE_TAG="k8s-$CIRCLE_SHA1"
               echo "$IMAGE_TAG"
