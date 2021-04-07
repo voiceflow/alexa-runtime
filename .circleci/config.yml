@@ -185,9 +185,21 @@ jobs:
                 version: 19.03.13
       - attach_workspace:
           at: << parameters.attach_workspace_folder >>
-      - check_track_exists:
-          component: << parameters.component >>
-          bucket: << parameters.bucket >>
+      - run:
+          name: check track
+          command: |
+            TRACK="tracks/<< parameters.component >>/$CIRCLE_BRANCH"
+            set +e
+            TRACK_EXECUTION=aws s3 cp s3://<< parameters.bucket >>/$TRACK /tmp/$TRACK > /dev/null 2>&1
+            SEARCH_TRACK_RESULT=$?
+            set -e
+
+            # Store the result on a file in tmp folder to use in future steps
+            if [[ $SEARCH_TRACK_RESULT -eq 0 ]]; then  
+              echo 'export TRACK_EXISTS="true"' > /tmp/TRACK_STATUS  # Track exists, skip following steps
+            else
+              echo 'export TRACK_EXISTS="false"' > /tmp/TRACK_STATUS  # Track exists, skip following steps
+            fi
       - vfcommon/check_image_exists:
           image_repo: << parameters.image_repo >>
           request_remote_docker: false
@@ -257,7 +269,7 @@ workflows:
 
   build-deploy-environment-new:
     jobs:
-      - build-deploy-dev-env:
+      - build_deploy_dev_env:
           context: dev-test
 
   # Master (production)
