@@ -121,7 +121,7 @@ jobs:
     steps:
       - vfcommon/update_track:
           image_repo: << pipeline.parameters.container-image-url >>
-          component: << pipeline.parameters.dev-env-component >>
+          component: << pipeline.parameters.track-component >>
 
 # When should each job run and what are their dependencies?
 workflows:
