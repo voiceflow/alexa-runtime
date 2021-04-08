@@ -52,7 +52,7 @@ defaults:
 
 orbs:
   codecov: codecov/codecov@1.0.2
-  vfcommon: voiceflow/common@0.0.83
+  vfcommon: voiceflow/common@0.0.84
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
