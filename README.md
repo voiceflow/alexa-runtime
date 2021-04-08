@@ -11,8 +11,10 @@ This is an interface between the [voiceflow/runtime](https://github.com/voiceflo
 
 ## client architecture
 
-![client architecture](https://user-images.githubusercontent.com/5643574/92404808-5a927e00-f102-11ea-8229-dc7bb1c9c15b.png)
+![client architecture](https://user-images.githubusercontent.com/5643574/114078647-343ee780-9877-11eb-8460-83dc46708b19.png)
 
+Upon uploading to Alexa through the desktop, it is important that on your [Alexa Developer Console](https://developer.amazon.com/alexa/console/ask) for the skill, that the webhook endpoint is pointed at the `alexa-runtime` - it essentially acts in place of the typical Lambda Function.
+<img width="1281" alt="Screen Shot 2021-04-08 at 2 41 31 PM" src="https://user-images.githubusercontent.com/5643574/114080457-6c472a00-9879-11eb-9fe1-a772f5e526c2.png">
 It is important to understand the Alexa Request/Response webhook model
 https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-and-response-json-reference.html
 
