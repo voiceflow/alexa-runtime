@@ -59,8 +59,8 @@ jobs:
           NEW_LABEL="env-test-${{steps.vars.outputs.envName}}"
 
           # Get all components and retrieve the line that has the json output
-          COMPONENT_URL=$(./vfcli component list  --interactive false --verbose --output json  --no-telepresence -n ${NEW_ENV_NAME} | grep { | jq -c '.[] | select(.id | contains("creator-app")).endpoint')
-          echo "${COMPONENT_URL}"
+          COMPONENT_URL=$(./vfcli component list  --interactive false --verbose --output json  --no-telepresence -n ${NEW_ENV_NAME} | grep { | jq -cr '.[] | select(.id | contains("creator-app")).endpoint')
+          echo ${COMPONENT_URL}
 
           echo -e "::set-output name=newEnvName::${NEW_ENV_NAME}"
           echo -e "::set-output name=newLabel::${NEW_LABEL}"
