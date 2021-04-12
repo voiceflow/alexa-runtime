@@ -50,7 +50,7 @@ jobs:
           ENV_NAME=${{ steps.envNameLabel.outputs.label}}
           ENV_NAME=$(sed 's|env-||g' <<< $ENV_NAME)
 
-          ./vfcli env delete -n ${ENV_NAME} --interactive false
+          ./vfcli env delete -n ${ENV_NAME} --interactive false --no-telepresence
           echo -e "::set-output name=deleted::true"
           echo -e "::set-output name=envName::${ENV_NAME}"
 

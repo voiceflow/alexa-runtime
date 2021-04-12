@@ -51,18 +51,15 @@ jobs:
           sleep $[ ( $RANDOM % 10 ) ]s # Add dither to desync multiple tag request firings
 
           echo "Initializating vfcli..."
-          ./vfcli init --interactive false
+          ./vfcli init --interactive false --no-telepresence
 
           echo "Creating new environment..."
-          ./vfcli env create ${{steps.vars.outputs.envName}} --interactive false
+          ./vfcli env create ${{steps.vars.outputs.envName}} --interactive false --no-telepresence
           NEW_ENV_NAME="test-${{steps.vars.outputs.envName}}"
           NEW_LABEL="env-test-${{steps.vars.outputs.envName}}"
 
           # Get all components and retrieve the line that has the json output
-          #COMPONENT_URLS=$(./vfcli component list --verbose --output json | grep { | jq -c '.[] | select(.id | contains("creator-app")).endpoint')
-          #COMPONENT_URLS=$(./vfcli component list  --interactive false --verbose --output json )
-          ./vfcli component list  --interactive false --verbose --output json 
-          cat /home/runner/.vfcli.yaml
+          COMPONENT_URLS=$(./vfcli component list --verbose --no-telepresence --output json | grep { | jq -c '.[] | select(.id | contains("creator-app")).endpoint')
           echo "${COMPONENT_URLS}"
 
           echo -e "::set-output name=newEnvName::${NEW_ENV_NAME}"
@@ -97,7 +94,7 @@ jobs:
           echo "Creating track..."
           COMPONENT=$(echo "${GITHUB_REPOSITORY}" | sed 's:.*/::')
           BRANCH="$(echo ${GITHUB_HEAD_REF#refs/heads/})"
-          ./vfcli track create -c $COMPONENT -b $BRANCH --interactive false
+          ./vfcli track create -c $COMPONENT -b $BRANCH --interactive false --no-telepresence
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@master
