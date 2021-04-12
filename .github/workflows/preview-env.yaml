@@ -59,13 +59,12 @@ jobs:
           NEW_LABEL="env-test-${{steps.vars.outputs.envName}}"
 
           # Get all components and retrieve the line that has the json output
-          ./vfcli component list  --interactive false --verbose --output json  --no-telepresence
-          COMPONENT_URLS=$(./vfcli component list  --interactive false --verbose --output json  --no-telepresence | grep { | jq -c '.[].endpoint')
-          echo "${COMPONENT_URLS}"
+          COMPONENT_URL=$(./vfcli component list  --interactive false --verbose --output json  --no-telepresence -n ${NEW_ENV_NAME} | grep { | jq -c '.[] | select(.id | contains("creator-app")).endpoint')
+          echo "${COMPONENT_URL}"
 
           echo -e "::set-output name=newEnvName::${NEW_ENV_NAME}"
           echo -e "::set-output name=newLabel::${NEW_LABEL}"
-          echo -e "::set-output name=endpoints::${COMPONENT_URLS}"
+          echo -e "::set-output name=endpoint::${COMPONENT_URL}"
 
       - name: Tag PR with new environment name
         uses: buildsville/add-remove-label@v1
@@ -110,5 +109,5 @@ jobs:
         uses: thollander/actions-comment-pull-request@master
         if: steps.newEnvLabel.outputs.hasLabel == 'true' && steps.envNameLabel.outputs.label == ''
         with:
-          message: "${{ steps.createNewEnv.outputs.endpoints }}"
+          message: "${{ steps.createNewEnv.outputs.endpoint }}"
           GITHUB_TOKEN: ${{ secrets.GH_SA_TOKEN }}
