@@ -16,9 +16,6 @@ parameters:
   ssh-fingerprint:
     type: string
     default: "31:42:5a:4e:ee:42:40:e6:77:fc:d4:1b:9f:4e:ca:46"
-  dev-env-component:
-    type: string
-    default: "alexaruntime"
   track-component:
     type: string
     default: "alexa-runtime"
@@ -101,14 +98,6 @@ jobs:
           target: << pipeline.parameters.k8s-asset >>
           tagged: true
 
-  build-deploy-dev-env:
-    executor: vfcommon/build-executor
-    steps:
-      - vfcommon/build_deploy_dev_env:
-          image_repo: << pipeline.parameters.container-image-url >>
-          component: << pipeline.parameters.dev-env-component >>
-          ssh_key: << pipeline.parameters.ssh-fingerprint >>
-
   update-track:
     executor: vfcommon/build-executor
     steps:
@@ -135,16 +124,6 @@ workflows:
             branches:
               only:
                 - staging
-
-  # Development environments
-  build-deploy-environment:
-    jobs:
-      - build-deploy-dev-env:
-          context: dev-test
-          filters:
-            branches:
-              only:
-                - /env-.*/
 
   # Update tracks, avoiding tags
   update-track:
