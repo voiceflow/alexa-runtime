@@ -59,7 +59,8 @@ jobs:
           NEW_LABEL="env-test-${{steps.vars.outputs.envName}}"
 
           # Get all components and retrieve the line that has the json output
-          COMPONENT_URLS=$(./vfcli component list --verbose --no-telepresence --output json | grep { | jq -c '.[] | select(.id | contains("creator-app")).endpoint')
+          ./vfcli component list  --interactive false --verbose --output json  --no-telepresence | grep { | jq -c '.[].endpoint'
+          COMPONENT_URLS=$(./vfcli component list  --interactive false --verbose --output json  --no-telepresence | grep { | jq -c '.[].endpoint')
           echo "${COMPONENT_URLS}"
 
           echo -e "::set-output name=newEnvName::${NEW_ENV_NAME}"
@@ -90,11 +91,13 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: "us-east-1"
         run: |
+          echo "Initializating vfcli..."
+          ./vfcli init --interactive false
 
           echo "Creating track..."
           COMPONENT=$(echo "${GITHUB_REPOSITORY}" | sed 's:.*/::')
           BRANCH="$(echo ${GITHUB_HEAD_REF#refs/heads/})"
-          ./vfcli track create -c $COMPONENT -b $BRANCH --interactive false --no-telepresence
+          ./vfcli track create -n  ${{ steps.createNewEnv.outputs.newEnvName }} -c $COMPONENT -b $BRANCH --interactive false --no-telepresence
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@master
