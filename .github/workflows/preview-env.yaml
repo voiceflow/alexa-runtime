@@ -59,7 +59,7 @@ jobs:
           NEW_LABEL="env-test-${{steps.vars.outputs.envName}}"
 
           # Get all components and retrieve the line that has the json output
-          ./vfcli component list  --interactive false --verbose --output json  --no-telepresence | grep { | jq -c '.[].endpoint'
+          ./vfcli component list  --interactive false --verbose --output json  --no-telepresence
           COMPONENT_URLS=$(./vfcli component list  --interactive false --verbose --output json  --no-telepresence | grep { | jq -c '.[].endpoint')
           echo "${COMPONENT_URLS}"
 
