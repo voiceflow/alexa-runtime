@@ -59,7 +59,7 @@ jobs:
 
           # Get all components and retrieve the line that has the json output
           #COMPONENT_URLS=$(./vfcli component list --verbose --output json | grep { | jq -c '.[] | select(.id | contains("creator-app")).endpoint')
-          COMPONENT_URLS=$(./vfcli component list  --interactive false --verbose --output json | grep { | jq -c '.[].endpoint'
+          COMPONENT_URLS=$(./vfcli component list  --interactive false --verbose --output json | grep { | jq -c '.[].endpoint')
           echo "${COMPONENT_URLS}"
 
           echo -e "::set-output name=newEnvName::${NEW_ENV_NAME}"
