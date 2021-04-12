@@ -52,10 +52,11 @@ jobs:
 
           ./vfcli env delete -n ${ENV_NAME} --interactive false
           echo -e "::set-output name=deleted::true"
+          echo -e "::set-output name=envName::${ENV_NAME}"
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@master
         if: steps.deleteEnv.outputs.deleted == 'true'
         with:
-          message: "Dev environment ${ENV_NAME} destroyed!"
+          message: "Dev environment ${{ steps.deleteEnv.outputs.envName}} destroyed!"
           GITHUB_TOKEN: ${{ secrets.GH_SA_TOKEN }}
