@@ -47,6 +47,9 @@ jobs:
           ./vfcli init --interactive false
 
           # Remove environmnet
+          ENV_NAME=${{ steps.envNameLabel.outputs.label}}
+          ENV_NAME=$(sed 's|env-||g' <<< $ENV_NAME)
+
           ./vfcli env delete -n ${{ steps.envNameLabel.outputs.label}} --interactive false
           echo -e "::set-output name=deleted::true"
 
