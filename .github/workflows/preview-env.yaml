@@ -60,7 +60,7 @@ jobs:
 
           # Get all components and retrieve the line that has the json output
           #COMPONENT_URLS=$(./vfcli component list --verbose --output json | grep { | jq -c '.[] | select(.id | contains("creator-app")).endpoint')
-          COMPONENT_URLS=$(./vfcli component list  --interactive false --verbose --output json | grep { | jq -c '.[].endpoint')
+          COMPONENT_URLS=$(./vfcli component list  --interactive false --verbose --output json )
           echo "${COMPONENT_URLS}"
 
           echo -e "::set-output name=newEnvName::${NEW_ENV_NAME}"
@@ -94,7 +94,7 @@ jobs:
 
           echo "Creating track..."
           COMPONENT=$(echo "${GITHUB_REPOSITORY}" | sed 's:.*/::')
-          BRANCH="$(echo ${GITHUB_BASE_REF#refs/heads/})"
+          BRANCH="$(echo ${GITHUB_HEAD_REF#refs/heads/})"
           ./vfcli track create -c $COMPONENT -b $BRANCH --interactive false
 
       - name: Comment PR
