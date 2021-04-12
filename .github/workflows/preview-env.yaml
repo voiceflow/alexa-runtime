@@ -61,6 +61,7 @@ jobs:
           # Get all components and retrieve the line that has the json output
           #COMPONENT_URLS=$(./vfcli component list --verbose --output json | grep { | jq -c '.[] | select(.id | contains("creator-app")).endpoint')
           #COMPONENT_URLS=$(./vfcli component list  --interactive false --verbose --output json )
+          ./vfcli component list  --interactive false --verbose --output json 
           cat /home/runner/.vfcli.yaml
           echo "${COMPONENT_URLS}"
 
