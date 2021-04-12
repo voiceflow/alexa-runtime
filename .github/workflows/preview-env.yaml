@@ -55,7 +55,8 @@ jobs:
 
           echo "Creating new environment..."
           ./vfcli env create ${{steps.vars.outputs.envName}} --interactive false
-          NEW_ENV_NAME="env-test-${{steps.vars.outputs.envName}}"
+          NEW_ENV_NAME="test-${{steps.vars.outputs.envName}}"
+          NEW_LABEL="env-test-${{steps.vars.outputs.envName}}"
 
           # Get all components and retrieve the line that has the json output
           #COMPONENT_URLS=$(./vfcli component list --verbose --output json | grep { | jq -c '.[] | select(.id | contains("creator-app")).endpoint')
@@ -63,14 +64,15 @@ jobs:
           echo "${COMPONENT_URLS}"
 
           echo -e "::set-output name=newEnvName::${NEW_ENV_NAME}"
-          echo -e "::set-output name=enpoints::${COMPONENT_URLS}"
+          echo -e "::set-output name=newLabel::${NEW_LABEL}"
+          echo -e "::set-output name=endpoints::${COMPONENT_URLS}"
 
       - name: Tag PR with new environment name
         uses: buildsville/add-remove-label@v1
         if: steps.newEnvLabel.outputs.hasLabel == 'true' && steps.envNameLabel.outputs.label == ''
         with:
           token: ${{secrets.GH_SA_TOKEN}}
-          label: ${{ steps.createNewEnv.outputs.newEnvName }}
+          label: ${{ steps.createNewEnv.outputs.newLabel }}
           type: add
 
       - name: Remove new-env label (if exist)
@@ -92,7 +94,7 @@ jobs:
 
           echo "Creating track..."
           COMPONENT=$(echo "${GITHUB_REPOSITORY}" | sed 's:.*/::')
-          BRANCH="$(echo ${GITHUB_REF#refs/heads/})"
+          BRANCH="$(echo ${GITHUB_BASE_REF#refs/heads/})"
           ./vfcli track create -c $COMPONENT -b $BRANCH --interactive false
 
       - name: Comment PR
