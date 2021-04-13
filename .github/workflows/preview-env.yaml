@@ -46,18 +46,17 @@ jobs:
           ./vfcli init --interactive false --no-telepresence
 
           echo "Creating new environment..."
-          ./vfcli env create test-xavi --interactive false --no-telepresence
+          ./vfcli env create xavi --interactive false --no-telepresence
           # From the vfcli config file, gets the value from the name YAML property and the replace " to empty
           ENV_NAME=$(cat /home/runner/.vfcli.yaml | grep test- | awk '/name:/ {print $2}' | sed 's/"//g' )
 
-          NEW_ENV_NAME="test-${ENV_NAME}"
-          NEW_LABEL="env-${NEW_ENV_NAME}"
+          NEW_LABEL="env-${ENV_NAME}"
 
           # Get all components and retrieve the line that has the json output
-          COMPONENT_URL=$(./vfcli component list  --interactive false --verbose --output json  --no-telepresence -n ${NEW_ENV_NAME} | grep { | jq -cr '.[] | select(.id | contains("creator-app")).endpoint')
+          COMPONENT_URL=$(./vfcli component list  --interactive false --verbose --output json  --no-telepresence -n ${ENV_NAME} | grep { | jq -cr '.[] | select(.id | contains("creator-app")).endpoint')
           echo ${COMPONENT_URL}
 
-          echo -e "::set-output name=newEnvName::${NEW_ENV_NAME}"
+          echo -e "::set-output name=newEnvName::${ENV_NAME}"
           echo -e "::set-output name=newLabel::${NEW_LABEL}"
           echo -e "::set-output name=endpoint::${COMPONENT_URL}"
 
