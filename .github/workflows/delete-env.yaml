@@ -2,7 +2,7 @@ name: PR-label -> clean-up dev env
 
 on:
   pull_request:
-    types: [closed, unlabeled]
+    types: [closed]
 
 jobs:
   preview:
