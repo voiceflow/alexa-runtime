@@ -32,14 +32,6 @@ jobs:
           curl -J -L -H "Accept: application/octet-stream" "$API_URL/releases/assets/$ASSET_ID" --output vfcli.tar.gz
           tar -xf vfcli.tar.gz
 
-      - name: Set common vars
-        id: vars
-        run: |
-          PREFIX="$(echo "${GITHUB_SHA}" | cut -c1-5)"
-          ENV_NAME="${GITHUB_ACTOR}-${PREFIX}" 
-
-          echo -e "::set-output name=envName::${ENV_NAME}"
-
       - name: Create new environment if applicable
         if: steps.newEnvLabel.outputs.hasLabel == 'true' && steps.envNameLabel.outputs.label == ''
         id: createNewEnv
@@ -54,9 +46,12 @@ jobs:
           ./vfcli init --interactive false --no-telepresence
 
           echo "Creating new environment..."
-          ./vfcli env create ${{steps.vars.outputs.envName}} --interactive false --no-telepresence
-          NEW_ENV_NAME="test-${{steps.vars.outputs.envName}}"
-          NEW_LABEL="env-test-${{steps.vars.outputs.envName}}"
+          ./vfcli env create test-xavi --interactive false --no-telepresence
+          # From the vfcli config file, gets the value from the name YAML property and the replace " to empty
+          ENV_NAME=$(cat /home/runner/.vfcli.yaml | grep test- | awk '/name:/ {print $2}' | sed 's/"//g' )
+
+          NEW_ENV_NAME="test-${ENV_NAME}"
+          NEW_LABEL="env-${NEW_ENV_NAME}"
 
           # Get all components and retrieve the line that has the json output
           COMPONENT_URL=$(./vfcli component list  --interactive false --verbose --output json  --no-telepresence -n ${NEW_ENV_NAME} | grep { | jq -cr '.[] | select(.id | contains("creator-app")).endpoint')
@@ -109,5 +104,5 @@ jobs:
         uses: thollander/actions-comment-pull-request@master
         if: steps.newEnvLabel.outputs.hasLabel == 'true' && steps.envNameLabel.outputs.label == ''
         with:
-          message: "${{ steps.createNewEnv.outputs.endpoint }}"
+          message: "https://${{ steps.createNewEnv.outputs.endpoint }}"
           GITHUB_TOKEN: ${{ secrets.GH_SA_TOKEN }}
