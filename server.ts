@@ -1,10 +1,12 @@
 /* eslint no-process-exit: "off", no-process-env: "off" */
 import Promise from 'bluebird';
 import express, { Express } from 'express';
+import fs from 'fs';
 import http from 'http';
 import https from 'https';
 
 import { ExpressMiddleware, ServiceManager } from './backend';
+import log from './logger';
 import pjson from './package.json';
 import { Config } from './types';
 
@@ -28,20 +30,29 @@ class Server {
     // Start services.
     await this.serviceManager.start();
 
-    const app = express();
-    const server = http.createServer(app);
+    this.app = express();
+
+    if (process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'e2e') {
+      this.server = https.createServer(
+        {
+          key: fs.readFileSync('./certs/localhost.key'),
+          cert: fs.readFileSync('./certs/localhost.crt'),
+          requestCert: false,
+          rejectUnauthorized: false,
+        },
+        this.app
+      );
+    } else {
+      this.server = http.createServer(this.app);
+    }
 
     const { middlewares, controllers } = this.serviceManager;
 
-    this.app = app;
-    this.server = server;
+    ExpressMiddleware.attach(this.app, middlewares, controllers);
 
-    ExpressMiddleware.attach(app, middlewares, controllers);
+    await Promise.fromCallback((cb: any) => this.server!.listen(this.config.PORT, cb));
 
-    await Promise.fromCallback((cb: any) => server.listen(this.config.PORT, cb));
-
-    // eslint-disable-next-line no-console
-    console.log(`${name} listening on port ${this.config.PORT}`);
+    log.info(`${name} listening on port ${this.config.PORT}`);
   }
 
   /**
