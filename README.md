@@ -39,7 +39,7 @@ repeat all steps each time a user speaks to the alexa skill, to perform a conver
 
 | name                            | example/values                    |                                                                                                                desc | required |
 | ------------------------------- | :-------------------------------- | ------------------------------------------------------------------------------------------------------------------: | -------- |
-| `PORT`                          | `4000`                            |                                                                                  http port that service will run on | YES      |
+| `PORT`                          | `8012`                            |                                                                                  http port that service will run on | YES      |
 | `PROJECT_SOURCE`                | `VF-Project-nPDdD6qZJ9.json`      |            JSON File inside `/projects` to read version/program metadata - if undefined will use `VF_DATA_ENDPOINT` | NO       |
 | `SESSIONS_SOURCE`               | `local` \| `remote`               |           if `local` read/write sessions to memory, otherwise if `remote` or undefined read/write to DynamoDB` | NO |
 | `AWS_REGION`                    | `localhost`                       |                                                  AWS Region for DynamoDB, doesn't matter if `SESSION_SOUCE='local'` | NO       |
@@ -81,7 +81,7 @@ Also add the following file to the local repository:
 > SESSIONS_SOURCE='local'
 > PROJECT_SOURCE='[YOUR EXPORTED PROJECT FILE HERE (i.e. VF-Project-nPDdD6qZJ9.json)]'
 >
-> PORT=4000
+> PORT=8012
 > SESSIONS_DYNAMO_TABLE="none"
 > VF_DATA_ENDPOINT="none"
 >
@@ -108,10 +108,10 @@ Run your local instance of `voiceflow/alexa-runtime` with
 yarn local
 ```
 
-This will now be running on port 4000 of localhost. Expose this with
+This will now be running on port 8012 of localhost. Expose this with
 
 ```
-ngrok http 4000
+ngrok http 8012
 ```
 
 In your shell you will see a link similar to this - `https://e9g1335dd0ac.ngrok.io`, note this down. Ensure you copy the `https://` version instead of `http://`
