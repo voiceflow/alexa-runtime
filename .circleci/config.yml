@@ -48,7 +48,6 @@ defaults:
           branch_pattern: master
 
 orbs:
-  codecov: codecov/codecov@1.0.2
   vfcommon: voiceflow/common@0.0.72
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
@@ -66,13 +65,7 @@ jobs:
           step_name: Dependency Tests
       - vfcommon/build
       - vfcommon/unit_tests
-      - codecov/upload:
-          file: nyc_coverage/lcov.info
-          flags: unit
       - vfcommon/integration_tests
-      - codecov/upload:
-          file: nyc_coverage/lcov.info
-          flags: integration
       # temp steps
       - vfcommon/install_aws_cli
       - vfcommon/clone_s3_assets:
