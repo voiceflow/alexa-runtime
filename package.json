@@ -135,7 +135,7 @@
     "lint:report": "yarn lint --format json -o sonar/report.json",
     "local": "vfcli mesh connect alexa-runtime",
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
-    "start:meshed": "NODE_ENV=local ts-node-dev --files --respawn --transpile-only -r tsconfig-paths/register -- start.ts",
+    "start:meshed": "NODE_ENV=local ts-node-dev --files --respawn --exit-child --transpile-only -r tsconfig-paths/register -- start.ts",
     "test": "NODE_ENV=test nyc ts-mocha --paths --opts ./config/tests/mocha.opts 'tests/**/*.{unit,it}.ts'",
     "test:dependencies": "depcheck",
     "test:integration": "NODE_ENV=test nyc ts-mocha --paths --opts ./config/tests/mocha.opts 'tests/**/*.it.ts'",
