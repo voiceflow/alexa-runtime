@@ -19,7 +19,7 @@ jobs:
       - name: Remove environment label
         uses: buildsville/add-remove-label@v1
         with:
-          token: ${{secrets.GH_SA_TOKEN}}
+          token: ${{ secrets.GH_SA_TOKEN }}
           label: ${{ steps.envNameLabel.outputs.label}}
           type: remove
 
@@ -27,8 +27,8 @@ jobs:
         uses: peter-evans/find-comment@v1
         id: comment
         with:
-          token: ${{ github.event.number }}
-          issue-number: ${{ secrets.GH_SA_TOKEN }}
+          token: ${{ secrets.GH_SA_TOKEN }}
+          issue-number: ${{ github.event.number }}
           body-includes: https://creator-
           direction: last
 
