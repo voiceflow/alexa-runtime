@@ -137,7 +137,7 @@
     "local": "rm -f .env.local && vfcli mesh connect alexa-runtime",
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
     "start:meshed": "NODE_ENV=local ts-node-dev --files --respawn --exit-child --transpile-only -r tsconfig-paths/register -- start.ts",
-    "test": "yarn test",
+    "test": "yarn test:run",
     "test:dependencies": "depcheck",
     "test:integration": "NODE_ENV=test nyc ts-mocha --paths --opts ./config/tests/mocha.opts 'tests/**/*.it.ts'",
     "test:run": "NODE_ENV=test nyc ts-mocha --paths --opts ./config/tests/mocha.opts 'tests/**/*.{unit,it}.ts'",
