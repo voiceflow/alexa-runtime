@@ -126,7 +126,7 @@
     "build": "yarn clean && ttsc --project ./tsconfig.build.json && cp yarn.lock build/",
     "clean": "rimraf build",
     "commit": "cz",
-    "connect:cli": "vfcli mesh connect creator-api -c \"/bin/bash\"",
+    "connect:cli": "vfcli mesh connect alexa-runtime -c \"/bin/bash\"",
     "e2e": "NODE_ENV=e2e ts-node --files -r tsconfig-paths/register start.ts",
     "gen-certs:e2e": "scripts/generate_e2e_certs.sh",
     "lint": "eslint \"./**/*.{js,ts}\"",
