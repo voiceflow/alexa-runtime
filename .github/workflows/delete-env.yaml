@@ -33,7 +33,7 @@ jobs:
           direction: last
 
       - name: Install vfcli
-        if: (github.event.action == 'closed' && steps.envNameLabel.outputs.label != '') || (github.event.action == 'unlabeled' && steps.envNameLabel.outputs.label == '' && steps.comment.outputs.comment-body != "")
+        if: (github.event.action == 'closed' && steps.envNameLabel.outputs.label != '') || (github.event.action == 'unlabeled' && steps.envNameLabel.outputs.label == '' && steps.comment.outputs.comment-body != '')
         env:
           GITHUB_TOKEN: ${{ secrets.GH_SA_TOKEN }}
         run: |
@@ -43,7 +43,7 @@ jobs:
           tar -xf vfcli.tar.gz
 
       - name: Delete the dev env if PR closed not creating and the label exists
-        if: (github.event.action == 'closed' && steps.envNameLabel.outputs.label != '') || (github.event.action == 'unlabeled' && steps.envNameLabel.outputs.label == '' && steps.comment.outputs.comment-body != "")
+        if: (github.event.action == 'closed' && steps.envNameLabel.outputs.label != '') || (github.event.action == 'unlabeled' && steps.envNameLabel.outputs.label == '' && steps.comment.outputs.comment-body != '')
         id: deleteEnv
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
