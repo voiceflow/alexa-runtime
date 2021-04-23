@@ -54,8 +54,10 @@ jobs:
           ./vfcli init --interactive false
 
           # Remove environment
-          if [[ ${{ steps.envNameLabel.outputs.label }} != "" ]]; then
-            ENV_NAME=${{ steps.envNameLabel.outputs.label }}
+          LABEL=${{ steps.envNameLabel.outputs.label }} 
+          if [[ $LABEL != "" ]]
+          then
+            ENV_NAME=$LABEL
             ENV_NAME=$(sed 's|env-||g' <<< $ENV_NAME)
           else
             ENV_NAME=$(sed 's|https://creator-||g' <<< ${{ steps.comment.outputs.comment-body }})
