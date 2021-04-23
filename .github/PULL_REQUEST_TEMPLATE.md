@@ -1,6 +1,6 @@
 <!-- You can erase any parts of this template not applicable to your Pull Request. -->
 
-**Fixes or implements CORE-XXX**
+**Fixes or implements VF-XXX**
 
 ### Brief description. What is this change?
 
@@ -13,7 +13,6 @@
 ### Setup information
 
 <!-- Notes regarding local environment. These should note any new configurations, new environment variables, etc. -->
-
 
 ### Deployment Notes
 
@@ -33,4 +32,4 @@
 - [ ] title of PR reflects the branch name
 - [ ] all commits adhere to conventional commits
 - [ ] appropriate tests have been written
-- [ ] all the dependendencies are upgraded
+- [ ] all the dependencies are upgraded

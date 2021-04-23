@@ -16,9 +16,6 @@ parameters:
   ssh-fingerprint:
     type: string
     default: "31:42:5a:4e:ee:42:40:e6:77:fc:d4:1b:9f:4e:ca:46"
-  dev-env-component:
-    type: string
-    default: "alexaruntime"
   track-component:
     type: string
     default: "alexa-runtime"
@@ -32,13 +29,11 @@ defaults:
       tags:
         only: /^v[0-9]*(\.[0-9]*)*$/
 
-  ignore_dev_env_autorebase_staging_filters:
-    &ignore_dev_env_autorebase_staging_filters
+  ignore_autorebase_staging_filters: &ignore_autorebase_staging_filters
     branches:
       ignore:
         - /rebase-pull-request-.*/
         - /cherry-pick-rebase-pull-request-.*/
-        - /env-.*/
         - staging
 
   slack-fail-post-step: &slack-fail-post-step
@@ -51,8 +46,7 @@ defaults:
           branch_pattern: master
 
 orbs:
-  codecov: codecov/codecov@1.0.2
-  vfcommon: voiceflow/common@0.0.83
+  vfcommon: voiceflow/common@0.0.85
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
@@ -69,13 +63,7 @@ jobs:
           step_name: Dependency Tests
       - vfcommon/build
       - vfcommon/unit_tests
-      - codecov/upload:
-          file: nyc_coverage/lcov.info
-          flags: unit
       - vfcommon/integration_tests
-      - codecov/upload:
-          file: nyc_coverage/lcov.info
-          flags: integration
       # temp steps
       - vfcommon/install_aws_cli
       - vfcommon/clone_s3_assets:
@@ -108,20 +96,12 @@ jobs:
           target: << pipeline.parameters.k8s-asset >>
           tagged: true
 
-  build-deploy-dev-env:
-    executor: vfcommon/build-executor
-    steps:
-      - vfcommon/build_deploy_dev_env:
-          image_repo: << pipeline.parameters.container-image-url >>
-          component: << pipeline.parameters.dev-env-component >>
-          ssh_key: << pipeline.parameters.ssh-fingerprint >>
-
   update-track:
     executor: vfcommon/build-executor
     steps:
       - vfcommon/update_track:
           image_repo: << pipeline.parameters.container-image-url >>
-          component: << pipeline.parameters.dev-env-component >>
+          component: << pipeline.parameters.track-component >>
 
 # When should each job run and what are their dependencies?
 workflows:
@@ -143,16 +123,6 @@ workflows:
               only:
                 - staging
 
-  # Development environments
-  build-deploy-environment:
-    jobs:
-      - build-deploy-dev-env:
-          context: dev-test
-          filters:
-            branches:
-              only:
-                - /env-.*/
-
   # Update tracks, avoiding tags
   update-track:
     jobs:
@@ -169,7 +139,7 @@ workflows:
           <<: *slack-fail-post-step
           context: dev-test
           filters:
-            <<: *ignore_dev_env_autorebase_staging_filters
+            <<: *ignore_autorebase_staging_filters
 
       - vfcommon/release:
           <<: *slack-fail-post-step
