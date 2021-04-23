@@ -60,3 +60,29 @@ jobs:
         with:
           message: "Dev environment ${{ steps.deleteEnv.outputs.envName}} destroyed!"
           GITHUB_TOKEN: ${{ secrets.GH_SA_TOKEN }}
+
+      - name: Remove track if exists
+        if: github.event.action == 'closed'
+        id: deleteTrack
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "us-east-1"
+        run: |
+          COMPONENT=$(echo "${GITHUB_REPOSITORY}" | sed 's:.*/::')
+          BRANCH="$(echo ${GITHUB_HEAD_REF#refs/heads/})"
+          TRACK="tracks/$COMPONENT/$BRANCH"
+          BUCKET="com.voiceflow.ci.assets"
+          echo $TRACK
+          set +e
+          aws s3 cp s3://$BUCKET/$TRACK /tmp/$TRACK
+          SEARCH_TRACK_RESULT=$?
+          set -e
+
+          # Store the result on a file in tmp folder to use in future steps
+          if [[ $SEARCH_TRACK_RESULT -eq 0 ]]; then 
+            echo "Track $TRACK exists. Removing.." 
+            aws s3 rm s3://$BUCKET/$TRACK
+          else
+            echo "Track $TRACK does not exist"
+          fi
