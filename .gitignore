@@ -25,7 +25,6 @@ newrelic_agent.log
 /.env*
 !/.env.example
 !/.env.test
-!/.env.e2e
 
 /database
 /migrations
