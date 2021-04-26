@@ -16,13 +16,6 @@ jobs:
           regex: env-
         id: envNameLabel
 
-      - name: Remove environment label
-        uses: buildsville/add-remove-label@v1
-        with:
-          token: ${{ secrets.GH_SA_TOKEN }}
-          label: ${{ steps.envNameLabel.outputs.label}}
-          type: remove
-
       - name: Find Comment Created
         uses: peter-evans/find-comment@v1
         id: commentCreated
@@ -40,6 +33,14 @@ jobs:
           issue-number: ${{ github.event.number }}
           body-includes: destroyed!
           direction: last
+
+      - name: Remove environment label
+        uses: buildsville/add-remove-label@v1
+        if: (github.event.action == 'closed' && steps.envNameLabel.outputs.label != '')
+        with:
+          token: ${{ secrets.GH_SA_TOKEN }}
+          label: ${{ steps.envNameLabel.outputs.label}}
+          type: remove
 
       - name: Install vfcli
         if: (github.event.action == 'closed' && steps.envNameLabel.outputs.label != '') || (github.event.action == 'unlabeled' && steps.envNameLabel.outputs.label == '' && steps.commentCreated.outputs.comment-body != '')
