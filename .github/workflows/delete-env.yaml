@@ -23,17 +23,26 @@ jobs:
           label: ${{ steps.envNameLabel.outputs.label}}
           type: remove
 
-      - name: Find Comment
+      - name: Find Comment Created
         uses: peter-evans/find-comment@v1
-        id: comment
+        id: commentCreated
         with:
           token: ${{ secrets.GH_SA_TOKEN }}
           issue-number: ${{ github.event.number }}
           body-includes: https://creator-
           direction: last
 
+      - name: Find Comment Destroyed
+        uses: peter-evans/find-comment@v1
+        id: commentDestroyed
+        with:
+          token: ${{ secrets.GH_SA_TOKEN }}
+          issue-number: ${{ github.event.number }}
+          body-includes: destroyed!
+          direction: last
+
       - name: Install vfcli
-        if: (github.event.action == 'closed' && steps.envNameLabel.outputs.label != '') || (github.event.action == 'unlabeled' && steps.envNameLabel.outputs.label == '' && steps.comment.outputs.comment-body != '')
+        if: (github.event.action == 'closed' && steps.envNameLabel.outputs.label != '') || (github.event.action == 'unlabeled' && steps.envNameLabel.outputs.label == '' && steps.commentCreated.outputs.comment-body != '' && steps.commentDestroyed.outputs.comment-body != '')
         env:
           GITHUB_TOKEN: ${{ secrets.GH_SA_TOKEN }}
         run: |
@@ -43,7 +52,7 @@ jobs:
           tar -xf vfcli.tar.gz
 
       - name: Delete the dev env if PR closed not creating and the label exists
-        if: (github.event.action == 'closed' && steps.envNameLabel.outputs.label != '') || (github.event.action == 'unlabeled' && steps.envNameLabel.outputs.label == '' && steps.comment.outputs.comment-body != '')
+        if: (github.event.action == 'closed' && steps.envNameLabel.outputs.label != '') || (github.event.action == 'unlabeled' && steps.envNameLabel.outputs.label == '' && steps.commentCreated.outputs.comment-body != '' && steps.commentDestroyed.outputs.comment-body != '')
         id: deleteEnv
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -60,7 +69,7 @@ jobs:
             ENV_NAME=$LABEL
             ENV_NAME=$(sed 's|env-||g' <<< $ENV_NAME)
           else
-            ENV_NAME=$(sed 's|https://creator-||g' <<< ${{ steps.comment.outputs.comment-body }})
+            ENV_NAME=$(sed 's|https://creator-||g' <<< ${{ steps.commentCreated.outputs.comment-body }})
             ENV_NAME=$(echo $ENV_NAME | cut -d. -f1)
           fi
 
