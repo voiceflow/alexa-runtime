@@ -90,14 +90,8 @@ jobs:
           echo "Creating track..."
           COMPONENT=$(echo "${GITHUB_REPOSITORY}" | sed 's:.*/::')
           BRANCH="$(echo ${GITHUB_HEAD_REF#refs/heads/})"
-          NEW_LABEL="${{ github.event.label.name }}"
 
-          if [[ $NEW_LABEL == *"env-"* ]]
-          then
-            ./vfcli track create -n  ${{ steps.createNewEnv.outputs.newEnvName }} -c $COMPONENT -b $BRANCH --interactive false --no-telepresence --only-attach
-          else
-            ./vfcli track create -n  ${{ steps.createNewEnv.outputs.newEnvName }} -c $COMPONENT -b $BRANCH --interactive false --no-telepresence
-          fi
+          ./vfcli track create -n  ${{ steps.createNewEnv.outputs.newEnvName }} -c $COMPONENT -b $BRANCH --interactive false --no-telepresence
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@master
