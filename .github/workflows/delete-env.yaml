@@ -21,6 +21,7 @@ jobs:
         id: commentCreated
         with:
           token: ${{ secrets.GH_SA_TOKEN }}
+          comment-author: vf-service-account
           issue-number: ${{ github.event.number }}
           body-includes: https://creator-
           direction: last
@@ -30,6 +31,7 @@ jobs:
         id: commentDestroyed
         with:
           token: ${{ secrets.GH_SA_TOKEN }}
+          comment-author: vf-service-account
           issue-number: ${{ github.event.number }}
           body-includes: destroyed!
           direction: last
