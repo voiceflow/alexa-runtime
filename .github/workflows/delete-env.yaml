@@ -77,7 +77,7 @@ jobs:
             then
               echo "Environment $ENV_NAME already deleted"
               exit 0
-            else
+            fi
           fi
 
           ./vfcli env delete -n ${ENV_NAME} --interactive false --no-telepresence
