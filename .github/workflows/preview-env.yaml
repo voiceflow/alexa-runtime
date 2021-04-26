@@ -94,7 +94,8 @@ jobs:
 
           if [[ $NEW_LABEL == *"env-"* ]]
           then
-            ./vfcli track create -n  $NEW_LABEL -c $COMPONENT -b $BRANCH --interactive false --no-telepresence 
+            ENV_NAME=$(sed 's|env-||g' <<< $NEW_LABEL)
+            ./vfcli track create -n  $ENV_NAME -c $COMPONENT -b $BRANCH --interactive false --no-telepresence 
           else
             ./vfcli track create -n  ${{ steps.createNewEnv.outputs.newEnvName }} -c $COMPONENT -b $BRANCH --interactive false --no-telepresence
           fi
