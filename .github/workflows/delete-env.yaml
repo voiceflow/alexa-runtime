@@ -71,7 +71,7 @@ jobs:
           else
             ENV_NAME=$(sed 's|https://creator-||g' <<< ${{ steps.commentCreated.outputs.comment-body }})
             ENV_NAME=$(echo $ENV_NAME | cut -d. -f1)
-            LAST_COMMENT_DESTROYED=${{ steps.commentDestroyed.outputs.comment-body }}
+            LAST_COMMENT_DESTROYED="${{ steps.commentDestroyed.outputs.comment-body }}"
             # if it is already destroyed, do now continue
             if [[ $LAST_COMMENT_DESTROYED == *"$ENV_NAME"* ]]
             then
