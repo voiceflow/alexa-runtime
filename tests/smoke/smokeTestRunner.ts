@@ -72,7 +72,7 @@ const awaitServerHealthy = async (url: string) => {
       // eslint-disable-next-line no-await-in-loop
       const { data } = await axios(`${url}/health`);
 
-      if (data === 'Healthy') {
+      if (data === `${process.env.NODE_ENV} Healthy`) {
         break;
       }
     } catch (e) {
