@@ -931,17 +931,6 @@
     axios "^0.21.1"
     superstruct "^0.10.12"
 
-"@voiceflow/api-sdk@1.30.0":
-  version "1.30.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.30.0.tgz#4fdbb086a5ee760975c9b371aa30bdd867059cce"
-  integrity sha512-wbB5DGkzhNHRccXGOc78TAAiNuOKr3W8c30Fbm5PlwbwVo4Rc1hz+Igt/DygZwFOzEMA+WVHyEUyAWX4upTzmw==
-  dependencies:
-    "@types/atob" "^2.1.2"
-    "@voiceflow/logger" "^1.5.2"
-    atob "^2.1.2"
-    axios "^0.21.1"
-    superstruct "^0.10.12"
-
 "@voiceflow/backend-utils@2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@voiceflow/backend-utils/-/backend-utils-2.2.1.tgz#11bd9e2102bbfd04b48d662e1906c06fcda4b22d"
@@ -1001,12 +990,21 @@
   integrity sha512-ExABwepdWbpckY7BNNbof+TIZ9YixITdHhdibU3Dh+luPxBY8lUOg8G516SH3jzQJflPeOEmVJEy79LY55OVug==
   dependencies:
     "@voiceflow/api-sdk" "1.30.0"
+
 "@voiceflow/general-types@1.45.1":
   version "1.45.1"
   resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.45.1.tgz#411440a85df2db7902fcb098b11ea764691112ea"
   integrity sha512-cXfABd+jsQUF2b8Kclk01rXRvHAarGtyzInmZD4vY4nF8cpchegzNZoMoE1iXo7oT3KHFgidiv223lNBgPhabQ==
   dependencies:
     "@voiceflow/api-sdk" "1.30.0"
+
+"@voiceflow/general-types@^1.45.1":
+  version "1.45.2"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.45.2.tgz#1e5ff63fcdca740a549305d5d6eafe1f85cad9df"
+  integrity sha512-4FM40bqnl2quuttJ2IRB0FhWcsAS05lU7r0b6oXRYK2ing7RSRah0PGmkpZcv6WkASK6sTwgIOv+CKbjZV+YvQ==
+  dependencies:
+    "@voiceflow/api-sdk" "1.30.0"
+
 "@voiceflow/git-branch-check@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@voiceflow/git-branch-check/-/git-branch-check-1.2.0.tgz#773e07c5e4558283b8f94a0e7e05b88e637bc3d0"
@@ -1077,15 +1075,15 @@
   resolved "https://registry.yarnpkg.com/@voiceflow/prettier-config/-/prettier-config-1.0.5.tgz#307caf65040ae0c0539ecb8531b9e403381f11ab"
   integrity sha512-yM35E7UI0fD8yMgL7JImljvMLZVU+jCz/latc2s2e7Nlbr9kiMpO0FArjkaXVIghhcUeQ0y04lsFUHRu3kMzmA==
 
-"@voiceflow/runtime@1.28.0":
-  version "1.28.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/runtime/-/runtime-1.28.0.tgz#47d028e47605811613cf158aa348c0c78c6f95cb"
-  integrity sha512-AnsrD3yYsJ8kbUcIUfOLrfBV199tqBP7IGG3QnLe/qprBIiYZzQ55BNbuV0jWbPrqx+INGhKTJo2V848DBSCaQ==
+"@voiceflow/runtime@1.29.0":
+  version "1.29.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/runtime/-/runtime-1.29.0.tgz#a8a90814d7c56bf0060eb7773f5b2da13f039fad"
+  integrity sha512-goqCV1Uj0dWI4Aj04tpuDQ1Zcf98KOHlWtlOE8O6qyQTpNgvUdFapambOjUW3nMRgiUPKPwPcirJrHTnxBwJeQ==
   dependencies:
     "@types/safe-json-stringify" "^1.1.0"
     "@voiceflow/api-sdk" "1.30.0"
     "@voiceflow/common" "6.5.0"
-    "@voiceflow/general-types" "1.45.0"
+    "@voiceflow/general-types" "^1.45.1"
     axios "^0.19.0"
     bluebird "^3.7.2"
     form-data "^3.0.0"
