@@ -75,6 +75,11 @@ export const DocumentResponseBuilder: ResponseBuilder = async (runtime, builder)
       }
     });
 
+    if (results?.length) {
+      // you can not end the session, but if false, it will trigger a prompt
+      builder.withShouldEndSession(undefined!);
+    }
+
     builder.addDirective({
       type: RENDER_DOCUMENT_DIRECTIVE_TYPE,
       token: runtime.versionID,

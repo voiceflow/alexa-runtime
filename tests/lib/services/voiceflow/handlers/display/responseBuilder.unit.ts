@@ -149,9 +149,10 @@ describe('DisplayResponseBuilder unit tests', () => {
           multimodal: { getDisplayDocument: sinon.stub().returns(document) },
         },
       };
-      const builder = { addDirective: sinon.stub() };
+      const builder = { addDirective: sinon.stub(), withShouldEndSession: sinon.stub() };
       expect(await DocumentResponseBuilder(runtime as any, builder as any)).to.eql(undefined);
       expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
+      expect(builder.withShouldEndSession.args).to.eql([[undefined]]);
       expect(builder.addDirective.args).to.eql([
         [
           {
