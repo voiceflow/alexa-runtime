@@ -3,11 +3,13 @@ import {
   EndHandler,
   FlowHandler,
   IfHandler,
+  IfV2Handler,
   IntegrationsHandler,
   NextHandler,
   RandomHandler,
   ResetHandler,
   SetHandler,
+  SetV2Handler,
   StartHandler,
 } from '@voiceflow/runtime';
 
@@ -42,6 +44,8 @@ export const responseHandlers = [
   DirectiveResponseBuilder,
 ];
 
+const _v1Handler = _V1Handler();
+
 export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HANDLER_ENDPOINT }: Config) => [
   ...StateHandlers(),
   SpeakHandler(),
@@ -63,11 +67,13 @@ export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HAND
   EndHandler(),
   FlowHandler(),
   IfHandler(),
+  IfV2Handler({ _v1: _v1Handler }),
   APIHandler({ customAPIEndpoint: API_HANDLER_ENDPOINT }),
   IntegrationsHandler({ integrationsEndpoint: INTEGRATIONS_HANDLER_ENDPOINT }),
   RandomHandler(),
   SetHandler(),
+  SetV2Handler(),
   StartHandler(),
   NextHandler(),
-  _V1Handler(),
+  _v1Handler,
 ];
