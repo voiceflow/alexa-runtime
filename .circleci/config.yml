@@ -46,7 +46,7 @@ defaults:
           branch_pattern: master
 
 orbs:
-  vfcommon: voiceflow/common@0.0.116
+  vfcommon: voiceflow/common@0.0.122
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
@@ -105,24 +105,6 @@ jobs:
 
 # When should each job run and what are their dependencies?
 workflows:
-  # Staging
-  build-deploy-staging:
-    jobs:
-      - build-push-image:
-          context: dev-test
-          filters:
-            branches:
-              only:
-                - staging
-      - deploy-image:
-          context: dev-test
-          requires:
-            - build-push-image
-          filters:
-            branches:
-              only:
-                - staging
-
   # Update tracks, avoiding tags
   update-track:
     jobs:
