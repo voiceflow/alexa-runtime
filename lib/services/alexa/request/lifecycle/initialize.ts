@@ -9,8 +9,6 @@ import { AlexaRuntime } from '@/lib/services/runtime/types';
 
 import { AlexaHandlerInput } from '../../types';
 
-export const VAR_VF = 'voiceflow';
-
 const utilsObj = {
   resume: {
     createResumeFrame,
@@ -63,13 +61,13 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
     platform: 'alexa',
 
     // hidden system variables (code node only)
-    [VAR_VF]: {
+    [V.VOICEFLOW]: {
       // TODO: implement all exposed voiceflow variables
       permissions: storage.get(S.ALEXA_PERMISSIONS),
       capabilities: storage.get(S.SUPPORTED_INTERFACES),
       events: [],
     },
-    _system: input.requestEnvelope.context.System,
+    [V.SYSTEM]: input.requestEnvelope.context.System,
   });
 
   // initialize all the global variables, as well as slots as global variables
@@ -89,7 +87,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
 
   const { session = { type: SessionType.RESTART } } = settings;
   // restart logic
-  const shouldRestart = stack.isEmpty() || session.type === SessionType.RESTART || variables.get<{ resume?: boolean }>(VAR_VF)?.resume === false;
+  const shouldRestart = stack.isEmpty() || session.type === SessionType.RESTART || variables.get<{ resume?: boolean }>(V.VOICEFLOW)?.resume === false;
   if (shouldRestart) {
     // start the stack with just the root flow
     stack.flush();
