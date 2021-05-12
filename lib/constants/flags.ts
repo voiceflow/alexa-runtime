@@ -40,6 +40,9 @@ export enum Frame {
 
 export enum Variables {
   TIMESTAMP = 'timestamp',
+  SYSTEM = '_system',
+  RESPONSE = '_response',
+  VOICEFLOW = 'voiceflow',
 }
 
 export default {

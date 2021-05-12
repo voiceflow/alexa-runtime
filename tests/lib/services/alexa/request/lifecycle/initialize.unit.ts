@@ -2,8 +2,8 @@ import { RepeatType, SessionType, TraceType } from '@voiceflow/general-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { F, S, T } from '@/lib/constants';
-import { initializeGenerator, VAR_VF } from '@/lib/services/alexa/request/lifecycle/initialize';
+import { F, S, T, V } from '@/lib/constants';
+import { initializeGenerator } from '@/lib/services/alexa/request/lifecycle/initialize';
 import { StreamAction } from '@/lib/services/runtime/handlers/stream';
 
 const VERSION_ID = 'version-id';
@@ -141,7 +141,7 @@ describe('initialize lifecycle unit tests', async () => {
           user_id: userId,
           sessions: 1,
           platform: 'alexa',
-          [VAR_VF]: {
+          [V.VOICEFLOW]: {
             events: [],
             permissions,
             capabilities,

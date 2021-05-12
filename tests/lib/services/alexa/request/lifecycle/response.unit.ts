@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { S, T } from '@/lib/constants';
+import { S, T, V } from '@/lib/constants';
 import { responseGenerator } from '@/lib/services/alexa/request/lifecycle/response';
 
 describe('response lifecycle unit tests', () => {
@@ -23,6 +23,7 @@ describe('response lifecycle unit tests', () => {
       storage: { get: storageGet },
       turn: { get: turnGet, set: sinon.stub() },
       stack: { isEmpty: sinon.stub().returns(true) },
+      variables: { get: sinon.stub().returns(false) },
       getFinalState: sinon.stub().returns(finalState),
     };
     const accessToken = 'access-token';
@@ -56,6 +57,7 @@ describe('response lifecycle unit tests', () => {
       storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
       turn: { get: sinon.stub().returns(true) },
       stack: { isEmpty: sinon.stub().returns(false) },
+      variables: { get: sinon.stub().returns(false) },
       getFinalState: sinon.stub().returns({}),
     };
     const output = 'output';
@@ -70,5 +72,34 @@ describe('response lifecycle unit tests', () => {
     };
 
     expect(await response(runtime as any, input as any)).to.eql(output);
+  });
+
+  it('response variable', async () => {
+    const utils = { responseHandlers: [] };
+
+    const response = responseGenerator(utils);
+
+    const responseVar = { foo: 'bar', b: 'd', c: null };
+
+    const runtime = {
+      storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
+      turn: { get: sinon.stub().returns(true) },
+      stack: { isEmpty: sinon.stub().returns(false) },
+      variables: { get: sinon.stub().returns(responseVar) },
+      getFinalState: sinon.stub().returns({}),
+    };
+    const output = { a: 'b', b: 'c' };
+
+    const input = {
+      responseBuilder: {
+        getResponse: sinon.stub().returns(output),
+        speak: sinon.stub().returns({ reprompt: sinon.stub().returns({ withShouldEndSession: sinon.stub() }) }),
+      },
+      requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } } },
+      attributesManager: { setPersistentAttributes: sinon.stub() },
+    };
+
+    expect(await response(runtime as any, input as any)).to.eql({ ...output, ...responseVar, c: undefined });
+    expect(runtime.variables.get.args).to.eql([[V.RESPONSE], [V.RESPONSE]]);
   });
 });

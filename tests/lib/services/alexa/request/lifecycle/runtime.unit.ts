@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { S, T } from '@/lib/constants';
+import { S, T, V } from '@/lib/constants';
 import buildRuntime from '@/lib/services/alexa/request/lifecycle/runtime';
 import { Request } from '@/lib/services/alexa/types';
 import { RequestType } from '@/lib/services/runtime/types';
@@ -12,6 +12,7 @@ describe('runtime lifecycle unit tests', () => {
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('output') },
       turn: { set: sinon.stub() },
+      variables: { set: sinon.stub() },
       setEvent: sinon.stub(),
     };
 
@@ -38,6 +39,7 @@ describe('runtime lifecycle unit tests', () => {
     ]);
     expect(runtime.setEvent.args[0][0]).to.eql('stateDidCatch');
     expect(runtime.setEvent.args[1][0]).to.eql('handlerDidCatch');
+    expect(runtime.variables.set.args).to.eql([[V.RESPONSE, null]]);
   });
 
   it('with event', async () => {
@@ -45,6 +47,7 @@ describe('runtime lifecycle unit tests', () => {
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('output') },
       turn: { set: sinon.stub() },
+      variables: { set: sinon.stub() },
       setEvent: sinon.stub(),
     };
 
@@ -63,6 +66,7 @@ describe('runtime lifecycle unit tests', () => {
     ]);
     expect(runtime.setEvent.args[0][0]).to.eql('stateDidCatch');
     expect(runtime.setEvent.args[1][0]).to.eql('handlerDidCatch');
+    expect(runtime.variables.set.args).to.eql([[V.RESPONSE, null]]);
   });
 
   it('with intent', async () => {
@@ -70,6 +74,7 @@ describe('runtime lifecycle unit tests', () => {
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('output') },
       turn: { set: sinon.stub() },
+      variables: { set: sinon.stub() },
       setEvent: sinon.stub(),
     };
 
@@ -88,5 +93,6 @@ describe('runtime lifecycle unit tests', () => {
     ]);
     expect(runtime.setEvent.args[0][0]).to.eql('stateDidCatch');
     expect(runtime.setEvent.args[1][0]).to.eql('handlerDidCatch');
+    expect(runtime.variables.set.args).to.eql([[V.RESPONSE, null]]);
   });
 });
