@@ -1,7 +1,7 @@
 # alexa-runtime
 
 [![circle ci](https://circleci.com/gh/voiceflow/alexa-runtime/tree/master.svg?style=shield)](https://circleci.com/gh/voiceflow/alexa-runtime/tree/master)
-[![codecov](https://codecov.io/gh/voiceflow/alexa-runtime/branch/master/graph/badge.svg)](https://codecov.io/gh/voiceflow/alexa-runtime)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=voiceflow_alexa-runtime&metric=coverage)](https://sonarcloud.io/dashboard?id=voiceflow_alexa-runtime)
 [![sonar quality gate](https://sonarcloud.io/api/project_badges/measure?project=voiceflow_alexa-runtime&metric=alert_status)](https://sonarcloud.io/dashboard?id=voiceflow_alexa-runtime)
 
 `alexa-runtime` is an http webhook service that handles alexa requests and generates a response. It manages the state of the user based on the programs (flows) made on the Voiceflow Creator tool.
