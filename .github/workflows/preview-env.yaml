@@ -32,6 +32,13 @@ jobs:
           curl -J -L -H "Accept: application/octet-stream" "$API_URL/releases/assets/$ASSET_ID" --output vfcli.tar.gz
           tar -xf vfcli.tar.gz
 
+      - name: Create empty commit
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          token: ${{ secrets.GH_SA_TOKEN }}
+          commit_message: "ci: empty commit to update the track"
+          commit_options: "--allow-empty"
+
       - name: Create new environment if applicable
         if: steps.newEnvLabel.outputs.hasLabel == 'true' && steps.envNameLabel.outputs.label == ''
         id: createNewEnv
