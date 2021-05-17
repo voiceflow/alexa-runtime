@@ -38,6 +38,10 @@ jobs:
           token: ${{ secrets.GH_SA_TOKEN }}
           commit_message: "ci: empty commit to update the track"
           commit_options: "--allow-empty"
+          commit_user_name: vf-service-account # defaults to "GitHub Actions"
+          commit_user_email: serviceaccount@voiceflow.com # defaults to "actions@github.com"
+          commit_author: vf-service-account
+          file_pattern: "*.ts *.js"
 
       - name: Create new environment if applicable
         if: steps.newEnvLabel.outputs.hasLabel == 'true' && steps.envNameLabel.outputs.label == ''
