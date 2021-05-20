@@ -2,6 +2,7 @@
   "name": "@voiceflow/alexa-runtime",
   "description": "voiceflow alexa runtime client",
   "version": "0.1.0",
+  "private": true,
   "author": "Voiceflow",
   "bugs": {
     "url": "https://github.com/voiceflow/alexa-runtime/issues"

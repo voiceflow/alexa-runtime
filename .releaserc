@@ -1,6 +1,5 @@
 {
-  "release": {
-    "branch": "master"
-  },
-  "npmPublish": false
+  branches: [
+      master
+    ]
 }
