@@ -2,7 +2,6 @@
   "name": "@voiceflow/alexa-runtime",
   "description": "voiceflow alexa runtime client",
   "version": "0.1.0",
-  "private": true,
   "author": "Voiceflow",
   "bugs": {
     "url": "https://github.com/voiceflow/alexa-runtime/issues"
@@ -13,11 +12,11 @@
     }
   },
   "dependencies": {
-    "@voiceflow/alexa-types": "1.49.0",
-    "@voiceflow/api-sdk": "1.30.0",
+    "@voiceflow/alexa-types": "1.50.15",
+    "@voiceflow/api-sdk": "1.31.11",
     "@voiceflow/backend-utils": "2.2.1",
     "@voiceflow/common": "6.5.0",
-    "@voiceflow/general-types": "1.45.1",
+    "@voiceflow/general-types": "1.48.2",
     "@voiceflow/logger": "1.5.2",
     "@voiceflow/runtime": "1.29.0",
     "@voiceflow/verror": "^1.1.0",
@@ -119,6 +118,7 @@
   "license": "ISC",
   "main": "build/start.js",
   "prettier": "@voiceflow/prettier-config",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/voiceflow/alexa-runtime.git"
