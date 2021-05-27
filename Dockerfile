@@ -22,7 +22,7 @@ ARG build_BUILD_URL
 
 ENV SEM_VER=${build_SEM_VER}
 ENV BUILD_NUM=${build_BUILD_NUM}
-ENV GIT_SHA=${build_GIT_SHA}}
+ENV GIT_SHA=${build_GIT_SHA}
 ENV BUILD_URL=${build_BUILD_URL}
 
 RUN apk add --no-cache dumb-init
