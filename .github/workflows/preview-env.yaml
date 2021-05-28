@@ -23,6 +23,15 @@ jobs:
         id: newEnvLabel
         with:
           label: new-env
+
+      - name: Remove new-env label (if exist)
+        uses: buildsville/add-remove-label@v1
+        if: steps.newEnvLabel.outputs.hasLabel == 'true' && steps.envNameLabel.outputs.label == ''
+        with:
+          token: ${{secrets.GH_SA_TOKEN}}
+          label: new-env
+          type: remove
+
       - name: Install vfcli
         env:
           GITHUB_TOKEN: ${{ secrets.GH_SA_TOKEN }}
@@ -67,14 +76,6 @@ jobs:
           token: ${{secrets.GH_SA_TOKEN}}
           label: ${{ steps.createNewEnv.outputs.newLabel }}
           type: add
-
-      - name: Remove new-env label (if exist)
-        uses: buildsville/add-remove-label@v1
-        if: steps.newEnvLabel.outputs.hasLabel == 'true' && steps.envNameLabel.outputs.label == ''
-        with:
-          token: ${{secrets.GH_SA_TOKEN}}
-          label: new-env
-          type: remove
 
       - name: Preview tracking
         if: (steps.newEnvLabel.outputs.hasLabel == 'true' && steps.envNameLabel.outputs.label == '') || (steps.envNameLabel.outputs.label != '' && contains(github.event.label.name, 'env-'))
