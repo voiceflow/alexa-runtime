@@ -1,5 +1,5 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/permission';
-import { HandlerFactory } from '@voiceflow/runtime';
+import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 
 import { S, T } from '@/lib/constants';
 

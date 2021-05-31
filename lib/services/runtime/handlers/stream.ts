@@ -1,6 +1,6 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/stream';
 import { generateHash, replaceVariables } from '@voiceflow/common';
-import { HandlerFactory } from '@voiceflow/runtime';
+import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import _ from 'lodash';
 
 import { S, T } from '@/lib/constants';

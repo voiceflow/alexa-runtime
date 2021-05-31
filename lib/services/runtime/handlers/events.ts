@@ -1,4 +1,4 @@
-import { EventCallback, EventType } from '@voiceflow/runtime';
+import { EventCallback, EventType } from '@voiceflow/general-runtime/build/runtime';
 import Promise from 'bluebird';
 
 import { events as displayEvents } from './display';

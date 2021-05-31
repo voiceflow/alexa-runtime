@@ -1,5 +1,5 @@
 import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
-import Client, { DataAPI, Runtime } from '@voiceflow/runtime';
+import Client, { DataAPI, Runtime } from '@voiceflow/general-runtime/build/runtime';
 import { ResponseBuilder as ASKResponseBuilder } from 'ask-sdk';
 import { Intent } from 'ask-sdk-model';
 

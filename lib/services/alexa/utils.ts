@@ -1,4 +1,4 @@
-import { State } from '@voiceflow/runtime';
+import { State } from '@voiceflow/general-runtime/build/runtime';
 
 import { AlexaRuntime } from '@/lib/services/runtime/types';
 

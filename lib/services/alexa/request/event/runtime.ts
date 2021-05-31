@@ -1,5 +1,5 @@
 import { Command } from '@voiceflow/api-sdk';
-import { extractFrameCommand } from '@voiceflow/runtime';
+import { extractFrameCommand } from '@voiceflow/general-runtime/build/runtime';
 
 import { AlexaRuntime, EventRequest, RequestType } from '@/lib/services/runtime/types';
 

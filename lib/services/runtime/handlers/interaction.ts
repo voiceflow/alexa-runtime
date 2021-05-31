@@ -1,7 +1,7 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/interaction';
 import { SlotMapping } from '@voiceflow/api-sdk';
 import { formatIntentName } from '@voiceflow/common';
-import { HandlerFactory } from '@voiceflow/runtime';
+import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 
 import { S, T } from '@/lib/constants';
 

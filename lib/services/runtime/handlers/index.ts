@@ -11,7 +11,7 @@ import {
   SetHandler,
   SetV2Handler,
   StartHandler,
-} from '@voiceflow/runtime';
+} from '@voiceflow/general-runtime/build/runtime';
 
 import { Config } from '@/types';
 

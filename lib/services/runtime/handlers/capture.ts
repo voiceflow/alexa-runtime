@@ -1,5 +1,5 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/capture';
-import { HandlerFactory } from '@voiceflow/runtime';
+import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import _ from 'lodash';
 import wordsToNumbers from 'words-to-numbers';
 

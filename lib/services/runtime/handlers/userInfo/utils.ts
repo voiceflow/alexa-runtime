@@ -1,6 +1,6 @@
 import { PermissionType } from '@voiceflow/alexa-types';
 import { Permission } from '@voiceflow/alexa-types/build/nodes/userInfo';
-import { Runtime, Store } from '@voiceflow/runtime';
+import { Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
 import { services } from 'ask-sdk-model';
 import axios, { AxiosStatic } from 'axios';
 

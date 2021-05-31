@@ -1,5 +1,5 @@
+import { Runtime } from '@voiceflow/general-runtime/build/runtime';
 import { RepeatType } from '@voiceflow/general-types';
-import { Runtime } from '@voiceflow/runtime';
 
 import { F, S, T } from '@/lib/constants';
 

@@ -1,4 +1,4 @@
-import { HandlerFactory } from '@voiceflow/runtime';
+import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 
 import { S } from '@/lib/constants';
 

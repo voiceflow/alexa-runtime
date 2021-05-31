@@ -1,5 +1,5 @@
 /* eslint-disable max-depth */
-import { State } from '@voiceflow/runtime';
+import { State } from '@voiceflow/general-runtime/build/runtime';
 import { RequestHandler } from 'ask-sdk';
 
 import { S } from '@/lib/constants';

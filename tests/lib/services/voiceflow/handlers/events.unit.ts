@@ -1,4 +1,4 @@
-import { EventType } from '@voiceflow/runtime';
+import { EventType } from '@voiceflow/general-runtime/build/runtime';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
