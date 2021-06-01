@@ -1,6 +1,6 @@
+import { Frame, Store } from '@voiceflow/general-runtime/build/runtime';
 import { RepeatType, SessionType, TraceType } from '@voiceflow/general-types';
 import { SpeakType, TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
-import { Frame, Store } from '@voiceflow/runtime';
 
 import { F, S, T, V } from '@/lib/constants';
 import { StreamAction } from '@/lib/services/runtime/handlers/stream';

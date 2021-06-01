@@ -1,4 +1,4 @@
-import { EventType, State } from '@voiceflow/runtime';
+import { EventType, State } from '@voiceflow/general-runtime/build/runtime';
 
 import { S, T, V } from '@/lib/constants';
 import { AlexaRuntimeRequest, RequestType } from '@/lib/services/runtime/types';

@@ -1,6 +1,6 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/directive';
 import { replaceVariables } from '@voiceflow/common';
-import { HandlerFactory } from '@voiceflow/runtime';
+import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { Directive } from 'ask-sdk-model';
 import _isString from 'lodash/isString';
 

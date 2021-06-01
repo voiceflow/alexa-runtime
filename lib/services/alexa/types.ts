@@ -1,5 +1,5 @@
 import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
-import { DataAPI } from '@voiceflow/runtime';
+import { DataAPI } from '@voiceflow/general-runtime/build/runtime';
 import { HandlerInput } from 'ask-sdk';
 
 import { AlexaRuntimeClient } from '@/lib/services/runtime/types';

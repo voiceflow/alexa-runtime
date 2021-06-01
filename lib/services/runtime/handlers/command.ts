@@ -1,6 +1,6 @@
 import { Command as IntentCommand } from '@voiceflow/alexa-types/build/nodes/command';
 import { Command, CommandMapping } from '@voiceflow/api-sdk';
-import { extractFrameCommand, Frame, Runtime, Store } from '@voiceflow/runtime';
+import { extractFrameCommand, Frame, Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
 import _ from 'lodash';
 
 import { F, T } from '@/lib/constants';

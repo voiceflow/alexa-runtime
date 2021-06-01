@@ -1,5 +1,5 @@
+import { CodeHandler, HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { Node } from '@voiceflow/general-types/build/nodes/code';
-import { CodeHandler, HandlerFactory } from '@voiceflow/runtime';
 
 const CodeHandlerWrapper: HandlerFactory<Node, { endpoint: string | null }> = ({ endpoint }) => {
   const codeHandler = CodeHandler({ endpoint });

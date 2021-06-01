@@ -1,6 +1,6 @@
 import { Node } from '@voiceflow/alexa-types/build/nodes/display';
 import { replaceVariables } from '@voiceflow/common';
-import { HandlerFactory } from '@voiceflow/runtime';
+import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { SupportedInterfaces } from 'ask-sdk-model';
 import _ from 'lodash';
 

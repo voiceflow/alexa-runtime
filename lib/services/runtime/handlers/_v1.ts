@@ -1,5 +1,5 @@
+import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { Node } from '@voiceflow/general-types/build/nodes/_v1';
-import { HandlerFactory } from '@voiceflow/runtime';
 
 export const _V1Handler: HandlerFactory<Node> = () => ({
   canHandle: (node) => node._v === 1,

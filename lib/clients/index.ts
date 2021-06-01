@@ -1,5 +1,5 @@
 import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
-import { DataAPI, LocalDataApi, ServerDataApi } from '@voiceflow/runtime';
+import { DataAPI, LocalDataApi, ServerDataApi } from '@voiceflow/general-runtime/build/runtime';
 
 import MongoPersistenceAdapter from '@/lib/services/alexa/mongo';
 import PostgresPersistenceAdapter from '@/lib/services/alexa/postgres';
