@@ -9,7 +9,7 @@ parameters:
     default: "168387678261.dkr.ecr.us-east-1.amazonaws.com/alexa"
   k8s-asset:
     type: string
-    default: "deployment/alexa"
+    default: "deployment/alexa-runtime"
   k8s-namespace:
     type: string
     default: "voiceflow-v1" # This is usually voiceflow-v1
