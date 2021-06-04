@@ -38,7 +38,7 @@
     "express-validator": "^6.3.0",
     "hashids": "^2.2.8",
     "helmet": "^3.21.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "mongodb": "^3.6.3",
     "pg": "^8.5.1",
