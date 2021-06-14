@@ -15,7 +15,7 @@
     "@voiceflow/alexa-types": "1.50.15",
     "@voiceflow/api-sdk": "1.31.11",
     "@voiceflow/backend-utils": "2.2.1",
-    "@voiceflow/body-parser": "^1.20.1",
+    "@voiceflow/body-parser": "^1.21.0",
     "@voiceflow/common": "6.5.0",
     "@voiceflow/general-runtime": "1.46.2",
     "@voiceflow/general-types": "1.48.2",
@@ -45,7 +45,6 @@
     "pg-format": "^1.0.4",
     "randomstring": "^1.1.5",
     "regenerator-runtime": "^0.13.3",
-    "secure-json-parse": "^2.4.0",
     "words-to-numbers": "^1.5.1"
   },
   "devDependencies": {
