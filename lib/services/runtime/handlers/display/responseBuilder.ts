@@ -1,18 +1,24 @@
 import { replaceVariables } from '@voiceflow/common';
+import { SupportedInterfaces } from 'ask-sdk-model';
 import randomstring from 'randomstring';
 
 import { S } from '@/lib/constants';
 import { FullServiceMap } from '@/lib/services';
 import { ResponseBuilder } from '@/lib/services/runtime/types';
 
-import { ENDED_EVENT_PREFIX, RENDER_DOCUMENT_DIRECTIVE_TYPE, STARTED_EVENT_PREFIX, VIDEO_ID_PREFIX } from './constants';
+import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, RENDER_DOCUMENT_DIRECTIVE_TYPE, STARTED_EVENT_PREFIX, VIDEO_ID_PREFIX } from './constants';
 import { DisplayInfo, VideoCommand, VideoCommandType } from './types';
 import { deepFindVideos, getEventToSend } from './utils';
 
 export const DocumentResponseBuilder: ResponseBuilder = async (runtime, builder) => {
   const displayInfo = runtime.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
+  const supportedInterfaces = runtime.storage.get<SupportedInterfaces | undefined>(S.SUPPORTED_INTERFACES);
 
-  if (!displayInfo?.shouldUpdate || (displayInfo.currentDisplay === undefined && !displayInfo.document)) {
+  if (
+    !supportedInterfaces?.[APL_INTERFACE_NAME] ||
+    !displayInfo?.shouldUpdate ||
+    (displayInfo.currentDisplay === undefined && !displayInfo.document)
+  ) {
     return;
   }
 

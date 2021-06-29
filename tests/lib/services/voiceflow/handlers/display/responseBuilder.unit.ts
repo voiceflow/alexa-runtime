@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import { DOCUMENT_VIDEO_TYPE, RENDER_DOCUMENT_DIRECTIVE_TYPE } from '@/lib/services/runtime/handlers/display/constants';
+import { APL_INTERFACE_NAME, DOCUMENT_VIDEO_TYPE, RENDER_DOCUMENT_DIRECTIVE_TYPE } from '@/lib/services/runtime/handlers/display/constants';
 import DisplayResponseBuilder, { CommandsResponseBuilder, DocumentResponseBuilder } from '@/lib/services/runtime/handlers/display/responseBuilder';
 import { VideoCommand, VideoCommandType } from '@/lib/services/runtime/handlers/display/types';
 
@@ -11,7 +11,7 @@ describe('DisplayResponseBuilder unit tests', () => {
     it('works correctly', async () => {
       const runtime = { storage: { get: sinon.stub().returns(null) } };
       await DisplayResponseBuilder(runtime as any, null as any);
-      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO], [S.DISPLAY_INFO]]);
+      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO], [S.SUPPORTED_INTERFACES], [S.DISPLAY_INFO]]);
     });
   });
 
@@ -91,19 +91,19 @@ describe('DisplayResponseBuilder unit tests', () => {
     it('no displayInfo', async () => {
       const runtime = { storage: { get: sinon.stub().returns(null) } };
       expect(await DocumentResponseBuilder(runtime as any, null as any)).to.eql(undefined);
-      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
+      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO], [S.SUPPORTED_INTERFACES]]);
     });
 
     it('shouldUpdate false', async () => {
       const runtime = { storage: { get: sinon.stub().returns({ shouldUpdate: false }) } };
       expect(await DocumentResponseBuilder(runtime as any, null as any)).to.eql(undefined);
-      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
+      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO], [S.SUPPORTED_INTERFACES]]);
     });
 
     it('currentDisplay undefined', async () => {
       const runtime = { storage: { get: sinon.stub().returns({ shouldUpdate: true }) } };
       expect(await DocumentResponseBuilder(runtime as any, null as any)).to.eql(undefined);
-      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
+      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO], [S.SUPPORTED_INTERFACES]]);
     });
 
     it('no document', async () => {
@@ -115,7 +115,7 @@ describe('DisplayResponseBuilder unit tests', () => {
         },
       };
       expect(await DocumentResponseBuilder(runtime as any, null as any)).to.eql(undefined);
-      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
+      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO], [S.SUPPORTED_INTERFACES]]);
     });
 
     it('no document.document or datasource', async () => {
@@ -128,7 +128,7 @@ describe('DisplayResponseBuilder unit tests', () => {
         },
       };
       expect(await DocumentResponseBuilder(runtime as any, null as any)).to.eql(undefined);
-      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
+      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO], [S.SUPPORTED_INTERFACES]]);
     });
 
     it('works correctly', async () => {
@@ -138,11 +138,15 @@ describe('DisplayResponseBuilder unit tests', () => {
         c: { type: DOCUMENT_VIDEO_TYPE, id: 'c', onEnd: 'on-end', onPlay: 'on-play' },
       };
       const rawVariables = { foo: 'bar' };
+      const storageGet = sinon.stub();
+      storageGet.withArgs(S.SUPPORTED_INTERFACES).returns({ [APL_INTERFACE_NAME]: {} });
+      storageGet.returns({ shouldUpdate: true, currentDisplay: 'current-display' });
+
       const runtime = {
         versionID: 'version-id',
         storage: {
           produce: sinon.stub(),
-          get: sinon.stub().returns({ shouldUpdate: true, currentDisplay: 'current-display' }),
+          get: storageGet,
         },
         variables: { getState: sinon.stub().returns(rawVariables) },
         services: {
@@ -151,7 +155,7 @@ describe('DisplayResponseBuilder unit tests', () => {
       };
       const builder = { addDirective: sinon.stub(), withShouldEndSession: sinon.stub() };
       expect(await DocumentResponseBuilder(runtime as any, builder as any)).to.eql(undefined);
-      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
+      expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO], [S.SUPPORTED_INTERFACES]]);
       expect(builder.withShouldEndSession.args).to.eql([[undefined]]);
       expect(builder.addDirective.args).to.eql([
         [
