@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import AnalyticsClient from '@/lib/clients/analytics';
+import { Event } from '@/lib/clients/ingest-client';
 import { T, V } from '@/lib/constants';
 import update from '@/lib/services/alexa/request/lifecycle/update';
-import { Config } from '@/types';
 
 describe('update lifecycle unit tests', () => {
   let clock: sinon.SinonFakeTimers;
@@ -20,21 +19,19 @@ describe('update lifecycle unit tests', () => {
   describe('update', () => {
     it('works correctly', async () => {
       const request = { foo: 'bar' };
-      const config = {} as Config;
       const runtime = {
         variables: { set: sinon.stub() },
         turn: { set: sinon.stub() },
         update: sinon.stub(),
         getRequest: sinon.stub().returns(request),
         services: {
-          analyticsClient: AnalyticsClient(config),
+          analyticsClient: {
+            identify: sinon.stub().returns(request),
+            track: sinon.stub().returns(request),
+          },
         },
-        getVersionID: () => {
-          return '';
-        },
-        getFinalState: () => {
-          return '';
-        },
+        getVersionID: sinon.stub().returns(request),
+        getFinalState: sinon.stub().returns(request),
       };
 
       const input = {
@@ -48,6 +45,9 @@ describe('update lifecycle unit tests', () => {
       await update(runtime as any, input as any);
       expect(runtime.turn.set.args).to.eql([[T.REQUEST, request]]);
       expect(runtime.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
+      expect(runtime.services.analyticsClient.track.args).to.eql([
+        [request, Event.INTERACT, true, request, input.requestEnvelope.session.sessionId, request],
+      ]);
       expect(runtime.update.callCount).to.eql(1);
     });
   });
