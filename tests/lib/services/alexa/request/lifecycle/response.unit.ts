@@ -1,8 +1,10 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
+import AnalyticsClient from '@/lib/clients/analytics';
 import { S, T, V } from '@/lib/constants';
 import { responseGenerator } from '@/lib/services/alexa/request/lifecycle/response';
+import { Config } from '@/types';
 
 describe('response lifecycle unit tests', () => {
   it('works correctly', async () => {
@@ -18,13 +20,19 @@ describe('response lifecycle unit tests', () => {
     const turnGet = sinon.stub();
     turnGet.onFirstCall().returns(null);
     turnGet.onSecondCall().returns(true);
-
+    const config = {} as Config;
     const runtime = {
       storage: { get: storageGet },
       turn: { get: turnGet, set: sinon.stub() },
       stack: { isEmpty: sinon.stub().returns(true) },
       variables: { get: sinon.stub().returns(false) },
       getFinalState: sinon.stub().returns(finalState),
+      services: {
+        analyticsClient: AnalyticsClient(config),
+      },
+      getVersionID: () => {
+        return '';
+      },
     };
     const accessToken = 'access-token';
     const output = 'output';
@@ -52,6 +60,7 @@ describe('response lifecycle unit tests', () => {
     const utils = { responseHandlers: [] };
 
     const response = responseGenerator(utils);
+    const config = {} as Config;
 
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
@@ -59,6 +68,12 @@ describe('response lifecycle unit tests', () => {
       stack: { isEmpty: sinon.stub().returns(false) },
       variables: { get: sinon.stub().returns(false) },
       getFinalState: sinon.stub().returns({}),
+      services: {
+        analyticsClient: AnalyticsClient(config),
+      },
+      getVersionID: () => {
+        return '';
+      },
     };
     const output = 'output';
 

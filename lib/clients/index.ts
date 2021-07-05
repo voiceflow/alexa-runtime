@@ -20,7 +20,7 @@ export interface ClientMap extends StaticType {
   metrics: MetricsType;
   mongo: MongoDB | null;
   pg: PostgresDB | null;
-  analyticsClient: AnalyticsSystem | null;
+  analyticsClient: AnalyticsSystem;
 }
 
 /**

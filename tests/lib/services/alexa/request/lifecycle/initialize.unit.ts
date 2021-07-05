@@ -2,9 +2,11 @@ import { RepeatType, SessionType, TraceType } from '@voiceflow/general-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
+import AnalyticsClient from '@/lib/clients/analytics';
 import { F, S, T, V } from '@/lib/constants';
 import { initializeGenerator } from '@/lib/services/alexa/request/lifecycle/initialize';
 import { StreamAction } from '@/lib/services/runtime/handlers/stream';
+import { Config } from '@/types';
 
 const VERSION_ID = 'version-id';
 
@@ -48,8 +50,13 @@ describe('initialize lifecycle unit tests', async () => {
         get: sinon.stub().returns(null),
       };
 
+      const config = {} as Config;
+
       const runtime = {
         getVersionID: sinon.stub().returns(VERSION_ID),
+        services: {
+          analyticsClient: AnalyticsClient(config),
+        },
         stack: {
           isEmpty: sinon.stub().returns(false),
           flush: sinon.stub(),

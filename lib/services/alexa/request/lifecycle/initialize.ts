@@ -24,9 +24,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
   const { requestEnvelope } = input;
 
   // Identify on analytics system
-  if (runtime?.services?.AnalyticsClient) {
-    runtime.services.analyticsClient.identify(runtime.getVersionID());
-  }
+  runtime.services.analyticsClient.identify(runtime.getVersionID());
 
   // fetch the metadata for this version (project)
   const {
