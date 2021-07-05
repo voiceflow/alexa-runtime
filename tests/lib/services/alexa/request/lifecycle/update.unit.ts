@@ -19,6 +19,7 @@ describe('update lifecycle unit tests', () => {
   describe('update', () => {
     it('works correctly', async () => {
       const request = { foo: 'bar' };
+      const versionID = 'version.id';
       const runtime = {
         variables: { set: sinon.stub() },
         turn: { set: sinon.stub() },
@@ -30,7 +31,7 @@ describe('update lifecycle unit tests', () => {
             track: sinon.stub().returns(request),
           },
         },
-        getVersionID: sinon.stub().returns(request),
+        getVersionID: sinon.stub().returns(versionID),
         getFinalState: sinon.stub().returns(request),
       };
 
@@ -46,7 +47,7 @@ describe('update lifecycle unit tests', () => {
       expect(runtime.turn.set.args).to.eql([[T.REQUEST, request]]);
       expect(runtime.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
       expect(runtime.services.analyticsClient.track.args).to.eql([
-        [request, Event.INTERACT, true, request, input.requestEnvelope.session.sessionId, request],
+        [versionID, Event.INTERACT, true, request, input.requestEnvelope.session.sessionId, request],
       ]);
       expect(runtime.update.callCount).to.eql(1);
     });
