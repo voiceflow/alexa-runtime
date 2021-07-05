@@ -2,6 +2,7 @@ import { Response } from 'ask-sdk-model';
 import _isObject from 'lodash/isObject';
 import _mapValues from 'lodash/mapValues';
 
+import { Event } from '@/lib/clients/ingest-client';
 import { S, T, V } from '@/lib/constants';
 import { responseHandlers } from '@/lib/services/runtime/handlers';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
@@ -49,6 +50,18 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
       ...response,
       ..._mapValues(variables.get(V.RESPONSE), (v) => (v === null ? undefined : v)),
     };
+  }
+
+  // Track response on analytics system
+  if (runtime?.services?.analyticsClient) {
+    runtime.services.analyticsClient.track(
+      runtime.getVersionID(),
+      Event.INTERACT,
+      false,
+      response,
+      input.requestEnvelope.session?.sessionId,
+      runtime.getFinalState()
+    );
   }
 
   return response;

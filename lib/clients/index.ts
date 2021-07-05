@@ -5,6 +5,7 @@ import MongoPersistenceAdapter from '@/lib/services/alexa/mongo';
 import PostgresPersistenceAdapter from '@/lib/services/alexa/postgres';
 import { Config } from '@/types';
 
+import Analytics, { AnalyticsSystem } from './analytics';
 import Dynamo, { DynamoType } from './dynamo';
 import Metrics, { MetricsType } from './metrics';
 import MongoDB from './mongodb';
@@ -19,6 +20,7 @@ export interface ClientMap extends StaticType {
   metrics: MetricsType;
   mongo: MongoDB | null;
   pg: PostgresDB | null;
+  analyticsClient: AnalyticsSystem | null;
 }
 
 /**
@@ -36,6 +38,7 @@ const buildClients = (config: Config): ClientMap => {
   const metrics = Metrics(config);
   const mongo = MongoPersistenceAdapter.enabled(config) ? new MongoDB(config) : null;
   const pg = PostgresPersistenceAdapter.enabled(config) ? new PostgresDB(config) : null;
+  const analyticsClient = Analytics(config);
 
   return {
     ...Static,
@@ -45,6 +48,7 @@ const buildClients = (config: Config): ClientMap => {
     dataAPI,
     metrics,
     multimodal,
+    analyticsClient,
   };
 };
 

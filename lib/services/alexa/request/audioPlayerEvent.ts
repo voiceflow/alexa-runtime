@@ -72,7 +72,7 @@ export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): Reques
           const tempRuntime = runtimeClient.createRuntime(versionID, rawState as State);
           tempRuntime.storage.set(S.STREAM_PLAY, { ...tempRuntime.storage.get<StreamPlay>(S.STREAM_PLAY), action: StreamAction.NEXT });
 
-          await utils.update(tempRuntime);
+          await utils.update(tempRuntime, input);
 
           if (tempRuntime.storage.get<StreamPlay>(S.STREAM_PLAY)?.action === StreamAction.START) {
             const { url, token, metaData } = utils._streamMetaData(tempRuntime.storage.get<StreamPlay>(S.STREAM_PLAY)!);

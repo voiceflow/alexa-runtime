@@ -23,6 +23,11 @@ const utilsObj = {
 export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: AlexaRuntime, input: AlexaHandlerInput): Promise<void> => {
   const { requestEnvelope } = input;
 
+  // Identify on analytics system
+  if (runtime?.services?.AnalyticsClient) {
+    runtime.services.analyticsClient.identify(runtime.getVersionID());
+  }
+
   // fetch the metadata for this version (project)
   const {
     platformData: { settings, slots },

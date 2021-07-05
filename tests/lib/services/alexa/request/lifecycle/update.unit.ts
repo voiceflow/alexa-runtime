@@ -25,7 +25,9 @@ describe('update lifecycle unit tests', () => {
         getRequest: sinon.stub().returns(request),
       };
 
-      await update(runtime as any);
+      const input = {};
+
+      await update(runtime as any, input as any);
       expect(runtime.turn.set.args).to.eql([[T.REQUEST, request]]);
       expect(runtime.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
       expect(runtime.update.callCount).to.eql(1);
