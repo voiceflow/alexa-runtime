@@ -52,6 +52,7 @@ export class AnalyticsSystem extends AbstractClient {
     this.rudderstackClient!.track(interactAnalyticsBody);
   }
 
+  // eslint-disable-next-line max-params
   private createInteractBody(
     id: string,
     eventId: Event,
