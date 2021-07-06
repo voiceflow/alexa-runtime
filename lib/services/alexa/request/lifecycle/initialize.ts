@@ -23,9 +23,6 @@ const utilsObj = {
 export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: AlexaRuntime, input: AlexaHandlerInput): Promise<void> => {
   const { requestEnvelope } = input;
 
-  // Identify on analytics system
-  runtime.services.analyticsClient.identify(runtime.getVersionID());
-
   // fetch the metadata for this version (project)
   const {
     platformData: { settings, slots },
@@ -34,6 +31,9 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
   } = await runtime.api.getVersion(runtime.getVersionID());
 
   const { stack, storage, variables } = runtime;
+
+  // Identify on analytics system
+  runtime.services.analyticsClient.identify(runtime.getVersionID());
 
   storage.delete(S.STREAM_TEMP);
 

@@ -24,6 +24,12 @@ export enum Event {
   INTERACT = 'interact',
 }
 
+export enum Request {
+  REQUEST = 'request',
+  LAUNCH = 'launch',
+  RESPONSE = 'response',
+}
+
 export class IngestApi {
   private axios: AxiosInstance;
 

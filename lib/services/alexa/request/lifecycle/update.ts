@@ -1,6 +1,6 @@
 import { RepeatType } from '@voiceflow/general-types';
 
-import { Event } from '@/lib/clients/ingest-client';
+import { Event, Request as InteractRequestType } from '@/lib/clients/ingest-client';
 import { S, T, V } from '@/lib/constants';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
 
@@ -8,7 +8,6 @@ import { AlexaHandlerInput } from '../../types';
 
 const update = async (runtime: AlexaRuntime, input: AlexaHandlerInput): Promise<void> => {
   const { turn, variables, storage } = runtime;
-
   const repeatNumber = storage?.get(S.REPEAT);
 
   // TODO: temporary buffer to update sessions with old numeric repeat type REMOVE SOON
@@ -23,11 +22,15 @@ const update = async (runtime: AlexaRuntime, input: AlexaHandlerInput): Promise<
 
   await runtime.update();
 
+  let request: InteractRequestType = InteractRequestType.REQUEST;
+  if (input?.requestEnvelope?.request?.type === 'LaunchRequest') {
+    request = InteractRequestType.LAUNCH;
+  }
   // Track response on analytics system
   runtime.services.analyticsClient.track(
     runtime.getVersionID(),
     Event.INTERACT,
-    true,
+    request,
     runtime.getRequest(),
     input.requestEnvelope.session?.sessionId,
     runtime.getFinalState()

@@ -7,7 +7,7 @@ import log from '@/logger';
 import { Config } from '@/types';
 
 import { AlexaRuntimeRequest } from '../services/runtime/types';
-import IngestApiClient, { Event, IngestApi, InteractBody } from './ingest-client';
+import IngestApiClient, { Event, IngestApi, InteractBody, Request } from './ingest-client';
 import { AbstractClient } from './utils';
 
 export class AnalyticsSystem extends AbstractClient {
@@ -56,7 +56,7 @@ export class AnalyticsSystem extends AbstractClient {
   private createInteractBody(
     id: string,
     eventId: Event,
-    request: boolean,
+    request: Request,
     payload: Response | AlexaRuntimeRequest,
     sessionid: string,
     metadata: State
@@ -64,7 +64,7 @@ export class AnalyticsSystem extends AbstractClient {
     return {
       eventId,
       request: {
-        requestType: request ? 'request' : 'reponse',
+        requestType: request,
         sessionId: sessionid,
         versionId: id,
         payload,
@@ -81,7 +81,7 @@ export class AnalyticsSystem extends AbstractClient {
   async track(
     id: string,
     event: Event,
-    request: boolean,
+    request: Request,
     payload: Response | AlexaRuntimeRequest,
     sessionid: string,
     metadata: State
