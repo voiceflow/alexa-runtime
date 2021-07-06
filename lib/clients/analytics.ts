@@ -52,15 +52,21 @@ export class AnalyticsSystem extends AbstractClient {
     this.rudderstackClient!.track(interactAnalyticsBody);
   }
 
-  // eslint-disable-next-line max-params
-  private createInteractBody(
-    id: string,
-    eventId: Event,
-    request: RequestType,
-    payload: Response | AlexaRuntimeRequest,
-    sessionid: string,
-    metadata: State
-  ): InteractBody {
+  private createInteractBody({
+    id,
+    eventId,
+    request,
+    payload,
+    sessionid,
+    metadata,
+  }: {
+    id: string;
+    eventId: Event;
+    request: RequestType;
+    payload: Response | AlexaRuntimeRequest;
+    sessionid: string;
+    metadata: State;
+  }): InteractBody {
     return {
       eventId,
       request: {
@@ -77,20 +83,26 @@ export class AnalyticsSystem extends AbstractClient {
     } as InteractBody;
   }
 
-  // eslint-disable-next-line max-params
-  async track(
-    id: string,
-    event: Event,
-    request: RequestType,
-    payload: Response | AlexaRuntimeRequest,
-    sessionid: string,
-    metadata: State
-  ): Promise<AxiosResponse<any> | undefined> {
+  async track({
+    id,
+    event,
+    request,
+    payload,
+    sessionid,
+    metadata,
+  }: {
+    id: string;
+    event: Event;
+    request: RequestType;
+    payload: Response | AlexaRuntimeRequest;
+    sessionid: string;
+    metadata: State;
+  }): Promise<AxiosResponse<any> | undefined> {
     log.trace('analytics: Track');
     // eslint-disable-next-line sonarjs/no-small-switch
     switch (event) {
       case Event.INTERACT: {
-        const interactIngestBody = this.createInteractBody(id, event, request, payload, sessionid, metadata);
+        const interactIngestBody = this.createInteractBody({ id, eventId: event, request, payload, sessionid, metadata });
 
         // User/initial interact
         if (this.aggregateAnalytics && this.rudderstackClient) {

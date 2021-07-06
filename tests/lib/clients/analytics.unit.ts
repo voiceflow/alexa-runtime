@@ -37,9 +37,16 @@ describe('Analytics client unit tests', () => {
 
       const payload = {};
 
-      expect(client.track('id', Event.INTERACT, RequestType.REQUEST, payload as any, 'session.id', metadata as any)).to.eventually.rejectedWith(
-        RangeError
-      );
+      expect(
+        client.track({
+          id: 'id',
+          event: Event.INTERACT,
+          request: RequestType.REQUEST,
+          payload: payload as any,
+          sessionid: 'session.id',
+          metadata: metadata as any,
+        })
+      ).to.eventually.rejectedWith(RangeError);
     });
 
     it('works with interact events', () => {
@@ -71,7 +78,14 @@ describe('Analytics client unit tests', () => {
 
       (client as any).ingestClient = ingestClient;
 
-      client.track('id', Event.INTERACT, RequestType.REQUEST, payload as any, 'session.id', metadata as any);
+      client.track({
+        id: 'id',
+        event: Event.INTERACT,
+        request: RequestType.REQUEST,
+        payload: payload as any,
+        sessionid: 'session.id',
+        metadata: metadata as any,
+      });
 
       expect(rudderstack.track.callCount).to.eql(1);
       expect(rudderstack.track.getCall(0).args).to.deep.eq([
