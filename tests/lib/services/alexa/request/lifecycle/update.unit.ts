@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { Event, Request } from '@/lib/clients/ingest-client';
+import { Event, RequestType } from '@/lib/clients/ingest-client';
 import { T, V } from '@/lib/constants';
 import update from '@/lib/services/alexa/request/lifecycle/update';
 
@@ -47,7 +47,7 @@ describe('update lifecycle unit tests', () => {
       expect(runtime.turn.set.args).to.eql([[T.REQUEST, request]]);
       expect(runtime.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
       expect(runtime.services.analyticsClient.track.args).to.eql([
-        [versionID, Event.INTERACT, Request.REQUEST, request, input.requestEnvelope.session.sessionId, request],
+        [versionID, Event.INTERACT, RequestType.REQUEST, request, input.requestEnvelope.session.sessionId, request],
       ]);
       expect(runtime.update.callCount).to.eql(1);
     });

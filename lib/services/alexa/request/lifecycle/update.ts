@@ -1,6 +1,6 @@
 import { RepeatType } from '@voiceflow/general-types';
 
-import { Event, Request as InteractRequestType } from '@/lib/clients/ingest-client';
+import { Event, RequestType } from '@/lib/clients/ingest-client';
 import { S, T, V } from '@/lib/constants';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
 
@@ -22,15 +22,11 @@ const update = async (runtime: AlexaRuntime, input: AlexaHandlerInput): Promise<
 
   await runtime.update();
 
-  let request: InteractRequestType = InteractRequestType.REQUEST;
-  if (input?.requestEnvelope?.request?.type === 'LaunchRequest') {
-    request = InteractRequestType.LAUNCH;
-  }
   // Track response on analytics system
   runtime.services.analyticsClient.track(
     runtime.getVersionID(),
     Event.INTERACT,
-    request,
+    input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
     runtime.getRequest(),
     input.requestEnvelope.session?.sessionId,
     runtime.getFinalState()

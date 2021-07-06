@@ -24,7 +24,7 @@ export enum Event {
   INTERACT = 'interact',
 }
 
-export enum Request {
+export enum RequestType {
   REQUEST = 'request',
   LAUNCH = 'launch',
   RESPONSE = 'response',

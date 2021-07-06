@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { Event, Request } from '@/lib/clients/ingest-client';
+import { Event, RequestType } from '@/lib/clients/ingest-client';
 import { S, T, V } from '@/lib/constants';
 import { responseGenerator } from '@/lib/services/alexa/request/lifecycle/response';
 
@@ -48,7 +48,7 @@ describe('response lifecycle unit tests', () => {
     expect(await response(runtime as any, input as any)).to.eql(output);
     expect(runtime.turn.set.args).to.eql([[T.END, true]]);
     expect(runtime.storage.get.args).to.eql([[S.OUTPUT], [S.OUTPUT]]);
-    expect(runtime.services.analyticsClient.track.args).to.eql([[versionID, Event.INTERACT, Request.RESPONSE, output, undefined, finalState]]);
+    expect(runtime.services.analyticsClient.track.args).to.eql([[versionID, Event.INTERACT, RequestType.RESPONSE, output, undefined, finalState]]);
     expect(input.responseBuilder.speak.args).to.eql([['speak']]);
     expect(reprompt.args).to.eql([['speak']]);
     expect(withShouldEndSession.args).to.eql([[true]]);
@@ -88,7 +88,7 @@ describe('response lifecycle unit tests', () => {
     };
 
     expect(await response(runtime as any, input as any)).to.eql(output);
-    expect(runtime.services.analyticsClient.track.args).to.eql([[versionID, Event.INTERACT, Request.RESPONSE, output, undefined, {}]]);
+    expect(runtime.services.analyticsClient.track.args).to.eql([[versionID, Event.INTERACT, RequestType.RESPONSE, output, undefined, {}]]);
   });
 
   it('response variable', async () => {
