@@ -32,6 +32,9 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
 
   const { stack, storage, variables } = runtime;
 
+  // Identify on analytics system
+  runtime.services.analyticsClient.identify(runtime.getVersionID());
+
   storage.delete(S.STREAM_TEMP);
 
   // increment user sessions by 1 or initialize

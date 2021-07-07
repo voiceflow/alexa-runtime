@@ -50,6 +50,12 @@ describe('initialize lifecycle unit tests', async () => {
 
       const runtime = {
         getVersionID: sinon.stub().returns(VERSION_ID),
+        services: {
+          analyticsClient: {
+            identify: sinon.stub().returns(VERSION_ID),
+            track: sinon.stub().returns(VERSION_ID),
+          },
+        },
         stack: {
           isEmpty: sinon.stub().returns(false),
           flush: sinon.stub(),

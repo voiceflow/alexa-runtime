@@ -4,6 +4,8 @@ import * as ExpressValidator from 'express-validator';
 export interface Config {
   NODE_ENV: string;
   PORT: string;
+  CLOUD_ENV: string | null;
+  IS_PRIVATE_CLOUD: boolean;
 
   AWS_ACCESS_KEY_ID: string | null;
   AWS_SECRET_ACCESS_KEY: string | null;
@@ -46,6 +48,11 @@ export interface Config {
   PG_PORT: string | null;
 
   CONFIG_ID_HASH: string | null;
+
+  // Analytics
+  ANALYTICS_ENDPOINT: string | null;
+  ANALYTICS_WRITE_KEY: string | null;
+  INGEST_WEBHOOK_ENDPOINT: string | null;
 }
 
 export interface Request<P extends {} = {}> extends Express.Request<P> {

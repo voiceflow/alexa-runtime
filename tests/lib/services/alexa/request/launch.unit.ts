@@ -35,7 +35,7 @@ describe('launch handler unit tests', () => {
       expect(await handler.handle(input as any)).to.eql(output);
       expect(utils.buildRuntime.args).to.eql([[input]]);
       expect(utils.initialize.args).to.eql([[runtime, input]]);
-      expect(utils.update.args).to.eql([[runtime]]);
+      expect(utils.update.args).to.eql([[runtime, input]]);
       expect(utils.buildResponse.args).to.eql([[runtime, input]]);
     });
   });

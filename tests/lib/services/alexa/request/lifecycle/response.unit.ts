@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
+import { Event, RequestType } from '@/lib/clients/ingest-client';
 import { S, T, V } from '@/lib/constants';
 import { responseGenerator } from '@/lib/services/alexa/request/lifecycle/response';
 
@@ -18,13 +19,20 @@ describe('response lifecycle unit tests', () => {
     const turnGet = sinon.stub();
     turnGet.onFirstCall().returns(null);
     turnGet.onSecondCall().returns(true);
-
+    const versionID = 'version.id';
     const runtime = {
       storage: { get: storageGet },
       turn: { get: turnGet, set: sinon.stub() },
       stack: { isEmpty: sinon.stub().returns(true) },
       variables: { get: sinon.stub().returns(false) },
       getFinalState: sinon.stub().returns(finalState),
+      services: {
+        analyticsClient: {
+          identify: sinon.stub(),
+          track: sinon.stub(),
+        },
+      },
+      getVersionID: sinon.stub().returns(versionID),
     };
     const accessToken = 'access-token';
     const output = 'output';
@@ -40,6 +48,9 @@ describe('response lifecycle unit tests', () => {
     expect(await response(runtime as any, input as any)).to.eql(output);
     expect(runtime.turn.set.args).to.eql([[T.END, true]]);
     expect(runtime.storage.get.args).to.eql([[S.OUTPUT], [S.OUTPUT]]);
+    expect(runtime.services.analyticsClient.track.args).to.eql([
+      [{ id: versionID, event: Event.INTERACT, request: RequestType.RESPONSE, payload: output, sessionid: undefined, metadata: finalState }],
+    ]);
     expect(input.responseBuilder.speak.args).to.eql([['speak']]);
     expect(reprompt.args).to.eql([['speak']]);
     expect(withShouldEndSession.args).to.eql([[true]]);
@@ -52,13 +63,20 @@ describe('response lifecycle unit tests', () => {
     const utils = { responseHandlers: [] };
 
     const response = responseGenerator(utils);
-
+    const versionID = 'version.id';
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
       turn: { get: sinon.stub().returns(true) },
       stack: { isEmpty: sinon.stub().returns(false) },
       variables: { get: sinon.stub().returns(false) },
       getFinalState: sinon.stub().returns({}),
+      services: {
+        analyticsClient: {
+          identify: sinon.stub(),
+          track: sinon.stub(),
+        },
+      },
+      getVersionID: sinon.stub().returns(versionID),
     };
     const output = 'output';
 
@@ -72,6 +90,9 @@ describe('response lifecycle unit tests', () => {
     };
 
     expect(await response(runtime as any, input as any)).to.eql(output);
+    expect(runtime.services.analyticsClient.track.args).to.eql([
+      [{ id: versionID, event: Event.INTERACT, request: RequestType.RESPONSE, payload: output, sessionid: undefined, metadata: {} }],
+    ]);
   });
 
   it('response variable', async () => {
