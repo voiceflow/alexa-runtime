@@ -47,7 +47,16 @@ describe('update lifecycle unit tests', () => {
       expect(runtime.turn.set.args).to.eql([[T.REQUEST, request]]);
       expect(runtime.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
       expect(runtime.services.analyticsClient.track.args).to.eql([
-        [versionID, Event.INTERACT, RequestType.REQUEST, request, input.requestEnvelope.session.sessionId, request],
+        [
+          {
+            id: versionID,
+            event: Event.INTERACT,
+            request: RequestType.REQUEST,
+            payload: request,
+            sessionid: input.requestEnvelope.session.sessionId,
+            metadata: request,
+          },
+        ],
       ]);
       expect(runtime.update.callCount).to.eql(1);
     });

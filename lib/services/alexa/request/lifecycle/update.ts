@@ -23,14 +23,14 @@ const update = async (runtime: AlexaRuntime, input: AlexaHandlerInput): Promise<
   await runtime.update();
 
   // Track response on analytics system
-  runtime.services.analyticsClient.track(
-    runtime.getVersionID(),
-    Event.INTERACT,
-    input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
-    runtime.getRequest(),
-    input.requestEnvelope.session?.sessionId,
-    runtime.getFinalState()
-  );
+  runtime.services.analyticsClient.track({
+    id: runtime.getVersionID(),
+    event: Event.INTERACT,
+    request: input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
+    payload: runtime.getRequest(),
+    sessionid: input.requestEnvelope.session?.sessionId,
+    metadata: runtime.getFinalState(),
+  });
 };
 
 export default update;

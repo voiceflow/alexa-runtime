@@ -53,14 +53,14 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
   }
 
   // Track response on analytics system
-  runtime.services.analyticsClient.track(
-    runtime.getVersionID(),
-    Event.INTERACT,
-    RequestType.RESPONSE,
-    response,
-    input.requestEnvelope.session?.sessionId,
-    runtime.getFinalState()
-  );
+  runtime.services.analyticsClient.track({
+    id: runtime.getVersionID(),
+    event: Event.INTERACT,
+    request: RequestType.RESPONSE,
+    payload: response,
+    sessionid: input.requestEnvelope.session?.sessionId,
+    metadata: runtime.getFinalState(),
+  });
 
   return response;
 };
