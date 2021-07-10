@@ -65,7 +65,7 @@ export const CommandHandler = (utils: typeof utilsObj) => ({
     if (res.command) {
       const { index, command } = res;
 
-      variableMap = command.mappings?.map(({ slot, variable }) => ({ slot: slot ?? '', variable: variable ?? '' }));
+      variableMap = command.mappings;
 
       if (command.diagram_id) {
         runtime.trace.debug(`matched command **${command.intent}** - adding command flow`);

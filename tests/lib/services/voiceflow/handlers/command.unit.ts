@@ -128,7 +128,7 @@ describe('command handler unit tests', async () => {
       });
 
       it('mappings but no slots', () => {
-        const commandHandler = CommandHandler({ getCommand: sinon.stub().returns({ command: { mappings: [] }, intent: {} }) } as any);
+        const commandHandler = CommandHandler({ getCommand: sinon.stub().returns({ command: { mappings: {} }, intent: {} }) } as any);
 
         const runtime = { turn: { delete: sinon.stub() } };
 
@@ -145,7 +145,7 @@ describe('command handler unit tests', async () => {
 
       it('mappings and slots', () => {
         const mappedSlots = { foo: 'bar' };
-        const res = { intent: { slots: { slot1: 'slot_one' } }, command: { mappings: [{ slot: 'mapping1', variable: 'mapping1' }] } };
+        const res = { intent: { slots: { slot1: 'slot_one' } }, command: { mappings: { mapping1: 'mapping1' } } };
         const utils = {
           mapSlots: sinon.stub().returns(mappedSlots),
           getCommand: sinon.stub().returns(res),
