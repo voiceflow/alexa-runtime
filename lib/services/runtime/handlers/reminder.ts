@@ -1,4 +1,4 @@
-import { Node, NodeData, RecurrenceFreq } from '@voiceflow/alexa-types/build/nodes/reminder';
+import { Node, NodeReminder, RecurrenceFreq } from '@voiceflow/alexa-types/build/nodes/reminder';
 import { replaceVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { NodeID } from '@voiceflow/general-types';
@@ -39,7 +39,7 @@ const _deriveSeconds = (text: string, multiplier = 1): number => {
   return number * multiplier;
 };
 
-export const _createReminderObject = (reminder: NodeData['reminder'], variablesMap: Record<string, any>, locale: string) => {
+export const _createReminderObject = (reminder: NodeReminder, variablesMap: Record<string, any>, locale: string) => {
   if (reminder.type !== ReminderType.SCHEDULED_ABSOLUTE && reminder.type !== ReminderType.SCHEDULED_RELATIVE)
     throw new Error('invalid reminder type');
 
