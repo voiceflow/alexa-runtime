@@ -1142,10 +1142,10 @@
     eslint-plugin-xss "^0.1.9"
     typescript "^3.9.7"
 
-"@voiceflow/general-runtime@1.50.0":
-  version "1.50.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/general-runtime/-/general-runtime-1.50.0.tgz#86b15b1da88347413d7745614769c98bd0f13b6e"
-  integrity sha512-aOpF9mZxFk+UFW4tZ3rJfOESHm3U+itBT+5OpyDR+f2BQGdbI9kUx8hvBJD+KXLmElqYxtOlEhODQJ1U8UH69g==
+"@voiceflow/general-runtime@1.50.1":
+  version "1.50.1"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-runtime/-/general-runtime-1.50.1.tgz#c7f467d3694dbc5f4abb26e6c9b081aa158bd612"
+  integrity sha512-3kY/57qfwMBdQnGTrx0cf/qlmWsqer/EZc7FZLyB4C3P1Jf07O75hFK2neNe6MtDgn8Toe2+ia3BPusCKHwG5w==
   dependencies:
     "@rudderstack/rudder-sdk-node" "^1.0.2"
     "@types/mathjs" "^6.0.4"

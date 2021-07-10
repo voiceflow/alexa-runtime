@@ -18,7 +18,7 @@
     "@voiceflow/backend-utils": "2.2.1",
     "@voiceflow/body-parser": "^1.21.0",
     "@voiceflow/common": "6.5.0",
-    "@voiceflow/general-runtime": "1.50.0",
+    "@voiceflow/general-runtime": "1.50.1",
     "@voiceflow/general-types": "1.51.0",
     "@voiceflow/logger": "1.5.2",
     "@voiceflow/verror": "^1.1.0",
