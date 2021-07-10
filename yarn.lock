@@ -1029,20 +1029,30 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
-"@voiceflow/alexa-types@1.50.15":
-  version "1.50.15"
-  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.50.15.tgz#0e91273611576d74f7d532ddea265fbd22db270c"
-  integrity sha512-bkNcHoSXzyxkvhaBpNjsd+Lj+6vhqMu+xmV+jyg1e+4qkoASOBHQJdXs6VZNUUb2vsjE1RhpuDgoSBxZ+zEEIw==
+"@voiceflow/alexa-types@1.52.0":
+  version "1.52.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.52.0.tgz#29f5c237112f18b6dc6f2dcd54d4aac4dac557af"
+  integrity sha512-SUAIdp/wwNVw/TPZe/wt7mEJjPxWtkDf3ODi5H/aDeeLoKY1EcC+lM2d4dIneW7Hr5yt1ft/TDbsCak4ubYhLw==
   dependencies:
-    "@voiceflow/api-sdk" "^1.31.11"
+    "@voiceflow/api-sdk" "^1.33.0"
     "@voiceflow/common" "6.5.0"
-    "@voiceflow/general-types" "^1.48.2"
-    ask-smapi-model "^1.11.0"
+    "@voiceflow/general-types" "^1.51.0"
+    ask-smapi-model "1.14.0"
 
 "@voiceflow/api-sdk@1.31.11", "@voiceflow/api-sdk@^1.31.11":
   version "1.31.11"
   resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.31.11.tgz#945164cd8594fe40a5ed182adfe3a890430a7cf9"
   integrity sha512-0JJq2EPHXhz3S1JKb4fx5fql1yi0x4wZkO1H+UkQx9ORAZ+D7L4PhrPalEaH3L7dpjdQVAUGUVdN6lDW3gQceA==
+  dependencies:
+    "@types/atob" "^2.1.2"
+    atob "^2.1.2"
+    axios "^0.21.1"
+    superstruct "^0.10.12"
+
+"@voiceflow/api-sdk@1.33.0", "@voiceflow/api-sdk@^1.33.0":
+  version "1.33.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.33.0.tgz#c86a2ef5d4e788238b0e6b95999c07ddbd080dda"
+  integrity sha512-XmPKy02/dWSh8kOAb30Soqi3UG8zz+7kPQwJhj41BlRGSQBZeGbQa56NzQZ3Tb416w8r0AU3TLZZOR2HWj27Sw==
   dependencies:
     "@types/atob" "^2.1.2"
     atob "^2.1.2"
@@ -1185,12 +1195,19 @@
     words-to-numbers "^1.5.1"
     workerpool "^5.0.4"
 
-"@voiceflow/general-types@1.48.2", "@voiceflow/general-types@^1.48.2":
+"@voiceflow/general-types@1.48.2":
   version "1.48.2"
   resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.48.2.tgz#3c0f86f1860ac123b24f186b344645ae9fff66d2"
   integrity sha512-f85uH0A71g0pgOVuC1O683Mmipv5uWQ+IQJ6Stpd7MxMLLpcd836xTsXoIlV4tPdXSo8MWQqg/DqpwgBloj5mQ==
   dependencies:
     "@voiceflow/api-sdk" "^1.31.11"
+
+"@voiceflow/general-types@1.51.0", "@voiceflow/general-types@^1.51.0":
+  version "1.51.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.51.0.tgz#d2218cf4b8d858978412c304fe3d5f3d7920d607"
+  integrity sha512-TsMrI1adX73uRGZDux0TlQNy6BR087/zsDlR3kZEN1YhNABwoX+QavBmjyqnOmeXpIiP5xyVVd0FT/bbaSnjwg==
+  dependencies:
+    "@voiceflow/api-sdk" "^1.33.0"
 
 "@voiceflow/git-branch-check@^1.2.0":
   version "1.2.0"
@@ -1637,10 +1654,10 @@ ask-sdk@^2.9.0:
     ask-sdk-dynamodb-persistence-adapter "^2.9.0"
     ask-sdk-model "^1.29.0"
 
-ask-smapi-model@^1.11.0:
-  version "1.12.3"
-  resolved "https://registry.yarnpkg.com/ask-smapi-model/-/ask-smapi-model-1.12.3.tgz#280d74df76d04120fbc5dd6c3f5f51d012710814"
-  integrity sha512-nH9rtw275x3KdnLyOG8j6kkwe2OdlKoea4TZP0wzhvGOMVb7O2H/EeaFhsJ+s/4bPN3grL2CF9aZkP13O2Ll7g==
+ask-smapi-model@1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/ask-smapi-model/-/ask-smapi-model-1.14.0.tgz#1076b92eef9fa08a8d29b7c24b0e0063ba809b02"
+  integrity sha512-HnmHZy7YY3Bdcwr+pkVKV7x91WckQCf7Q4zQuIG/b2m3MXqwRm6b83OmnirFtvc25u2YlfaEvM7Zy3aiQAyWOw==
   dependencies:
     ask-sdk-model-runtime "^1.1.0"
 
