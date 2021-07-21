@@ -64,7 +64,7 @@ export class AnalyticsSystem extends AbstractClient {
     turnID: string;
     timestamp: Date;
   }): InteractBody {
-    const isAlexaRuntimeRequest = (p: Response | AlexaRuntimeRequest): p is AlexaRuntimeRequest => 'type' in p!;
+    const isAlexaRuntimeRequest = (p: Response | AlexaRuntimeRequest): p is AlexaRuntimeRequest => (p ? 'type' in p : false);
     return {
       eventId: eventID,
       request: {
