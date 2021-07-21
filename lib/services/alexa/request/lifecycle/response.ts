@@ -52,7 +52,7 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     };
   }
 
-  const turnID = turn.get<string>(T.TURNID);
+  const turnID = await turn.get<string>(T.TURNID);
   // Track response on analytics system
   runtime.services.analyticsClient.track({
     id: runtime.getVersionID(),
