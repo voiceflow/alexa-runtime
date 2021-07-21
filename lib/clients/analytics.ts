@@ -1,13 +1,12 @@
 import Rudderstack, { IdentifyRequest, TrackRequest } from '@rudderstack/rudder-sdk-node';
 import { State } from '@voiceflow/general-runtime/build/runtime';
 import { Response } from 'ask-sdk-model';
-import { AxiosResponse } from 'axios';
 
 import log from '@/logger';
 import { Config } from '@/types';
 
 import { AlexaRuntimeRequest } from '../services/runtime/types';
-import IngestApiClient, { Event, IngestApi, InteractBody, RequestType } from './ingest-client';
+import IngestApiClient, { Event, IngestApi, InteractBody, RequestType, TurnBody } from './ingest-client';
 import { AbstractClient } from './utils';
 
 export class AnalyticsSystem extends AbstractClient {
@@ -53,34 +52,57 @@ export class AnalyticsSystem extends AbstractClient {
   }
 
   private createInteractBody({
-    id,
-    eventId,
+    eventID,
     request,
     payload,
-    sessionid,
-    metadata,
+    turnID,
+    timestamp,
   }: {
-    id: string;
-    eventId: Event;
+    eventID: Event;
     request: RequestType;
     payload: Response | AlexaRuntimeRequest;
-    sessionid: string;
-    metadata: State;
+    turnID: string;
+    timestamp: Date;
   }): InteractBody {
+    const isAlexaRuntimeRequest = (p: Response | AlexaRuntimeRequest): p is AlexaRuntimeRequest => 'type' in p!;
     return {
-      eventId,
+      eventId: eventID,
       request: {
-        requestType: request,
-        sessionId: sessionid,
-        versionId: id,
+        turn_id: turnID,
+        // eslint-disable-next-line dot-notation
+        type: isAlexaRuntimeRequest(payload) ? payload!.type.toLocaleLowerCase() : request,
+        format: request,
         payload,
-        metadata: {
-          stack: metadata.stack,
-          storage: metadata.storage,
-          variables: metadata.variables,
-        },
+        timestamp: timestamp.toISOString(),
       },
     } as InteractBody;
+  }
+
+  private createTurnBody({
+    versionID,
+    eventID,
+    sessionID,
+    metadata,
+    timestamp,
+  }: {
+    versionID: string;
+    eventID: Event;
+    sessionID: string;
+    metadata: State;
+    timestamp: Date;
+  }): TurnBody {
+    return {
+      eventId: eventID,
+      request: {
+        session_id: sessionID,
+        version_id: versionID,
+        state: metadata,
+        timestamp: timestamp.toISOString(),
+        metadata: {
+          locale: metadata.storage.locale,
+        },
+      },
+    } as TurnBody;
   }
 
   async track({
@@ -90,6 +112,8 @@ export class AnalyticsSystem extends AbstractClient {
     payload,
     sessionid,
     metadata,
+    timestamp,
+    turnIDP,
   }: {
     id: string;
     event: Event;
@@ -97,18 +121,41 @@ export class AnalyticsSystem extends AbstractClient {
     payload: Response | AlexaRuntimeRequest;
     sessionid: string;
     metadata: State;
-  }): Promise<AxiosResponse<any> | undefined> {
+    timestamp: Date;
+    turnIDP?: string;
+  }): Promise<string> {
     log.trace('analytics: Track');
-    // eslint-disable-next-line sonarjs/no-small-switch
     switch (event) {
-      case Event.INTERACT: {
-        const interactIngestBody = this.createInteractBody({ id, eventId: event, request, payload, sessionid, metadata });
+      case Event.TURN: {
+        const turnIngestBody = this.createTurnBody({ versionID: id, eventID: event, sessionID: sessionid, metadata, timestamp });
+
+        // User/initial interact
+        if (this.aggregateAnalytics && this.rudderstackClient) {
+          this.callAnalyticsSystemTrack(id, event, turnIngestBody);
+        }
+        const turnResponse = await this.ingestClient?.doIngest(turnIngestBody);
+        const turnID = turnResponse?.data.turn_id!;
+
+        const interactIngestBody = this.createInteractBody({ eventID: Event.INTERACT, request, payload, turnID, timestamp });
 
         // User/initial interact
         if (this.aggregateAnalytics && this.rudderstackClient) {
           this.callAnalyticsSystemTrack(id, event, interactIngestBody);
         }
-        return this.ingestClient?.doIngest(interactIngestBody);
+        await this.ingestClient?.doIngest(interactIngestBody);
+
+        return turnID;
+      }
+      case Event.INTERACT: {
+        const interactIngestBody = this.createInteractBody({ eventID: event, request, payload, turnID: turnIDP!, timestamp });
+
+        // User/initial interact
+        if (this.aggregateAnalytics && this.rudderstackClient) {
+          this.callAnalyticsSystemTrack(id, event, interactIngestBody);
+        }
+
+        await this.ingestClient?.doIngest(interactIngestBody);
+        return turnIDP!;
       }
       default:
         throw new RangeError(`Unknown event type: ${event}`);

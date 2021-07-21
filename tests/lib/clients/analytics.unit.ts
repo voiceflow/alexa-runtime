@@ -40,11 +40,12 @@ describe('Analytics client unit tests', () => {
       expect(
         client.track({
           id: 'id',
-          event: Event.INTERACT,
+          event: 'Unknow event' as Event,
           request: RequestType.REQUEST,
           payload: payload as any,
           sessionid: 'session.id',
           metadata: metadata as any,
+          timestamp: new Date(),
         })
       ).to.eventually.rejectedWith(RangeError);
     });
@@ -77,7 +78,7 @@ describe('Analytics client unit tests', () => {
       const ingestClient = { doIngest: sinon.stub() };
 
       (client as any).ingestClient = ingestClient;
-
+      const timestamp = new Date();
       client.track({
         id: 'id',
         event: Event.INTERACT,
@@ -85,6 +86,7 @@ describe('Analytics client unit tests', () => {
         payload: payload as any,
         sessionid: 'session.id',
         metadata: metadata as any,
+        timestamp,
       });
 
       expect(rudderstack.track.callCount).to.eql(1);
@@ -96,15 +98,11 @@ describe('Analytics client unit tests', () => {
             metadata: {
               eventId: Event.INTERACT,
               request: {
-                metadata: {
-                  variables: {},
-                  storage: {},
-                  stack: {},
-                },
+                type: RequestType.REQUEST,
                 payload: {},
-                requestType: 'request',
-                sessionId: 'session.id',
-                versionId: 'id',
+                format: 'request',
+                turn_id: undefined,
+                timestamp: timestamp.toISOString(),
               },
             },
           },

@@ -52,6 +52,7 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     };
   }
 
+  const turnID = turn.get<string>(T.TURNID);
   // Track response on analytics system
   runtime.services.analyticsClient.track({
     id: runtime.getVersionID(),
@@ -60,6 +61,8 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     payload: response,
     sessionid: input.requestEnvelope.session?.sessionId,
     metadata: runtime.getFinalState(),
+    timestamp: new Date(),
+    turnIDP: turnID,
   });
 
   return response;
