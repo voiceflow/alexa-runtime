@@ -103,7 +103,7 @@ describe('response lifecycle unit tests', () => {
 
     expect(await response(runtime as any, input as any)).to.eql(output);
     const { timestamp } = runtime.services.analyticsClient.track.args[0][0];
-    expect(runtime.services.analyticsClient.track.args).to.equal([
+    expect(runtime.services.analyticsClient.track.args).to.deep.eq([
       [
         {
           id: versionID,
