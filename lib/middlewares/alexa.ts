@@ -1,9 +1,52 @@
-import AlexaVerifier from 'alexa-verifier-middleware';
+import verifier from 'alexa-verifier';
+import { NextFunction, Request, Response } from 'express';
 
 import { Config } from '@/types';
 
 import { FullServiceMap } from '../services';
 import { AbstractMiddleware } from './utils';
+
+export const AlexaVerifierMiddleware = (req: Request & { _body: any; rawBody: any }, res: Response, next: NextFunction) => {
+  if (req._body) {
+    const er = 'The raw request body has already been parsed.';
+    res.status(400).json({ status: 'failure', reason: er });
+    return;
+  }
+
+  // TODO: if _rawBody is set and a string, don't obliterate it here!
+
+  // mark the request body as already having been parsed so it's ignored by
+  // other body parser middlewares
+  req._body = true;
+  req.rawBody = '';
+  req.on('data', (data: string) => {
+    // eslint-disable-next-line no-return-assign
+    return (req.rawBody += data);
+  });
+
+  req.on('end', () => {
+    try {
+      req.body = JSON.parse(req.rawBody);
+    } catch (parseError) {
+      // eslint-disable-next-line no-console
+      console.log('parseError', parseError);
+      req.body = {};
+    }
+
+    const certUrl = req.headers.signaturecertchainurl as string;
+    const signature = req.headers.signature as string;
+
+    // eslint-disable-next-line no-shadow
+    verifier(certUrl, signature, req.rawBody, (er: any) => {
+      if (er) {
+        // eslint-disable-next-line no-console
+        console.log('verifierError', er);
+        return res.status(400).json({ status: 'failure', reason: er });
+      }
+      return next();
+    });
+  });
+};
 
 class AlexaMiddleware extends AbstractMiddleware {
   public verifier: any;
@@ -11,7 +54,7 @@ class AlexaMiddleware extends AbstractMiddleware {
   constructor(public services: FullServiceMap, public config: Config) {
     super(services, config);
 
-    this.verifier = this.config.NODE_ENV === 'test' ? (_: any, __: any, next: () => void) => next() : AlexaVerifier;
+    this.verifier = this.config.NODE_ENV === 'test' ? (_: any, __: any, next: () => void) => next() : AlexaVerifierMiddleware;
   }
 }
 

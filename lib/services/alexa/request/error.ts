@@ -12,6 +12,10 @@ const ErrorHandlerGenerator = (metrics: MetricsType): ErrorHandlerType => ({
   handle: (input: AlexaHandlerInput, error: Error) => {
     // TODO: fully implement error handler
     const { versionID } = input.context;
+    // eslint-disable-next-line no-console
+    console.log('Unhandled Error');
+    // eslint-disable-next-line no-console
+    console.log(error);
 
     log.error('ERROR versionID=%s, request=%s, error=%s', versionID, input.requestEnvelope.request.type, error);
 
