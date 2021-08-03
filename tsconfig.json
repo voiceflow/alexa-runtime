@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "ES2017",
     "moduleResolution": "node",
-    "module": "commonjs",
+    "module": "ESNext",
     "declaration": false,
     "sourceMap": true,
     "esModuleInterop": true,
