@@ -12,7 +12,6 @@
     }
   },
   "dependencies": {
-    "@rudderstack/rudder-sdk-node": "^1.0.2",
     "@voiceflow/alexa-types": "1.52.0",
     "@voiceflow/api-sdk": "1.33.0",
     "@voiceflow/backend-utils": "2.2.1",

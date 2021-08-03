@@ -23,14 +23,16 @@ const update = async (runtime: AlexaRuntime, input: AlexaHandlerInput): Promise<
   await runtime.update();
 
   // Track response on analytics system
-  runtime.services.analyticsClient.track({
+  const turnID = await runtime.services.analyticsClient.track({
     id: runtime.getVersionID(),
-    event: Event.INTERACT,
+    event: Event.TURN,
     request: input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
     payload: runtime.getRequest(),
     sessionid: input.requestEnvelope.session?.sessionId,
     metadata: runtime.getFinalState(),
+    timestamp: new Date(),
   });
+  turn.set(T.TURNID, turnID);
 };
 
 export default update;

@@ -46,10 +46,22 @@ describe('response lifecycle unit tests', () => {
     };
 
     expect(await response(runtime as any, input as any)).to.eql(output);
+    const { timestamp } = runtime.services.analyticsClient.track.args[0][0];
     expect(runtime.turn.set.args).to.eql([[T.END, true]]);
     expect(runtime.storage.get.args).to.eql([[S.OUTPUT], [S.OUTPUT]]);
     expect(runtime.services.analyticsClient.track.args).to.eql([
-      [{ id: versionID, event: Event.INTERACT, request: RequestType.RESPONSE, payload: output, sessionid: undefined, metadata: finalState }],
+      [
+        {
+          id: versionID,
+          event: Event.INTERACT,
+          request: RequestType.RESPONSE,
+          payload: output,
+          sessionid: undefined,
+          metadata: finalState,
+          timestamp,
+          turnIDP: undefined,
+        },
+      ],
     ]);
     expect(input.responseBuilder.speak.args).to.eql([['speak']]);
     expect(reprompt.args).to.eql([['speak']]);
@@ -90,8 +102,20 @@ describe('response lifecycle unit tests', () => {
     };
 
     expect(await response(runtime as any, input as any)).to.eql(output);
-    expect(runtime.services.analyticsClient.track.args).to.eql([
-      [{ id: versionID, event: Event.INTERACT, request: RequestType.RESPONSE, payload: output, sessionid: undefined, metadata: {} }],
+    const { timestamp } = runtime.services.analyticsClient.track.args[0][0];
+    expect(runtime.services.analyticsClient.track.args).to.deep.eq([
+      [
+        {
+          id: versionID,
+          event: Event.INTERACT,
+          request: RequestType.RESPONSE,
+          payload: output,
+          sessionid: undefined,
+          metadata: {},
+          timestamp,
+          turnIDP: true,
+        },
+      ],
     ]);
   });
 
