@@ -12,4 +12,4 @@ jobs:
       - uses: deepakputhraya/action-pr-title@master
         with:
           regex: ${{ secrets.PR_TITLE_REGEX }} # Regex the title should match.
-          github_token: ${{ secrets.GH_SA_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
