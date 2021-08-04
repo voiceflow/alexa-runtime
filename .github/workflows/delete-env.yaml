@@ -4,6 +4,9 @@ on:
   pull_request:
     types: [closed, unlabeled]
 
+concurrency: 
+  group: delete-env-${{ github.ref }}
+
 jobs:
   preview:
     name: Clean up dev environment
@@ -71,9 +74,9 @@ jobs:
           if [[ $LABEL != "" ]]
           then
             ENV_NAME=$LABEL
-            ENV_NAME=$(sed 's|env-||g' <<< $ENV_NAME)
+            ENV_NAME=$(sed 's|env-||g' <<< "$ENV_NAME")
           else
-            ENV_NAME=$(sed 's|https://creator-||g' <<< ${{ steps.commentCreated.outputs.comment-body }})
+            ENV_NAME=$(sed 's|https://creator-||g' <<< "${{ steps.commentCreated.outputs.comment-body }}")
             ENV_NAME=$(echo $ENV_NAME | cut -d. -f1)
             LAST_COMMENT_DESTROYED="${{ steps.commentDestroyed.outputs.comment-body }}"
             # if it is already destroyed, do now continue

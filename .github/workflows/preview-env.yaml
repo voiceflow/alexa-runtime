@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [reopened, labeled]
 
+# when new-env label + new labels are added at the same time it creates a race condition and this job has to be executed only once
+concurrency: 
+  group: preview-env-${{ github.ref }}
+
 jobs:
   preview:
     name: Preview commit on env
