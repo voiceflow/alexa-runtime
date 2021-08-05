@@ -50,6 +50,15 @@ orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
+
+  e2e-check:
+    executor: vfcommon/code-test-executor
+    steps:
+      - run:
+          name: Install AWS CLI
+          command: | 
+            yarn gen-certs:e2e && yarn e2e
+
   test:
     executor: vfcommon/code-test-executor
     steps:
@@ -108,11 +117,18 @@ workflows:
   # Master (production)
   test-and-release-app:
     jobs:
+      - e2e-check:
+          <<: *slack-fail-post-step
+          context: dev-test
+          filters:
+            <<: *ignore_autorebase_staging_filters
       - test:
           <<: *slack-fail-post-step
           context: dev-test
           filters:
             <<: *ignore_autorebase_staging_filters
+          requires:
+            - e2e-check
 
       - vfcommon/release:
           <<: *slack-fail-post-step
