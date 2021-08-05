@@ -54,6 +54,8 @@ jobs:
   e2e-check:
     executor: vfcommon/code-test-executor
     steps:
+      - checkout
+      - vfcommon/install_node_modules
       - run:
           name: Install AWS CLI
           command: | 
