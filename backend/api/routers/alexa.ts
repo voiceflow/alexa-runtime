@@ -8,6 +8,7 @@ export default (middlewares: MiddlewareMap, controllers: ControllerMap) => {
 
   router.use(bodyParser.text({ type: '*/*' }));
   router.use(middlewares.alexa.verifier);
+  // the middlewares.alexa.verifier does a JSON.parse on the body, req.body is an object now
   router.post('/:versionID', controllers.alexa.handler);
 
   return router;
