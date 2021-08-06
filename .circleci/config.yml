@@ -54,6 +54,8 @@ jobs:
   e2e-check:
     executor: vfcommon/code-test-executor
     steps:
+      - checkout
+      - vfcommon/install_node_modules
       - run:
           name: Install tools
           command: |
@@ -76,8 +78,6 @@ jobs:
           service_name: alexa-runtime
           github_username: GITHUB_USERNAME
           github_token: GITHUB_TOKEN
-      - checkout
-      - vfcommon/install_node_modules
       - run:
           name: Check e2e
           command: |
