@@ -1,5 +1,6 @@
 import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
 import { DataAPI, LocalDataApi, ServerDataApi } from '@voiceflow/general-runtime/build/runtime';
+import { SkillRequestSignatureVerifier, TimestampVerifier, Verifier } from 'ask-sdk-express-adapter';
 
 import MongoPersistenceAdapter from '@/lib/services/alexa/mongo';
 import PostgresPersistenceAdapter from '@/lib/services/alexa/postgres';
@@ -21,6 +22,7 @@ export interface ClientMap extends StaticType {
   mongo: MongoDB | null;
   pg: PostgresDB | null;
   analyticsClient: AnalyticsSystem;
+  alexaVerifiers: Verifier[];
 }
 
 /**
@@ -39,6 +41,7 @@ const buildClients = (config: Config): ClientMap => {
   const mongo = MongoPersistenceAdapter.enabled(config) ? new MongoDB(config) : null;
   const pg = PostgresPersistenceAdapter.enabled(config) ? new PostgresDB(config) : null;
   const analyticsClient = Analytics(config);
+  const alexaVerifiers = [new SkillRequestSignatureVerifier(), new TimestampVerifier()];
 
   return {
     ...Static,
@@ -48,6 +51,7 @@ const buildClients = (config: Config): ClientMap => {
     dataAPI,
     metrics,
     multimodal,
+    alexaVerifiers,
     analyticsClient,
   };
 };
