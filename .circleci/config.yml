@@ -75,7 +75,7 @@ jobs:
             rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
       - vfcommon/setup_vf_service:
-          service_name: alexa-runtime
+          service_name: server-data-api
           github_username: GITHUB_USERNAME
           github_token: GITHUB_TOKEN
       - run:
