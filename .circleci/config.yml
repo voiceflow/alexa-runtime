@@ -141,13 +141,12 @@ workflows:
           context: dev-test
           filters:
             <<: *ignore_autorebase_staging_filters
-          requires:
-            - e2e-check
 
       - vfcommon/release:
           <<: *slack-fail-post-step
           context: dev-test
           requires:
+            - e2e-check
             - test
           filters:
             branches:
