@@ -73,10 +73,10 @@ jobs:
             wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
             sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
             rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-      # - vfcommon/setup_vf_dbs:
-      #     github_username: GITHUB_USERNAME
-      #     github_token: GITHUB_TOKEN
-      #     commit: DEFAULT_COMMIT
+      - vfcommon/setup_vf_dbs:
+          github_username: GITHUB_USERNAME
+          github_token: GITHUB_TOKEN
+          commit: DEFAULT_COMMIT
 
       - vfcommon/setup_vf_service:
           service_name: server-data-api
@@ -86,7 +86,6 @@ jobs:
           name: Check e2e
           command: |
             npm install @voiceflow/dbcli
-            dbcli init:e2e
             yarn gen-certs:e2e
             yarn e2e&
 
