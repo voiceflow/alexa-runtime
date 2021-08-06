@@ -29,7 +29,7 @@ export const AlexaVerifierMiddleware = (req: Request & { _body: any; rawBody: an
     try {
       req.body = JSON.parse(req.rawBody);
     } catch (parseError) {
-      log.error('body parse rejection: %s, %s', parseError, req.rawBody);
+      log.error(`body parse rejection: ${parseError}, ${req.rawBody}`);
       req.body = {};
     }
 
@@ -39,7 +39,7 @@ export const AlexaVerifierMiddleware = (req: Request & { _body: any; rawBody: an
     // eslint-disable-next-line no-shadow
     verifier(certUrl, signature, req.rawBody, (er) => {
       if (er) {
-        log.error('verifier failure: %s', er);
+        log.error(`verifier failure: ${er}`);
         return res.status(400).json({ status: 'failure', reason: er });
       }
       return next();

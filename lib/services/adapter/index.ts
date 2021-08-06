@@ -47,7 +47,7 @@ class AdapterManager extends AbstractManager {
         variables,
       };
     } catch (err) {
-      log.error('context adapter err: %s', err.message);
+      log.error(`context adapter err: ${err.message}`);
       return {};
     }
   }
