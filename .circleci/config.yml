@@ -82,7 +82,7 @@ jobs:
           name: Check e2e
           command: |
             yarn gen-certs:e2e
-            yarn e2e
+            yarn e2e&
 
             dockerize -wait tcp://localhost:8012 -timeout 1m
 
