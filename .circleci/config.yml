@@ -72,7 +72,7 @@ jobs:
             tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
             rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-      - setup_vf_service:
+      - vfcommon/setup_vf_service:
           service_name: alexa-runtime
           github_username: GITHUB_USERNAME
           github_token: GITHUB_TOKEN
