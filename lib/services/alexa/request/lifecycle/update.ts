@@ -3,6 +3,7 @@ import { RepeatType } from '@voiceflow/general-types';
 import { Event, RequestType } from '@/lib/clients/ingest-client';
 import { S, T, V } from '@/lib/constants';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
+import logger from '@/logger';
 
 import { AlexaHandlerInput } from '../../types';
 
@@ -21,18 +22,21 @@ const update = async (runtime: AlexaRuntime, input: AlexaHandlerInput): Promise<
   variables.set(V.TIMESTAMP, Math.floor(Date.now() / 1000));
 
   await runtime.update();
-
-  // Track response on analytics system
-  const turnID = await runtime.services.analyticsClient.track({
-    id: runtime.getVersionID(),
-    event: Event.TURN,
-    request: input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
-    payload: runtime.getRequest(),
-    sessionid: input.requestEnvelope.session?.sessionId,
-    metadata: runtime.getFinalState(),
-    timestamp: new Date(),
-  });
-  turn.set(T.TURNID, turnID);
+  try {
+    // Track response on analytics system
+    const turnID = await runtime.services.analyticsClient.track({
+      id: runtime.getVersionID(),
+      event: Event.TURN,
+      request: input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
+      payload: runtime.getRequest(),
+      sessionid: input.requestEnvelope.session?.sessionId,
+      metadata: runtime.getFinalState(),
+      timestamp: new Date(),
+    });
+    turn.set(T.TURNID, turnID);
+  } catch (error) {
+    logger.error(error);
+  }
 };
 
 export default update;

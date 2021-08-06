@@ -6,6 +6,7 @@ import { Event, RequestType } from '@/lib/clients/ingest-client';
 import { S, T, V } from '@/lib/constants';
 import { responseHandlers } from '@/lib/services/runtime/handlers';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
+import logger from '@/logger';
 
 import { DirectivesInvalidWithAudioPlayer } from '../../constants';
 import { AlexaHandlerInput, Request } from '../../types';
@@ -52,18 +53,22 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     };
   }
 
-  const turnID = await turn.get<string>(T.TURNID);
-  // Track response on analytics system
-  runtime.services.analyticsClient.track({
-    id: runtime.getVersionID(),
-    event: Event.INTERACT,
-    request: RequestType.RESPONSE,
-    payload: response,
-    sessionid: input.requestEnvelope.session?.sessionId,
-    metadata: runtime.getFinalState(),
-    timestamp: new Date(),
-    turnIDP: turnID,
-  });
+  try {
+    const turnID = await turn.get<string>(T.TURNID);
+    // Track response on analytics system
+    runtime.services.analyticsClient.track({
+      id: runtime.getVersionID(),
+      event: Event.INTERACT,
+      request: RequestType.RESPONSE,
+      payload: response,
+      sessionid: input.requestEnvelope.session?.sessionId,
+      metadata: runtime.getFinalState(),
+      timestamp: new Date(),
+      turnIDP: turnID,
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   return response;
 };

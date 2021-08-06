@@ -6,6 +6,7 @@ import { F, S, T, V } from '@/lib/constants';
 import { StreamAction } from '@/lib/services/runtime/handlers/stream';
 import { createResumeFrame, RESUME_PROGRAM_ID } from '@/lib/services/runtime/programs/resume';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
+import logger from '@/logger';
 
 import { AlexaHandlerInput } from '../../types';
 
@@ -32,8 +33,12 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
 
   const { stack, storage, variables } = runtime;
 
-  // Identify on analytics system
-  runtime.services.analyticsClient.identify(runtime.getVersionID());
+  try {
+    // Identify on analytics system
+    runtime.services.analyticsClient.identify(runtime.getVersionID());
+  } catch (error) {
+    logger.error(error);
+  }
 
   storage.delete(S.STREAM_TEMP);
 
