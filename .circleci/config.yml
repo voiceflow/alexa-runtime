@@ -54,20 +54,37 @@ jobs:
   e2e-check:
     executor: vfcommon/code-test-executor
     steps:
+      - run:
+          name: Install tools
+          command: |
+            MKCERT_VERSION=v1.4.0
+            DOCKERIZE_VERSION=v0.6.1
+
+            sudo apt update
+            sudo apt install -y nginx postgresql-client wget libnss3-tools apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+
+            wget https://github.com/FiloSottile/mkcert/releases/download/$MKCERT_VERSION/mkcert-$MKCERT_VERSION-linux-amd64
+            chmod +x mkcert-$MKCERT_VERSION-linux-amd64
+            sudo mv mkcert-$MKCERT_VERSION-linux-amd64 /usr/local/bin/mkcert
+            mkcert -install
+
+            wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+            tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+            rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
+      - setup_vf_service:
+          service_name: alexa-runtime
+          github_username: GITHUB_USERNAME
+          github_token: GITHUB_TOKEN
       - checkout
       - vfcommon/install_node_modules
       - run:
           name: Check e2e
           command: |
-            MKCERT_VERSION=v1.4.0
-            sudo apt update
-            sudo apt install -y nginx postgresql-client wget libnss3-tools apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-            wget https://github.com/FiloSottile/mkcert/releases/download/$MKCERT_VERSION/mkcert-$MKCERT_VERSION-linux-amd64
-            chmod +x mkcert-$MKCERT_VERSION-linux-amd64
-            sudo mv mkcert-$MKCERT_VERSION-linux-amd64 /usr/local/bin/mkcert
-            mkcert -install
             yarn gen-certs:e2e
             yarn e2e
+
+            dockerize -wait tcp://localhost:8012 -timeout 1m
 
   test:
     executor: vfcommon/code-test-executor
