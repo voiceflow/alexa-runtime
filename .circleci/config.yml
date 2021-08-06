@@ -57,8 +57,8 @@ jobs:
       - run:
           name: Install tools
           command: |
-            MKCERT_VERSION=v1.4.0
-            DOCKERIZE_VERSION=v0.6.1
+            MKCERT_VERSION="v1.4.0"
+            DOCKERIZE_VERSION="v0.6.1"
 
             sudo apt update
             sudo apt install -y nginx postgresql-client wget libnss3-tools apt-transport-https ca-certificates curl gnupg-agent software-properties-common
@@ -69,7 +69,7 @@ jobs:
             mkcert -install
 
             wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-            tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+            sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
             rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
       - vfcommon/setup_vf_service:
