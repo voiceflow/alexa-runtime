@@ -59,6 +59,7 @@ jobs:
       - run:
           name: Check e2e
           command: |
+            MKCERT_VERSION=v1.4.0
             sudo apt update
             sudo apt install -y nginx postgresql-client wget libnss3-tools apt-transport-https ca-certificates curl gnupg-agent software-properties-common
             wget https://github.com/FiloSottile/mkcert/releases/download/$MKCERT_VERSION/mkcert-$MKCERT_VERSION-linux-amd64
