@@ -77,10 +77,6 @@ jobs:
           github_username: GITHUB_USERNAME
           github_token: GITHUB_TOKEN
           commit: DEFAULT_COMMIT
-      - vfcommon/setup_vf_service:
-          service_name: server-data-api
-          github_username: GITHUB_USERNAME
-          github_token: GITHUB_TOKEN
 
       - vfcommon/setup_vf_service:
           service_name: server-data-api
