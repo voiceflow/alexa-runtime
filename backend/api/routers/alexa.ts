@@ -1,14 +1,14 @@
 import bodyParser from '@voiceflow/body-parser';
 import express from 'express';
 
-import { BODY_PARSER_SIZE_LIMIT } from '@/backend/constants';
 import { ControllerMap, MiddlewareMap } from '@/lib';
 
 export default (middlewares: MiddlewareMap, controllers: ControllerMap) => {
   const router = express.Router();
 
+  router.use(bodyParser.text({ type: '*/*' }));
   router.use(middlewares.alexa.verifier);
-  router.use(bodyParser.json({ limit: BODY_PARSER_SIZE_LIMIT }));
+  // the middlewares.alexa.verifier does a JSON.parse on the body, req.body is an object now
   router.post('/:versionID', controllers.alexa.handler);
 
   return router;
