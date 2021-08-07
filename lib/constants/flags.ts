@@ -20,7 +20,6 @@ export enum Storage {
 
 export enum Turn {
   AUDIO = 'play',
-  TURNID = 'turnid',
   PERMISSION_CARD = 'permissionCard',
   ACCOUNT_LINKING = 'accountLinking',
   END = 'end',

@@ -53,22 +53,33 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     };
   }
 
-  try {
-    const turnID = await turn.get<string>(T.TURNID);
-    // Track response on analytics system
-    runtime.services.analyticsClient.track({
+  // Track response on analytics system
+  runtime.services.analyticsClient
+    .track({
       id: runtime.getVersionID(),
-      event: Event.INTERACT,
-      request: RequestType.RESPONSE,
-      payload: response,
+      event: Event.TURN,
+      request: input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
+      payload: runtime.getRequest(),
       sessionid: input.requestEnvelope.session?.sessionId,
       metadata: runtime.getFinalState(),
       timestamp: new Date(),
-      turnIDP: turnID,
+    })
+    // Track response on analytics system
+    .then((turnID: string) =>
+      runtime.services.analyticsClient.track({
+        id: runtime.getVersionID(),
+        event: Event.INTERACT,
+        request: RequestType.RESPONSE,
+        payload: response,
+        sessionid: input.requestEnvelope.session?.sessionId,
+        metadata: runtime.getFinalState(),
+        timestamp: new Date(),
+        turnIDP: turnID,
+      })
+    )
+    .catch((error: Error) => {
+      logger.error(error);
     });
-  } catch (error) {
-    logger.error(error);
-  }
 
   return response;
 };
