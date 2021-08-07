@@ -39,14 +39,16 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
     await utils.updateRuntime(input, (runtime) => {
       if (errorType === ErrorType.INVALID_RESPONSE || errorType === ErrorType.INTERNAL_SERVICE_ERROR) {
         utils.log.warn(
-          'SESSION ENDED' +
-            `versionID=${runtime.versionID},` +
-            `error=${JSON.stringify(request.error)},` +
-            `storage=${JSON.stringify(runtime.storage.getState())},` +
-            `turn=${JSON.stringify(runtime.turn.getState())},` +
-            `variables=${JSON.stringify(runtime.variables.getState())},` +
-            `stack=${JSON.stringify(runtime.stack.getState())},` +
-            `trace=${JSON.stringify(runtime.trace.get())}`
+          [
+            'SESSION ENDED',
+            `versionID=${runtime.versionID},`,
+            `error=${JSON.stringify(request.error)},`,
+            `storage=${JSON.stringify(runtime.storage.getState())},`,
+            `turn=${JSON.stringify(runtime.turn.getState())},`,
+            `variables=${JSON.stringify(runtime.variables.getState())},`,
+            `stack=${JSON.stringify(runtime.stack.getState())},`,
+            `trace=${JSON.stringify(runtime.trace.get())}`,
+          ].join(' ')
         );
       } else if (request.reason === RequestReason.ERROR) {
         utils.log.warn(`SESSION ENDED versionID=${runtime.versionID}, error=${JSON.stringify(request.error)}`);

@@ -110,14 +110,16 @@ describe('session ended handler unit tests', () => {
         fn(runtime);
         expect(utils.log.warn.args).to.eql([
           [
-            'SESSION ENDED' +
-              `versionID=${runtime.versionID},` +
-              `error=${JSON.stringify(input.requestEnvelope.request.error)},` +
-              `storage=${JSON.stringify(runtime.storage.getState())},` +
-              `turn=${JSON.stringify(runtime.turn.getState())},` +
-              `variables=${JSON.stringify(runtime.variables.getState())},` +
-              `stack=${JSON.stringify(runtime.stack.getState())},` +
+            [
+              'SESSION ENDED',
+              `versionID=${runtime.versionID},`,
+              `error=${JSON.stringify(input.requestEnvelope.request.error)},`,
+              `storage=${JSON.stringify(runtime.storage.getState())},`,
+              `turn=${JSON.stringify(runtime.turn.getState())},`,
+              `variables=${JSON.stringify(runtime.variables.getState())},`,
+              `stack=${JSON.stringify(runtime.stack.getState())},`,
               `trace=${JSON.stringify(runtime.trace.get())}`,
+            ].join(' '),
           ],
         ]);
       });
