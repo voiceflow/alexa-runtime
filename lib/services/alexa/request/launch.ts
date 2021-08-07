@@ -26,7 +26,7 @@ export const LaunchHandlerGenerator = (utils: typeof utilsObj): RequestHandler =
 
     await utils.initialize(runtime, input);
 
-    await utils.update(runtime, input);
+    await utils.update(runtime);
 
     return utils.buildResponse(runtime, input);
   },
