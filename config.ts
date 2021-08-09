@@ -61,8 +61,7 @@ const CONFIG: Config = {
   ANALYTICS_ENDPOINT: getOptionalProcessEnv('ANALYTICS_ENDPOINT') || null,
   ANALYTICS_WRITE_KEY: getOptionalProcessEnv('ANALYTICS_WRITE_KEY') || null,
 
-  // temporarily turn off (too many errors)
-  INGEST_WEBHOOK_ENDPOINT: null, // getOptionalProcessEnv('INGEST_WEBHOOK_ENDPOINT') || null,
+  INGEST_WEBHOOK_ENDPOINT: getOptionalProcessEnv('INGEST_WEBHOOK_ENDPOINT') || null,
 };
 
 export default CONFIG;
