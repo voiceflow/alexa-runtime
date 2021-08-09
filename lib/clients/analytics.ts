@@ -124,39 +124,45 @@ export class AnalyticsSystem extends AbstractClient {
     metadata: State;
     timestamp: Date;
     turnIDP?: string;
-  }): Promise<string> {
+  }): Promise<string | null> {
     log.trace('analytics: Track');
     switch (event) {
       case Event.TURN: {
-        const turnIngestBody = this.createTurnBody({ versionID: id, eventID: event, sessionID: sessionid, metadata, timestamp });
+        if (sessionid) {
+          const turnIngestBody = this.createTurnBody({ versionID: id, eventID: event, sessionID: sessionid, metadata, timestamp });
 
-        // User/initial interact
-        // if (this.aggregateAnalytics && this.rudderstackClient) {
-        //   this.callAnalyticsSystemTrack(id, event, turnIngestBody);
-        // }
-        const turnResponse = await this.ingestClient?.doIngest(turnIngestBody);
-        const turnID = turnResponse?.data.turn_id!;
+          // User/initial interact
+          // if (this.aggregateAnalytics && this.rudderstackClient) {
+          //   this.callAnalyticsSystemTrack(id, event, turnIngestBody);
+          // }
+          const turnResponse = await this.ingestClient?.doIngest(turnIngestBody);
+          const turnID = turnResponse?.data.turn_id!;
 
-        const interactIngestBody = this.createInteractBody({ eventID: Event.INTERACT, request, payload, turnID, timestamp });
+          const interactIngestBody = this.createInteractBody({ eventID: Event.INTERACT, request, payload, turnID, timestamp });
 
-        // User/initial interact
-        // if (this.aggregateAnalytics && this.rudderstackClient) {
-        //   this.callAnalyticsSystemTrack(id, event, interactIngestBody);
-        // }
-        await this.ingestClient?.doIngest(interactIngestBody);
+          // User/initial interact
+          // if (this.aggregateAnalytics && this.rudderstackClient) {
+          //   this.callAnalyticsSystemTrack(id, event, interactIngestBody);
+          // }
+          await this.ingestClient?.doIngest(interactIngestBody);
 
-        return turnID;
+          return turnID;
+        }
+        return null;
       }
       case Event.INTERACT: {
-        const interactIngestBody = this.createInteractBody({ eventID: event, request, payload, turnID: turnIDP!, timestamp });
+        if (turnIDP) {
+          const interactIngestBody = this.createInteractBody({ eventID: event, request, payload, turnID: turnIDP, timestamp });
 
-        // User/initial interact
-        // if (this.aggregateAnalytics && this.rudderstackClient) {
-        //   this.callAnalyticsSystemTrack(id, event, interactIngestBody);
-        // }
+          // User/initial interact
+          // if (this.aggregateAnalytics && this.rudderstackClient) {
+          //   this.callAnalyticsSystemTrack(id, event, interactIngestBody);
+          // }
 
-        await this.ingestClient?.doIngest(interactIngestBody);
-        return turnIDP!;
+          await this.ingestClient?.doIngest(interactIngestBody);
+          return turnIDP;
+        }
+        return null;
       }
       default:
         throw new RangeError(`Unknown event type: ${event}`);
