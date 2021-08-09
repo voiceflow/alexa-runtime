@@ -25,43 +25,13 @@ describe('update lifecycle unit tests', () => {
         turn: { set: sinon.stub() },
         update: sinon.stub(),
         getRequest: sinon.stub().returns(request),
-        services: {
-          analyticsClient: {
-            identify: sinon.stub().returns(request),
-            track: sinon.stub().returns(request),
-          },
-        },
         getVersionID: sinon.stub().returns(versionID),
         getFinalState: sinon.stub().returns(request),
       };
 
-      const input = {
-        requestEnvelope: {
-          session: {
-            sessionId: 'session.id',
-          },
-        },
-      };
-      await update(runtime as any, input as any);
-      const { timestamp } = runtime.services.analyticsClient.track.args[0][0];
-      expect(runtime.turn.set.args).to.eql([
-        [T.REQUEST, request],
-        [T.TURNID, request],
-      ]);
+      await update(runtime as any);
+      expect(runtime.turn.set.args).to.eql([[T.REQUEST, request]]);
       expect(runtime.variables.set.args).to.eql([[V.TIMESTAMP, Math.floor(clock.now / 1000)]]);
-      expect(runtime.services.analyticsClient.track.args).to.eql([
-        [
-          {
-            id: versionID,
-            event: Event.TURN,
-            request: RequestType.REQUEST,
-            payload: request,
-            sessionid: input.requestEnvelope.session.sessionId,
-            metadata: request,
-            timestamp,
-          },
-        ],
-      ]);
       expect(runtime.update.callCount).to.eql(1);
     });
   });

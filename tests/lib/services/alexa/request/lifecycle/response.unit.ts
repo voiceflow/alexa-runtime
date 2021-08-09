@@ -20,7 +20,10 @@ describe('response lifecycle unit tests', () => {
     turnGet.onFirstCall().returns(null);
     turnGet.onSecondCall().returns(true);
     const versionID = 'version.id';
+    const turnID = 'turn-id';
+    const request = { foo: 'bar' };
     const runtime = {
+      getRequest: sinon.stub().returns(request),
       storage: { get: storageGet },
       turn: { get: turnGet, set: sinon.stub() },
       stack: { isEmpty: sinon.stub().returns(true) },
@@ -29,7 +32,7 @@ describe('response lifecycle unit tests', () => {
       services: {
         analyticsClient: {
           identify: sinon.stub(),
-          track: sinon.stub(),
+          track: sinon.stub().resolves(turnID),
         },
       },
       getVersionID: sinon.stub().returns(versionID),
@@ -41,25 +44,39 @@ describe('response lifecycle unit tests', () => {
     const reprompt = sinon.stub().returns({ withShouldEndSession });
     const input = {
       responseBuilder: { getResponse: sinon.stub().returns(output), speak: sinon.stub().returns({ reprompt }) },
-      requestEnvelope: { runtime: { System: { user: { accessToken } } } },
+      requestEnvelope: {
+        runtime: { System: { user: { accessToken } } },
+        session: { sessionId: 'session.id' },
+      },
       attributesManager: { setPersistentAttributes: sinon.stub() },
     };
 
     expect(await response(runtime as any, input as any)).to.eql(output);
-    const { timestamp } = runtime.services.analyticsClient.track.args[0][0];
+    const [[{ timestamp }], [{ timestamp: timestamp2 }]] = runtime.services.analyticsClient.track.args;
     expect(runtime.turn.set.args).to.eql([[T.END, true]]);
     expect(runtime.storage.get.args).to.eql([[S.OUTPUT], [S.OUTPUT]]);
     expect(runtime.services.analyticsClient.track.args).to.eql([
       [
         {
           id: versionID,
+          event: Event.TURN,
+          request: RequestType.REQUEST,
+          payload: request,
+          sessionid: input.requestEnvelope.session.sessionId,
+          metadata: finalState,
+          timestamp,
+        },
+      ],
+      [
+        {
+          id: versionID,
           event: Event.INTERACT,
           request: RequestType.RESPONSE,
           payload: output,
-          sessionid: undefined,
+          sessionid: input.requestEnvelope.session.sessionId,
           metadata: finalState,
-          timestamp,
-          turnIDP: undefined,
+          timestamp: timestamp2,
+          turnIDP: turnID,
         },
       ],
     ]);
@@ -76,7 +93,10 @@ describe('response lifecycle unit tests', () => {
 
     const response = responseGenerator(utils);
     const versionID = 'version.id';
+    const turnID = 'turn-id';
+    const request = { foo: 'bar' };
     const runtime = {
+      getRequest: sinon.stub().returns(request),
       storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
       turn: { get: sinon.stub().returns(true) },
       stack: { isEmpty: sinon.stub().returns(false) },
@@ -85,7 +105,7 @@ describe('response lifecycle unit tests', () => {
       services: {
         analyticsClient: {
           identify: sinon.stub(),
-          track: sinon.stub(),
+          track: sinon.stub().resolves(turnID),
         },
       },
       getVersionID: sinon.stub().returns(versionID),
@@ -97,23 +117,37 @@ describe('response lifecycle unit tests', () => {
         getResponse: sinon.stub().returns(output),
         speak: sinon.stub().returns({ reprompt: sinon.stub().returns({ withShouldEndSession: sinon.stub() }) }),
       },
-      requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } } },
+      requestEnvelope: {
+        runtime: { System: { user: { accessToken: 'access-token' } } },
+        session: { sessionId: 'session.id' },
+      },
       attributesManager: { setPersistentAttributes: sinon.stub() },
     };
 
     expect(await response(runtime as any, input as any)).to.eql(output);
-    const { timestamp } = runtime.services.analyticsClient.track.args[0][0];
+    const [[{ timestamp }], [{ timestamp: timestamp2 }]] = runtime.services.analyticsClient.track.args;
     expect(runtime.services.analyticsClient.track.args).to.deep.eq([
+      [
+        {
+          id: versionID,
+          event: Event.TURN,
+          request: RequestType.REQUEST,
+          payload: request,
+          sessionid: input.requestEnvelope.session.sessionId,
+          metadata: {},
+          timestamp,
+        },
+      ],
       [
         {
           id: versionID,
           event: Event.INTERACT,
           request: RequestType.RESPONSE,
           payload: output,
-          sessionid: undefined,
+          sessionid: input.requestEnvelope.session.sessionId,
           metadata: {},
-          timestamp,
-          turnIDP: true,
+          timestamp: timestamp2,
+          turnIDP: turnID,
         },
       ],
     ]);

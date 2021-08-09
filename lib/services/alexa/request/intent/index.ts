@@ -32,7 +32,7 @@ export const IntentHandlerGenerator = (utils: typeof utilsObj): RequestHandler =
       }
     }
 
-    await utils.update(runtime, input);
+    await utils.update(runtime);
 
     return utils.buildResponse(runtime, input);
   },
