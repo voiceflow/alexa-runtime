@@ -1127,7 +1127,7 @@
     eslint-plugin-xss "^0.1.9"
     typescript "^3.9.7"
 
-"@voiceflow/general-runtime@1.53.5":
+"@voiceflow/general-runtime@^1.53.5":
   version "1.53.5"
   resolved "https://registry.yarnpkg.com/@voiceflow/general-runtime/-/general-runtime-1.53.5.tgz#44fa1b229b7b24098419448db29a5acfc19a2904"
   integrity sha512-XNyI7qhqcg4033DaAzSKwr9HpyfBZ9cfnyiqBw/q9fGD6guoCIvC5FqrhoW7kmJZ+0gpEDY3FyqovMv8vuf3xg==
