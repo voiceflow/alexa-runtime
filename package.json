@@ -81,7 +81,7 @@
     "@voiceflow/git-branch-check": "^1.2.0",
     "@voiceflow/prettier-config": "^1.0.5",
     "@zerollup/ts-transform-paths": "^1.7.9",
-    "chai": "^4.2.0",
+    "chai": "^4.2.1",
     "chai-as-promised": "^7.1.1",
     "commitizen": "^4.2.3",
     "cz-conventional-changelog": "^3.0.2",
