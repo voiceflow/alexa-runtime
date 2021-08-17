@@ -6,6 +6,7 @@ export interface Config {
   PORT: string;
   CLOUD_ENV: string | null;
   IS_PRIVATE_CLOUD: boolean;
+  ERROR_RESPONSE_MS: number;
 
   AWS_ACCESS_KEY_ID: string | null;
   AWS_SECRET_ACCESS_KEY: string | null;

@@ -11,6 +11,7 @@ const CONFIG: Config = {
   NODE_ENV,
   PORT: getRequiredProcessEnv('PORT'),
   CLOUD_ENV,
+  ERROR_RESPONSE_MS: Number(getOptionalProcessEnv('ERROR_RESPONSE_MS', (30 * 1000).toString())),
 
   IS_PRIVATE_CLOUD: NODE_ENV === 'production' && CLOUD_ENV !== 'public',
 
