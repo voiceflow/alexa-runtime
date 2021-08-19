@@ -1,5 +1,5 @@
+import { Node as BaseNode } from '@voiceflow/base-types';
 import { EventType } from '@voiceflow/general-runtime/build/runtime';
-import { TraceType } from '@voiceflow/general-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -205,7 +205,7 @@ describe('voiceflowManager unit tests', async () => {
         expect(topStorageGet.args[0]).to.eql([F.CALLED_COMMAND]);
         expect(storageTop.delete.args[0]).to.eql([F.CALLED_COMMAND]);
         expect(topStorageGet.args[1]).to.eql([F.SPEAK]);
-        expect(runtime.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: fSpeak, type: 'message' } }]]);
+        expect(runtime.trace.addTrace.args).to.eql([[{ type: BaseNode.Utils.TraceType.SPEAK, payload: { message: fSpeak, type: 'message' } }]]);
 
         const fn2 = runtime.storage.produce.args[0][0];
 

@@ -1,4 +1,4 @@
-import { RepeatType, SessionType, TraceType } from '@voiceflow/general-types';
+import { Node as BaseNode, Version as BaseVersion } from '@voiceflow/base-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -25,7 +25,7 @@ describe('initialize lifecycle unit tests', async () => {
         },
       };
 
-      const session: any = { type: SessionType.RESTART };
+      const session: any = { type: BaseVersion.SessionType.RESTART };
       const metaObj = {
         variables: ['a', 'b', 'c'],
         platformData: {
@@ -35,7 +35,7 @@ describe('initialize lifecycle unit tests', async () => {
           ],
           settings: {
             permissions: ['alexa-permission'],
-            repeat: RepeatType.DIALOG,
+            repeat: BaseVersion.RepeatType.DIALOG,
             session,
           },
         },
@@ -197,7 +197,7 @@ describe('initialize lifecycle unit tests', async () => {
       delete input.requestEnvelope.context.System.device;
       await fn(runtime as any, input as any);
 
-      expect(runtime.storage.set.args[4]).to.eql([S.REPEAT, RepeatType.ALL]);
+      expect(runtime.storage.set.args[4]).to.eql([S.REPEAT, BaseVersion.RepeatType.ALL]);
       expect(runtime.storage.set.args[2]).to.eql([S.SUPPORTED_INTERFACES, undefined]);
       expect(runtime.api.getVersion.args).to.eql([[VERSION_ID]]);
     });
@@ -224,7 +224,7 @@ describe('initialize lifecycle unit tests', async () => {
           const { utils, runtime, input, metaObj } = generateFakes();
 
           runtime.stack.isEmpty = sinon.stub().returns(false);
-          metaObj.platformData.settings.session = { type: SessionType.RESTART };
+          metaObj.platformData.settings.session = { type: BaseVersion.SessionType.RESTART };
 
           const fn = initializeGenerator(utils as any);
 
@@ -240,7 +240,7 @@ describe('initialize lifecycle unit tests', async () => {
           const { utils, runtime, input, metaObj } = generateFakes();
 
           runtime.stack.isEmpty = sinon.stub().returns(false);
-          metaObj.platformData.settings.session = { type: SessionType.RESUME };
+          metaObj.platformData.settings.session = { type: BaseVersion.SessionType.RESUME };
           runtime.variables.get = sinon.stub().returns({ resume: false });
 
           const fn = initializeGenerator(utils as any);
@@ -260,7 +260,7 @@ describe('initialize lifecycle unit tests', async () => {
 
           runtime.stack.isEmpty = sinon.stub().returns(false);
           runtime.stack.getFrames = sinon.stub().returns([]);
-          const session = { type: SessionType.RESUME, resume: { foo: 'bar' }, follow: 'test' };
+          const session = { type: BaseVersion.SessionType.RESUME, resume: { foo: 'bar' }, follow: 'test' };
           metaObj.platformData.settings.session = session;
           runtime.variables.get = sinon.stub().returns({ resume: true });
 
@@ -286,7 +286,7 @@ describe('initialize lifecycle unit tests', async () => {
               { getProgramID: () => utils.resume.RESUME_PROGRAM_ID },
               { getProgramID: () => false },
             ]);
-          const session = { type: SessionType.RESUME, resume: { foo: 'bar' }, follow: null };
+          const session = { type: BaseVersion.SessionType.RESUME, resume: { foo: 'bar' }, follow: null };
           metaObj.platformData.settings.session = session;
           runtime.variables.get = sinon.stub().returns({ resume: true });
 
@@ -306,7 +306,7 @@ describe('initialize lifecycle unit tests', async () => {
         it('no last speak', async () => {
           const { utils, runtime, input, metaObj, topStorage } = generateFakes();
 
-          metaObj.platformData.settings.session = { type: SessionType.RESUME };
+          metaObj.platformData.settings.session = { type: BaseVersion.SessionType.RESUME };
           topStorage.get = sinon.stub().returns(null);
 
           const fn = initializeGenerator(utils as any);
@@ -316,14 +316,14 @@ describe('initialize lifecycle unit tests', async () => {
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
           expect(runtime.storage.set.args[5]).to.eql([S.OUTPUT, '']);
-          expect(runtime.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: '', type: 'message' } }]]);
+          expect(runtime.trace.addTrace.args).to.eql([[{ type: BaseNode.Utils.TraceType.SPEAK, payload: { message: '', type: 'message' } }]]);
           expect(runtime.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
 
         it('with last speak', async () => {
           const { utils, runtime, input, metaObj, topStorage } = generateFakes();
 
-          metaObj.platformData.settings.session = { type: SessionType.RESUME };
+          metaObj.platformData.settings.session = { type: BaseVersion.SessionType.RESUME };
           const lastSpeak = 'random text';
           topStorage.get = sinon.stub().returns(lastSpeak);
 
@@ -334,7 +334,7 @@ describe('initialize lifecycle unit tests', async () => {
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
           expect(runtime.storage.set.args[5]).to.eql([S.OUTPUT, lastSpeak]);
-          expect(runtime.trace.addTrace.args).to.eql([[{ type: TraceType.SPEAK, payload: { message: lastSpeak, type: 'message' } }]]);
+          expect(runtime.trace.addTrace.args).to.eql([[{ type: BaseNode.Utils.TraceType.SPEAK, payload: { message: lastSpeak, type: 'message' } }]]);
           expect(runtime.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
       });

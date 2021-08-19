@@ -1,11 +1,11 @@
-import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
+import { Program, Version } from '@voiceflow/alexa-types';
 import { DataAPI } from '@voiceflow/general-runtime/build/runtime';
 import { HandlerInput } from 'ask-sdk';
 
 import { AlexaRuntimeClient } from '@/lib/services/runtime/types';
 
 export type AlexaContext = {
-  api: DataAPI<AlexaProgram, AlexaVersion>;
+  api: DataAPI<Program.AlexaProgram, Version.AlexaVersion>;
   versionID: string;
   runtimeClient: AlexaRuntimeClient;
 };

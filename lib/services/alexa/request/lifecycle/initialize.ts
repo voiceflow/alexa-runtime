@@ -1,6 +1,5 @@
+import { Node as BaseNode, Version as BaseVersion } from '@voiceflow/base-types';
 import { Frame, Store } from '@voiceflow/general-runtime/build/runtime';
-import { RepeatType, SessionType, TraceType } from '@voiceflow/general-types';
-import { SpeakType, TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
 
 import { F, S, T, V } from '@/lib/constants';
 import { StreamAction } from '@/lib/services/runtime/handlers/stream';
@@ -58,7 +57,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
 
   // set based on metadata
   storage.set(S.ALEXA_PERMISSIONS, settings.permissions ?? []);
-  storage.set(S.REPEAT, settings.repeat ?? RepeatType.ALL);
+  storage.set(S.REPEAT, settings.repeat ?? BaseVersion.RepeatType.ALL);
 
   // default global variables
   variables.merge({
@@ -93,9 +92,10 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
     });
   }
 
-  const { session = { type: SessionType.RESTART } } = settings;
+  const { session = { type: BaseVersion.SessionType.RESTART } } = settings;
   // restart logic
-  const shouldRestart = stack.isEmpty() || session.type === SessionType.RESTART || variables.get<{ resume?: boolean }>(V.VOICEFLOW)?.resume === false;
+  const shouldRestart =
+    stack.isEmpty() || session.type === BaseVersion.SessionType.RESTART || variables.get<{ resume?: boolean }>(V.VOICEFLOW)?.resume === false;
   if (shouldRestart) {
     // start the stack with just the root flow
     stack.flush();
@@ -103,7 +103,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
 
     // we've created a brand new stack
     runtime.turn.set(T.NEW_STACK, true);
-  } else if (session.type === SessionType.RESUME && session.resume) {
+  } else if (session.type === BaseVersion.SessionType.RESUME && session.resume) {
     // resume prompt flow - use command flow logic
     stack.top().storage.set(F.CALLED_COMMAND, true);
 
@@ -120,9 +120,9 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
     const lastSpeak = stack.top().storage.get<string>(F.SPEAK) ?? '';
 
     storage.set(S.OUTPUT, lastSpeak);
-    runtime.trace.addTrace<SpeakTraceFrame>({
-      type: TraceType.SPEAK,
-      payload: { message: lastSpeak, type: SpeakType.MESSAGE },
+    runtime.trace.addTrace<BaseNode.Speak.TraceFrame>({
+      type: BaseNode.Utils.TraceType.SPEAK,
+      payload: { message: lastSpeak, type: BaseNode.Speak.TraceSpeakType.MESSAGE },
     });
   }
 };

@@ -1,5 +1,4 @@
-import { PermissionType } from '@voiceflow/alexa-types';
-import { Permission } from '@voiceflow/alexa-types/build/nodes/userInfo';
+import { Node } from '@voiceflow/alexa-types';
 import { Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
 import { services } from 'ask-sdk-model';
 import axios, { AxiosStatic } from 'axios';
@@ -97,7 +96,7 @@ const _transactionPermissionGenerator = async ({
 
 export const _productPermissionGenerator = (apiCall: typeof _alexaApiCall) => async (
   handlerInput: AlexaHandlerInput,
-  permission: Partial<Permission>,
+  permission: Partial<Node.UserInfo.Permission>,
   permissionVariable: string | undefined,
   locale: string,
   variables: Store
@@ -280,7 +279,7 @@ const utilsObj = {
 };
 
 export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
-  permission: Partial<Permission> | null,
+  permission: Partial<Node.UserInfo.Permission> | null,
   runtime: Runtime,
   variables: Store
 ): Promise<boolean> => {
@@ -289,7 +288,7 @@ export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
   const permissionValue = permission.selected?.value;
   const handlerInput = runtime.turn.get<AlexaHandlerInput>(T.HANDLER_INPUT);
 
-  if (permissionValue === PermissionType.ALEXA_ALERTS_REMINDERS_SKILL_READ_WRITE) {
+  if (permissionValue === Node.PermissionType.ALEXA_ALERTS_REMINDERS_SKILL_READ_WRITE) {
     return utils._remindersPermissions(handlerInput);
   }
 
@@ -304,47 +303,47 @@ export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
 
   const permissionVariable = permission.map_to?.value;
 
-  if (permissionValue === PermissionType.ALEXA_DEVICES_ALL_NOTIFICATIONS_WRITE) {
+  if (permissionValue === Node.PermissionType.ALEXA_DEVICES_ALL_NOTIFICATIONS_WRITE) {
     return true;
   }
 
-  if (permissionValue === PermissionType.ALEXA_HOUSEHOLD_LISTS_READ) {
+  if (permissionValue === Node.PermissionType.ALEXA_HOUSEHOLD_LISTS_READ) {
     return true;
   }
 
-  if (permissionValue === PermissionType.ALEXA_HOUSEHOLD_LISTS_WRITE) {
+  if (permissionValue === Node.PermissionType.ALEXA_HOUSEHOLD_LISTS_WRITE) {
     return true;
   }
 
-  if (permissionValue === PermissionType.UNOFFICIAL_ISP) {
+  if (permissionValue === Node.PermissionType.UNOFFICIAL_ISP) {
     return utils._ispPermission(handlerInput);
   }
 
-  if (permissionValue === PermissionType.UNOFFICIAL_PRODUCT && permission.product?.value) {
+  if (permissionValue === Node.PermissionType.UNOFFICIAL_PRODUCT && permission.product?.value) {
     return utils._productPermission(handlerInput, permission, permissionVariable, runtime.storage.get<string>(S.LOCALE)!, variables);
   }
 
-  if (permissionValue === PermissionType.UNOFFICIAL_ACCOUNT_LINKING) {
+  if (permissionValue === Node.PermissionType.UNOFFICIAL_ACCOUNT_LINKING) {
     return utils._accountLinkingPermission(runtime.storage.get<string>(S.ACCESS_TOKEN)!, permissionVariable, variables);
   }
 
-  if (permissionValue === PermissionType.ALEXA_PERSON_ID_READ) {
+  if (permissionValue === Node.PermissionType.ALEXA_PERSON_ID_READ) {
     return utils._personIdReadPermission(handlerInput, permissionVariable, variables);
   }
 
-  if (permissionValue === PermissionType.ALEXA_PROFILE_EMAIL_READ) {
+  if (permissionValue === Node.PermissionType.ALEXA_PROFILE_EMAIL_READ) {
     return utils._profileEmailReadPermission(handlerInput, permissionVariable, variables);
   }
 
-  if (permissionValue === PermissionType.ALEXA_PROFILE_NAME_READ) {
+  if (permissionValue === Node.PermissionType.ALEXA_PROFILE_NAME_READ) {
     return utils._profileNameReadPermission(handlerInput, permissionVariable, variables);
   }
 
-  if (permissionValue === PermissionType.ALEXA_PROFILE_MOBILE_NUMBER_READ) {
+  if (permissionValue === Node.PermissionType.ALEXA_PROFILE_MOBILE_NUMBER_READ) {
     return utils._profileNumberReadPermission(handlerInput, permissionVariable, variables);
   }
 
-  if (permissionValue === PermissionType.ALEXA_DEVICES_ALL_GEOLOCATION_READ) {
+  if (permissionValue === Node.PermissionType.ALEXA_DEVICES_ALL_GEOLOCATION_READ) {
     return utils._geolocationRead(handlerInput, permissionVariable, variables);
   }
 

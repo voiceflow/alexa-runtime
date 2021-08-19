@@ -1,4 +1,4 @@
-import { CardType } from '@voiceflow/alexa-types/build/nodes/card';
+import { Node as BaseNode } from '@voiceflow/base-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -60,7 +60,7 @@ describe('card handler unit tests', async () => {
       expect(runtime.turn.set.args[0]).to.eql([
         T.CARD,
         {
-          type: CardType.SIMPLE,
+          type: BaseNode.Card.CardType.SIMPLE,
           title: 'TITLE',
           text: 'CONTENT',
           image: {
@@ -102,7 +102,7 @@ describe('card handler unit tests', async () => {
 
       const node = {
         card: {
-          type: CardType.STANDARD,
+          type: BaseNode.Card.CardType.STANDARD,
         },
       };
       const runtime = {
@@ -124,7 +124,7 @@ describe('card handler unit tests', async () => {
 
       const node = {
         card: {
-          type: CardType.STANDARD,
+          type: BaseNode.Card.CardType.STANDARD,
           image: {
             largeImageUrl: 'random-url',
             smallImageUrl: 'small-random-url',
@@ -170,7 +170,7 @@ describe('card handler unit tests', async () => {
 
     it('simple card', async () => {
       const card = {
-        type: CardType.SIMPLE,
+        type: BaseNode.Card.CardType.SIMPLE,
         title: 'TITLE',
         texr: 'CONTENT',
       };
@@ -189,7 +189,7 @@ describe('card handler unit tests', async () => {
 
     it('standard card', async () => {
       const card = {
-        type: CardType.STANDARD,
+        type: BaseNode.Card.CardType.STANDARD,
         title: 'TITLE',
         text: 'TEXT',
         image: {

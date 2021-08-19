@@ -1,11 +1,11 @@
-import { Node } from '@voiceflow/alexa-types/build/nodes/permission';
+import { Node } from '@voiceflow/alexa-types';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 
 import { S, T } from '@/lib/constants';
 
 import { ResponseBuilder } from '../types';
 
-export type PermissionCardTurn = Node['permission_card'];
+export type PermissionCardTurn = Node.Permission.Node['permission_card'];
 
 export const PermissionCardResponseBuilder: ResponseBuilder = (runtime, builder) => {
   // check permissions card
@@ -20,7 +20,7 @@ export const PermissionCardResponseBuilder: ResponseBuilder = (runtime, builder)
   }
 };
 
-const PermissionCardHandler: HandlerFactory<Node> = () => ({
+const PermissionCardHandler: HandlerFactory<Node.Permission.Node> = () => ({
   canHandle: (node) => !!node.permission_card,
   handle: (node, runtime) => {
     runtime.turn.set<PermissionCardTurn>(T.PERMISSION_CARD, node.permission_card);

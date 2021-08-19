@@ -1,4 +1,4 @@
-import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
+import { Program, Version } from '@voiceflow/alexa-types';
 import { DataAPI, LocalDataApi, ServerDataApi } from '@voiceflow/general-runtime/build/runtime';
 import { SkillRequestSignatureVerifier, TimestampVerifier, Verifier } from 'ask-sdk-express-adapter';
 
@@ -17,7 +17,7 @@ import Static, { StaticType } from './static';
 export interface ClientMap extends StaticType {
   dynamo: DynamoType;
   multimodal: MultimodalType;
-  dataAPI: DataAPI<AlexaProgram, AlexaVersion>;
+  dataAPI: DataAPI<Program.AlexaProgram, Version.AlexaVersion>;
   metrics: MetricsType;
   mongo: MongoDB | null;
   pg: PostgresDB | null;
@@ -31,8 +31,8 @@ export interface ClientMap extends StaticType {
 const buildClients = (config: Config): ClientMap => {
   const dynamo = Dynamo(config);
   const dataAPI = config.PROJECT_SOURCE
-    ? new LocalDataApi<AlexaProgram, AlexaVersion>({ projectSource: config.PROJECT_SOURCE }, { fs: Static.fs, path: Static.path })
-    : new ServerDataApi<AlexaProgram, AlexaVersion>(
+    ? new LocalDataApi<Program.AlexaProgram, Version.AlexaVersion>({ projectSource: config.PROJECT_SOURCE }, { fs: Static.fs, path: Static.path })
+    : new ServerDataApi<Program.AlexaProgram, Version.AlexaVersion>(
         { platform: 'alexa', adminToken: config.ADMIN_SERVER_DATA_API_TOKEN, dataEndpoint: config.VF_DATA_ENDPOINT },
         { axios: Static.axios }
       );

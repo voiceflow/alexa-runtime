@@ -1,4 +1,4 @@
-import { Node } from '@voiceflow/alexa-types/build/nodes/display';
+import { Node } from '@voiceflow/alexa-types';
 import { replaceVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { SupportedInterfaces } from 'ask-sdk-model';
@@ -19,7 +19,7 @@ const utilsObj = {
   commandHandler: CommandHandler(),
 };
 
-export const DisplayHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
+export const DisplayHandler: HandlerFactory<Node.Display.Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => !!node.document && !!node.datasource,
   handle: async (node, runtime, variables) => {
     const supportedInterfaces: SupportedInterfaces | undefined = runtime.storage.get(S.SUPPORTED_INTERFACES);

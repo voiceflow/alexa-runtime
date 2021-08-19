@@ -1,6 +1,6 @@
-import { Node } from '@voiceflow/alexa-types/build/nodes/payment';
+import { Node } from '@voiceflow/alexa-types';
+import { Node as BaseNode } from '@voiceflow/base-types';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
-import { NodeID } from '@voiceflow/general-types';
 import { interfaces } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
@@ -9,9 +9,9 @@ import { ResponseBuilder } from '@/lib/services/runtime/types';
 
 export type PaymentStorage = {
   status: null | false | interfaces.monetization.v1.PurchaseResult;
-  failPath?: NodeID;
+  failPath?: BaseNode.Utils.NodeID;
   productId: string;
-  successPath?: NodeID;
+  successPath?: BaseNode.Utils.NodeID;
 };
 
 export const PaymentResponseBuilder: ResponseBuilder = (runtime, builder) => {
@@ -35,7 +35,7 @@ export const PaymentResponseBuilder: ResponseBuilder = (runtime, builder) => {
   }
 };
 
-const PaymentHandler: HandlerFactory<Node> = () => ({
+const PaymentHandler: HandlerFactory<Node.Payment.Node> = () => ({
   canHandle: (node) => 'product_id' in node && !!node.product_id,
   handle: (node, runtime) => {
     if (!('product_id' in node)) {
