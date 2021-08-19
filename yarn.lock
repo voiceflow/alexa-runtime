@@ -1194,7 +1194,7 @@
     "@voiceflow/base-types" "^1.0.1"
     "@voiceflow/voice-types" "^1.1.0"
 
-"@voiceflow/general-types@1.54.4", "@voiceflow/general-types@^1.54.4":
+"@voiceflow/general-types@^1.54.4":
   version "1.54.4"
   resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.54.4.tgz#e5616347519623688db80128642331c5e89a4814"
   integrity sha512-nxmOq8gPh5qf7KZr2saPD1F8N+7xAqp6439teiuv4PAs4VvKl+NH/k+ggBFndx7xN7axdudR7ixgpaLnwz/IfA==
