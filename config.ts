@@ -12,8 +12,8 @@ const CONFIG: Config = {
   PORT: getRequiredProcessEnv('PORT'),
   CLOUD_ENV,
   ERROR_RESPONSE_MS: Number(getOptionalProcessEnv('ERROR_RESPONSE_MS', (10 * 1000).toString())),
-
   IS_PRIVATE_CLOUD: NODE_ENV === 'production' && CLOUD_ENV !== 'public',
+  PRIVATE_LOGS: !!getOptionalProcessEnv('PRIVATE_LOGS', false.toString()),
 
   AWS_ACCESS_KEY_ID: getOptionalProcessEnv('AWS_ACCESS_KEY_ID'),
   AWS_SECRET_ACCESS_KEY: getOptionalProcessEnv('AWS_SECRET_ACCESS_KEY'),

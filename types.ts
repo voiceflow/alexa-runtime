@@ -7,6 +7,8 @@ export interface Config {
   CLOUD_ENV: string | null;
   IS_PRIVATE_CLOUD: boolean;
   ERROR_RESPONSE_MS: number;
+  /** Censor certain sensitive info (ex. API access tokens) */
+  PRIVATE_LOGS: boolean;
 
   AWS_ACCESS_KEY_ID: string | null;
   AWS_SECRET_ACCESS_KEY: string | null;

@@ -1,10 +1,12 @@
 import { RequestHandler } from 'ask-sdk';
 import { SessionEndedRequest } from 'ask-sdk-model';
 
+import CONFIG from '@/config';
 import { S } from '@/lib/constants';
 import { DisplayInfo } from '@/lib/services/runtime/handlers/display/types';
 import log from '@/logger';
 
+import { NewStateVariables } from '../../adapter/types';
 import { AlexaHandlerInput } from '../types';
 import { updateRuntime } from '../utils';
 
@@ -38,6 +40,12 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
 
     await utils.updateRuntime(input, (runtime) => {
       if (errorType === ErrorType.INVALID_RESPONSE || errorType === ErrorType.INTERNAL_SERVICE_ERROR) {
+        const variables = runtime.variables.getState();
+
+        if (CONFIG.PRIVATE_LOGS && variables?._system?.apiAccessToken) {
+          (variables as NewStateVariables)._system.apiAccessToken = '***';
+        }
+
         utils.log.warn(
           [
             'SESSION ENDED',
@@ -45,7 +53,7 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
             `error=${JSON.stringify(request.error)},`,
             `storage=${JSON.stringify(runtime.storage.getState())},`,
             `turn=${JSON.stringify(runtime.turn.getState())},`,
-            `variables=${JSON.stringify(runtime.variables.getState())},`,
+            `variables=${JSON.stringify(variables)},`,
             `stack=${JSON.stringify(runtime.stack.getState())},`,
             `trace=${JSON.stringify(runtime.trace.get())}`,
           ].join(' ')
