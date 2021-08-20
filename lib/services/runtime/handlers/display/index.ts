@@ -1,5 +1,5 @@
-import { NodeType } from '@voiceflow/alexa-types';
-import { Node } from '@voiceflow/api-sdk';
+import { Node } from '@voiceflow/alexa-types';
+import { Node as BaseNode } from '@voiceflow/base-types';
 import { replaceVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { SupportedInterfaces } from 'ask-sdk-model';
@@ -16,16 +16,14 @@ import { deepFindVideos, isVideoEvent, VideoEvent } from './utils';
 
 export { events, DisplayResponseBuilder };
 
-export type DisplayNode = Node<
-  NodeType.DISPLAY,
-  {
-    nextId?: string;
-    display_id?: number;
-    datasource?: string;
-    apl_commands?: Command[] | string;
-    update_on_change?: boolean;
-  }
->;
+export interface DisplayNode extends BaseNode.Utils.BaseNode {
+  type: Node.NodeType.DISPLAY;
+  nextId?: string;
+  display_id?: number;
+  datasource?: string;
+  apl_commands?: Command[] | string;
+  update_on_change?: boolean;
+}
 
 export const getVariables = (str: string): string[] => {
   return (str.match(/\{[\w\d]+\}/g) || []).map((s) => s.slice(1, -1));

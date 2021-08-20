@@ -1,5 +1,5 @@
-import { AmazonIntent } from '@voiceflow/alexa-types';
-import { RepeatType } from '@voiceflow/general-types';
+import { Constants } from '@voiceflow/alexa-types';
+import { Version as BaseVersion } from '@voiceflow/base-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -8,11 +8,11 @@ import RepeatHandler from '@/lib/services/runtime/handlers/repeat';
 
 describe('repeat handler', () => {
   const repeatHandler = RepeatHandler();
-  const intentRequest = { payload: { intent: { name: AmazonIntent.REPEAT } } };
+  const intentRequest = { payload: { intent: { name: Constants.AmazonIntent.REPEAT } } };
 
   describe('can handle', () => {
     it('true', () => {
-      const runtime = { turn: { get: sinon.stub().returns(intentRequest) }, storage: { get: sinon.stub().returns(RepeatType.ALL) } };
+      const runtime = { turn: { get: sinon.stub().returns(intentRequest) }, storage: { get: sinon.stub().returns(BaseVersion.RepeatType.ALL) } };
       expect(repeatHandler.canHandle(runtime as any)).to.eql(true);
       expect(runtime.storage.get.args[0][0]).to.eql(S.REPEAT);
       expect(runtime.turn.get.args[0][0]).to.eql(T.REQUEST);
@@ -20,10 +20,16 @@ describe('repeat handler', () => {
 
     it('false', () => {
       expect(
-        repeatHandler.canHandle({ turn: { get: sinon.stub().returns(null) }, storage: { get: sinon.stub().returns(RepeatType.ALL) } } as any)
+        repeatHandler.canHandle({
+          turn: { get: sinon.stub().returns(null) },
+          storage: { get: sinon.stub().returns(BaseVersion.RepeatType.ALL) },
+        } as any)
       ).to.eql(false);
       expect(
-        repeatHandler.canHandle({ turn: { get: sinon.stub().returns(intentRequest) }, storage: { get: sinon.stub().returns(RepeatType.OFF) } } as any)
+        repeatHandler.canHandle({
+          turn: { get: sinon.stub().returns(intentRequest) },
+          storage: { get: sinon.stub().returns(BaseVersion.RepeatType.OFF) },
+        } as any)
       ).to.eql(false);
       expect(
         repeatHandler.canHandle({
@@ -42,7 +48,7 @@ describe('repeat handler', () => {
 
         const runtime = {
           storage: {
-            get: sinon.stub().returns(RepeatType.OFF),
+            get: sinon.stub().returns(BaseVersion.RepeatType.OFF),
             produce: sinon.stub(),
           },
           turn: {
@@ -78,7 +84,7 @@ describe('repeat handler', () => {
 
         const runtime = {
           storage: {
-            get: sinon.stub().returns(RepeatType.ALL),
+            get: sinon.stub().returns(BaseVersion.RepeatType.ALL),
             produce: sinon.stub(),
           },
           turn: {

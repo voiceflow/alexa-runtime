@@ -1,7 +1,7 @@
-import { Node, NodeReminder, RecurrenceFreq } from '@voiceflow/alexa-types/build/nodes/reminder';
+import { Node } from '@voiceflow/alexa-types';
+import { Node as BaseNode } from '@voiceflow/base-types';
 import { replaceVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
-import { NodeID } from '@voiceflow/general-types';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -19,7 +19,7 @@ type Trigger =
       scheduledTime: string;
       recurrence?: {
         byDay?: string[];
-        freq: RecurrenceFreq;
+        freq: Node.Reminder.RecurrenceFreq;
       };
       timeZoneId?: string;
     }
@@ -39,7 +39,7 @@ const _deriveSeconds = (text: string, multiplier = 1): number => {
   return number * multiplier;
 };
 
-export const _createReminderObject = (reminder: NodeReminder, variablesMap: Record<string, any>, locale: string) => {
+export const _createReminderObject = (reminder: Node.Reminder.NodeReminder, variablesMap: Record<string, any>, locale: string) => {
   if (reminder.type !== ReminderType.SCHEDULED_ABSOLUTE && reminder.type !== ReminderType.SCHEDULED_RELATIVE)
     throw new Error('invalid reminder type');
 
@@ -102,12 +102,12 @@ const utilsObj = {
   axios,
 };
 
-export const ReminderHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
+export const ReminderHandler: HandlerFactory<Node.Reminder.Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => {
     return !!node.reminder;
   },
   handle: async (node, runtime, variables) => {
-    let nextId: NodeID;
+    let nextId: BaseNode.Utils.NodeID;
 
     try {
       const handlerInput = runtime.turn.get<AlexaHandlerInput>(T.HANDLER_INPUT);

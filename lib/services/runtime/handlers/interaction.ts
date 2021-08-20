@@ -1,4 +1,4 @@
-import { Node } from '@voiceflow/alexa-types/build/nodes/interaction';
+import { Node } from '@voiceflow/alexa-types';
 import { SlotMapping } from '@voiceflow/api-sdk';
 import { formatIntentName } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
@@ -20,7 +20,7 @@ const utilsObj = {
   addRepromptIfExists,
 };
 
-export const InteractionHandler: HandlerFactory<Node, typeof utilsObj> = (utils) => ({
+export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => !!node.interactions,
   handle: (node, runtime, variables) => {
     const request = runtime.turn.get<IntentRequest>(T.REQUEST);

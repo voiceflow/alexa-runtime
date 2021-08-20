@@ -1,6 +1,6 @@
-import { Node } from '@voiceflow/alexa-types/build/nodes/cancelPayment';
+import { Node } from '@voiceflow/alexa-types';
+import { Node as BaseNode } from '@voiceflow/base-types';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
-import { NodeID } from '@voiceflow/general-types';
 import { interfaces } from 'ask-sdk-model';
 
 import { S } from '@/lib/constants';
@@ -8,9 +8,9 @@ import { ResponseBuilder } from '@/lib/services/runtime/types';
 
 export type CancelPaymentStorage = {
   status: null | false | interfaces.monetization.v1.PurchaseResult;
-  failPath?: NodeID;
+  failPath?: BaseNode.Utils.NodeID;
   productId: string;
-  successPath?: NodeID;
+  successPath?: BaseNode.Utils.NodeID;
 };
 
 export const CancelPaymentResponseBuilder: ResponseBuilder = (runtime, builder) => {
@@ -34,7 +34,7 @@ export const CancelPaymentResponseBuilder: ResponseBuilder = (runtime, builder) 
   }
 };
 
-const CancelPaymentHandler: HandlerFactory<Node> = () => ({
+const CancelPaymentHandler: HandlerFactory<Node.CancelPayment.Node> = () => ({
   canHandle: (node) => 'cancel_product_id' in node && !!node.cancel_product_id,
   handle: (node, runtime) => {
     if (!('cancel_product_id' in node)) {

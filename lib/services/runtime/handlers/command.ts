@@ -1,5 +1,6 @@
-import { Command as IntentCommand } from '@voiceflow/alexa-types/build/nodes/command';
-import { Command, CommandMapping } from '@voiceflow/api-sdk';
+import { Node } from '@voiceflow/alexa-types';
+import { CommandMapping } from '@voiceflow/api-sdk';
+import { Node as BaseNode } from '@voiceflow/base-types';
 import { extractFrameCommand, Frame, Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
 import _ from 'lodash';
 
@@ -19,12 +20,12 @@ export const getCommand = (runtime: Runtime, extractFrame: typeof extractFrameCo
   // don't act on a catchall intent
   if (intentName === IntentName.VOICEFLOW) return null;
 
-  const matcher = (command: Command | null) => command?.intent === intentName;
+  const matcher = (command: Node.AnyAlexaCommand | null) => !!command && 'intent' in command && command.intent === intentName;
 
   // If Cancel Intent is not handled turn it into Stop Intent
   // This first loop is AMAZON specific, if cancel intent is not explicitly used anywhere at all, map it to stop intent
   if (intentName === IntentName.CANCEL) {
-    const found = runtime.stack.getFrames().some((frame) => frame.getCommands().some(matcher));
+    const found = runtime.stack.getFrames().some((frame) => frame.getCommands<Node.AnyAlexaCommand>().some(matcher));
 
     if (!found) {
       intentName = IntentName.STOP;
@@ -33,7 +34,8 @@ export const getCommand = (runtime: Runtime, extractFrame: typeof extractFrameCo
     }
   }
 
-  const res = extractFrame<IntentCommand>(runtime.stack, matcher);
+  const res = extractFrame<BaseNode.Command.Command>(runtime.stack, matcher);
+
   if (!res) return null;
 
   return {

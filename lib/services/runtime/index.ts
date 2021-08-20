@@ -1,7 +1,5 @@
+import { Node as BaseNode } from '@voiceflow/base-types';
 import Client, { EventType } from '@voiceflow/general-runtime/build/runtime';
-import { TraceType } from '@voiceflow/general-types';
-import { TraceFrame as FlowTraceFrame } from '@voiceflow/general-types/build/nodes/flow';
-import { SpeakType, TraceFrame as SpeakTraceFrame } from '@voiceflow/general-types/build/nodes/speak';
 
 import { F, S } from '@/lib/constants';
 import { executeEvents } from '@/lib/services/runtime/handlers/events';
@@ -36,8 +34,8 @@ const RuntimeClientManager = (services: Services, config: Config, utils = utilsO
   client.setEvent(EventType.stackDidChange, ({ runtime }) => {
     const programID = runtime.stack.top()?.getProgramID();
 
-    runtime.trace.addTrace<FlowTraceFrame>({
-      type: TraceType.FLOW,
+    runtime.trace.addTrace<BaseNode.Flow.TraceFrame>({
+      type: BaseNode.Utils.TraceType.FLOW,
       payload: { diagramID: programID },
     });
   });
@@ -53,9 +51,9 @@ const RuntimeClientManager = (services: Services, config: Config, utils = utilsO
           draft[S.OUTPUT] += output;
         });
 
-        runtime.trace.addTrace<SpeakTraceFrame>({
-          type: TraceType.SPEAK,
-          payload: { message: output, type: SpeakType.MESSAGE },
+        runtime.trace.addTrace<BaseNode.Speak.TraceFrame>({
+          type: BaseNode.Utils.TraceType.SPEAK,
+          payload: { message: output, type: BaseNode.Speak.TraceSpeakType.MESSAGE },
         });
       }
     }
