@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { State } from '@voiceflow/general-runtime/build/runtime';
 import { Response } from 'ask-sdk-model';
 
