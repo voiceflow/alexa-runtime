@@ -105,7 +105,7 @@ Install a localhost tunnel tool such as [ngrok](https://ngrok.com/), [localtunne
 Run your local instance of `voiceflow/alexa-runtime` with
 
 ```
-yarn local
+yarn start:meshed
 ```
 
 This will now be running on port 4000 of localhost. Expose this with
