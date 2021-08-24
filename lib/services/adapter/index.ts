@@ -23,7 +23,12 @@ class AdapterManager extends AbstractManager {
       // set transformed context
       input.attributesManager.setPersistentAttributes(transformedContext);
 
-      log.warn(`transformed context (skillId=${versionID}, userId=${input.requestEnvelope?.context?.System?.user?.userId})`);
+      log.debug(
+        `[app] [${this.constructor.name}] transformed context ${log.vars({
+          skillID: versionID,
+          userID: input.requestEnvelope?.context?.System?.user?.userId,
+        })}`
+      );
     }
   }
 
@@ -46,8 +51,9 @@ class AdapterManager extends AbstractManager {
         storage,
         variables,
       };
-    } catch (err) {
-      log.error(`context adapter err: ${err.message}`);
+    } catch (error) {
+      log.error(`[app] [${AdapterManager.name}] context adapter failed ${log.vars({ error })}`);
+
       return {};
     }
   }

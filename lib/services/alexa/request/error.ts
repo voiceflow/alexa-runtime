@@ -13,7 +13,13 @@ const ErrorHandlerGenerator = (metrics: MetricsType): ErrorHandlerType => ({
     // TODO: fully implement error handler
     const { versionID } = input.context;
 
-    log.error(`ERROR versionID=${versionID}, request=${input.requestEnvelope.request.type}, error=${error}`);
+    log.error(
+      `[app] ${ErrorHandlerGenerator.name} error handled ${log.vars({
+        versionID,
+        requestType: input.requestEnvelope.request.type,
+        error,
+      })}`
+    );
 
     metrics.error(versionID);
 
