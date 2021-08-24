@@ -6,7 +6,7 @@ import { Event, RequestType } from '@/lib/clients/ingest-client';
 import { S, T, V } from '@/lib/constants';
 import { responseHandlers } from '@/lib/services/runtime/handlers';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
-import logger from '@/logger';
+import log from '@/logger';
 
 import { DirectivesInvalidWithAudioPlayer } from '../../constants';
 import { AlexaHandlerInput, Request } from '../../types';
@@ -53,10 +53,11 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     };
   }
 
+  const versionID = runtime.getVersionID();
   // Track response on analytics system
   runtime.services.analyticsClient
     .track({
-      id: runtime.getVersionID(),
+      id: versionID,
       event: Event.TURN,
       request: input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
       payload: runtime.getRequest(),
@@ -67,7 +68,7 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     // Track response on analytics system
     .then((turnID: string) =>
       runtime.services.analyticsClient.track({
-        id: runtime.getVersionID(),
+        id: versionID,
         event: Event.INTERACT,
         request: RequestType.RESPONSE,
         payload: response,
@@ -78,7 +79,7 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
       })
     )
     .catch((error: Error) => {
-      logger.error(error);
+      log.error(`[analytics] failed to identify ${log.vars({ versionID, error })}`);
     });
 
   return response;

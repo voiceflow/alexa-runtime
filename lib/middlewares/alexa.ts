@@ -17,9 +17,9 @@ class AlexaMiddleware extends AbstractMiddleware {
 
       try {
         req.body = JSON.parse(req.body);
-      } catch (parseError) {
-        log.error(`body parse rejection: ${parseError}, ${req.body}`);
-        return res.status(400).json({ status: 'failure', reason: parseError });
+      } catch (error) {
+        log.debug(`[http] [${this.constructor.name}] failed to parse JSON from body ${log.vars({ body: req.body, error })}`);
+        return res.status(400).json({ status: 'failure', reason: error });
       }
 
       if (this.config.NODE_ENV === 'test') {
@@ -34,10 +34,9 @@ class AlexaMiddleware extends AbstractMiddleware {
             await verifier.verify(plainTextBody, req.headers);
           })
         );
-      } catch (err) {
-        // server return err message
-        log.error(`verifier failure: ${err}`);
-        return res.status(400).json({ status: 'failure', reason: err });
+      } catch (error) {
+        log.debug(`[http] [${this.constructor.name}] request verification failed ${log.vars({ body: req.body, error })}`);
+        return res.status(400).json({ status: 'failure', reason: error });
       }
 
       return next();

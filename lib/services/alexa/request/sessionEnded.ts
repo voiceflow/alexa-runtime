@@ -47,19 +47,18 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
         }
 
         utils.log.warn(
-          [
-            'SESSION ENDED',
-            `versionID=${runtime.versionID},`,
-            `error=${JSON.stringify(request.error)},`,
-            `storage=${JSON.stringify(runtime.storage.getState())},`,
-            `turn=${JSON.stringify(runtime.turn.getState())},`,
-            `variables=${JSON.stringify(variables)},`,
-            `stack=${JSON.stringify(runtime.stack.getState())},`,
-            `trace=${JSON.stringify(runtime.trace.get())}`,
-          ].join(' ')
+          `[app] [runtime] session ended ${utils.log.vars({
+            versionID: runtime.versionID,
+            error: JSON.stringify(request.error),
+            storage: JSON.stringify(runtime.storage.getState()),
+            turn: JSON.stringify(runtime.turn.getState()),
+            variables: JSON.stringify(variables),
+            stack: JSON.stringify(runtime.stack.getState()),
+            trace: JSON.stringify(runtime.trace.get()),
+          })}`
         );
       } else if (request.reason === RequestReason.ERROR) {
-        utils.log.warn(`SESSION ENDED versionID=${runtime.versionID}, error=${JSON.stringify(request.error)}`);
+        utils.log.warn(`[app] [runtime] session ended ${utils.log.vars({ versionID: runtime.versionID, error: JSON.stringify(request.error) })}`);
       }
 
       const displayInfo = runtime.storage.get<DisplayInfo | undefined>(S.DISPLAY_INFO);

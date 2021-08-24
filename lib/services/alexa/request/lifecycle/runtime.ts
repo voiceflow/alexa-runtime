@@ -31,8 +31,10 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
 
   runtime.variables.set(V.RESPONSE, null);
 
-  runtime.setEvent(EventType.stateDidCatch, (error) => log.error(`RUNTIME STACK ERROR error=${JSON.stringify(error)}`));
-  runtime.setEvent(EventType.handlerDidCatch, (error) => log.error(`RUNTIME HANDLER ERROR error=${JSON.stringify(error)}`));
+  runtime.setEvent(EventType.stateDidCatch, (error) => log.error(`[app] [runtime] stack error caught ${log.vars({ error: JSON.stringify(error) })}`));
+  runtime.setEvent(EventType.handlerDidCatch, (error) =>
+    log.error(`[app] [runtime] handler error caught ${log.vars({ error: JSON.stringify(error) })}`)
+  );
 
   return runtime;
 };
