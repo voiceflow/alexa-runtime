@@ -1,8 +1,10 @@
+import Logger from '@voiceflow/logger';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
 import SessionEndedHandler, { ErrorType, Request, RequestReason, SessionEndedHandlerGenerator } from '@/lib/services/alexa/request/sessionEnded';
+import log from '@/logger';
 
 describe('session ended handler unit tests', () => {
   describe('canHandle', () => {
@@ -79,7 +81,7 @@ describe('session ended handler unit tests', () => {
 
     describe('with errors', () => {
       it('works correctly', async () => {
-        const utils = { updateRuntime: sinon.stub(), log: { warn: sinon.stub() } };
+        const utils = { updateRuntime: sinon.stub(), log: { warn: sinon.stub(), vars: log.vars } };
         const handler = SessionEndedHandlerGenerator(utils as any);
 
         const output = 'output';
@@ -110,16 +112,15 @@ describe('session ended handler unit tests', () => {
         fn(runtime);
         expect(utils.log.warn.args).to.eql([
           [
-            [
-              'SESSION ENDED',
-              `versionID=${runtime.versionID},`,
-              `error=${JSON.stringify(input.requestEnvelope.request.error)},`,
-              `storage=${JSON.stringify(runtime.storage.getState())},`,
-              `turn=${JSON.stringify(runtime.turn.getState())},`,
-              `variables=${JSON.stringify(runtime.variables.getState())},`,
-              `stack=${JSON.stringify(runtime.stack.getState())},`,
-              `trace=${JSON.stringify(runtime.trace.get())}`,
-            ].join(' '),
+            `[app] [runtime] session ended ${log.vars({
+              versionID: runtime.versionID,
+              error: JSON.stringify(input.requestEnvelope.request.error),
+              storage: JSON.stringify(runtime.storage.getState()),
+              turn: JSON.stringify(runtime.turn.getState()),
+              variables: JSON.stringify(runtime.variables.getState()),
+              stack: JSON.stringify(runtime.stack.getState()),
+              trace: JSON.stringify(runtime.trace.get()),
+            })}`,
           ],
         ]);
       });
