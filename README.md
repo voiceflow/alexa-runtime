@@ -10,6 +10,8 @@ This is the same service that hosts all Alexa skills created on Voiceflow. This 
 
 > ⚠️ **This repository is still undergoing active development**: Major breaking changes may be pushed periodically and the documentation may become outdated - a stable version has not been released
 
+![image](https://user-images.githubusercontent.com/5643574/132608647-7f64832d-87e3-41f8-b4c9-0f7c4ba4ff8f.png)
+
 ## client architecture
 
 ![client architecture](https://user-images.githubusercontent.com/5643574/114078647-343ee780-9877-11eb-8460-83dc46708b19.png)
