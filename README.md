@@ -4,11 +4,9 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=voiceflow_alexa-runtime&metric=coverage)](https://sonarcloud.io/dashboard?id=voiceflow_alexa-runtime)
 [![sonar quality gate](https://sonarcloud.io/api/project_badges/measure?project=voiceflow_alexa-runtime&metric=alert_status)](https://sonarcloud.io/dashboard?id=voiceflow_alexa-runtime)
 
-`alexa-runtime` is an http webhook service that handles alexa requests and generates a response. It manages the state of the alexa user based on the programs (flows) made on the Voiceflow Creator tool. It can be run independently from Voiceflow.
+`alexa-runtime` is an http webhook service that handles Alexa requests and generates a response. It manages the state of the Alexa user based on the programs (flows) made on the Voiceflow Creator tool. It can be run independently from Voiceflow.
 
 This is the same service that hosts all Alexa skills created on Voiceflow. This includes serving production apps on and handling millions of requests.
-
-> ⚠️ **This repository is still undergoing active development**: Major breaking changes may be pushed periodically and the documentation may become outdated - a stable version has not been released
 
 ![image](https://user-images.githubusercontent.com/5643574/132608647-7f64832d-87e3-41f8-b4c9-0f7c4ba4ff8f.png)
 
@@ -25,16 +23,16 @@ https://developer.amazon.com/en-US/docs/alexa/custom-skills/request-and-response
 
 ### Anatomy of an interaction
 
-1. user says something to alexa, alexa uses natural language processing to transcribe user intent, then sends it via webhook (along with other metadata i.e. _userID_) to `alexa-runtime`
+1. user says something to Alexa, Alexa uses natural language processing to transcribe user intent, then sends it via webhook (along with other metadata i.e. _userID_) to `alexa-runtime`
 2. fetch user state (JSON format) from **end user session storage** based on a _userID_ identifier
 3. fetch project version data for initialization parameters from **Voiceflow API/Project File**
 4. fetch the current program (flow) that the user is on from **Voiceflow API/Project File**
 5. go through each block and update the user state
 6. save the final user state to **end user session storage**
-7. generate a response based on the final user state, send back to alexa
-8. alexa interprets response and speaks to user
+7. generate a response based on the final user state, send back to Alexa
+8. Alexa interprets response and speaks to user
 
-repeat all steps each time a user speaks to the alexa skill, to perform a conversation
+repeat all steps each time a user speaks to the Alexa skill, to perform a conversation
 
 # configurations
 
