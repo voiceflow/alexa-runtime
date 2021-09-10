@@ -123,6 +123,8 @@ workflows:
           filters:
             tags:
               ignore: /.*/
+            branches:
+              ignore: master
 
   # Master (production)
   test-and-release-app:
@@ -153,8 +155,14 @@ workflows:
       - build-push-image:
           <<: *prod_deploy_filters
           context: dev-test
+      - update-track:
+          <<: *prod_deploy_filters
+          context: dev-test
+          name: update-track-release
+          requires:
+            - build-push-image
       - post-image-push-actions:
           <<: *prod_deploy_filters
           context: dev-test
           requires:
-            - build-push-image
+            - update-track-release
