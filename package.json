@@ -129,7 +129,7 @@
     "clean": "rimraf build",
     "commit": "cz",
     "connect:cli": "vfcli mesh connect alexa-runtime -c \"/bin/bash\"",
-    "e2e": "yarn kill:e2e && NODE_TLS_REJECT_UNAUTHORIZED=0 NODE_ENV=e2e ts-node --files -r tsconfig-paths/register start.ts",
+    "e2e": "NODE_TLS_REJECT_UNAUTHORIZED=0 NODE_ENV=e2e ts-node --files -r tsconfig-paths/register start.ts",
     "e2e:check-deps": "until [[ $(curl -I --silent -o /dev/null -w %{http_code} https://localhost:8011/health) =~ 2[0-9][0-9]  ]] ;do sleep 5;done",
     "gen-certs:e2e": "scripts/generate_e2e_certs.sh",
     "kill:e2e": "kill -9 $(lsof -t -i tcp:8012) || true",
