@@ -1,5 +1,6 @@
 import 'core-js';
 import 'regenerator-runtime/runtime';
+import 'pluginSetup';
 
 import { ServiceManager } from './backend';
 import config from './config';
