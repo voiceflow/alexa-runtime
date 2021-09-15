@@ -4,14 +4,14 @@ import { replaceVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import utc from 'dayjs/plugin/utc';
+import dayjs_customParseFormat from 'dayjs/plugin/customParseFormat';
+import dayjs_utc from 'dayjs/plugin/utc';
 
 import { S, T } from '@/lib/constants';
 import { AlexaHandlerInput } from '@/lib/services/alexa/types';
 
-dayjs.extend(utc);
-dayjs.extend(customParseFormat);
+dayjs.extend(dayjs_utc);
+dayjs.extend(dayjs_customParseFormat);
 
 export enum ReminderType {
   SCHEDULED_ABSOLUTE = 'SCHEDULED_ABSOLUTE',
