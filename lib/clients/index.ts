@@ -40,7 +40,7 @@ const buildClients = (config: Config): ClientMap => {
   const metrics = Metrics(config);
   const mongo = MongoPersistenceAdapter.enabled(config) ? new MongoDB(config) : null;
   const pg = PostgresPersistenceAdapter.enabled(config) ? new PostgresDB(config) : null;
-  const analyticsClient = Analytics(config);
+  const analyticsClient = Analytics({ config, dataAPI });
   const alexaVerifiers = [new SkillRequestSignatureVerifier(), new TimestampVerifier()];
 
   return {
