@@ -1,4 +1,4 @@
-import './pluginSetup';
+import '@/pluginSetup';
 
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
