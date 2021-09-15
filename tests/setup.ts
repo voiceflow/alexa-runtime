@@ -1,3 +1,5 @@
+import '@/pluginSetup';
+
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import deepEqualInAnyOrder from 'deep-equal-in-any-order';
