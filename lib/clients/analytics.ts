@@ -30,7 +30,8 @@ export class AnalyticsSystem extends AbstractClient {
     // this.aggregateAnalytics = !config.IS_PRIVATE_CLOUD;
   }
 
-  identify(id: string) {
+  async identify(id: string) {
+    id = await this.dataAPI.unhashVersionID(id);
     log.trace(`[analytics] identify ${log.vars({ id })}`);
 
     // const payload: IdentifyRequest = {
