@@ -1,5 +1,6 @@
 import { Program, Version } from '@voiceflow/alexa-types';
 import { DataAPI, LocalDataApi, ServerDataApi } from '@voiceflow/general-runtime/build/runtime';
+import { PlatformType } from '@voiceflow/internal';
 import { SkillRequestSignatureVerifier, TimestampVerifier, Verifier } from 'ask-sdk-express-adapter';
 
 import MongoPersistenceAdapter from '@/lib/services/alexa/mongo';
@@ -33,7 +34,7 @@ const buildClients = (config: Config): ClientMap => {
   const dataAPI = config.PROJECT_SOURCE
     ? new LocalDataApi<Program.AlexaProgram, Version.AlexaVersion>({ projectSource: config.PROJECT_SOURCE }, { fs: Static.fs, path: Static.path })
     : new ServerDataApi<Program.AlexaProgram, Version.AlexaVersion>(
-        { platform: 'alexa', adminToken: config.ADMIN_SERVER_DATA_API_TOKEN, dataEndpoint: config.VF_DATA_ENDPOINT },
+        { platform: PlatformType.ALEXA, adminToken: config.ADMIN_SERVER_DATA_API_TOKEN, dataEndpoint: config.VF_DATA_ENDPOINT },
         { axios: Static.axios }
       );
   const multimodal = Multimodal(dataAPI);

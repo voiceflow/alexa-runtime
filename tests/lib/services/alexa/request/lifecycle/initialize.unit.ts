@@ -1,4 +1,5 @@
 import { Node as BaseNode, Version as BaseVersion } from '@voiceflow/base-types';
+import { PlatformType } from '@voiceflow/internal';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -146,7 +147,7 @@ describe('initialize lifecycle unit tests', async () => {
           locale,
           user_id: userId,
           sessions: 1,
-          platform: 'alexa',
+          platform: PlatformType.ALEXA,
           [V.VOICEFLOW]: {
             events: [],
             permissions,

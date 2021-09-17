@@ -1,5 +1,6 @@
 import { Node as BaseNode, Version as BaseVersion } from '@voiceflow/base-types';
 import { Frame, Store } from '@voiceflow/general-runtime/build/runtime';
+import { PlatformType } from '@voiceflow/internal';
 
 import { F, S, T, V } from '@/lib/constants';
 import { StreamAction } from '@/lib/services/runtime/handlers/stream';
@@ -66,7 +67,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
     locale: storage.get(S.LOCALE),
     user_id: storage.get(S.USER),
     sessions: storage.get(S.SESSIONS),
-    platform: 'alexa',
+    platform: PlatformType.ALEXA,
 
     // hidden system variables (code node only)
     [V.VOICEFLOW]: {
