@@ -1228,6 +1228,15 @@
     "@voiceflow/base-types" "^1.6.2"
     "@voiceflow/voice-types" "^1.4.13"
 
+"@voiceflow/general-types@1.56.0":
+  version "1.56.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.56.0.tgz#de614a73dde587fe53561f921610544410b29768"
+  integrity sha512-Ya1fXI7fY6iSHFVWGTbnabNX49lG54kSH2KmSzdA65PpZo0ddVg7ABKTY8QgylL5HcvK+y6lvaMNlVG3DF4jwA==
+  dependencies:
+    "@voiceflow/api-sdk" "^1.40.1"
+    "@voiceflow/base-types" "^1.6.4"
+    "@voiceflow/voice-types" "^1.4.15"
+
 "@voiceflow/general-types@^1.54.4":
   version "1.54.4"
   resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-1.54.4.tgz#e5616347519623688db80128642331c5e89a4814"
@@ -1333,7 +1342,7 @@
     "@voiceflow/api-sdk" "^1.36.0"
     "@voiceflow/base-types" "^1.0.2"
 
-"@voiceflow/voice-types@^1.4.13":
+"@voiceflow/voice-types@^1.4.13", "@voiceflow/voice-types@^1.4.15":
   version "1.4.15"
   resolved "https://registry.yarnpkg.com/@voiceflow/voice-types/-/voice-types-1.4.15.tgz#6d21648b126e2d5eb95484e36968438755f8b967"
   integrity sha512-3siuDIsvVtG35Rq3LAofJlmJ7OJcdEgMhAc+fXe73a+jNk+6z3hWDfepE4sZIx7KNlprGg87iCNZg5RsZf2hqg==
