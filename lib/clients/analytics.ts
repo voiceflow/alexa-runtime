@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { State } from '@voiceflow/general-runtime/build/runtime';
+import { DataAPI, State } from '@voiceflow/general-runtime/build/runtime';
 import { Response } from 'ask-sdk-model';
 
 import log from '@/logger';
@@ -17,7 +17,7 @@ export class AnalyticsSystem extends AbstractClient {
 
   // private aggregateAnalytics = false;
 
-  constructor(config: Config) {
+  constructor(config: Config, public dataAPI: DataAPI) {
     super(config);
 
     // if (config.ANALYTICS_WRITE_KEY && config.ANALYTICS_ENDPOINT) {
@@ -30,7 +30,8 @@ export class AnalyticsSystem extends AbstractClient {
     // this.aggregateAnalytics = !config.IS_PRIVATE_CLOUD;
   }
 
-  identify(id: string) {
+  async identify(id: string) {
+    id = await this.dataAPI.unhashVersionID(id);
     log.trace(`[analytics] identify ${log.vars({ id })}`);
 
     // const payload: IdentifyRequest = {
@@ -126,6 +127,7 @@ export class AnalyticsSystem extends AbstractClient {
     timestamp: Date;
     turnIDP?: string;
   }): Promise<string | null> {
+    versionID = await this.dataAPI.unhashVersionID(versionID);
     log.trace(`[analytics] track ${log.vars({ versionID })}`);
     switch (event) {
       case Event.TURN: {
@@ -171,6 +173,6 @@ export class AnalyticsSystem extends AbstractClient {
   }
 }
 
-const AnalyticsClient = (config: Config) => new AnalyticsSystem(config);
+const AnalyticsClient = ({ config, dataAPI }: { config: Config; dataAPI: DataAPI }) => new AnalyticsSystem(config, dataAPI);
 
 export default AnalyticsClient;
