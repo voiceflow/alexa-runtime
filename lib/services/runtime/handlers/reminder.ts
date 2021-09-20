@@ -3,7 +3,7 @@ import { Node as BaseNode } from '@voiceflow/base-types';
 import { replaceVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import axios from 'axios';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import { S, T } from '@/lib/constants';
 import { AlexaHandlerInput } from '@/lib/services/alexa/types';
@@ -70,10 +70,10 @@ export const _createReminderObject = (reminder: Node.Reminder.NodeReminder, vari
   if (reminder.type === ReminderType.SCHEDULED_ABSOLUTE) {
     const date = reminder.date && replaceVariables(reminder.date, variablesMap);
 
-    const time = date?.includes('/') ? moment.utc(date, 'DD/MM/YYYY') : moment.utc(date?.split('T')[0], 'YYYY-MM-DD');
+    let time = date?.includes('/') ? dayjs.utc(date, 'DD/MM/YYYY') : dayjs.utc(date?.split('T')[0], 'YYYY-MM-DD');
 
     if (!time.isValid()) throw new Error('invalid date');
-    else time.add(seconds, 's');
+    else time = time.add(seconds, 's');
 
     reminderObject.trigger = {
       type: reminder.type,
