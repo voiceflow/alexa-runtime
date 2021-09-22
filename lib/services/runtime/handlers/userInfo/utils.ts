@@ -269,11 +269,7 @@ export const _geolocationRead = async (
 export const _amazonPayRead = async (handlerInput: AlexaHandlerInput): Promise<boolean> => {
   const skillPermissionGranted = handlerInput.requestEnvelope.context.System.user.permissions?.scopes?.['payments:autopay_consent'].status;
 
-  if (skillPermissionGranted !== 'GRANTED') {
-    return false;
-  }
-
-  return true;
+  return skillPermissionGranted === 'GRANTED';
 };
 
 const utilsObj = {
