@@ -266,6 +266,16 @@ export const _geolocationRead = async (
   return true;
 };
 
+export const _amazonPayRead = async (handlerInput: AlexaHandlerInput): Promise<boolean> => {
+  const skillPermissionGranted = handlerInput.requestEnvelope.context.System.user.permissions?.scopes?.['payments:autopay_consent'].status;
+
+  if (skillPermissionGranted !== 'GRANTED') {
+    return false;
+  }
+
+  return true;
+};
+
 const utilsObj = {
   _ispPermission: _ispPermissionGenerator(_alexaApiCall),
   _productPermission,
@@ -276,6 +286,7 @@ const utilsObj = {
   _profileNumberReadPermission,
   _geolocationRead,
   _remindersPermissions,
+  _amazonPayRead,
 };
 
 export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
@@ -297,7 +308,8 @@ export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
     !handlerInput ||
     ((!Array.isArray(runtime.storage.get<string[]>(S.PERMISSIONS)) || !runtime.storage.get<string[]>(S.PERMISSIONS)!.includes(permissionValue)) &&
       !permissionValue.startsWith('UNOFFICIAL') &&
-      !permissionValue.startsWith('alexa::person_id'))
+      !permissionValue.startsWith('alexa::person_id') &&
+      !permissionValue.startsWith('payments:autopay_consent'))
   )
     return false;
 
@@ -345,6 +357,10 @@ export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
 
   if (permissionValue === Node.PermissionType.ALEXA_DEVICES_ALL_GEOLOCATION_READ) {
     return utils._geolocationRead(handlerInput, permissionVariable, variables);
+  }
+
+  if (permissionValue === Node.PermissionType.PAYMENTS_AUTO_PAY_CONSENT) {
+    return utils._amazonPayRead(handlerInput);
   }
 
   return false;
