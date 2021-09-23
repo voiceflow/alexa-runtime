@@ -10,6 +10,7 @@ import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, RENDER_DOCUMENT_DIRECTIVE_TYPE,
 import { DisplayInfo, VideoCommand, VideoCommandType } from './types';
 import { deepFindVideos, getEventToSend } from './utils';
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export const DocumentResponseBuilder: ResponseBuilder = async (runtime, builder) => {
   const displayInfo = runtime.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
   const supportedInterfaces = runtime.storage.get<SupportedInterfaces | undefined>(S.SUPPORTED_INTERFACES);

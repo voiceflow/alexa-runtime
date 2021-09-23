@@ -9,3 +9,5 @@ scratch.js
 /database
 /node_modules
 /routes
+/nyc_coverage_unit
+/typings

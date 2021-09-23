@@ -22,6 +22,7 @@ const utilsObj = {
 
 export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => !!node.interactions,
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   handle: (node, runtime, variables) => {
     const request = runtime.turn.get<IntentRequest>(T.REQUEST);
 

@@ -5,6 +5,7 @@ import { AlexaRuntime, EventRequest, RequestType } from '@/lib/services/runtime/
 
 export type EventCommand = Command<'event', { event: string; next: string | null; mappings: { path: string; var: string }[] }>;
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export const getVariable = (path: string, data: any) => {
   if (!path || typeof path !== 'string') {
     return undefined;

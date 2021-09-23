@@ -55,6 +55,7 @@ export class AnalyticsSystem extends AbstractClient {
   //   this.rudderstackClient!.track(interactAnalyticsBody);
   // }
 
+  // eslint-disable-next-line class-methods-use-this
   private createInteractBody({
     eventID,
     request,
@@ -73,7 +74,6 @@ export class AnalyticsSystem extends AbstractClient {
       eventId: eventID,
       request: {
         turn_id: turnID,
-        // eslint-disable-next-line dot-notation
         type: isAlexaRuntimeRequest(payload) ? payload!.type.toLocaleLowerCase() : request,
         format: request,
         payload,
@@ -82,6 +82,7 @@ export class AnalyticsSystem extends AbstractClient {
     } as InteractBody;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private createTurnBody({
     versionID,
     eventID,

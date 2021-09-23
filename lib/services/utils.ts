@@ -2,7 +2,6 @@ import { Config } from '@/types';
 
 import { FullServiceMap } from '.';
 
-// eslint-disable-next-line import/prefer-default-export
 export abstract class AbstractManager<T = Record<string, never>> {
   public services: FullServiceMap & T;
 
@@ -11,4 +10,4 @@ export abstract class AbstractManager<T = Record<string, never>> {
   }
 }
 
-export { FullServiceMap as Services, Config };
+export { Config, FullServiceMap as Services };

@@ -78,7 +78,6 @@ const _transactionPermissionGenerator = async ({
   } else if (result?.entitlementReason === PRODUCT.AUTO_ENTITLED) {
     variables.set(transaction.value, PRODUCT.FTU);
   } else if (result?.purchasable === PRODUCT.NOT_PURCHASABLE) {
-    // eslint-disable-next-line max-depth
     try {
       const transactionsEndpoint = '/v1/users/~current/skills/~current/inSkillProductsTransactions';
       const transactions = await apiCall(handlerInput, transactionsEndpoint);
@@ -289,6 +288,7 @@ export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
   permission: Partial<Node.UserInfo.Permission> | null,
   runtime: Runtime,
   variables: Store
+  // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<boolean> => {
   if (!permission) return false;
 

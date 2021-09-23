@@ -32,6 +32,7 @@ class AdapterManager extends AbstractManager {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async transformState(
     state: OldStateRaw | { attributes: OldStateRaw; id: string },
     input: HandlerInput
