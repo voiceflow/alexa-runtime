@@ -4,11 +4,11 @@ import { HandlerInput } from 'ask-sdk';
 
 import { AlexaRuntimeClient } from '@/lib/services/runtime/types';
 
-export type AlexaContext = {
+export interface AlexaContext {
   api: DataAPI<Program.AlexaProgram, Version.AlexaVersion>;
   versionID: string;
   runtimeClient: AlexaRuntimeClient;
-};
+}
 
 export type AlexaHandlerInput = Omit<HandlerInput, 'context'> & {
   context: AlexaContext;
