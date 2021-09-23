@@ -6,6 +6,7 @@ import { S } from '@/lib/constants';
 import isPermissionGranted, {
   _accountLinkingPermission,
   _alexaApiCallGenerator,
+  _amazonPayRead,
   _geolocationRead,
   _ispPermissionGenerator,
   _personIdReadPermission,
@@ -226,6 +227,16 @@ describe('user info utils unit test', () => {
       const permission = { selected: { value: permissionValue }, map_to: { value: permissionVariable } };
       expect(await fn(permission as any, runtime as any, variables as any)).to.eql(true);
       expect(utils._geolocationRead.args).to.eql([[handlerInput, permissionVariable, variables]]);
+    });
+
+    it('PERMISSIONS.PAYMENTS_AUTO_PAY_CONSENT', async () => {
+      const permissionValue = Node.PermissionType.PAYMENTS_AUTO_PAY_CONSENT;
+      const handlerInput = 'input';
+      const runtime = { turn: { get: sinon.stub().returns(handlerInput) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const permission = { selected: { value: permissionValue } };
+      const utils = { _amazonPayRead: sinon.stub().returns(true) };
+      expect(await isPermissionGrantedGenerator(utils as any)(permission as any, runtime as any, null as any)).to.eql(true);
+      expect(utils._amazonPayRead.args).to.eql([[handlerInput]]);
     });
   });
 
@@ -736,6 +747,33 @@ describe('user info utils unit test', () => {
           expect(variables.set.args).to.eql([[transactionValue, 0]]);
         });
       });
+    });
+  });
+
+  describe('_amazonPayRead', () => {
+    it('true', async () => {
+      const handlerInput = {
+        requestEnvelope: { context: { System: { user: { permissions: { scopes: { 'payments:autopay_consent': { status: 'GRANTED' } } } } } } },
+      };
+
+      expect(await _amazonPayRead(handlerInput as any)).to.eql(true);
+    });
+
+    it('false', async () => {
+      const handlerInput = {
+        requestEnvelope: {
+          context: { System: { user: { permissions: { scopes: { 'payments:autopay_consent': { status: 'some other status' } } } } } },
+        },
+      };
+
+      expect(await _amazonPayRead(handlerInput as any)).to.eql(false);
+      expect(
+        await _amazonPayRead({
+          requestEnvelope: {
+            context: { System: { user: { permissions: undefined } } },
+          },
+        } as any)
+      ).to.eql(false);
     });
   });
 });
