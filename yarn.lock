@@ -1235,6 +1235,14 @@
     "@types/crypto-js" "^4.0.2"
     crypto-js "^4.1.1"
 
+"@voiceflow/common@6.9.0":
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/common/-/common-6.9.0.tgz#c4739797397828636f5a3283a080a66a2f770816"
+  integrity sha512-LETJrRdunPvwdhW7y6X/QBGcb21U2AUZV0IFBywp316RVX7BJkKQk3CdDHXTwostf1pZQRHGqIIP47+/285syA==
+  dependencies:
+    "@types/crypto-js" "^4.0.2"
+    crypto-js "^4.1.1"
+
 "@voiceflow/eslint-config@^3.4.0":
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/@voiceflow/eslint-config/-/eslint-config-3.4.0.tgz#670dc657ff0b5cce81508a69bd603cae31e44133"
