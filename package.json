@@ -14,7 +14,7 @@
   "dependencies": {
     "@voiceflow/alexa-types": "1.52.17",
     "@voiceflow/api-sdk": "1.36.0",
-    "@voiceflow/backend-utils": "2.2.1",
+    "@voiceflow/backend-utils": "3.5.5",
     "@voiceflow/base-types": "1.0.2",
     "@voiceflow/body-parser": "^1.21.0",
     "@voiceflow/common": "6.9.0",

@@ -1131,21 +1131,6 @@
     axios "^0.21.1"
     superstruct "^0.10.12"
 
-"@voiceflow/backend-utils@2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@voiceflow/backend-utils/-/backend-utils-2.2.1.tgz#11bd9e2102bbfd04b48d662e1906c06fcda4b22d"
-  integrity sha512-WVF/qHp6ek6CxkYBRh5T8jL/kvjW525Y7FQtfhI8t6h/7chh34ybE04ffqyZlg+uXwEWfUUlih56yrk/KRzSew==
-  dependencies:
-    "@voiceflow/logger" "1.5.2"
-    "@voiceflow/verror" "^1.1.0"
-    bluebird "^3.7.2"
-    chai "^4.2.0"
-    express-validator "^6.3.0"
-    http-status "^1.4.2"
-    lodash "^4.17.11"
-    luxon "^1.21.3"
-    sinon "^7.5.0"
-
 "@voiceflow/backend-utils@3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@voiceflow/backend-utils/-/backend-utils-3.3.0.tgz#e4af7d68462855286f9d06026c4191fafdd8b156"
@@ -1162,6 +1147,30 @@
     "@voiceflow/verror" "^1.1.0"
     bluebird "^3.7.2"
     chai "^4.3.4"
+    express "^4.17.1"
+    http-status "^1.4.2"
+    lodash "^4.17.11"
+    luxon "^1.21.3"
+    rate-limiter-flexible "^2.2.2"
+    sinon "^10.0.0"
+
+"@voiceflow/backend-utils@3.5.5":
+  version "3.5.5"
+  resolved "https://registry.yarnpkg.com/@voiceflow/backend-utils/-/backend-utils-3.5.5.tgz#d0677fdec11aaa66858c86c5e97eca2afcf6c2dc"
+  integrity sha512-qK0L9fTmmNGYITLteS1JKlsSb/VToS6wjGpk10Irea4ukjaF5eH0zpUc9XJ8lsvi8BWpkO/s4Dv/RyzR4BadAw==
+  dependencies:
+    "@types/bluebird" "^3.5.33"
+    "@types/chai" "^4.2.16"
+    "@types/express" "^4.17.11"
+    "@types/ioredis" "^4.26.4"
+    "@types/lodash" "^4.14.168"
+    "@types/luxon" "^1.26.4"
+    "@types/sinon" "^10.0.0"
+    "@voiceflow/logger" "1.5.2"
+    "@voiceflow/verror" "^1.1.0"
+    bluebird "^3.7.2"
+    chai "^4.3.4"
+    dotenv "^10.0.0"
     express "^4.17.1"
     http-status "^1.4.2"
     lodash "^4.17.11"
@@ -3159,6 +3168,11 @@ dot-prop@^5.1.0:
   integrity sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==
   dependencies:
     is-obj "^2.0.0"
+
+dotenv@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
+  integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
 dotenv@^8.2.0:
   version "8.2.0"
