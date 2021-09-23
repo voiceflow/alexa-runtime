@@ -25,7 +25,7 @@ export const DocumentResponseBuilder: ResponseBuilder = async (runtime, builder)
   const variables = runtime.variables.getState();
   const services = runtime.services as FullServiceMap;
 
-  let dataSources: object | undefined;
+  let dataSources: Record<string, any> | undefined;
 
   try {
     let document;
@@ -39,7 +39,7 @@ export const DocumentResponseBuilder: ResponseBuilder = async (runtime, builder)
 
       // Gracefully handle slightly malformed document
       if (document.dataSources) {
-        dataSources = document.dataSources as object;
+        dataSources = document.dataSources as Record<string, any>;
       }
 
       if (document.document) {

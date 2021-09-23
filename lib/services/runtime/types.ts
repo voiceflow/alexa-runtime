@@ -38,7 +38,7 @@ export type IntentRequest = {
 
 export type EventRequestPayload = {
   event: string;
-  data?: object;
+  data?: Record<string, any>;
 };
 
 export type EventRequest = {

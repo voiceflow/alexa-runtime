@@ -4,7 +4,7 @@ import { DOCUMENT_VIDEO_TYPE, EVENT_SEND_EVENT } from './constants';
 
 export type VideoEvent = {
   type: string;
-  arguments?: (string | object | number | null)[];
+  arguments?: (string | Record<string, any> | number | null)[];
 };
 
 export type Video = {

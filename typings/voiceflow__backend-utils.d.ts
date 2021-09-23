@@ -17,6 +17,7 @@ declare module '@voiceflow/backend-utils' {
   export class ResponseBuilder {
     route(dataPromise: DataPromise, successCodeOverride?: HttpStatus, failureCodeOverride?: HttpStatus): Route;
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     validationResult(req: Record<string, any>, res?: Record<string, any>, next?: Function): void;
   }
 

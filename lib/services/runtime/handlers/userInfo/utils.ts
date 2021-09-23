@@ -20,7 +20,7 @@ export enum PRODUCT {
 }
 
 export const _alexaApiCallGenerator = (http: AxiosStatic) => (handlerInput: AlexaHandlerInput, endpoint: string) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const { apiConfiguration } = handlerInput.serviceClientFactory;
 
@@ -119,7 +119,7 @@ export const _productPermissionGenerator = (apiCall: typeof _alexaApiCall) => as
       apiCall,
       variables,
       // FIXME: add transaction type or remove it since never used on the FE
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       transaction: permission.transaction,
       handlerInput,

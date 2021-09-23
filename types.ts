@@ -58,7 +58,7 @@ export interface Config {
   INGEST_WEBHOOK_ENDPOINT: string | null;
 }
 
-export interface Request<P extends {} = {}> extends Express.Request<P> {
+export interface Request<P extends Record<string, any> = Record<string, never>> extends Express.Request<P> {
   headers: Record<string, string>;
   platform?: string;
   // timedout?: boolean;
@@ -68,7 +68,7 @@ export type Response = Express.Response;
 
 export type Next = () => void;
 
-export interface Route<P = {}, T = void> {
+export interface Route<P = Record<string, never>, T = void> {
   (req: Request<P>): Promise<T>;
 
   validations?: ExpressValidator.ValidationChain[];

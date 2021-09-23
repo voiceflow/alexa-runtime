@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { DataAPI, State } from '@voiceflow/general-runtime/build/runtime';
 import { Response } from 'ask-sdk-model';
