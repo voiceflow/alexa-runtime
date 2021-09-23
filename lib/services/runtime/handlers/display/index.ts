@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Node } from '@voiceflow/alexa-types';
 import { Node as BaseNode } from '@voiceflow/base-types';
 import { replaceVariables } from '@voiceflow/common';
