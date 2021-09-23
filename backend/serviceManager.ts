@@ -28,14 +28,14 @@ class ServiceManager {
   /**
    * Start services
    */
-  async start() {
+  async start(): Promise<void> {
     await initClients(this.config, this.clients);
   }
 
   /**
    * Stop services
    */
-  async stop() {
+  async stop(): Promise<void> {
     await stopClients(this.config, this.clients);
   }
 }

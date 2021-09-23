@@ -13,6 +13,8 @@ module.exports = {
         'import/no-cycle': 'off',
         'import/no-named-as-default': 'off',
         'you-dont-need-lodash-underscore/is-string': 'off',
+        '@typescript-eslint/no-non-null-assertion': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
         camelcase: 'warn',
       },
     },

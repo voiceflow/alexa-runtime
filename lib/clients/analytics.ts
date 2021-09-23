@@ -31,7 +31,7 @@ export class AnalyticsSystem extends AbstractClient {
     // this.aggregateAnalytics = !config.IS_PRIVATE_CLOUD;
   }
 
-  async identify(id: string) {
+  async identify(id: string): Promise<void> {
     id = await this.dataAPI.unhashVersionID(id);
     log.trace(`[analytics] identify ${log.vars({ id })}`);
 
@@ -175,6 +175,6 @@ export class AnalyticsSystem extends AbstractClient {
   }
 }
 
-const AnalyticsClient = ({ config, dataAPI }: { config: Config; dataAPI: DataAPI }) => new AnalyticsSystem(config, dataAPI);
+const AnalyticsClient = ({ config, dataAPI }: { config: Config; dataAPI: DataAPI }): AnalyticsSystem => new AnalyticsSystem(config, dataAPI);
 
 export default AnalyticsClient;
