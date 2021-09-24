@@ -12,13 +12,13 @@
     }
   },
   "dependencies": {
-    "@voiceflow/alexa-types": "1.52.17",
-    "@voiceflow/api-sdk": "1.36.0",
+    "@voiceflow/alexa-types": "1.52.34",
+    "@voiceflow/api-sdk": "1.39.0",
     "@voiceflow/backend-utils": "3.5.5",
-    "@voiceflow/base-types": "1.0.2",
+    "@voiceflow/base-types": "1.5.3",
     "@voiceflow/body-parser": "^1.21.0",
     "@voiceflow/common": "6.9.0",
-    "@voiceflow/general-runtime": "1.60.0",
+    "@voiceflow/general-runtime": "1.60.1",
     "@voiceflow/general-types": "1.56.0",
     "@voiceflow/logger": "^1.6.0",
     "@voiceflow/verror": "^1.1.0",
@@ -122,6 +122,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/voiceflow/alexa-runtime.git"
+  },
+  "resolutions": {
+    "@types/serve-static": "1.13.9"
   },
   "scripts": {
     "build": "yarn clean && ttsc --project ./tsconfig.build.json && cp yarn.lock build/",
