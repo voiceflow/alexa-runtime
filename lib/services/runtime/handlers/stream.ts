@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { Node } from '@voiceflow/alexa-types';
 import { generateHash, replaceVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
