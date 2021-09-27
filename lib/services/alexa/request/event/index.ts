@@ -25,7 +25,7 @@ export const EventHandlerGenerator = (utils: typeof utilsObj): RequestHandler =>
 
     input.attributesManager.setPersistentAttributes(runtime.getRawState());
 
-    return IntentHandler.handle(input);
+    return utils.IntentHandler.handle(input);
   },
 });
 
