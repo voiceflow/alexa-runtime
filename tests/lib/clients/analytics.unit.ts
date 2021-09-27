@@ -24,7 +24,7 @@ describe('Analytics client unit tests', () => {
 
   describe('Track', () => {
     it('throws on unknown events', () => {
-      const client = AnalyticsClient({ config: {} } as any);
+      const client = AnalyticsClient({ config: {}, dataAPI: { unhashVersionID: sinon.stub().returns('versionID') } } as any);
       const metadata = {
         data: {
           reqHeaders: {},
