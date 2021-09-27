@@ -17,6 +17,8 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         camelcase: 'off',
+        '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
+        'class-methods-use-this': 'off',
       },
     },
   ],

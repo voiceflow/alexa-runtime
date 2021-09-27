@@ -12,3 +12,4 @@ scratch.js
 /nyc_coverage
 /nyc_coverage_*
 /typings
+/build

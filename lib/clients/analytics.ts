@@ -55,7 +55,6 @@ export class AnalyticsSystem extends AbstractClient {
   //   this.rudderstackClient!.track(interactAnalyticsBody);
   // }
 
-  // eslint-disable-next-line class-methods-use-this
   private createInteractBody({
     eventID,
     request,
@@ -82,7 +81,6 @@ export class AnalyticsSystem extends AbstractClient {
     } as InteractBody;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private createTurnBody({
     versionID,
     eventID,
