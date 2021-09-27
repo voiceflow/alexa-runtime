@@ -6,12 +6,12 @@ import { interfaces } from 'ask-sdk-model';
 import { S } from '@/lib/constants';
 import { ResponseBuilder } from '@/lib/services/runtime/types';
 
-export type CancelPaymentStorage = {
+export interface CancelPaymentStorage {
   status: null | false | interfaces.monetization.v1.PurchaseResult;
   failPath?: BaseNode.Utils.NodeID;
   productId: string;
   successPath?: BaseNode.Utils.NodeID;
-};
+}
 
 export const CancelPaymentResponseBuilder: ResponseBuilder = (runtime, builder) => {
   // check cancel payment

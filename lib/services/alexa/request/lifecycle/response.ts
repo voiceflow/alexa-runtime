@@ -39,11 +39,9 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
   const response = responseBuilder.getResponse();
 
   const { directives } = response;
-  if (Array.isArray(directives)) {
+  if (Array.isArray(directives) && directives.some(({ type }) => DirectivesInvalidWithAudioPlayer.has(type))) {
     // remove AudioPlayer directives if there is a conflicting directive
-    if (directives.some(({ type }) => DirectivesInvalidWithAudioPlayer.has(type))) {
-      response.directives = directives.filter(({ type }) => !type.startsWith(Request.AUDIO_PLAYER));
-    }
+    response.directives = directives.filter(({ type }) => !type.startsWith(Request.AUDIO_PLAYER));
   }
 
   if (_isObject(variables.get(V.RESPONSE))) {

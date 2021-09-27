@@ -1,3 +1,4 @@
+import { EmptyObject } from '@voiceflow/common';
 import { HandlerInput } from 'ask-sdk';
 import _ from 'lodash';
 
@@ -12,7 +13,7 @@ import { afterStorageModifier, beforeContextModifier, stackAdapter, storageAdapt
  * The intention is to remove this adapter once we switch all users over
  */
 class AdapterManager extends AbstractManager {
-  async state(input: HandlerInput, versionID: number | string | bigint) {
+  async state(input: HandlerInput, versionID: number | string | bigint): Promise<void> {
     // getPersistentAttributes hits dynamo only once during a TURN. the results from dynamo are cached
     // and used for sequent calls to getPersistentAttributes
     const state = await input.attributesManager.getPersistentAttributes();
@@ -32,7 +33,7 @@ class AdapterManager extends AbstractManager {
     }
   }
 
-  async transformState(state: OldStateRaw | { attributes: OldStateRaw; id: string }, input: HandlerInput): Promise<NewStateRaw | {}> {
+  async transformState(state: OldStateRaw | { attributes: OldStateRaw; id: string }, input: HandlerInput): Promise<NewStateRaw | EmptyObject> {
     if ('attributes' in state) {
       state = state.attributes;
     }

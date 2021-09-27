@@ -4,14 +4,16 @@ import { Config } from '@/types';
 
 import { FullServiceMap } from '.';
 
-type InjectedServiceMap<S extends object> = { [K in keyof S]: { new (services: FullServiceMap, config: Config): S[K] } };
+type InjectedServiceMap<S extends Record<string, any>> = { [K in keyof S]: { new (services: FullServiceMap, config: Config): S[K] } };
 
 const constructService = (Service: any, services: any, config: any) => {
   // eslint-disable-next-line no-nested-ternary
   return isConstructor(Service) ? new Service(services, config) : typeof Service === 'function' ? Service(services, config) : Service;
 };
 
-export const injectServices = <S extends object>(injectedServiceMap: InjectedServiceMap<S> | S) => <T extends { new (...args: any[]): any }>(
+export const injectServices = <S extends Record<string, any>>(injectedServiceMap: InjectedServiceMap<S> | S) => <
+  T extends { new (...args: any[]): any }
+>(
   clazz: T
 ): any =>
   class extends clazz {

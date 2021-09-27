@@ -43,7 +43,9 @@ export const stackAdapter = (oldState: OldStateRaw): NewStateStack =>
     return acc;
   }, [] as NewStateStack) || [];
 
-type StorageAdapterOptions = { accessToken: string | undefined };
+interface StorageAdapterOptions {
+  accessToken: string | undefined;
+}
 
 export const storageAdapter = (oldState: OldStateRaw, { accessToken }: StorageAdapterOptions): NewStateStorage => ({
   output: oldState.output,
@@ -116,7 +118,9 @@ export const storageAdapter = (oldState: OldStateRaw, { accessToken }: StorageAd
   }),
 });
 
-type VariablesAdapterOptions = { system: interfaces.system.SystemState };
+interface VariablesAdapterOptions {
+  system: interfaces.system.SystemState;
+}
 
 export const variablesAdapter = (oldState: OldStateRaw, { system }: VariablesAdapterOptions): NewStateVariables =>
   oldState.globals[0]

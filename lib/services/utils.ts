@@ -1,9 +1,10 @@
+import { EmptyObject } from '@voiceflow/common';
+
 import { Config } from '@/types';
 
 import { FullServiceMap } from '.';
 
-// eslint-disable-next-line import/prefer-default-export
-export abstract class AbstractManager<T = {}> {
+export abstract class AbstractManager<T = EmptyObject> {
   public services: FullServiceMap & T;
 
   constructor(services: FullServiceMap, public config: Config) {
@@ -11,4 +12,4 @@ export abstract class AbstractManager<T = {}> {
   }
 }
 
-export { FullServiceMap as Services, Config };
+export { Config, FullServiceMap as Services };

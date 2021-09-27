@@ -9,3 +9,7 @@ scratch.js
 /database
 /node_modules
 /routes
+/nyc_coverage
+/nyc_coverage_*
+/typings
+/build

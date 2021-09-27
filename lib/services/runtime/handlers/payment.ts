@@ -7,12 +7,12 @@ import { S } from '@/lib/constants';
 import { SEND_REQUEST_DIRECTIVE } from '@/lib/services/alexa/constants';
 import { ResponseBuilder } from '@/lib/services/runtime/types';
 
-export type PaymentStorage = {
+export interface PaymentStorage {
   status: null | false | interfaces.monetization.v1.PurchaseResult;
   failPath?: BaseNode.Utils.NodeID;
   productId: string;
   successPath?: BaseNode.Utils.NodeID;
-};
+}
 
 export const PaymentResponseBuilder: ResponseBuilder = (runtime, builder) => {
   // check payment
