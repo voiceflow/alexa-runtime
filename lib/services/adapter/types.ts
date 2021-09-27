@@ -3,16 +3,16 @@ import { interfaces, SupportedInterfaces } from 'ask-sdk-model';
 import { Command as DisplayCommand, DisplayInfo } from '../runtime/handlers/display/types';
 import { StreamAction, StreamPlay } from '../runtime/handlers/stream';
 
-export type OldCommands = {
+export interface OldCommands {
   [key: string]: {
     mappings: Array<{ variable: string; slot: string }>;
     diagram_id: string; // when command
     end: boolean; // when command
     next: string; // when intent
   };
-};
+}
 
-type OldPlay = {
+interface OldPlay {
   action: StreamAction;
   url: string;
   loop: boolean;
@@ -28,7 +28,7 @@ type OldPlay = {
   regex_description: string;
   icon_img: string;
   background_img: string;
-};
+}
 
 type OldRandoms = Record<string, string[]>;
 
@@ -48,7 +48,7 @@ type OldDiagrams = Array<{
   speak: string;
 }>;
 
-export type OldStateRaw = {
+export interface OldStateRaw {
   line_id: string | null;
   output: string;
   last_speak?: string;
@@ -100,18 +100,18 @@ export type OldStateRaw = {
   // end of play temp vars
   globals: OldGlobals;
   diagrams: OldDiagrams;
-};
+}
 
-export type Command = {
+export interface Command {
   diagram_id?: string; // when command
   next?: string; // when intent
   mappings: Array<{ variable: string; slot: string }>;
   end?: boolean; // when command
   intent: string;
-};
+}
 export type Commands = Array<Command>;
 
-export type Frame = {
+export interface Frame {
   nodeID: string | null;
   programID: string;
   variables: Record<string, any>;
@@ -122,11 +122,11 @@ export type Frame = {
     calledCommand?: boolean;
   };
   commands: Commands;
-};
+}
 
 export type NewStateStack = Array<Frame>;
 
-export type NewStateStorage = {
+export interface NewStateStorage {
   output: string;
   sessions: number;
   repeat: number;
@@ -157,23 +157,23 @@ export type NewStateStorage = {
   };
   streamFinished?: true;
   streamTemp?: NewStateRaw;
-};
+}
 
-export type NewVoiceflowVars = {
+export interface NewVoiceflowVars {
   [key: string]: any;
   permissions: string[]; // alexa_permissions
   events: any[];
   capabilities: SupportedInterfaces; // supported_interfaces
-};
+}
 
-export type NewStateVariables = {
+export interface NewStateVariables {
   [key: string]: any;
   voiceflow: NewVoiceflowVars;
   _system: interfaces.system.SystemState;
-};
+}
 
-export type NewStateRaw = {
+export interface NewStateRaw {
   stack: NewStateStack;
   storage: NewStateStorage;
   variables: NewStateVariables;
-};
+}

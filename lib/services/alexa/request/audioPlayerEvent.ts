@@ -1,4 +1,4 @@
-/* eslint-disable max-depth */
+/* eslint-disable max-depth, sonarjs/cognitive-complexity */
 import { State } from '@voiceflow/general-runtime/build/runtime';
 import { RequestHandler } from 'ask-sdk';
 

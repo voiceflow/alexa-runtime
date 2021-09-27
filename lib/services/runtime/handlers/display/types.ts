@@ -17,7 +17,7 @@ export interface Command {
   value?: number | string;
 }
 
-export type DisplayInfo = {
+export interface DisplayInfo {
   playingVideos: Record<string, { started: number }>;
   dataSource?: string;
   document?: string;
@@ -28,4 +28,4 @@ export type DisplayInfo = {
   lastDataSource?: string;
   dataSourceVariables?: string[];
   shouldUpdateOnResume?: boolean;
-};
+}

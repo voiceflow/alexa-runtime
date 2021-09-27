@@ -11,13 +11,17 @@ import { AbstractMiddleware } from './middlewares/utils';
 
 type Validations = Record<string, ValidationChain>;
 
-export const validate = (validations: Validations) => (_target: object, _key: string, descriptor: PropertyDescriptor) => {
+export const validate = (validations: Validations) => (
+  _target: Record<string, any>,
+  _key: string,
+  descriptor: PropertyDescriptor
+): PropertyDescriptor => {
   descriptor.value = Object.assign(descriptor.value, { validations });
 
   return descriptor;
 };
 
-export const factory = () => (_target: () => Middleware, _key: string, descriptor: PropertyDescriptor) => {
+export const factory = () => (_target: () => Middleware, _key: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
   descriptor.value = Object.assign(descriptor.value, { callback: true });
 
   return descriptor;

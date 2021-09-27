@@ -22,7 +22,7 @@ export enum AudioDirective {
   REPLACE_ALL = 'REPLACE_ALL',
 }
 
-export type StreamPlay = {
+export interface StreamPlay {
   action: StreamAction;
   url: string;
   loop: boolean;
@@ -38,12 +38,12 @@ export type StreamPlay = {
   regex_description: string;
   icon_img: string;
   background_img: string;
-};
+}
 
-export type StreamPauseStorage = {
+export interface StreamPauseStorage {
   id: string;
   offset: number;
-};
+}
 
 export const _streamMetaData = (streamPlay: StreamPlay) => {
   if (!streamPlay || _.isEmpty(streamPlay)) return {};
@@ -51,7 +51,7 @@ export const _streamMetaData = (streamPlay: StreamPlay) => {
   const { title, description, icon_img, background_img, url, offset } = streamPlay;
 
   const metaData: Record<string, any> = {
-    title: title || _.last(url.split('/')),
+    title: title || _.last(url.split('/')), // eslint-disable-line you-dont-need-lodash-underscore/last
     subtitle: description,
   };
 

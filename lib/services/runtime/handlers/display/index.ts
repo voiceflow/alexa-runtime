@@ -14,7 +14,7 @@ import DisplayResponseBuilder from './responseBuilder';
 import { Command, DisplayInfo } from './types';
 import { deepFindVideos, isVideoEvent, VideoEvent } from './utils';
 
-export { events, DisplayResponseBuilder };
+export { DisplayResponseBuilder, events };
 
 export interface DisplayNode extends BaseNode.Utils.BaseNode {
   type: Node.NodeType.DISPLAY;
@@ -26,7 +26,7 @@ export interface DisplayNode extends BaseNode.Utils.BaseNode {
 }
 
 export const getVariables = (str: string): string[] => {
-  return (str.match(/\{[\w\d]+\}/g) || []).map((s) => s.slice(1, -1));
+  return (str.match(/{\w+}/g) || []).map((s) => s.slice(1, -1));
 };
 
 const utilsObj = {

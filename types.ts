@@ -1,3 +1,4 @@
+import { EmptyObject } from '@voiceflow/common';
 import * as Express from 'express';
 import * as ExpressValidator from 'express-validator';
 
@@ -58,7 +59,7 @@ export interface Config {
   INGEST_WEBHOOK_ENDPOINT: string | null;
 }
 
-export interface Request<P extends {} = {}> extends Express.Request<P> {
+export interface Request<P extends Record<string, any> = EmptyObject> extends Express.Request<P> {
   headers: Record<string, string>;
   platform?: string;
   // timedout?: boolean;
@@ -68,7 +69,7 @@ export type Response = Express.Response;
 
 export type Next = () => void;
 
-export interface Route<P = {}, T = void> {
+export interface Route<P = EmptyObject, T = void> {
   (req: Request<P>): Promise<T>;
 
   validations?: ExpressValidator.ValidationChain[];
@@ -82,5 +83,7 @@ export type Middleware = (req: Request, res: Response, next: Next) => Promise<vo
 
 export type MiddlewareGroup = Record<string, Middleware>;
 
-export type Class<T, A extends any[]> = { new (...args: A): T };
+export interface Class<T, A extends any[]> {
+  new (...args: A): T;
+}
 export type AnyClass = Class<any, any[]>;

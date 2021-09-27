@@ -10,6 +10,7 @@ import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, RENDER_DOCUMENT_DIRECTIVE_TYPE,
 import { DisplayInfo, VideoCommand, VideoCommandType } from './types';
 import { deepFindVideos, getEventToSend } from './utils';
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export const DocumentResponseBuilder: ResponseBuilder = async (runtime, builder) => {
   const displayInfo = runtime.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
   const supportedInterfaces = runtime.storage.get<SupportedInterfaces | undefined>(S.SUPPORTED_INTERFACES);
@@ -25,7 +26,7 @@ export const DocumentResponseBuilder: ResponseBuilder = async (runtime, builder)
   const variables = runtime.variables.getState();
   const services = runtime.services as FullServiceMap;
 
-  let dataSources: object | undefined;
+  let dataSources: Record<string, any> | undefined;
 
   try {
     let document;
@@ -39,7 +40,7 @@ export const DocumentResponseBuilder: ResponseBuilder = async (runtime, builder)
 
       // Gracefully handle slightly malformed document
       if (document.dataSources) {
-        dataSources = document.dataSources as object;
+        dataSources = document.dataSources as Record<string, any>;
       }
 
       if (document.document) {

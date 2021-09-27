@@ -2,16 +2,16 @@ import _ from 'lodash';
 
 import { DOCUMENT_VIDEO_TYPE, EVENT_SEND_EVENT } from './constants';
 
-export type VideoEvent = {
+export interface VideoEvent {
   type: string;
-  arguments?: (string | object | number | null)[];
-};
+  arguments?: (string | Record<string, any> | number | null)[];
+}
 
-export type Video = {
+export interface Video {
   id?: string;
   onEnd?: VideoEvent | VideoEvent[];
   onPlay?: VideoEvent | VideoEvent[];
-};
+}
 
 /*
   Recursively apply _.filter to collection, returning all results in array.

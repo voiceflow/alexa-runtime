@@ -17,17 +17,17 @@ class MongoPersistenceAdapter implements PersistenceAdapter {
 
   constructor(private mongo: MongoDb) {}
 
-  public static enabled(config: Config) {
+  public static enabled(config: Config): boolean {
     return config.SESSIONS_SOURCE === Source.MONGO;
   }
 
-  async getAttributes(requestEnvelope: RequestEnvelope) {
+  async getAttributes(requestEnvelope: RequestEnvelope): Promise<Record<string, any>> {
     const userId = this.idGenerator(requestEnvelope);
-    const session = await this.mongo.db.collection(this.collectionName).findOne<{ attributes: object }>({ id: userId });
+    const session = await this.mongo.db.collection(this.collectionName).findOne<{ attributes: Record<string, any> }>({ id: userId });
     return session?.attributes || {};
   }
 
-  async saveAttributes(requestEnvelope: RequestEnvelope, attributes: Record<string, any>) {
+  async saveAttributes(requestEnvelope: RequestEnvelope, attributes: Record<string, any>): Promise<void> {
     const userId = this.idGenerator(requestEnvelope);
     const {
       result: { ok },
@@ -38,7 +38,7 @@ class MongoPersistenceAdapter implements PersistenceAdapter {
     }
   }
 
-  async deleteAttributes(requestEnvelope: RequestEnvelope) {
+  async deleteAttributes(requestEnvelope: RequestEnvelope): Promise<void> {
     const userId = this.idGenerator(requestEnvelope);
 
     await this.mongo.db.collection(this.collectionName).deleteOne({ id: userId });

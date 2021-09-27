@@ -27,24 +27,24 @@ export enum IntentName {
   LOOP_OFF = 'AMAZON.LoopOffIntent',
 }
 
-export type IntentRequestPayload = {
+export interface IntentRequestPayload {
   intent: Intent;
-};
+}
 
-export type IntentRequest = {
+export interface IntentRequest {
   type: RequestType.INTENT;
   payload: IntentRequestPayload;
-};
+}
 
-export type EventRequestPayload = {
+export interface EventRequestPayload {
   event: string;
-  data?: object;
-};
+  data?: Record<string, any>;
+}
 
-export type EventRequest = {
+export interface EventRequest {
   type: RequestType.EVENT;
   payload: EventRequestPayload;
-};
+}
 
 export type AlexaRuntimeRequest = IntentRequest | EventRequest | undefined;
 

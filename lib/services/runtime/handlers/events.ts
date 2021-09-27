@@ -10,7 +10,7 @@ const executeMap: Partial<ExecuteMap> = {
 };
 
 export const executeEvents = <E extends EventType>(eventType: E): EventCallback<E> =>
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   (event) => Promise.each(executeMap[eventType] || [], (callback) => callback(event));
 

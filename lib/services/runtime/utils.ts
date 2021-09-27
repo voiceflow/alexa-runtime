@@ -14,7 +14,7 @@ export const mapSlots = ({
   slots: { [key: string]: Slot };
   mappings: SlotMapping[];
   overwrite?: boolean;
-}): object => {
+}): Record<string, any> => {
   const variables: Record<string, any> = {};
 
   if (mappings && slots) {

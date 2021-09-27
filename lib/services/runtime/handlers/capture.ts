@@ -42,6 +42,7 @@ export const CaptureHandler: HandlerFactory<Node.Capture.Node, typeof utilsObj> 
     const { intent } = request.payload;
 
     // try to match the first slot of the intent to the variable
+    // eslint-disable-next-line you-dont-need-lodash-underscore/keys,you-dont-need-lodash-underscore/values
     const value = _.keys(intent.slots).length === 1 && _.values(intent.slots)[0]?.value;
 
     if (value) {
