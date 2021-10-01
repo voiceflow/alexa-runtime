@@ -132,38 +132,34 @@ export class AnalyticsSystem extends AbstractClient {
     switch (event) {
       case Event.TURN: {
         if (sessionid) {
-          // TODO: Uncomment to re-enable runtime transcript ingest
-          // const turnIngestBody = this.createTurnBody({ versionID, eventID: event, sessionID: sessionid, metadata, timestamp });
-          // // User/initial interact
-          // // if (this.aggregateAnalytics && this.rudderstackClient) {
-          // //   this.callAnalyticsSystemTrack(id, event, turnIngestBody);
-          // // }
-          // const turnResponse = await this.ingestClient?.doIngest(turnIngestBody);
-          // const turnID = turnResponse?.data.turn_id!;
-          // const interactIngestBody = this.createInteractBody({ eventID: Event.INTERACT, request, payload, turnID, timestamp });
-          // // User/initial interact
-          // // if (this.aggregateAnalytics && this.rudderstackClient) {
-          // //   this.callAnalyticsSystemTrack(id, event, interactIngestBody);
-          // // }
-          // await this.ingestClient?.doIngest(interactIngestBody);
-          // return turnID;
-          return '';
+          const turnIngestBody = this.createTurnBody({ versionID, eventID: event, sessionID: sessionid, metadata, timestamp });
+          // User/initial interact
+          // if (this.aggregateAnalytics && this.rudderstackClient) {
+          //   this.callAnalyticsSystemTrack(id, event, turnIngestBody);
+          // }
+          const turnResponse = await this.ingestClient?.doIngest(turnIngestBody);
+          const turnID = turnResponse?.data.turn_id!;
+          const interactIngestBody = this.createInteractBody({ eventID: Event.INTERACT, request, payload, turnID, timestamp });
+          // User/initial interact
+          // if (this.aggregateAnalytics && this.rudderstackClient) {
+          //   this.callAnalyticsSystemTrack(id, event, interactIngestBody);
+          // }
+          await this.ingestClient?.doIngest(interactIngestBody);
+          return turnID;
         }
         return null;
       }
       case Event.INTERACT: {
         if (turnIDP) {
-          // TODO: Uncomment to re-enable runtime transcript ingest
-          // const interactIngestBody = this.createInteractBody({ eventID: event, request, payload, turnID: turnIDP, timestamp });
+          const interactIngestBody = this.createInteractBody({ eventID: event, request, payload, turnID: turnIDP, timestamp });
 
-          // // User/initial interact
-          // // if (this.aggregateAnalytics && this.rudderstackClient) {
-          // //   this.callAnalyticsSystemTrack(id, event, interactIngestBody);
-          // // }
+          // User/initial interact
+          // if (this.aggregateAnalytics && this.rudderstackClient) {
+          //   this.callAnalyticsSystemTrack(id, event, interactIngestBody);
+          // }
 
-          // await this.ingestClient?.doIngest(interactIngestBody);
-          // return turnIDP;
-          return '';
+          await this.ingestClient?.doIngest(interactIngestBody);
+          return turnIDP;
         }
         return null;
       }
