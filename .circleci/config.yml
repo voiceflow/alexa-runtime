@@ -53,7 +53,7 @@ jobs:
   e2e-check:
     executor: vfcommon/e2e-executor
     steps:
-      - vfcommon/init_e2e:
+      - vfcommon/init_e2e_docker:
           checkout: true
           install_node_modules: true
           github_username: GITHUB_USERNAME
