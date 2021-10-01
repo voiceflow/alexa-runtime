@@ -62,8 +62,8 @@ Also add the following file to the local repository:
 >
 > INTEGRATIONS_HANDLER_ENDPOINT="none"
 >
-> LOG_LEVEL="warn"
-> MIDDLEWARE_VERBOSITY="debug"
+> LOG_LEVEL="debug"
+> MIDDLEWARE_VERBOSITY="short"
 >
 > ADMIN_SERVER_DATA_API_TOKEN="none"
 > DATADOG_API_KEY="none"
