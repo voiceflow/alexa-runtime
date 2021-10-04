@@ -31,7 +31,6 @@ describe('response lifecycle unit tests', () => {
       getFinalState: sinon.stub().returns(finalState),
       services: {
         analyticsClient: {
-          identify: sinon.stub(),
           track: sinon.stub().resolves(turnID),
         },
       },
@@ -104,7 +103,6 @@ describe('response lifecycle unit tests', () => {
       getFinalState: sinon.stub().returns({}),
       services: {
         analyticsClient: {
-          identify: sinon.stub(),
           track: sinon.stub().resolves(turnID),
         },
       },
