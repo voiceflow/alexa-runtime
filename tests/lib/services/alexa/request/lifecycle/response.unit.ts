@@ -1,7 +1,7 @@
+import * as Ingest from '@voiceflow/general-runtime/ingest';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { Event, RequestType } from '@/lib/clients/ingest-client';
 import { S, T, V } from '@/lib/constants';
 import { responseGenerator } from '@/lib/services/alexa/request/lifecycle/response';
 
@@ -59,8 +59,8 @@ describe('response lifecycle unit tests', () => {
       [
         {
           id: versionID,
-          event: Event.TURN,
-          request: RequestType.REQUEST,
+          event: Ingest.Event.TURN,
+          request: Ingest.RequestType.REQUEST,
           payload: request,
           sessionid: input.requestEnvelope.session.sessionId,
           metadata: finalState,
@@ -70,8 +70,8 @@ describe('response lifecycle unit tests', () => {
       [
         {
           id: versionID,
-          event: Event.INTERACT,
-          request: RequestType.RESPONSE,
+          event: Ingest.Event.INTERACT,
+          request: Ingest.RequestType.RESPONSE,
           payload: output,
           sessionid: input.requestEnvelope.session.sessionId,
           metadata: finalState,
@@ -130,8 +130,8 @@ describe('response lifecycle unit tests', () => {
       [
         {
           id: versionID,
-          event: Event.TURN,
-          request: RequestType.REQUEST,
+          event: Ingest.Event.TURN,
+          request: Ingest.RequestType.REQUEST,
           payload: request,
           sessionid: input.requestEnvelope.session.sessionId,
           metadata: {},
@@ -141,8 +141,8 @@ describe('response lifecycle unit tests', () => {
       [
         {
           id: versionID,
-          event: Event.INTERACT,
-          request: RequestType.RESPONSE,
+          event: Ingest.Event.INTERACT,
+          request: Ingest.RequestType.RESPONSE,
           payload: output,
           sessionid: input.requestEnvelope.session.sessionId,
           metadata: {},

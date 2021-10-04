@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { Event, RequestType } from '@/lib/clients/ingest-client';
 import { T, V } from '@/lib/constants';
 import update from '@/lib/services/alexa/request/lifecycle/update';
 
