@@ -1,4 +1,4 @@
-import * as Ingest from '@voiceflow/general-runtime/ingest';
+import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
 import { expect } from 'chai';
 import sinon from 'sinon';
 

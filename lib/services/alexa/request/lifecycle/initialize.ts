@@ -6,7 +6,6 @@ import { F, S, T, V } from '@/lib/constants';
 import { StreamAction } from '@/lib/services/runtime/handlers/stream';
 import { createResumeFrame, RESUME_PROGRAM_ID } from '@/lib/services/runtime/programs/resume';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
-import log from '@/logger';
 
 import { AlexaHandlerInput } from '../../types';
 

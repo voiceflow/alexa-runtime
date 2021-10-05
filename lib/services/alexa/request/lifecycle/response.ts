@@ -1,4 +1,4 @@
-import * as Ingest from '@voiceflow/general-runtime/ingest';
+import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
 import { Response } from 'ask-sdk-model';
 import _isObject from 'lodash/isObject';
 import _mapValues from 'lodash/mapValues';

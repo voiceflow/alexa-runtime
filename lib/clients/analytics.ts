@@ -1,5 +1,5 @@
+import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
 import { DataAPI, State } from '@voiceflow/general-runtime/build/runtime';
-import * as Ingest from '@voiceflow/general-runtime/ingest';
 import { Response } from 'ask-sdk-model';
 
 import log from '@/logger';
