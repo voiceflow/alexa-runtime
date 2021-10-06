@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
 import { DataAPI, State } from '@voiceflow/general-runtime/build/runtime';
 import { Response } from 'ask-sdk-model';
 
@@ -7,53 +6,19 @@ import log from '@/logger';
 import { Config } from '@/types';
 
 import { AlexaRuntimeRequest } from '../services/runtime/types';
-import IngestApiClient, { Event, IngestApi, InteractBody, RequestType, TurnBody } from './ingest-client';
+import { InteractBody, TurnBody } from './ingest-client';
 import { AbstractClient } from './utils';
 
 export class AnalyticsSystem extends AbstractClient {
-  // Rudderstack client is commented due to a possible use in a near future
-  // private rudderstackClient?: Rudderstack;
-
-  private ingestClient?: IngestApi;
-
-  // private aggregateAnalytics = false;
+  private ingestClient?: Ingest.Api<InteractBody, TurnBody>;
 
   constructor(config: Config, public dataAPI: DataAPI) {
     super(config);
 
-    // if (config.ANALYTICS_WRITE_KEY && config.ANALYTICS_ENDPOINT) {
-    //   this.rudderstackClient = new Rudderstack(config.ANALYTICS_WRITE_KEY, `${config.ANALYTICS_ENDPOINT}/v1/batch`);
-    // }
-
     if (config.INGEST_WEBHOOK_ENDPOINT) {
-      this.ingestClient = IngestApiClient(config.INGEST_WEBHOOK_ENDPOINT, undefined);
+      this.ingestClient = Ingest.Client(config.INGEST_WEBHOOK_ENDPOINT, undefined);
     }
-    // this.aggregateAnalytics = !config.IS_PRIVATE_CLOUD;
   }
-
-  async identify(id: string): Promise<void> {
-    id = await this.dataAPI.unhashVersionID(id);
-    log.trace(`[analytics] identify ${log.vars({ id })}`);
-
-    // const payload: IdentifyRequest = {
-    //   userId: id,
-    // };
-
-    // if (this.aggregateAnalytics && this.rudderstackClient) {
-    //   this.rudderstackClient.identify(payload);
-    // }
-  }
-
-  // private callAnalyticsSystemTrack(id: string, eventId: Event, metadata: InteractBody) {
-  //   const interactAnalyticsBody: TrackRequest = {
-  //     userId: id,
-  //     event: eventId,
-  //     properties: {
-  //       metadata,
-  //     },
-  //   };
-  //   this.rudderstackClient!.track(interactAnalyticsBody);
-  // }
 
   private createInteractBody({
     eventID,
@@ -62,8 +27,8 @@ export class AnalyticsSystem extends AbstractClient {
     turnID,
     timestamp,
   }: {
-    eventID: Event;
-    request: RequestType;
+    eventID: Ingest.Event;
+    request: Ingest.RequestType;
     payload: Response | AlexaRuntimeRequest;
     turnID: string;
     timestamp: Date;
@@ -89,7 +54,7 @@ export class AnalyticsSystem extends AbstractClient {
     timestamp,
   }: {
     versionID: string;
-    eventID: Event;
+    eventID: Ingest.Event;
     sessionID: string;
     metadata: State;
     timestamp: Date;
@@ -119,8 +84,8 @@ export class AnalyticsSystem extends AbstractClient {
     turnIDP,
   }: {
     id: string;
-    event: Event;
-    request: RequestType;
+    event: Ingest.Event;
+    request: Ingest.RequestType;
     payload: Response | AlexaRuntimeRequest;
     sessionid: string;
     metadata: State;
@@ -130,33 +95,20 @@ export class AnalyticsSystem extends AbstractClient {
     versionID = await this.dataAPI.unhashVersionID(versionID);
     log.trace(`[analytics] track ${log.vars({ versionID })}`);
     switch (event) {
-      case Event.TURN: {
+      case Ingest.Event.TURN: {
         if (sessionid) {
           const turnIngestBody = this.createTurnBody({ versionID, eventID: event, sessionID: sessionid, metadata, timestamp });
-          // User/initial interact
-          // if (this.aggregateAnalytics && this.rudderstackClient) {
-          //   this.callAnalyticsSystemTrack(id, event, turnIngestBody);
-          // }
           const turnResponse = await this.ingestClient?.doIngest(turnIngestBody);
           const turnID = turnResponse?.data.turn_id!;
-          const interactIngestBody = this.createInteractBody({ eventID: Event.INTERACT, request, payload, turnID, timestamp });
-          // User/initial interact
-          // if (this.aggregateAnalytics && this.rudderstackClient) {
-          //   this.callAnalyticsSystemTrack(id, event, interactIngestBody);
-          // }
+          const interactIngestBody = this.createInteractBody({ eventID: Ingest.Event.INTERACT, request, payload, turnID, timestamp });
           await this.ingestClient?.doIngest(interactIngestBody);
           return turnID;
         }
         return null;
       }
-      case Event.INTERACT: {
+      case Ingest.Event.INTERACT: {
         if (turnIDP) {
           const interactIngestBody = this.createInteractBody({ eventID: event, request, payload, turnID: turnIDP, timestamp });
-
-          // User/initial interact
-          // if (this.aggregateAnalytics && this.rudderstackClient) {
-          //   this.callAnalyticsSystemTrack(id, event, interactIngestBody);
-          // }
 
           await this.ingestClient?.doIngest(interactIngestBody);
           return turnIDP;

@@ -1333,10 +1333,10 @@
     eslint-plugin-xss "^0.1.9"
     eslint-plugin-you-dont-need-lodash-underscore "^6.12.0"
 
-"@voiceflow/general-runtime@1.60.1":
-  version "1.60.1"
-  resolved "https://registry.yarnpkg.com/@voiceflow/general-runtime/-/general-runtime-1.60.1.tgz#d87873686e0d76230ed94aa9dfe8b1467ac7971a"
-  integrity sha512-EI3acYaKLgH6s7x1sPMHUiJKRSH77/nE5kQ9TIisAKpBp3Ag1nSoEzwXQAyzqty87FyzGAtmwGAoBaWwkGp7/A==
+"@voiceflow/general-runtime@1.61.0":
+  version "1.61.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-runtime/-/general-runtime-1.61.0.tgz#59e3d8ece702bd28fddd5f11fda2d711586f45d5"
+  integrity sha512-WhVsPPTsm49fFmf20btN0KdexMhPxRR5CPfC18Kwmrj481pj8l5oB4V893NVVb2IufNVAAswtGt3ycIKxIaReg==
   dependencies:
     "@types/mathjs" "^6.0.4"
     "@types/workerpool" "^5.0.1"
