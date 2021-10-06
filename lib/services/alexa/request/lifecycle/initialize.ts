@@ -6,7 +6,6 @@ import { F, S, T, V } from '@/lib/constants';
 import { StreamAction } from '@/lib/services/runtime/handlers/stream';
 import { createResumeFrame, RESUME_PROGRAM_ID } from '@/lib/services/runtime/programs/resume';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
-import log from '@/logger';
 
 import { AlexaHandlerInput } from '../../types';
 
@@ -33,13 +32,6 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
   } = await runtime.api.getVersion(versionID);
 
   const { stack, storage, variables } = runtime;
-
-  try {
-    // Identify on analytics system
-    runtime.services.analyticsClient.identify(versionID);
-  } catch (error) {
-    log.error(`[analytics] failed to identify ${log.vars({ versionID, error })}`);
-  }
 
   storage.delete(S.STREAM_TEMP);
 

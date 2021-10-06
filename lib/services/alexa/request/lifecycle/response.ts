@@ -1,8 +1,8 @@
+import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
 import { Response } from 'ask-sdk-model';
 import _isObject from 'lodash/isObject';
 import _mapValues from 'lodash/mapValues';
 
-import { Event, RequestType } from '@/lib/clients/ingest-client';
 import { S, T, V } from '@/lib/constants';
 import { responseHandlers } from '@/lib/services/runtime/handlers';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
@@ -56,8 +56,8 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
   runtime.services.analyticsClient
     .track({
       id: versionID,
-      event: Event.TURN,
-      request: input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
+      event: Ingest.Event.TURN,
+      request: input?.requestEnvelope?.request?.type === 'LaunchRequest' ? Ingest.RequestType.LAUNCH : Ingest.RequestType.REQUEST,
       payload: runtime.getRequest(),
       sessionid: input.requestEnvelope.session?.sessionId,
       metadata: runtime.getFinalState(),
@@ -67,8 +67,8 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     .then((turnID: string) =>
       runtime.services.analyticsClient.track({
         id: versionID,
-        event: Event.INTERACT,
-        request: RequestType.RESPONSE,
+        event: Ingest.Event.INTERACT,
+        request: Ingest.RequestType.RESPONSE,
         payload: response,
         sessionid: input.requestEnvelope.session?.sessionId,
         metadata: runtime.getFinalState(),
