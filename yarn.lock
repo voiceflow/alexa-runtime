@@ -321,6 +321,13 @@
   dependencies:
     conventional-changelog-conventionalcommits "^4.3.1"
 
+"@commitlint/config-conventional@^12.1.4":
+  version "12.1.4"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-12.1.4.tgz#95bbab622f117a8a3e49f95917b08655040c66a8"
+  integrity sha512-ZIdzmdy4o4WyqywMEpprRCrehjCSQrHkaRTVZV411GyLigFQHlEBSJITAihLAWe88Qy/8SyoIe5uKvAsV5vRqQ==
+  dependencies:
+    conventional-changelog-conventionalcommits "^4.3.1"
+
 "@commitlint/ensure@^11.0.0":
   version "11.0.0"
   resolved "https://registry.yarnpkg.com/@commitlint/ensure/-/ensure-11.0.0.tgz#3e796b968ab5b72bc6f8a6040076406306c987fb"
@@ -1221,10 +1228,12 @@
     "@voiceflow/api-sdk" "^2.0.0"
     "@voiceflow/base-types" "^1.9.4"
 
-"@voiceflow/commitlint-config@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@voiceflow/commitlint-config/-/commitlint-config-1.0.1.tgz#e9513aa348d5e88ff064022e2dae8d0d7e227f6a"
-  integrity sha512-7amH9jUarcsB5CXmYNOeejQXtCs7kdyETjPp6q2x0y1mNGWfhqzWZ/FySP+wkvFytXyu46PADH29rBw3p2zGdw==
+"@voiceflow/commitlint-config@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/commitlint-config/-/commitlint-config-1.1.0.tgz#736b9e099830834b4f85998242d4cff6b1968dfd"
+  integrity sha512-5bBAyKsjT7R/mDBDpfvS9l04srf2DfAMJnhKlJFkuSyFM3qm/by7k5DQxLMrZySKOKxbxhykaTM1zm7/e8/yzg==
+  dependencies:
+    "@commitlint/config-conventional" "^12.1.4"
 
 "@voiceflow/common@6.7.1":
   version "6.7.1"
@@ -1249,10 +1258,10 @@
     "@types/crypto-js" "^4.0.2"
     crypto-js "^4.1.1"
 
-"@voiceflow/eslint-config@3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/eslint-config/-/eslint-config-3.4.0.tgz#670dc657ff0b5cce81508a69bd603cae31e44133"
-  integrity sha512-o4916NfqQqlfR/Rn4lvvUwTrMZ88sT72fsF6WzDkoVOj/5AfcETvcxF5qzrp9uz9K05w8g8EyGRSockJ9y9hUQ==
+"@voiceflow/eslint-config@3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/eslint-config/-/eslint-config-3.5.0.tgz#da34cba6160a1be9900dd80d54d770322e8e107e"
+  integrity sha512-O0XPkgw1hlaqOV0DpdrULC2+a1WqXgPvUSbFCA/tBtDgu/JWS2cBg6s8+rDIXuJwxxeiGK37/nne3oANnmp0yw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.31.0"
     "@typescript-eslint/parser" "^4.31.0"
