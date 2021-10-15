@@ -9,6 +9,14 @@ import { F, T } from '@/lib/constants';
 import { IntentName, IntentRequest, RequestType } from '../types';
 import { mapSlots } from '../utils';
 
+const isPushCommand = (command: BaseNode.AnyCommonCommand): command is BaseNode.Command.Command & { diagram_id: string } => {
+  return !!(command as BaseNode.Command.Command).diagram_id;
+};
+
+const isIntentCommand = (command: BaseNode.AnyCommonCommand): command is BaseNode.Intent.Command => {
+  return !isPushCommand(command) && !!(command as BaseNode.Intent.Command).next;
+};
+
 export const getCommand = (runtime: Runtime, extractFrame: typeof extractFrameCommand) => {
   const request = runtime.turn.get<IntentRequest>(T.REQUEST);
 
@@ -34,7 +42,7 @@ export const getCommand = (runtime: Runtime, extractFrame: typeof extractFrameCo
     }
   }
 
-  const res = extractFrame<BaseNode.Command.Command>(runtime.stack, matcher);
+  const res = extractFrame<BaseNode.AnyCommonCommand>(runtime.stack, matcher);
 
   if (!res) return null;
 
@@ -61,7 +69,6 @@ export const CommandHandler = (utils: typeof utilsObj) => ({
     const res = utils.getCommand(runtime);
     if (!res) return null;
 
-    let nextId: string | null = null;
     let variableMap: CommandMapping[] | undefined;
 
     if (res.command) {
@@ -69,7 +76,7 @@ export const CommandHandler = (utils: typeof utilsObj) => ({
 
       variableMap = command.mappings?.map(({ slot, variable }) => ({ slot: slot ?? '', variable: variable ?? '' }));
 
-      if (command.diagram_id) {
+      if (isPushCommand(command)) {
         runtime.trace.debug(`matched command **${command.intent}** - adding command flow`);
 
         runtime.stack.top().storage.set(F.CALLED_COMMAND, true);
@@ -77,19 +84,14 @@ export const CommandHandler = (utils: typeof utilsObj) => ({
         // Reset state to beginning of new diagram and store current line to the stack
         const newFrame = new utils.Frame({ programID: command.diagram_id });
         runtime.stack.push(newFrame);
-      } else if (command.next) {
-        if (index < runtime.stack.getSize() - 1) {
-          // otherwise destructive and pop off everything before the command
-          runtime.stack.popTo(index + 1);
-          runtime.stack.top().setNodeID(command.next);
-
-          runtime.trace.debug(`matched intent **${command.intent}** - exiting flows and jumping to node`);
-        } else if (index === runtime.stack.getSize() - 1) {
-          // jumping to an intent within the same flow
-          nextId = command.next;
-
-          runtime.trace.debug(`matched intent **${command.intent}** - jumping to node`);
+      } else if (isIntentCommand(command)) {
+        runtime.stack.popTo(index + 1);
+        if (command.diagramID && command.diagramID !== runtime.stack.top().getProgramID()) {
+          const newFrame = new utils.Frame({ programID: command.diagramID });
+          runtime.stack.push(newFrame);
         }
+        runtime.stack.top().setNodeID(command.next || null);
+        runtime.trace.debug(`matched intent **${command.intent}** - jumping to node`);
       }
     }
 
@@ -100,7 +102,7 @@ export const CommandHandler = (utils: typeof utilsObj) => ({
       variables.merge(utils.mapSlots({ slots: res.intent.slots, mappings: variableMap }));
     }
 
-    return nextId;
+    return null;
   },
 });
 

@@ -189,14 +189,17 @@ describe('command handler unit tests', async () => {
           const utils = { getCommand: sinon.stub().returns(res) };
           const commandHandler = CommandHandler(utils as any);
 
+          const topFrame = { setNodeID: sinon.stub() };
           const runtime = {
             trace: { debug: sinon.stub() },
             turn: { delete: sinon.stub() },
-            stack: { getSize: sinon.stub().returns(stackSize) },
+            stack: { getSize: sinon.stub().returns(stackSize), popTo: sinon.stub(), top: sinon.stub().returns(topFrame) },
           };
 
-          expect(commandHandler.handle(runtime as any, null as any)).to.eql(res.command.next);
+          expect(commandHandler.handle(runtime as any, null as any)).to.eql(null);
           expect(runtime.trace.debug.args).to.eql([[`matched intent **${res.command.intent}** - jumping to node`]]);
+          expect(topFrame.setNodeID.args).to.eql([[res.command.next]]);
+          expect(runtime.stack.popTo.args).to.eql([[stackSize]]);
         });
 
         it('not last frame', () => {
@@ -209,26 +212,35 @@ describe('command handler unit tests', async () => {
           const runtime = {
             trace: { debug: sinon.stub() },
             turn: { delete: sinon.stub() },
-            stack: { getSize: sinon.stub().returns(3), top: sinon.stub().returns(topFrame), popTo: sinon.stub() },
+            stack: { top: sinon.stub().returns(topFrame), popTo: sinon.stub() },
           };
 
           expect(commandHandler.handle(runtime as any, null as any)).to.eql(null);
           expect(runtime.stack.popTo.args).to.eql([[index + 1]]);
           expect(topFrame.setNodeID.args).to.eql([[res.command.next]]);
-          expect(runtime.trace.debug.args).to.eql([[`matched intent **${res.command.intent}** - exiting flows and jumping to node`]]);
+          expect(runtime.trace.debug.args).to.eql([[`matched intent **${res.command.intent}** - jumping to node`]]);
         });
 
-        it('index bigger than stack size', () => {
-          const res = { command: { next: 'next-id' }, index: 4 };
-          const utils = { getCommand: sinon.stub().returns(res) };
+        it('intent with diagramID', () => {
+          const programID = 'program-id';
+          const frame = { foo: 'bar' };
+          const res = { command: { next: 'next-id', intent: 'intent', diagramID: programID }, index: 1 };
+          const utils = { getCommand: sinon.stub().returns(res), Frame: sinon.stub().returns(frame) };
           const commandHandler = CommandHandler(utils as any);
 
+          const topFrame = { setNodeID: sinon.stub(), getProgramID: sinon.stub().returns('different-program-id') };
           const runtime = {
+            trace: { debug: sinon.stub() },
             turn: { delete: sinon.stub() },
-            stack: { getSize: sinon.stub().returns(3) },
+            stack: { top: sinon.stub().returns(topFrame), popTo: sinon.stub(), push: sinon.stub() },
           };
 
           expect(commandHandler.handle(runtime as any, null as any)).to.eql(null);
+          expect(runtime.stack.popTo.args).to.eql([[res.index + 1]]);
+          expect(topFrame.setNodeID.args).to.eql([[res.command.next]]);
+          expect(utils.Frame.args).to.eql([[{ programID: res.command.diagramID }]]);
+          expect(runtime.stack.push.args).to.eql([[frame]]);
+          expect(runtime.trace.debug.args).to.eql([[`matched intent **${res.command.intent}** - jumping to node`]]);
         });
       });
     });
