@@ -162,6 +162,7 @@ workflows:
           vf_service_commit: CIRCLE_SHA1
           vf_service_name: "alexa-runtime"
           vf_service_port: "8012"
+          enable: false
           context: dev-test
           filters:
             <<: *ignore_staging_filters
