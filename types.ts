@@ -5,6 +5,7 @@ import * as ExpressValidator from 'express-validator';
 export interface Config {
   NODE_ENV: string;
   PORT: string;
+  PORT_METRICS: string | null;
   CLOUD_ENV: string | null;
   IS_PRIVATE_CLOUD: boolean;
   ERROR_RESPONSE_MS: number;

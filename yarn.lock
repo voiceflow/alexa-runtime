@@ -555,6 +555,56 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@opentelemetry/api-metrics@0.26.0", "@opentelemetry/api-metrics@^0.26.0":
+  version "0.26.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/api-metrics/-/api-metrics-0.26.0.tgz#6f98a5467140ab97f23f598b26e0e18ad8ec59f3"
+  integrity sha512-idDSUTx+LRwJiHhVHhdh45SWow5u9lKNDROKu5AMzsIVPI29utH5FfT9vor8qMM6blxWWvlT22HUNdNMWqUQfQ==
+
+"@opentelemetry/api@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.0.3.tgz#13a12ae9e05c2a782f7b5e84c3cbfda4225eaf80"
+  integrity sha512-puWxACExDe9nxbBB3lOymQFrLYml2dVOrd7USiVRnSbgXE+KwBu+HxFvxrzfqsiSda9IWsXJG1ef7C1O2/GmKQ==
+
+"@opentelemetry/core@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/core/-/core-1.0.0.tgz#517f4181a52312e74c2de8b5c63dfdefc7a924f0"
+  integrity sha512-1+qvKilADnSFW4PiXy+f7D22pvfGVxepZ69GcbF8cTcbQTUt7w63xEBWn5f5j92x9I3c0sqbW1RUx5/a4wgzxA==
+  dependencies:
+    "@opentelemetry/semantic-conventions" "1.0.0"
+    semver "^7.3.5"
+
+"@opentelemetry/exporter-prometheus@^0.26.0":
+  version "0.26.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/exporter-prometheus/-/exporter-prometheus-0.26.0.tgz#e06305cc17fc49e97dd46daaa98dd3bf0337d1d3"
+  integrity sha512-B4yvl9ipos0GYP9OqbpDVRksnqraC1LmTRTPJxQ1zD6j9VFIAh1vsZfYJF7a7cCOy6SarrCcQzOx+U3nsWZAxQ==
+  dependencies:
+    "@opentelemetry/api-metrics" "0.26.0"
+    "@opentelemetry/core" "1.0.0"
+    "@opentelemetry/sdk-metrics-base" "0.26.0"
+
+"@opentelemetry/resources@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/resources/-/resources-1.0.0.tgz#6fb83d39d8305ea75cb3e120583d125670b3d6ac"
+  integrity sha512-ORP8F2LLcJEm5M3H24RmdlMdiDc70ySPushpkrAW34KZGdZXwkrFoFXZhhs5MUxPT+fLrTuBafXxZVr8eHtFuQ==
+  dependencies:
+    "@opentelemetry/core" "1.0.0"
+    "@opentelemetry/semantic-conventions" "1.0.0"
+
+"@opentelemetry/sdk-metrics-base@0.26.0", "@opentelemetry/sdk-metrics-base@^0.26.0":
+  version "0.26.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/sdk-metrics-base/-/sdk-metrics-base-0.26.0.tgz#efa0151e5c8a7f1932a5f38d3017d61f46ea505e"
+  integrity sha512-PbJsso7Vy/CLATAOyXbt/VP7ZQ2QYnvlq28lhOWaLPw8aqLogMBvidNGRrt7rF4/hfzLT6pMgpAAcit2C/nUMA==
+  dependencies:
+    "@opentelemetry/api-metrics" "0.26.0"
+    "@opentelemetry/core" "1.0.0"
+    "@opentelemetry/resources" "1.0.0"
+    lodash.merge "^4.6.2"
+
+"@opentelemetry/semantic-conventions@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/semantic-conventions/-/semantic-conventions-1.0.0.tgz#2b3aa897adabf8324585a5b9766268f0ceeb9fba"
+  integrity sha512-XCZ6ZSmc8FOspxKUU+Ow9UtJeSSRcS5rFBYGpjzix02U2v+X9ofjOjgNRnpvxlSvkccYIhdTuwcvNskmZ46SeA==
+
 "@sinonjs/commons@^1", "@sinonjs/commons@^1.3.0", "@sinonjs/commons@^1.4.0", "@sinonjs/commons@^1.7.0":
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.1.tgz#e7df00f98a203324f6dc7cc606cad9d4a8ab2217"
@@ -643,6 +693,11 @@
   version "4.2.12"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.12.tgz#6160ae454cd89dae05adc3bb97997f488b608201"
   integrity sha512-aN5IAC8QNtSUdQzxu7lGBgYAOuU1tmRU4c9dIq5OKGf/SBVjXo+ffM2wEjudAWbgpOhy60nLoAGH1xm8fpCKFQ==
+
+"@types/chai@^4.2.11":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.3.0.tgz#23509ebc1fa32f1b4d50d6a66c4032d5b8eaabdc"
+  integrity sha512-/ceqdqeRraGolFTcfoXNiqjyQhZzbINDngeoAq9GoHa8PPK1yNzTaxWjA6BFWp5Ua9JpXEMSS4s5i9tS0hOJtw==
 
 "@types/chai@^4.2.16":
   version "4.2.18"
@@ -804,6 +859,13 @@
   version "8.5.0"
   resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.5.0.tgz#2531d5e300803aa63279b232c014acf780c981c5"
   integrity sha512-9bVao7LvyorRGZCw0VmH/dr7Og+NdjYSsKAxB43OQoComFbBgsEpoR9JW6+qSq/ogwVBg8GI2MfAlk4SYI4OLg==
+  dependencies:
+    "@types/node" "*"
+
+"@types/jsonwebtoken@^8.5.0":
+  version "8.5.6"
+  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.5.6.tgz#1913e5a61e70a192c5a444623da4901a7b1a9d42"
+  integrity sha512-+P3O/xC7nzVizIi5VbF34YtqSonFsdnbXBnWUCYRiKOi1f9gA4sEFvXkrGr/QVV23IbMYvcoerI7nnhDUiWXRQ==
   dependencies:
     "@types/node" "*"
 
@@ -1103,6 +1165,18 @@
     "@voiceflow/voice-types" "^2.1.0"
     ask-smapi-model "1.14.0"
 
+"@voiceflow/api-sdk@1.42.2":
+  version "1.42.2"
+  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.42.2.tgz#f7730fd8c8ef55234403165655073e129e1871bd"
+  integrity sha512-kJvnPzgkCLN0EHefCBsAH0z0RcULdaTWt8qlyEuZUG+MhbsclAVw5JfO/4fsAjnLqoLlJWXWDLWVWSLxtMxBPw==
+  dependencies:
+    "@types/chai" "^4.2.11"
+    "@types/jsonwebtoken" "^8.5.0"
+    "@voiceflow/common" "^6.9.3"
+    atob "^2.1.2"
+    axios "^0.21.1"
+    superstruct "^0.10.12"
+
 "@voiceflow/api-sdk@3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-3.3.0.tgz#682a4aea51cabe9ba44c630a4eae056d3d45512d"
@@ -1206,7 +1280,7 @@
   dependencies:
     dotenv "^9.0.2"
 
-"@voiceflow/common@6.9.3":
+"@voiceflow/common@6.9.3", "@voiceflow/common@^6.9.3":
   version "6.9.3"
   resolved "https://registry.yarnpkg.com/@voiceflow/common/-/common-6.9.3.tgz#68dfff5485901f2d62e5e55dd6cd6c65302e8bee"
   integrity sha512-i7/8bCGzbJy+j8NY9v3dR1BjLPNnShbJWR9FQisRbLsml3gwhNuVTO3wY0U+PucR133WGX9vZlIMN+u7ibcXQQ==
