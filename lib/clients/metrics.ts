@@ -10,13 +10,13 @@ import { Config } from '@/types';
 export class Metrics {
   private client: BufferedMetricsLogger;
 
-  private meter: Meter;
+  private mAlexaRuntime: Meter;
 
-  private counterAlexaError: Counter;
+  private cAlexaError: Counter;
 
-  private counterAlexaInvocation: Counter;
+  private cAlexaInvocation: Counter;
 
-  private counterAlexaRequest: Counter;
+  private cAlexaRequest: Counter;
 
   private labels: { [key: string]: string } = {};
 
@@ -40,39 +40,39 @@ export class Metrics {
       }
     );
 
-    this.meter = new MeterProvider({ exporter, interval: 1000 }).getMeter('alexa-runtime');
+    this.mAlexaRuntime = new MeterProvider({ exporter, interval: 1000 }).getMeter('alexa-runtime');
 
     this.hashids = config.CONFIG_ID_HASH ? new Hashids(config.CONFIG_ID_HASH, 10) : null;
 
-    this.counterAlexaRequest = this.meter.createCounter('alexa.request', {
+    this.cAlexaRequest = this.mAlexaRuntime.createCounter('alexa.request', {
       description: 'Alexa Requests',
     });
 
-    this.counterAlexaInvocation = this.meter.createCounter('alexa.invocation', {
+    this.cAlexaInvocation = this.mAlexaRuntime.createCounter('alexa.invocation', {
       description: 'Alexa Invocations',
     });
 
-    this.counterAlexaError = this.meter.createCounter('alexa.request.error', {
+    this.cAlexaError = this.mAlexaRuntime.createCounter('alexa.request.error', {
       description: 'Alexa requests errors',
     });
   }
 
   request() {
     this.client.increment('alexa.request');
-    this.counterAlexaRequest.bind(this.labels).add(1);
+    this.cAlexaRequest.bind(this.labels).add(1);
   }
 
   error(versionID: string) {
     this.client.increment('alexa.request.error', 1, [`skill_id:${this._decodeVersionID(versionID)}`]);
     this.labels.skill_id = `${this._decodeVersionID(versionID)}`;
-    this.counterAlexaError.bind(this.labels).add(1);
+    this.cAlexaError.bind(this.labels).add(1);
   }
 
   invocation(versionID: string) {
     const decodedVersionID = this._decodeVersionID(versionID);
     this.client.increment('alexa.invocation', 1, [`skill_id:${decodedVersionID}`]);
     this.labels.skill_id = `${this._decodeVersionID(versionID)}`;
-    this.counterAlexaInvocation.bind(this.labels).add(1);
+    this.cAlexaInvocation.bind(this.labels).add(1);
     return decodedVersionID;
   }
 
