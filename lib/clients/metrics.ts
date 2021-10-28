@@ -18,7 +18,7 @@ export class Metrics {
 
   private cAlexaRequest: Counter;
 
-  private mHttpRequest: Counter;
+  private cHttpRequest: Counter;
 
   private rHttpRequestDuration: ValueRecorder;
 
@@ -46,7 +46,7 @@ export class Metrics {
 
     this.mAlexaRuntime = new MeterProvider({ exporter, interval: 1000 }).getMeter('alexa-runtime');
 
-    this.mHttpRequest = this.mAlexaRuntime.createCounter('http_request', {
+    this.cHttpRequest = this.mAlexaRuntime.createCounter('http_request', {
       description: 'Http requests',
     });
 
@@ -91,7 +91,7 @@ export class Metrics {
   httpRequest(operation: string, statusCode: number) {
     this.labels.operation = operation;
     this.labels.status_code = statusCode.toString();
-    this.mHttpRequest.bind(this.labels).add(1);
+    this.cHttpRequest.bind(this.labels).add(1);
   }
 
   httpRequestDuration(operation: string, statusCode: number, duration: number) {
