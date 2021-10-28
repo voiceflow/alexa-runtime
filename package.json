@@ -146,7 +146,7 @@
     "lint:report": "yarn lint:output",
     "local": "rm -f .env.local && vfcli mesh connect alexa-runtime",
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
-    "start:local": "NODE_ENV=local ts-node-dev --files --respawn --exit-child --transpile-only -r tsconfig-paths/register -- start.ts",
+    "start:local": "NODE_ENV=local IS_MESHED=true ts-node-dev --files --respawn --exit-child --transpile-only -r tsconfig-paths/register -- start.ts",
     "start:meshed": "yarn start:local",
     "test": "yarn test:run",
     "test:dependencies": "depcheck",
