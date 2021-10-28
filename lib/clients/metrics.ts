@@ -1,4 +1,4 @@
-import { Counter } from '@opentelemetry/api-metrics';
+import { Counter, ValueRecorder } from '@opentelemetry/api-metrics';
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
 import { Meter, MeterProvider } from '@opentelemetry/sdk-metrics-base';
 import { BufferedMetricsLogger } from 'datadog-metrics';
@@ -17,6 +17,10 @@ export class Metrics {
   private cAlexaInvocation: Counter;
 
   private cAlexaRequest: Counter;
+
+  private mHttpRequest: Counter;
+
+  private rHttpRequestDuration: ValueRecorder;
 
   private labels: { [key: string]: string } = {};
 
@@ -42,17 +46,25 @@ export class Metrics {
 
     this.mAlexaRuntime = new MeterProvider({ exporter, interval: 1000 }).getMeter('alexa-runtime');
 
+    this.mHttpRequest = this.mAlexaRuntime.createCounter('http_request', {
+      description: 'Http requests',
+    });
+
+    this.rHttpRequestDuration = this.mAlexaRuntime.createValueRecorder('http_request_duration', {
+      description: 'Http requests duration',
+    });
+
     this.hashids = config.CONFIG_ID_HASH ? new Hashids(config.CONFIG_ID_HASH, 10) : null;
 
-    this.cAlexaRequest = this.mAlexaRuntime.createCounter('alexa.request', {
+    this.cAlexaRequest = this.mAlexaRuntime.createCounter('alexa_request', {
       description: 'Alexa Requests',
     });
 
-    this.cAlexaInvocation = this.mAlexaRuntime.createCounter('alexa.invocation', {
+    this.cAlexaInvocation = this.mAlexaRuntime.createCounter('alexa_invocation', {
       description: 'Alexa Invocations',
     });
 
-    this.cAlexaError = this.mAlexaRuntime.createCounter('alexa.request.error', {
+    this.cAlexaError = this.mAlexaRuntime.createCounter('alexa_request_error', {
       description: 'Alexa requests errors',
     });
   }
@@ -74,6 +86,18 @@ export class Metrics {
     this.labels.skill_id = `${this._decodeVersionID(versionID)}`;
     this.cAlexaInvocation.bind(this.labels).add(1);
     return decodedVersionID;
+  }
+
+  httpRequest(operation: string, statusCode: number) {
+    this.labels.operation = operation;
+    this.labels.status_code = statusCode.toString();
+    this.mHttpRequest.bind(this.labels).add(1);
+  }
+
+  httpRequestDuration(operation: string, statusCode: number, duration: number) {
+    this.labels.operation = operation;
+    this.labels.status_code = statusCode.toString();
+    this.rHttpRequestDuration.bind(this.labels).record(duration);
   }
 
   _decodeVersionID(versionID: string) {
