@@ -6,7 +6,7 @@
 
 `alexa-runtime` is an http webhook service that handles Alexa requests and generates a response. It manages the state of the Alexa user based on the programs (flows) made on the Voiceflow Creator tool. It can be run independently from Voiceflow.
 
-This is the same service that hosts all Alexa skills created on Voiceflow. This includes serving production apps on and handling millions of requests.
+This is the same service that hosts all Alexa skills created on Voiceflow. This includes serving production apps on and handling millions of requests
 
 ![image](https://user-images.githubusercontent.com/5643574/132608647-7f64832d-87e3-41f8-b4c9-0f7c4ba4ff8f.png)
 
