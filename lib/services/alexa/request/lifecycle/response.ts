@@ -23,6 +23,11 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     turn.set(T.END, true);
   }
 
+  const goToIntent = turn.get<string | null>(T.GOTO);
+  if (goToIntent) {
+    responseBuilder.addDelegateDirective({ name: goToIntent, confirmationStatus: 'NONE', slots: {} });
+  }
+
   responseBuilder
     .speak(storage.get<string>(S.OUTPUT) ?? '')
     .reprompt((turn.get<string>('reprompt') || storage.get<string>(S.OUTPUT)) ?? '')

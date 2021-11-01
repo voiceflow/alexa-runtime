@@ -1104,16 +1104,15 @@
     "@typescript-eslint/types" "4.31.2"
     eslint-visitor-keys "^2.0.0"
 
-"@voiceflow/alexa-types@1.52.55":
-  version "1.52.55"
-  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-1.52.55.tgz#c37f6acc9041d1e176481775f42bfcb8c591ae61"
-  integrity sha512-W3FuYT5swWGnK9MTQZRafz+CpPEg/Cct7mw+fUs5ucy9TGP5g3bCKBfa5siYdnuENNCccca4lEzOdN+wficlNA==
+"@voiceflow/alexa-types@2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-2.0.4.tgz#fb70f5526e4a60c83baf642b0f3e20e4d1a55485"
+  integrity sha512-3supSXNl6MXpIHv3D++HDI8NHVMDbC/N6gxfIr9xF5fJ02hS+nCSwUFKikzyBt1xVgFAHQiqIgOgmAkw6zS2+g==
   dependencies:
-    "@voiceflow/api-sdk" "^2.0.0"
-    "@voiceflow/base-types" "^1.11.2"
-    "@voiceflow/common" "6.8.1"
-    "@voiceflow/general-types" "^2.0.9"
-    "@voiceflow/voice-types" "^1.4.28"
+    "@voiceflow/base-types" "^2.1.2"
+    "@voiceflow/common" "6.9.3"
+    "@voiceflow/general-types" "^3.0.3"
+    "@voiceflow/voice-types" "^2.0.3"
     ask-smapi-model "1.14.0"
 
 "@voiceflow/api-sdk@1.42.2":
@@ -1195,18 +1194,25 @@
     rate-limiter-flexible "^2.2.2"
     sinon "^10.0.0"
 
-"@voiceflow/base-types@1.11.2", "@voiceflow/base-types@^1.11.2":
-  version "1.11.2"
-  resolved "https://registry.yarnpkg.com/@voiceflow/base-types/-/base-types-1.11.2.tgz#c8398e3aa6087315e86a320ed1b1ce32c42be83b"
-  integrity sha512-AY+YSgm8A72qpwUbg/y6KIKDMrreiWpOtShpvCYpZqOV21NkJdEw5bcAXRSo0FYfzUZpFjPj5RqZPiOmgjqgsA==
-  dependencies:
-    "@voiceflow/api-sdk" "^2.0.0"
-    slate "^0.63.0"
-
 "@voiceflow/base-types@1.9.4", "@voiceflow/base-types@^1.8.0", "@voiceflow/base-types@^1.9.4":
   version "1.9.4"
   resolved "https://registry.yarnpkg.com/@voiceflow/base-types/-/base-types-1.9.4.tgz#92801fff0ce6301c0f461d118231321e44b2a7f6"
   integrity sha512-q5hGGaZId8PQrB6pmaT35zfZwvneSjXLBwd7JyGpsuOJ4m139YQjlizFOtpfYddPRWQXaGniYpVbaR7QXvZVFw==
+  dependencies:
+    "@voiceflow/api-sdk" "^2.0.0"
+    slate "^0.63.0"
+
+"@voiceflow/base-types@2.1.2", "@voiceflow/base-types@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@voiceflow/base-types/-/base-types-2.1.2.tgz#b0f4f5969fec880e0ae6648502b09d6cb19c02e4"
+  integrity sha512-0uZT+PSRKtUCZoLy1TKwx/MMBhsHo9vkLgz/Rp8snKtYwNbsmxfJmt0Qf3/p5Ssa8CgyVkwd8yIMAZWO1CNwRw==
+  dependencies:
+    slate "^0.63.0"
+
+"@voiceflow/base-types@^1.11.2":
+  version "1.11.2"
+  resolved "https://registry.yarnpkg.com/@voiceflow/base-types/-/base-types-1.11.2.tgz#c8398e3aa6087315e86a320ed1b1ce32c42be83b"
+  integrity sha512-AY+YSgm8A72qpwUbg/y6KIKDMrreiWpOtShpvCYpZqOV21NkJdEw5bcAXRSo0FYfzUZpFjPj5RqZPiOmgjqgsA==
   dependencies:
     "@voiceflow/api-sdk" "^2.0.0"
     slate "^0.63.0"
@@ -1355,7 +1361,7 @@
     "@voiceflow/base-types" "^1.8.0"
     "@voiceflow/voice-types" "^1.4.19"
 
-"@voiceflow/general-types@2.0.9", "@voiceflow/general-types@^2.0.9":
+"@voiceflow/general-types@2.0.9":
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-2.0.9.tgz#d1df064622001b8986ab4dc80af5d212e9911d45"
   integrity sha512-+7t408Bii6AzNUyFGt9r+uMggGFlJKPNDE+Dz29Itxxw6ugeRgAUncrSDKzS0PNCRNcQ+CzTbMXFVTBBBPq+PQ==
@@ -1363,6 +1369,14 @@
     "@voiceflow/api-sdk" "^2.0.0"
     "@voiceflow/base-types" "^1.11.2"
     "@voiceflow/voice-types" "^1.4.28"
+
+"@voiceflow/general-types@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-3.0.3.tgz#5d262a12724980430bb508624881d3d5d0606ca6"
+  integrity sha512-gFW0e80q8Xljo6dvfg1PlPyVhXrDQTCp+LeVObTm9uLuYzLytQjQXgXfLRxr+e0fVVKirCyP5+rLpgvlBFLtbw==
+  dependencies:
+    "@voiceflow/base-types" "^2.1.2"
+    "@voiceflow/voice-types" "^2.0.3"
 
 "@voiceflow/git-branch-check@1.2.0":
   version "1.2.0"
@@ -1467,6 +1481,13 @@
   dependencies:
     "@voiceflow/api-sdk" "^2.0.0"
     "@voiceflow/base-types" "^1.11.2"
+
+"@voiceflow/voice-types@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@voiceflow/voice-types/-/voice-types-2.0.3.tgz#f07f93ceefd38565c7b90a5c2ab3180f95df6698"
+  integrity sha512-Mn5tWLCyR62bJLHjFFpxg/eV9PR0Ip3ebwXD7kMB6HKupnzggDQu9i/c3++SCikWVtF5dJAVxqFLfeYobmnoGg==
+  dependencies:
+    "@voiceflow/base-types" "^2.1.2"
 
 "@zerollup/ts-helpers@^1.7.18":
   version "1.7.18"

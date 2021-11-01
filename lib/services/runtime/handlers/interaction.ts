@@ -44,8 +44,14 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
     // check if there is a choice in the node that fulfills intent
     node.interactions.forEach((choice, i: number) => {
       if (choice.intent && utils.formatIntentName(choice.intent) === intent.name) {
-        variableMap = choice.mappings ?? null;
-        nextId = node.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
+        if (choice.goTo) {
+          runtime.turn.set(T.GOTO, choice.goTo.intentName);
+          // stop on itself to await for new intent request coming in
+          nextId = node.id;
+        } else {
+          variableMap = choice.mappings ?? null;
+          nextId = node.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
+        }
       }
     });
 
