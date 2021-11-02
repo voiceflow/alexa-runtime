@@ -6,11 +6,17 @@ import config from '@/config';
 import MetricsClient, { Metrics } from '@/lib/clients/metrics';
 
 describe('metrics client unit tests', () => {
+  let metrics: Metrics;
+
   beforeEach(() => {
     sinon.restore();
   });
 
-  it('new', () => {
+  afterEach(async () => {
+    await metrics.stop();
+  });
+
+  it('new', async () => {
     const NODE_ENV = 'test';
     const loggerStub = sinon.stub().returns({
       increment: () => {
@@ -18,7 +24,7 @@ describe('metrics client unit tests', () => {
       },
     });
 
-    const metrics = new Metrics({ ...config, NODE_ENV } as any, loggerStub as any);
+    metrics = new Metrics({ ...config, NODE_ENV } as any, loggerStub as any);
     expect(typeof _.get(metrics, 'client.increment')).to.eql('function');
 
     expect(loggerStub.calledWithNew()).to.eql(true);
@@ -33,7 +39,7 @@ describe('metrics client unit tests', () => {
     ]);
   });
 
-  it('new with hash', () => {
+  it('new with hash', async () => {
     const NODE_ENV = 'test';
     const loggerStub = sinon.stub().returns({
       increment: () => {
@@ -41,12 +47,12 @@ describe('metrics client unit tests', () => {
       },
     });
 
-    const metrics = new Metrics({ ...config, NODE_ENV, CONFIG_ID_HASH: 'hash' } as any, loggerStub as any);
+    metrics = new Metrics({ ...config, NODE_ENV, CONFIG_ID_HASH: 'hash' } as any, loggerStub as any);
     expect(_.get(metrics, 'hashids') !== undefined).to.eql(true);
   });
 
-  it('request', () => {
-    const metrics = MetricsClient({} as any);
+  it('request', async () => {
+    metrics = MetricsClient({} as any);
     const increment = sinon.stub();
     _.set(metrics, 'client', { increment });
 
@@ -54,8 +60,8 @@ describe('metrics client unit tests', () => {
     expect(increment.args).to.eql([['alexa.request']]);
   });
 
-  it('error', () => {
-    const metrics = MetricsClient({} as any);
+  it('error', async () => {
+    metrics = MetricsClient({} as any);
     const increment = sinon.stub();
     _.set(metrics, 'client', { increment });
     sinon.stub(metrics, '_decodeVersionID').returnsArg(0);
@@ -65,8 +71,8 @@ describe('metrics client unit tests', () => {
     expect(increment.args).to.eql([['alexa.request.error', 1, [`skill_id:${versionID}`]]]);
   });
 
-  it('invocation', () => {
-    const metrics = MetricsClient({} as any);
+  it('invocation', async () => {
+    metrics = MetricsClient({} as any);
     const increment = sinon.stub();
     _.set(metrics, 'client', { increment });
     sinon.stub(metrics, '_decodeVersionID').returnsArg(0);
@@ -77,20 +83,20 @@ describe('metrics client unit tests', () => {
   });
 
   describe('_decodeVersionID', () => {
-    it('no hashids', () => {
-      const metrics = MetricsClient({} as any);
+    it('no hashids', async () => {
+      metrics = MetricsClient({} as any);
       const versionID = 'version-id';
       expect(metrics._decodeVersionID(versionID)).to.eql(versionID);
     });
 
-    it('object id', () => {
-      const metrics = MetricsClient({ CONFIG_ID_HASH: 'hash-key' } as any);
+    it('object id', async () => {
+      metrics = MetricsClient({ CONFIG_ID_HASH: 'hash-key' } as any);
       const versionID = '5f74a6f5e4a40c344b1ef366';
       expect(metrics._decodeVersionID(versionID)).to.eql(versionID);
     });
 
-    it('with hashids', () => {
-      const metrics = MetricsClient({ CONFIG_ID_HASH: 'hash-key' } as any);
+    it('with hashids', async () => {
+      metrics = MetricsClient({ CONFIG_ID_HASH: 'hash-key' } as any);
       const versionID = 5;
       expect(metrics._decodeVersionID(_.get(metrics, 'hashids').encode(versionID))).to.eql(versionID);
     });

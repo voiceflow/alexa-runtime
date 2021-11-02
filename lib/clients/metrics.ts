@@ -1,6 +1,7 @@
 import { Counter, ValueRecorder } from '@opentelemetry/api-metrics';
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
-import { Meter, MeterProvider } from '@opentelemetry/sdk-metrics-base';
+import { Meter, MeterProvider, MetricExporter } from '@opentelemetry/sdk-metrics-base';
+// TODO: remove this old client
 import { BufferedMetricsLogger } from 'datadog-metrics';
 import Hashids from 'hashids';
 
@@ -8,9 +9,12 @@ import log from '@/logger';
 import { Config } from '@/types';
 
 export class Metrics {
+  // TODO: remove this old client
   private client: BufferedMetricsLogger;
 
   private mAlexaRuntime: Meter;
+
+  private eAlexaRuntime: MetricExporter;
 
   private cAlexaError: Counter;
 
@@ -27,6 +31,7 @@ export class Metrics {
   private hashids: Hashids | null;
 
   constructor(config: Config, Logger: typeof BufferedMetricsLogger) {
+    // TODO: remove this old client
     this.client = new Logger({
       apiKey: config.DATADOG_API_KEY,
       prefix: `vf_server.${config.NODE_ENV}.`,
@@ -35,7 +40,7 @@ export class Metrics {
 
     const port = config.PORT_METRICS ? parseInt(config.PORT_METRICS, 10) : PrometheusExporter.DEFAULT_OPTIONS.port;
 
-    const exporter = new PrometheusExporter(
+    this.eAlexaRuntime = new PrometheusExporter(
       {
         port,
       },
@@ -44,7 +49,7 @@ export class Metrics {
       }
     );
 
-    this.mAlexaRuntime = new MeterProvider({ exporter, interval: 1000 }).getMeter('alexa-runtime');
+    this.mAlexaRuntime = new MeterProvider({ exporter: this.eAlexaRuntime, interval: 1000 }).getMeter('alexa-runtime');
 
     this.cHttpRequest = this.mAlexaRuntime.createCounter('http_request', {
       description: 'Http requests',
@@ -70,11 +75,13 @@ export class Metrics {
   }
 
   request() {
+    // TODO: remove this old client
     this.client.increment('alexa.request');
     this.cAlexaRequest.bind(this.labels).add(1);
   }
 
   error(versionID: string) {
+    // TODO: remove this old client
     this.client.increment('alexa.request.error', 1, [`skill_id:${this._decodeVersionID(versionID)}`]);
     this.labels.skill_id = `${this._decodeVersionID(versionID)}`;
     this.cAlexaError.bind(this.labels).add(1);
@@ -82,6 +89,7 @@ export class Metrics {
 
   invocation(versionID: string) {
     const decodedVersionID = this._decodeVersionID(versionID);
+    // TODO: remove this old client
     this.client.increment('alexa.invocation', 1, [`skill_id:${decodedVersionID}`]);
     this.labels.skill_id = `${this._decodeVersionID(versionID)}`;
     this.cAlexaInvocation.bind(this.labels).add(1);
@@ -104,6 +112,11 @@ export class Metrics {
     if (versionID.length === 24 || !this.hashids) return versionID;
 
     return this.hashids.decode(versionID)[0];
+  }
+
+  async stop() {
+    await this.mAlexaRuntime.shutdown();
+    await this.eAlexaRuntime.shutdown();
   }
 }
 
