@@ -7,7 +7,7 @@ on:
 jobs:
   rebase-to-master:
     name: Rebase to Master
-    if: github.event.pull_request.draft == false
+    if: github.event.pull_request.draft == false && github.event.pull_request.user.login != 'renovate[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the latest code
