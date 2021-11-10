@@ -145,6 +145,8 @@
     "lint:quiet": "yarn lint --quiet",
     "lint:report": "yarn lint:output",
     "local": "rm -f .env.local && vfcli mesh connect alexa-runtime",
+    "mesh:post": "exit 0",
+    "mesh:pre": "exit 0",
     "start": "NODE_ENV=production node --max-old-space-size=8192 build/start.js",
     "start:local": "NODE_ENV=local IS_MESHED=true ts-node-dev --files --respawn --exit-child --transpile-only -r tsconfig-paths/register -- start.ts",
     "start:meshed": "yarn start:local",
