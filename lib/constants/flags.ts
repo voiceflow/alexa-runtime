@@ -31,7 +31,6 @@ export enum Turn {
   TRACE = 'trace',
   DIRECTIVES = 'directives',
   NEW_STACK = 'newStack',
-  GOTO = 'goto',
 }
 
 export enum Frame {

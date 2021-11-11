@@ -187,14 +187,7 @@ describe('response lifecycle unit tests', () => {
       getRequest: sinon.stub().returns(request),
       storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
       turn: {
-        get: sinon
-          .stub()
-          .withArgs(T.GOTO)
-          .returns(null)
-          .onSecondCall()
-          .returns(true)
-          .onThirdCall()
-          .returns(true),
+        get: sinon.stub().returns(true),
       },
       stack: { isEmpty: sinon.stub().returns(false) },
       variables: { get: sinon.stub().returns(false) },
@@ -259,14 +252,7 @@ describe('response lifecycle unit tests', () => {
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
       turn: {
-        get: sinon
-          .stub()
-          .withArgs(T.GOTO)
-          .returns(null)
-          .onSecondCall()
-          .returns(true)
-          .onThirdCall()
-          .returns(true),
+        get: sinon.stub().returns(true),
       },
       stack: { isEmpty: sinon.stub().returns(false) },
       variables: { get: sinon.stub().returns(responseVar) },
