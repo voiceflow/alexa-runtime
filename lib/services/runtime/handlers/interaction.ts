@@ -42,10 +42,14 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
     const { intent } = request.payload;
 
     // check if there is a choice in the node that fulfills intent
-    node.interactions.forEach((choice, i: number) => {
+    node.interactions.forEach((choice, i) => {
       if (choice.intent && utils.formatIntentName(choice.intent) === intent.name) {
-        variableMap = choice.mappings ?? null;
-        nextId = node.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
+        if (choice.goTo) {
+          runtime.turn.set(T.REQUEST, { ...request, payload: { ...request.payload, intent: { name: choice.goTo.intentName, slots: [] } } });
+        } else {
+          variableMap = choice.mappings ?? null;
+          nextId = node.nextIds[choice.nextIdIndex ?? i];
+        }
       }
     });
 
