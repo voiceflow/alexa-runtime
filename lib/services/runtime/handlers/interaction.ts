@@ -48,7 +48,7 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
           runtime.turn.set(T.REQUEST, { ...request, payload: { ...request.payload, intent: { name: choice.goTo.intentName, slots: [] } } });
         } else {
           variableMap = choice.mappings ?? null;
-          nextId = node.nextIds[choice.nextIdIndex || choice.nextIdIndex === 0 ? choice.nextIdIndex : i];
+          nextId = node.nextIds[choice.nextIdIndex ?? i];
         }
       }
     });
