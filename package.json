@@ -25,7 +25,7 @@
     "ask-sdk": "^2.9.0",
     "ask-sdk-express-adapter": "^2.11.0",
     "ask-sdk-model": "^1.31.0",
-    "aws-sdk": "^2.586.0",
+    "aws-sdk": "^2.814.0",
     "axios": "0.21.2",
     "bluebird": "^3.7.2",
     "compression": "^1.7.4",
