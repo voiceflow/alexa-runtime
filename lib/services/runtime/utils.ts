@@ -6,6 +6,8 @@ import _ from 'lodash';
 
 import { T } from '@/lib/constants';
 
+const ALEXA_AUTHORITY = 'AlexaEntities';
+
 export const mapSlots = ({
   slots,
   mappings,
@@ -24,8 +26,8 @@ export const mapSlots = ({
       const toVariable = map.variable;
       const fromSlot = formatIntentName(map.slot);
 
-      // extract slot value from request
-      const fromSlotValue = slots[fromSlot]?.value || slots[fromSlot]?.resolutions?.resolutionsPerAuthority?.[0].values?.[0].value?.name || null;
+      const resolution = slots[fromSlot]?.resolutions?.resolutionsPerAuthority?.[0];
+      const fromSlotValue = (resolution?.authority !== ALEXA_AUTHORITY && resolution?.values?.[0].value?.name) || slots[fromSlot]?.value || null;
 
       if (toVariable && (fromSlotValue || overwrite)) {
         variables[toVariable] = transformStringVariableToNumber(fromSlotValue);
