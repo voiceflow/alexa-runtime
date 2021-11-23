@@ -1,4 +1,4 @@
-import { SlotMapping } from '@voiceflow/api-sdk';
+import { Models } from '@voiceflow/base-types';
 import { formatIntentName, replaceVariables, transformStringVariableToNumber } from '@voiceflow/common';
 import { Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
 import { Slot } from 'ask-sdk-model';
@@ -14,13 +14,13 @@ export const mapSlots = ({
   overwrite = false,
 }: {
   slots: { [key: string]: Slot };
-  mappings: SlotMapping[];
+  mappings: Models.SlotMapping[];
   overwrite?: boolean;
 }): Record<string, any> => {
   const variables: Record<string, any> = {};
 
   if (mappings && slots) {
-    mappings.forEach((map: SlotMapping) => {
+    mappings.forEach((map: Models.SlotMapping) => {
       if (!map.slot) return;
 
       const toVariable = map.variable;

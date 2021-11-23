@@ -1,5 +1,5 @@
 import { Node } from '@voiceflow/alexa-types';
-import { SlotMapping } from '@voiceflow/api-sdk';
+import { Models } from '@voiceflow/base-types';
 import { formatIntentName } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 
@@ -37,7 +37,7 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
     }
 
     let nextId: string | null | undefined;
-    let variableMap: SlotMapping[] | null = null;
+    let variableMap: Models.SlotMapping[] | null = null;
 
     const { intent } = request.payload;
 
@@ -71,15 +71,12 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
     // request for this turn has been processed, delete request
     runtime.turn.delete(T.REQUEST);
 
-    // check for noMatches to handle
-    if (nextId === undefined && utils.noMatchHandler.canHandle(node, runtime)) {
+    // handle noMatch
+    if (nextId === undefined) {
       return utils.noMatchHandler.handle(node, runtime, variables);
     }
 
-    // clean up no matches counter
-    runtime.storage.delete(S.NO_MATCHES_COUNTER);
-
-    return (nextId !== undefined ? nextId : node.elseId) || null;
+    return nextId || null;
   },
 });
 
