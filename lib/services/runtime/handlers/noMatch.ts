@@ -10,31 +10,42 @@ export type NoMatchCounterStorage = number;
 
 export const EMPTY_AUDIO_STRING = '<audio src=""/>';
 
-type NoMatchNode = BaseNode.Utils.BaseNode & VoiceNode.Utils.DeprecatedNodeNoMatch & { noMatch?: Nullable<VoiceNode.Utils.NodeNoMatch> };
+type NoMatchNode = BaseNode.Utils.BaseNode & { noMatch?: Nullable<VoiceNode.Utils.NodeNoMatch> };
+type DeprecatedNoMatchNode = NoMatchNode & VoiceNode.Utils.DeprecatedNodeNoMatch;
+
+const convertDeprecatedNoMatch = ({ noMatch, elseId, noMatches, randomize, ...node }: DeprecatedNoMatchNode): NoMatchNode =>
+  ({
+    noMatch: {
+      prompts: noMatch?.prompts ?? noMatches,
+      randomize: noMatch?.randomize ?? randomize,
+      nodeID: noMatch?.nodeID ?? elseId,
+    },
+    ...node,
+  } as NoMatchNode);
 
 const removeEmptyNoMatches = (node: NoMatchNode) => {
-  const noMatches = node.noMatches || node.noMatch?.noMatches || [];
+  const noMatches = node.noMatch?.prompts || [];
   return noMatches?.filter((noMatch) => noMatch != null && noMatch !== EMPTY_AUDIO_STRING);
 };
 
-const getElseID = (node: NoMatchNode) => node.elseId ?? node.noMatch?.nodeID ?? null;
-
 export const NoMatchHandler = () => ({
-  handle: (node: NoMatchNode, runtime: Runtime, variables: Store) => {
+  handle: (_node: DeprecatedNoMatchNode, runtime: Runtime, variables: Store) => {
+    const node = convertDeprecatedNoMatch(_node);
     const nonEmptyNoMatches = removeEmptyNoMatches(node);
 
     const noMatchCounter = runtime.storage.get<NoMatchCounterStorage>(S.NO_MATCHES_COUNTER) ?? 0;
     if (noMatchCounter >= nonEmptyNoMatches.length) {
       // clean up no matches counter
       runtime.storage.delete(S.NO_MATCHES_COUNTER);
-      return getElseID(node);
+      return node.noMatch?.nodeID ?? null;
     }
 
     runtime.storage.set(S.NO_MATCHES_COUNTER, noMatchCounter + 1);
 
     const speak =
-      (node.randomize ? _.sample(nonEmptyNoMatches) : nonEmptyNoMatches?.[runtime.storage.get<NoMatchCounterStorage>(S.NO_MATCHES_COUNTER)! - 1]) ||
-      '';
+      (node.noMatch?.randomize
+        ? _.sample(nonEmptyNoMatches)
+        : nonEmptyNoMatches?.[runtime.storage.get<NoMatchCounterStorage>(S.NO_MATCHES_COUNTER)! - 1]) || '';
     const sanitizedVars = sanitizeVariables(variables.getState());
     const output = replaceVariables(speak, sanitizedVars);
 
