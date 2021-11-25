@@ -42,10 +42,7 @@ export const NoMatchHandler = () => ({
 
     runtime.storage.set(S.NO_MATCHES_COUNTER, noMatchCounter + 1);
 
-    const speak =
-      (node.noMatch?.randomize
-        ? _.sample(nonEmptyNoMatches)
-        : nonEmptyNoMatches?.[runtime.storage.get<NoMatchCounterStorage>(S.NO_MATCHES_COUNTER)! - 1]) || '';
+    const speak = (node.noMatch?.randomize ? _.sample(nonEmptyNoMatches) : nonEmptyNoMatches?.[noMatchCounter]) || '';
     const sanitizedVars = sanitizeVariables(variables.getState());
     const output = replaceVariables(speak, sanitizedVars);
 
