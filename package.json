@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@voiceflow/alexa-types": "2.2.0",
-    "@voiceflow/api-sdk": "3.3.0",
     "@voiceflow/backend-utils": "3.5.5",
     "@voiceflow/base-types": "2.3.0",
     "@voiceflow/body-parser": "1.21.0",

@@ -1121,17 +1121,6 @@
     jsonwebtoken "^8.5.1"
     superstruct "^0.10.12"
 
-"@voiceflow/api-sdk@3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-3.3.0.tgz#682a4aea51cabe9ba44c630a4eae056d3d45512d"
-  integrity sha512-uB0Ll6PgdTPHgDJgclwQHEv4NPGxW4T0qKliZwQqQo8yx8pjmhfUANzlNgk93XkxM5rM4RZFYaPg7B1R8xVYcg==
-  dependencies:
-    "@voiceflow/base-types" "^2.3.0"
-    "@voiceflow/common" "^7.10.0"
-    axios "^0.21.1"
-    jwt-decode "^3.1.2"
-    superstruct "^0.10.12"
-
 "@voiceflow/backend-utils@3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@voiceflow/backend-utils/-/backend-utils-3.3.0.tgz#e4af7d68462855286f9d06026c4191fafdd8b156"
@@ -5643,11 +5632,6 @@ jws@^3.2.2:
   dependencies:
     jwa "^1.4.1"
     safe-buffer "^5.0.1"
-
-jwt-decode@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
-  integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
 
 kebab-case@^1.0.0:
   version "1.0.1"
