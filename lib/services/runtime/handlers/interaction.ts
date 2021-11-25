@@ -1,5 +1,4 @@
 import { Node } from '@voiceflow/alexa-types';
-import { Models } from '@voiceflow/base-types';
 import { formatIntentName } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 

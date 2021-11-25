@@ -1,6 +1,5 @@
 import { Node } from '@voiceflow/alexa-types';
-import { CommandMapping } from '@voiceflow/api-sdk';
-import { Node as BaseNode } from '@voiceflow/base-types';
+import { Models, Node as BaseNode } from '@voiceflow/base-types';
 import { extractFrameCommand, Frame, Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
 import _ from 'lodash';
 
@@ -69,7 +68,7 @@ export const CommandHandler = (utils: typeof utilsObj) => ({
     const res = utils.getCommand(runtime);
     if (!res) return null;
 
-    let variableMap: CommandMapping[] | undefined;
+    let variableMap: Models.CommandMapping[] | undefined;
 
     if (res.command) {
       const { index, command } = res;
