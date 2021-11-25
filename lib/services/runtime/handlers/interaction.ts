@@ -44,11 +44,12 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
     if (choice) {
       if (choice.goTo) {
         runtime.turn.set(T.REQUEST, { ...request, payload: { ...request.payload, intent: { name: choice.goTo.intentName, slots: [] } } });
+      } else {
+        if (choice.mappings && intent.slots) {
+          variables.merge(utils.mapSlots({ slots: intent.slots, mappings: choice.mappings }));
+        }
+        return node.nextIds[choice.nextIdIndex ?? index] ?? null;
       }
-      if (choice.mappings && intent.slots) {
-        variables.merge(utils.mapSlots({ slots: intent.slots, mappings: choice.mappings }));
-      }
-      return node.nextIds[choice.nextIdIndex ?? index] ?? null;
     }
 
     // check if there is a command in the stack that fulfills intent
