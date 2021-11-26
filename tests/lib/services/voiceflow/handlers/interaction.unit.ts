@@ -71,7 +71,10 @@ describe('interaction handler unit tests', async () => {
         const interactionHandler = InteractionHandler(utils as any);
 
         const node = { id: 'node-id', interactions: [] };
-        const runtime = { turn: { get: sinon.stub().returns({ type: RequestType.INTENT, payload: {} }) } };
+        const runtime = {
+          turn: { get: sinon.stub().returns({ type: RequestType.INTENT, payload: {} }) },
+          storage: { get: sinon.stub().returns(undefined), delete: sinon.stub() },
+        };
         const variables = { foo: 'bar' };
 
         expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(output);
@@ -98,7 +101,10 @@ describe('interaction handler unit tests', async () => {
 
           const node = { id: 'node-id', interactions: [{ intent: 'intent1' }, { intent: 'intent2' }] };
           const request = { type: RequestType.INTENT, payload: { intent: { name: 'random-intent' } } };
-          const runtime = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() }, storage: { delete: sinon.stub() } };
+          const runtime = {
+            turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
+            storage: { delete: sinon.stub(), get: sinon.stub().returns(undefined) },
+          };
           const variables = { foo: 'bar' };
 
           expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(null);
@@ -125,7 +131,10 @@ describe('interaction handler unit tests', async () => {
           const interactionHandler = InteractionHandler(utils as any);
 
           const request = { type: RequestType.INTENT, payload: { intent: { name: 'random-intent' } } };
-          const runtime = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() }, storage: { delete: sinon.stub() } };
+          const runtime = {
+            turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
+            storage: { delete: sinon.stub(), get: sinon.stub().returns(undefined) },
+          };
           const variables = { foo: 'bar' };
 
           expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.elseId);
@@ -156,7 +165,10 @@ describe('interaction handler unit tests', async () => {
             noMatches,
           };
           const request = { type: RequestType.INTENT, payload: { intent: { name: 'random-intent' } } };
-          const runtime = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
+          const runtime = {
+            turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
+            storage: { get: sinon.stub().returns(undefined), delete: sinon.stub() },
+          };
           const variables = { foo: 'bar' };
 
           expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(nextId);
@@ -185,7 +197,7 @@ describe('interaction handler unit tests', async () => {
           const runtime = {
             trace: { debug: sinon.stub() },
             turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
-            storage: { delete: sinon.stub() },
+            storage: { delete: sinon.stub(), get: sinon.stub().returns(undefined) },
           };
           const variables = { foo: 'bar' };
 
@@ -221,7 +233,7 @@ describe('interaction handler unit tests', async () => {
           const runtime = {
             trace: { debug: sinon.stub() },
             turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
-            storage: { delete: sinon.stub() },
+            storage: { delete: sinon.stub(), get: sinon.stub().returns(undefined) },
           };
           const variables = { foo: 'bar' };
 
@@ -230,7 +242,6 @@ describe('interaction handler unit tests', async () => {
         });
 
         it('goto choice', () => {
-          const output = 'next-id';
           const intentName = 'random-intent';
           const goToIntentName = 'go-to-intent';
 
@@ -249,7 +260,7 @@ describe('interaction handler unit tests', async () => {
           const request = { type: RequestType.INTENT, payload: { intent: { name: intentName } } };
           const runtime = {
             turn: { get: sinon.stub().returns(request), delete: sinon.stub(), set: sinon.stub().resolves() },
-            storage: { delete: sinon.stub() },
+            storage: { delete: sinon.stub(), get: sinon.stub().returns(undefined), set: sinon.stub() },
           };
           const variables = { foo: 'bar' };
 
@@ -264,6 +275,44 @@ describe('interaction handler unit tests', async () => {
               },
             ],
           ]);
+          expect(runtime.storage.set.args).to.eql([[S.GO_TO_REF, block.id]]);
+        });
+
+        it('skip interactions', () => {
+          const intentName = 'random-intent';
+          const block = {
+            id: 'block-id',
+            elseId: 'else-id',
+            interactions: [{ intent: 'random-intent' }],
+            nextIds: ['id-one', 'id-two'],
+          };
+          const utils = {
+            formatIntentName: sinon.stub().returns(intentName),
+            noMatchHandler: { handle: sinon.stub().returns(block.elseId) },
+            commandHandler: {
+              canHandle: sinon.stub().returns(false),
+            },
+            repeatHandler: {
+              canHandle: sinon.stub().returns(false),
+            },
+          };
+
+          const interactionHandler = InteractionHandler(utils as any);
+
+          const request = { type: RequestType.INTENT, payload: { intent: { name: intentName } } };
+          const runtime = {
+            turn: { get: sinon.stub().returns(request), delete: sinon.stub(), set: sinon.stub().resolves() },
+            storage: {
+              delete: sinon.stub(),
+              get: sinon
+                .stub()
+                .withArgs(S.GO_TO_REF)
+                .returns(block.id),
+            },
+          };
+          const variables = { foo: 'bar' };
+
+          expect(interactionHandler.handle(block as any, runtime as any, variables as any, null as any)).to.eql(block.elseId);
         });
 
         it('choice with mappings', () => {
@@ -296,7 +345,7 @@ describe('interaction handler unit tests', async () => {
           const runtime = {
             trace: { debug: sinon.stub() },
             turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
-            storage: { delete: sinon.stub() },
+            storage: { delete: sinon.stub(), get: sinon.stub().returns(undefined) },
           };
           const variables = { merge: sinon.stub() };
 
