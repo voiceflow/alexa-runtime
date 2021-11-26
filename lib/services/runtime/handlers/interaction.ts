@@ -38,18 +38,22 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
     // request for this turn has been processed, delete request
     const { intent } = request.payload;
 
+    const goToRef = runtime.storage.get<string>(S.GO_TO_REF) === node.id;
+    runtime.storage.delete(S.GO_TO_REF);
+
     const index = node.interactions.findIndex((choice) => choice.intent && utils.formatIntentName(choice.intent) === intent.name);
     const choice = node.interactions[index];
-    if (choice) {
+    if (choice && !goToRef) {
       if (choice.mappings && intent.slots) {
         variables.merge(utils.mapSlots({ slots: intent.slots, mappings: choice.mappings }));
       }
 
       if (choice.goTo?.intentName) {
-        runtime.storage.set(S.DELEGATION_REF, node.id);
+        runtime.storage.set<string>(S.GO_TO_REF, node.id);
         runtime.turn.set<Intent>(T.DELEGATE, { name: choice.goTo.intentName, slots: {}, confirmationStatus: 'NONE' });
         return node.id;
       }
+
       return node.nextIds[choice.nextIdIndex ?? index] ?? null;
     }
 
