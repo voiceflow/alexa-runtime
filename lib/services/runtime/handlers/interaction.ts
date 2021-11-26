@@ -1,6 +1,7 @@
 import { Node } from '@voiceflow/alexa-types';
 import { formatIntentName } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
+import { Intent } from 'ask-sdk-model';
 
 import { S, T } from '@/lib/constants';
 
@@ -40,15 +41,14 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
     const index = node.interactions.findIndex((choice) => choice.intent && utils.formatIntentName(choice.intent) === intent.name);
     const choice = node.interactions[index];
     if (choice) {
-      if (choice.goTo) {
-        runtime.turn.set(T.REQUEST, { ...request, payload: { ...request.payload, intent: { name: choice.goTo.intentName, slots: [] } } });
-      } else {
-        if (choice.mappings && intent.slots) {
-          variables.merge(utils.mapSlots({ slots: intent.slots, mappings: choice.mappings }));
-        }
-        runtime.turn.delete(T.REQUEST);
-        return node.nextIds[choice.nextIdIndex ?? index] ?? null;
+      if (choice.goTo?.intentName) {
+        runtime.turn.set<Intent>(T.DELEGATE, { name: choice.goTo.intentName, slots: {}, confirmationStatus: 'NONE' });
+        return node.id;
       }
+      if (choice.mappings && intent.slots) {
+        variables.merge(utils.mapSlots({ slots: intent.slots, mappings: choice.mappings }));
+      }
+      return node.nextIds[choice.nextIdIndex ?? index] ?? null;
     }
 
     // check if there is a command in the stack that fulfills intent

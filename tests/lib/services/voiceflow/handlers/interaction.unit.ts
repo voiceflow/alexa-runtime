@@ -235,13 +235,6 @@ describe('interaction handler unit tests', async () => {
           const goToIntentName = 'go-to-intent';
 
           const utils = {
-            commandHandler: {
-              canHandle: sinon.stub().returns(true),
-              handle: sinon.stub().returns(output),
-            },
-            noMatchHandler: {
-              canHandle: sinon.stub().returns(false),
-            },
             formatIntentName: sinon.stub().returns(intentName),
           };
 
@@ -260,23 +253,17 @@ describe('interaction handler unit tests', async () => {
           };
           const variables = { foo: 'bar' };
 
-          expect(interactionHandler.handle(block as any, runtime as any, variables as any, null as any)).to.eql(output);
+          expect(interactionHandler.handle(block as any, runtime as any, variables as any, null as any)).to.eql(block.id);
           expect(runtime.turn.set.args).to.eql([
             [
-              T.REQUEST,
+              T.DELEGATE,
               {
-                payload: {
-                  intent: {
-                    name: goToIntentName,
-                    slots: [],
-                  },
-                },
-                type: RequestType.INTENT,
+                name: goToIntentName,
+                slots: {},
+                confirmationStatus: 'NONE',
               },
             ],
           ]);
-          expect(utils.commandHandler.canHandle.callCount).to.eql(1);
-          expect(utils.commandHandler.handle.callCount).to.eql(1);
         });
 
         it('choice with mappings', () => {

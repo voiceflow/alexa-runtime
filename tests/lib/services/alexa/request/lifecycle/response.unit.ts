@@ -98,7 +98,11 @@ describe('response lifecycle unit tests', () => {
       getRequest: sinon.stub().returns(request),
       storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
       turn: {
-        get: sinon.stub().returns(true),
+        get: sinon
+          .stub()
+          .returns(true)
+          .withArgs(T.DELEGATE)
+          .returns('delegation'),
       },
       stack: { isEmpty: sinon.stub().returns(false) },
       variables: { get: sinon.stub().returns(false) },
@@ -115,6 +119,7 @@ describe('response lifecycle unit tests', () => {
     const input = {
       responseBuilder: {
         getResponse: sinon.stub().returns(output),
+        addDelegateDirective: sinon.stub(),
         speak: sinon.stub().returns({ reprompt: sinon.stub().returns({ withShouldEndSession: sinon.stub() }) }),
       },
       requestEnvelope: {
@@ -151,6 +156,7 @@ describe('response lifecycle unit tests', () => {
         },
       ],
     ]);
+    expect(input.responseBuilder.addDelegateDirective.args).to.eql([['delegation']]);
   });
 
   it('response variable', async () => {
@@ -163,7 +169,11 @@ describe('response lifecycle unit tests', () => {
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
       turn: {
-        get: sinon.stub().returns(true),
+        get: sinon
+          .stub()
+          .returns(true)
+          .withArgs(T.DELEGATE)
+          .returns(false),
       },
       stack: { isEmpty: sinon.stub().returns(false) },
       variables: { get: sinon.stub().returns(responseVar) },
