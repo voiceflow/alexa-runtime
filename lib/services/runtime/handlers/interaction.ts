@@ -35,7 +35,6 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
     }
 
     // request for this turn has been processed, delete request
-    runtime.turn.delete(T.REQUEST);
     const { intent } = request.payload;
 
     const index = node.interactions.findIndex((choice) => choice.intent && utils.formatIntentName(choice.intent) === intent.name);
@@ -47,6 +46,7 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
         if (choice.mappings && intent.slots) {
           variables.merge(utils.mapSlots({ slots: intent.slots, mappings: choice.mappings }));
         }
+        runtime.turn.delete(T.REQUEST);
         return node.nextIds[choice.nextIdIndex ?? index] ?? null;
       }
     }
@@ -58,6 +58,9 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
     if (utils.repeatHandler.canHandle(runtime)) {
       return utils.repeatHandler.handle(runtime);
     }
+
+    // request for this turn has been processed, delete request
+    runtime.turn.delete(T.REQUEST);
 
     // handle noMatch
     return utils.noMatchHandler.handle(node, runtime, variables);

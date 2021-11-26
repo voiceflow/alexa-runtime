@@ -71,13 +71,12 @@ describe('interaction handler unit tests', async () => {
         const interactionHandler = InteractionHandler(utils as any);
 
         const node = { id: 'node-id', interactions: [] };
-        const runtime = { turn: { get: sinon.stub().returns({ type: RequestType.INTENT, payload: {} }), delete: sinon.stub() } };
+        const runtime = { turn: { get: sinon.stub().returns({ type: RequestType.INTENT, payload: {} }) } };
         const variables = { foo: 'bar' };
 
         expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(output);
         expect(utils.commandHandler.canHandle.args).to.eql([[runtime]]);
         expect(utils.commandHandler.handle.args).to.eql([[runtime, variables]]);
-        expect(runtime.turn.delete.args).to.eql([[T.REQUEST]]);
       });
 
       describe('command cant handle', () => {
