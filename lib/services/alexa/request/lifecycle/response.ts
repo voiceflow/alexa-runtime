@@ -23,14 +23,13 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     turn.set(T.END, true);
   }
 
-  responseBuilder
-    .speak(storage.get<string>(S.OUTPUT) ?? '')
-    .reprompt((turn.get<string>('reprompt') || storage.get<string>(S.OUTPUT)) ?? '')
-    .withShouldEndSession(!!turn.get(T.END));
+  responseBuilder.speak(storage.get<string>(S.OUTPUT) ?? '').withShouldEndSession(!!turn.get(T.END));
 
   const delegate = turn.get<Intent>(T.DELEGATE);
   if (delegate) {
     responseBuilder.addDelegateDirective(delegate);
+  } else {
+    responseBuilder.reprompt((turn.get<string>(T.REPROMPT) || storage.get<string>(S.OUTPUT)) ?? '');
   }
 
   // eslint-disable-next-line no-restricted-syntax
