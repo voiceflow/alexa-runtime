@@ -54,6 +54,7 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
         return node.id;
       }
 
+      runtime.turn.delete(T.REQUEST);
       return node.nextIds[choice.nextIdIndex ?? index] ?? null;
     }
 
