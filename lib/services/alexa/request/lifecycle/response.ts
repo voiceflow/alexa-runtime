@@ -23,7 +23,7 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     turn.set(T.END, true);
   }
 
-  responseBuilder.speak(storage.get<string>(S.OUTPUT) ?? '').withShouldEndSession(!!turn.get(T.END));
+  responseBuilder.speak(storage.get<string>(S.OUTPUT) ?? '');
 
   const delegate = turn.get<Intent>(T.DELEGATE);
   if (delegate) {
@@ -31,6 +31,7 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
   } else {
     responseBuilder.reprompt((turn.get<string>(T.REPROMPT) || storage.get<string>(S.OUTPUT)) ?? '');
   }
+  responseBuilder.withShouldEndSession(!!turn.get(T.END));
 
   // eslint-disable-next-line no-restricted-syntax
   for (const handler of utils.responseHandlers) {

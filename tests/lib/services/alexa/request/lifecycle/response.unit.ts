@@ -40,9 +40,8 @@ describe('response lifecycle unit tests', () => {
     const accessToken = 'access-token';
     const output = 'output';
 
-    const withShouldEndSession = sinon.stub();
     const input = {
-      responseBuilder: { getResponse: sinon.stub().returns(output), speak: sinon.stub().returns({ withShouldEndSession }), reprompt: sinon.stub() },
+      responseBuilder: { getResponse: sinon.stub().returns(output), speak: sinon.stub(), reprompt: sinon.stub(), withShouldEndSession: sinon.stub() },
       requestEnvelope: {
         runtime: { System: { user: { accessToken } } },
         session: { sessionId: 'session.id' },
@@ -81,7 +80,7 @@ describe('response lifecycle unit tests', () => {
     ]);
     expect(input.responseBuilder.speak.args).to.eql([['speak']]);
     expect(input.responseBuilder.reprompt.args).to.eql([['speak']]);
-    expect(withShouldEndSession.args).to.eql([[true]]);
+    expect(input.responseBuilder.withShouldEndSession.args).to.eql([[true]]);
     expect(responseHandler1.args).to.eql([[runtime, input.responseBuilder]]);
     expect(responseHandler2.args).to.eql([[runtime, input.responseBuilder]]);
     expect(input.attributesManager.setPersistentAttributes.args).to.eql([[finalState]]);
@@ -120,8 +119,9 @@ describe('response lifecycle unit tests', () => {
       responseBuilder: {
         getResponse: sinon.stub().returns(output),
         addDelegateDirective: sinon.stub(),
-        speak: sinon.stub().returns({ withShouldEndSession: sinon.stub() }),
+        speak: sinon.stub(),
         reprompt: sinon.stub(),
+        withShouldEndSession: sinon.stub(),
       },
       requestEnvelope: {
         runtime: { System: { user: { accessToken: 'access-token' } } },
@@ -185,8 +185,9 @@ describe('response lifecycle unit tests', () => {
     const input = {
       responseBuilder: {
         getResponse: sinon.stub().returns(output),
-        speak: sinon.stub().returns({ withShouldEndSession: sinon.stub() }),
+        speak: sinon.stub(),
         reprompt: sinon.stub(),
+        withShouldEndSession: sinon.stub(),
       },
       requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } } },
       attributesManager: { setPersistentAttributes: sinon.stub() },
@@ -222,7 +223,8 @@ describe('response lifecycle unit tests', () => {
     const input = {
       responseBuilder: {
         getResponse: sinon.stub().returns(output),
-        speak: sinon.stub().returns({ withShouldEndSession: sinon.stub() }),
+        speak: sinon.stub(),
+        withShouldEndSession: sinon.stub(),
         addDelegateDirective: sinon.stub(),
       },
       requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } } },
