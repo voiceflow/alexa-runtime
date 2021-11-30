@@ -10,31 +10,33 @@ export type NoMatchCounterStorage = number;
 
 export const EMPTY_AUDIO_STRING = '<audio src=""/>';
 
-type NoMatchNode = BaseNode.Utils.BaseNode & { noMatch?: Nullable<VoiceNode.Utils.NodeNoMatch> };
-type DeprecatedNoMatchNode = NoMatchNode & VoiceNode.Utils.DeprecatedNodeNoMatch;
+interface NoMatchNode extends BaseNode.Utils.BaseNode {
+  noMatch?: Nullable<VoiceNode.Utils.NodeNoMatch>;
+}
 
-const convertDeprecatedNoMatch = ({ noMatch, elseId, noMatches, randomize, ...node }: DeprecatedNoMatchNode): NoMatchNode =>
-  ({
-    noMatch: {
-      prompts: noMatch?.prompts ?? noMatches,
-      randomize: noMatch?.randomize ?? randomize,
-      nodeID: noMatch?.nodeID ?? elseId,
-    },
-    ...node,
-  } as NoMatchNode);
+interface DeprecatedNoMatchNode extends NoMatchNode, VoiceNode.Utils.DeprecatedNodeNoMatch {}
 
-const removeEmptyNoMatches = (node: NoMatchNode) => {
-  const noMatches = node.noMatch?.prompts || [];
-  return noMatches?.filter((noMatch) => noMatch != null && noMatch !== EMPTY_AUDIO_STRING);
+const convertDeprecatedNoMatch = ({ noMatch, elseId, noMatches, randomize, ...node }: DeprecatedNoMatchNode): NoMatchNode => {
+  const mergedNoMatch: VoiceNode.Utils.NodeNoMatch = {
+    prompts: noMatch?.prompts ?? noMatches,
+    randomize: noMatch?.randomize ?? randomize,
+    nodeID: noMatch?.nodeID ?? elseId,
+  };
+
+  return { noMatch: mergedNoMatch, ...node };
 };
+
+const removeEmptyPrompts = (node: NoMatchNode): string[] =>
+  node.noMatch?.prompts?.filter((noMatch) => noMatch != null && noMatch !== EMPTY_AUDIO_STRING) ?? [];
 
 export const NoMatchHandler = () => ({
   handle: (_node: DeprecatedNoMatchNode, runtime: Runtime, variables: Store) => {
     const node = convertDeprecatedNoMatch(_node);
-    const nonEmptyNoMatches = removeEmptyNoMatches(node);
+    const noMatchPrompts = removeEmptyPrompts(node);
 
     const noMatchCounter = runtime.storage.get<NoMatchCounterStorage>(S.NO_MATCHES_COUNTER) ?? 0;
-    if (noMatchCounter >= nonEmptyNoMatches.length) {
+
+    if (noMatchCounter >= noMatchPrompts.length) {
       // clean up no matches counter
       runtime.storage.delete(S.NO_MATCHES_COUNTER);
       return node.noMatch?.nodeID ?? null;
@@ -42,7 +44,7 @@ export const NoMatchHandler = () => ({
 
     runtime.storage.set(S.NO_MATCHES_COUNTER, noMatchCounter + 1);
 
-    const speak = (node.noMatch?.randomize ? _.sample(nonEmptyNoMatches) : nonEmptyNoMatches?.[noMatchCounter]) || '';
+    const speak = (node.noMatch?.randomize ? _.sample(noMatchPrompts) : noMatchPrompts?.[noMatchCounter]) || '';
     const sanitizedVars = sanitizeVariables(variables.getState());
     const output = replaceVariables(speak, sanitizedVars);
 
