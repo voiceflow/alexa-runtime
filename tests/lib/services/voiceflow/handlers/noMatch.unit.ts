@@ -5,22 +5,27 @@ import { S } from '@/lib/constants';
 import { EMPTY_AUDIO_STRING, NoMatchHandler } from '@/lib/services/runtime/handlers/noMatch';
 
 describe('noMatch handler unit tests', () => {
-  describe('canHandle', () => {
-    it('false', () => {
-      expect(NoMatchHandler().canHandle({} as any, { storage: { get: sinon.stub().returns(null) } } as any)).to.eql(false);
-    });
-    it('true', () => {
-      expect(NoMatchHandler().canHandle({ noMatches: ['speak1', 'speak2'] } as any, { storage: { get: sinon.stub().returns(1) } } as any)).to.eql(
-        true
-      );
-      expect(NoMatchHandler().canHandle({ noMatches: ['speak1', 'speak2'] } as any, { storage: { get: sinon.stub().returns(null) } } as any)).to.eql(
-        true
-      );
-    });
-  });
-
   describe('handle', () => {
-    it('with noMatch', () => {
+    it('next id', () => {
+      const node = {
+        id: 'node-id',
+        noMatch: {
+          nodeID: 'next-id',
+          prompts: ['a', 'b'],
+        },
+      };
+      const runtime = {
+        storage: {
+          delete: sinon.stub(),
+          get: sinon.stub().returns(2),
+        },
+      };
+
+      const noMatchHandler = NoMatchHandler();
+      expect(noMatchHandler.handle(node as any, runtime as any, {} as any)).to.eql(node.noMatch.nodeID);
+    });
+
+    it('with old noMatch format', () => {
       const node = {
         id: 'node-id',
         noMatches: ['the counter is {counter}'],
@@ -28,7 +33,8 @@ describe('noMatch handler unit tests', () => {
       const runtime = {
         storage: {
           produce: sinon.stub(),
-          get: sinon.stub().returns(1),
+          set: sinon.stub(),
+          get: sinon.stub().returns(0),
         },
         trace: {
           addTrace: sinon.stub(),
@@ -52,18 +58,54 @@ describe('noMatch handler unit tests', () => {
         ],
       ]);
 
-      // assert produce
-      const cb1 = runtime.storage.produce.args[0][0];
-      // sets counter
-      const draft1 = {};
-      cb1(draft1);
-      expect(draft1).to.eql({ [S.NO_MATCHES_COUNTER]: 1 });
-      // increases counter
-      const draft2 = { [S.NO_MATCHES_COUNTER]: 2 };
-      cb1(draft2);
-      expect(draft2).to.eql({ [S.NO_MATCHES_COUNTER]: 3 });
+      expect(runtime.storage.set.args).to.eql([[S.NO_MATCHES_COUNTER, 1]]);
+
       // adds output
-      const cb2 = runtime.storage.produce.args[1][0];
+      const cb2 = runtime.storage.produce.args[0][0];
+      const draft3 = { [S.OUTPUT]: 'msg: ' };
+      cb2(draft3);
+      expect(draft3).to.eql({ [S.OUTPUT]: 'msg: the counter is 5.23' });
+    });
+
+    it('with new noMatch format', () => {
+      const node = {
+        id: 'node-id',
+        noMatch: {
+          prompts: ['the counter is {counter}'],
+        },
+      };
+      const runtime = {
+        storage: {
+          set: sinon.stub(),
+          produce: sinon.stub(),
+          get: sinon.stub().returns(null),
+        },
+        trace: {
+          addTrace: sinon.stub(),
+        },
+      };
+      const variables = {
+        getState: sinon.stub().returns({ counter: 5.2345 }),
+      };
+
+      const noMatchHandler = NoMatchHandler();
+      expect(noMatchHandler.handle(node as any, runtime as any, variables as any)).to.eql(node.id);
+      expect(runtime.trace.addTrace.args).to.eql([
+        [
+          {
+            type: 'speak',
+            payload: {
+              message: 'the counter is 5.23',
+              type: 'message',
+            },
+          },
+        ],
+      ]);
+
+      expect(runtime.storage.set.args).to.eql([[S.NO_MATCHES_COUNTER, 1]]);
+
+      // adds output
+      const cb2 = runtime.storage.produce.args[0][0];
       const draft3 = { [S.OUTPUT]: 'msg: ' };
       cb2(draft3);
       expect(draft3).to.eql({ [S.OUTPUT]: 'msg: the counter is 5.23' });
@@ -75,8 +117,9 @@ describe('noMatch handler unit tests', () => {
       };
       const runtime = {
         storage: {
-          produce: sinon.stub(),
-          get: sinon.stub().returns(1),
+          set: sinon.stub(),
+          delete: sinon.stub(),
+          get: sinon.stub(),
         },
         trace: {
           addTrace: sinon.stub(),
@@ -87,18 +130,8 @@ describe('noMatch handler unit tests', () => {
       };
 
       const noMatchHandler = NoMatchHandler();
-      expect(noMatchHandler.handle(node as any, runtime as any, variables as any)).to.eql(node.id);
-      expect(runtime.trace.addTrace.args).to.eql([
-        [
-          {
-            type: 'speak',
-            payload: {
-              message: '',
-              type: 'message',
-            },
-          },
-        ],
-      ]);
+      expect(noMatchHandler.handle(node as any, runtime as any, variables as any)).to.eql(null);
+      expect(runtime.trace.addTrace.callCount).to.eql(0);
     });
 
     it('with choices', () => {
@@ -108,8 +141,9 @@ describe('noMatch handler unit tests', () => {
       };
       const runtime = {
         storage: {
-          produce: sinon.stub(),
-          get: sinon.stub().returns(1),
+          set: sinon.stub(),
+          delete: sinon.stub(),
+          get: sinon.stub().returns(0),
         },
         trace: {
           addTrace: sinon.stub(),
@@ -120,30 +154,23 @@ describe('noMatch handler unit tests', () => {
       };
 
       const noMatchHandler = NoMatchHandler();
-      expect(noMatchHandler.handle(node as any, runtime as any, variables as any)).to.eql(node.id);
-      expect(runtime.trace.addTrace.args).to.eql([
-        [
-          {
-            type: 'speak',
-            payload: {
-              message: '',
-              type: 'message',
-            },
-          },
-        ],
-      ]);
+      expect(noMatchHandler.handle(node as any, runtime as any, variables as any)).to.eql(null);
+      expect(runtime.trace.addTrace.callCount).to.eql(0);
     });
 
     it('with noMatch randomized', () => {
       const node = {
         id: 'node-id',
-        noMatches: ['A', 'B', 'C'],
-        randomize: true,
+        noMatch: {
+          prompts: ['A', 'B', 'C'],
+          randomize: true,
+        },
       };
       const runtime = {
         storage: {
+          set: sinon.stub(),
           produce: sinon.stub(),
-          get: sinon.stub().returns(1),
+          get: sinon.stub().returns(0),
         },
         trace: {
           addTrace: sinon.stub(),
@@ -155,7 +182,7 @@ describe('noMatch handler unit tests', () => {
 
       const noMatchHandler = NoMatchHandler();
       expect(noMatchHandler.handle(node as any, runtime as any, variables as any)).to.eql(node.id);
-      expect(node.noMatches.includes(runtime.trace.addTrace.args[0][0].payload.message)).to.eql(true);
+      expect(node.noMatch.prompts.includes(runtime.trace.addTrace.args[0][0].payload.message)).to.eql(true);
     });
 
     it('with noMatch null speak string', () => {
@@ -166,8 +193,9 @@ describe('noMatch handler unit tests', () => {
       };
       const runtime = {
         storage: {
+          set: sinon.stub(),
           produce: sinon.stub(),
-          get: sinon.stub().returns(1),
+          get: sinon.stub().returns(0),
         },
         trace: {
           addTrace: sinon.stub(),
@@ -190,8 +218,9 @@ describe('noMatch handler unit tests', () => {
       };
       const runtime = {
         storage: {
+          set: sinon.stub(),
           produce: sinon.stub(),
-          get: sinon.stub().returns(1),
+          get: sinon.stub().returns(0),
         },
         trace: {
           addTrace: sinon.stub(),

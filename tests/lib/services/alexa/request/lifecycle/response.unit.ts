@@ -17,8 +17,9 @@ describe('response lifecycle unit tests', () => {
     const finalState = 'final-state';
     const storageGet = sinon.stub().returns('speak');
     const turnGet = sinon.stub();
-    turnGet.onFirstCall().returns(null);
-    turnGet.onSecondCall().returns(true);
+    turnGet.withArgs(T.REPROMPT).returns(null);
+    turnGet.withArgs(T.END).returns(true);
+    turnGet.withArgs(T.DELEGATE).returns(false);
     const versionID = 'version.id';
     const turnID = 'turn-id';
     const request = { foo: 'bar' };
@@ -39,10 +40,8 @@ describe('response lifecycle unit tests', () => {
     const accessToken = 'access-token';
     const output = 'output';
 
-    const withShouldEndSession = sinon.stub();
-    const reprompt = sinon.stub().returns({ withShouldEndSession });
     const input = {
-      responseBuilder: { getResponse: sinon.stub().returns(output), speak: sinon.stub().returns({ reprompt }) },
+      responseBuilder: { getResponse: sinon.stub().returns(output), speak: sinon.stub(), reprompt: sinon.stub(), withShouldEndSession: sinon.stub() },
       requestEnvelope: {
         runtime: { System: { user: { accessToken } } },
         session: { sessionId: 'session.id' },
@@ -80,8 +79,8 @@ describe('response lifecycle unit tests', () => {
       ],
     ]);
     expect(input.responseBuilder.speak.args).to.eql([['speak']]);
-    expect(reprompt.args).to.eql([['speak']]);
-    expect(withShouldEndSession.args).to.eql([[true]]);
+    expect(input.responseBuilder.reprompt.args).to.eql([['speak']]);
+    expect(input.responseBuilder.withShouldEndSession.args).to.eql([[true]]);
     expect(responseHandler1.args).to.eql([[runtime, input.responseBuilder]]);
     expect(responseHandler2.args).to.eql([[runtime, input.responseBuilder]]);
     expect(input.attributesManager.setPersistentAttributes.args).to.eql([[finalState]]);
@@ -97,7 +96,13 @@ describe('response lifecycle unit tests', () => {
     const runtime = {
       getRequest: sinon.stub().returns(request),
       storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
-      turn: { get: sinon.stub().returns(true) },
+      turn: {
+        get: sinon
+          .stub()
+          .returns(true)
+          .withArgs(T.DELEGATE)
+          .returns('delegation'),
+      },
       stack: { isEmpty: sinon.stub().returns(false) },
       variables: { get: sinon.stub().returns(false) },
       getFinalState: sinon.stub().returns({}),
@@ -113,7 +118,10 @@ describe('response lifecycle unit tests', () => {
     const input = {
       responseBuilder: {
         getResponse: sinon.stub().returns(output),
-        speak: sinon.stub().returns({ reprompt: sinon.stub().returns({ withShouldEndSession: sinon.stub() }) }),
+        addDelegateDirective: sinon.stub(),
+        speak: sinon.stub(),
+        reprompt: sinon.stub(),
+        withShouldEndSession: sinon.stub(),
       },
       requestEnvelope: {
         runtime: { System: { user: { accessToken: 'access-token' } } },
@@ -149,6 +157,7 @@ describe('response lifecycle unit tests', () => {
         },
       ],
     ]);
+    expect(input.responseBuilder.addDelegateDirective.args).to.eql([['delegation']]);
   });
 
   it('response variable', async () => {
@@ -160,7 +169,13 @@ describe('response lifecycle unit tests', () => {
 
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
-      turn: { get: sinon.stub().returns(true) },
+      turn: {
+        get: sinon
+          .stub()
+          .returns(true)
+          .withArgs(T.DELEGATE)
+          .returns(false),
+      },
       stack: { isEmpty: sinon.stub().returns(false) },
       variables: { get: sinon.stub().returns(responseVar) },
       getFinalState: sinon.stub().returns({}),
@@ -170,7 +185,9 @@ describe('response lifecycle unit tests', () => {
     const input = {
       responseBuilder: {
         getResponse: sinon.stub().returns(output),
-        speak: sinon.stub().returns({ reprompt: sinon.stub().returns({ withShouldEndSession: sinon.stub() }) }),
+        speak: sinon.stub(),
+        reprompt: sinon.stub(),
+        withShouldEndSession: sinon.stub(),
       },
       requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } } },
       attributesManager: { setPersistentAttributes: sinon.stub() },
@@ -178,5 +195,44 @@ describe('response lifecycle unit tests', () => {
 
     expect(await response(runtime as any, input as any)).to.eql({ ...output, ...responseVar, c: undefined });
     expect(runtime.variables.get.args).to.eql([[V.RESPONSE], [V.RESPONSE]]);
+  });
+
+  it('with delegation', async () => {
+    const utils = { responseHandlers: [] };
+
+    const response = responseGenerator(utils);
+
+    const responseVar = { foo: 'bar', b: 'd', c: null };
+
+    const DELEGATION = 'dialog_delegation';
+    const runtime = {
+      storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
+      turn: {
+        get: sinon
+          .stub()
+          .returns(true)
+          .withArgs(T.DELEGATE)
+          .returns(DELEGATION),
+      },
+      stack: { isEmpty: sinon.stub().returns(false) },
+      variables: { get: sinon.stub().returns(responseVar) },
+      getFinalState: sinon.stub().returns({}),
+    };
+    const output = { a: 'b', b: 'c' };
+
+    const input = {
+      responseBuilder: {
+        getResponse: sinon.stub().returns(output),
+        speak: sinon.stub(),
+        withShouldEndSession: sinon.stub(),
+        addDelegateDirective: sinon.stub(),
+      },
+      requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } } },
+      attributesManager: { setPersistentAttributes: sinon.stub() },
+    };
+
+    expect(await response(runtime as any, input as any)).to.eql({ ...output, ...responseVar, c: undefined });
+    expect(runtime.variables.get.args).to.eql([[V.RESPONSE], [V.RESPONSE]]);
+    expect(input.responseBuilder.addDelegateDirective.args).to.eql([[DELEGATION]]);
   });
 });

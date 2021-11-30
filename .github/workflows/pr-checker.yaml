@@ -1,11 +1,11 @@
-name: PR Title validation
+name: PR Validation
 
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
 
 jobs:
-  pr-validation:
+  pr-title-validation:
     name: Checks if the PR title is valid
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}

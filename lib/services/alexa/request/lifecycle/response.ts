@@ -1,5 +1,5 @@
 import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
-import { Response } from 'ask-sdk-model';
+import { Intent, Response } from 'ask-sdk-model';
 import _isObject from 'lodash/isObject';
 import _mapValues from 'lodash/mapValues';
 
@@ -23,10 +23,15 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     turn.set(T.END, true);
   }
 
-  responseBuilder
-    .speak(storage.get<string>(S.OUTPUT) ?? '')
-    .reprompt((turn.get<string>('reprompt') || storage.get<string>(S.OUTPUT)) ?? '')
-    .withShouldEndSession(!!turn.get(T.END));
+  responseBuilder.speak(storage.get<string>(S.OUTPUT) ?? '');
+
+  const delegate = turn.get<Intent>(T.DELEGATE);
+  if (delegate) {
+    responseBuilder.addDelegateDirective(delegate);
+  } else {
+    responseBuilder.reprompt((turn.get<string>(T.REPROMPT) || storage.get<string>(S.OUTPUT)) ?? '');
+  }
+  responseBuilder.withShouldEndSession(!!turn.get(T.END));
 
   // eslint-disable-next-line no-restricted-syntax
   for (const handler of utils.responseHandlers) {
