@@ -36,6 +36,24 @@ describe('capture handler unit tests', async () => {
       expect(utils.addRepromptIfExists.args).to.eql([[{ node, runtime, variables }]]);
     });
 
+    it('delegation', () => {
+      const utils = {
+        commandHandler: { canHandle: () => false },
+        repeatHandler: { canHandle: () => false },
+        addRepromptIfExists: sinon.stub(),
+      };
+
+      const captureHandler = CaptureHandler(utils as any);
+
+      const node = { id: 'node-id', intent: 'intent-name' };
+      const runtime = { turn: { get: sinon.stub().returns(null), set: sinon.stub() } };
+      const variables = { foo: 'bar' };
+
+      expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.id);
+      expect(utils.addRepromptIfExists.args).to.eql([[{ node, runtime, variables }]]);
+      expect(runtime.turn.set.args).to.eql([[T.DELEGATE, { name: node.intent, confirmationStatus: 'NONE' }]]);
+    });
+
     it('request type not intent', () => {
       const utils = {
         commandHandler: { canHandle: () => false },
