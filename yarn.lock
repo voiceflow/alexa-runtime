@@ -1109,15 +1109,15 @@
     "@typescript-eslint/types" "4.31.2"
     eslint-visitor-keys "^2.0.0"
 
-"@voiceflow/alexa-types@2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-2.2.0.tgz#02d7a7ab0eb0eb82909a354e8e647e9a4d42860f"
-  integrity sha512-iDOt9Fodi9CMbJ7V8dRryQJA0vVff60LJdSWdKR+PGc3zYFYWuA/mQR6dU2CI6BWno3EIO4qcRIbX/AOcV6Qpw==
+"@voiceflow/alexa-types@2.2.3":
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/@voiceflow/alexa-types/-/alexa-types-2.2.3.tgz#b4f4c861feca528dbb75caa11d7ac54a425c449a"
+  integrity sha512-dyssyFo3WtpB3P+9I82WP1dKyGuXmzzOaaI8d1oTV3jnEQJzVW0IMFlZ/B7PNDZsGyktdU6EVk4zrBIyaGvNBg==
   dependencies:
-    "@voiceflow/base-types" "^2.3.0"
+    "@voiceflow/base-types" "^2.4.0"
     "@voiceflow/common" "^7.10.0"
-    "@voiceflow/general-types" "^3.2.0"
-    "@voiceflow/voice-types" "^2.1.0"
+    "@voiceflow/general-types" "^3.2.3"
+    "@voiceflow/voice-types" "^2.1.3"
     ask-smapi-model "1.14.0"
 
 "@voiceflow/api-sdk@3.3.0":
@@ -1182,6 +1182,13 @@
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@voiceflow/base-types/-/base-types-2.3.0.tgz#447a9d49f1cdc6422c7e7d6fc54fc9d47bf899ea"
   integrity sha512-G2Wcqwl+t6tNSICB6T1HtRgEyOFu2qf+Nvp/WJkbXVYM5sAbHKI30241Yf6LNNH76bFqplE07ucxnsJwAv+NuA==
+  dependencies:
+    slate "^0.63.0"
+
+"@voiceflow/base-types@2.4.0", "@voiceflow/base-types@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@voiceflow/base-types/-/base-types-2.4.0.tgz#db32b7bfb2b2380ed9c3c805bf3b58d2d19e98c4"
+  integrity sha512-kBMd8onWb2ek0OB9APwYKMvWOg79EEYQtSxJFqcG0cXTSyQlVzexFooo+evEghp4tcEod7x4Ys2m8Ylti7YZpQ==
   dependencies:
     slate "^0.63.0"
 
@@ -1325,13 +1332,21 @@
     words-to-numbers "^1.5.1"
     workerpool "^5.0.4"
 
-"@voiceflow/general-types@3.2.0", "@voiceflow/general-types@^3.2.0":
+"@voiceflow/general-types@3.2.0":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-3.2.0.tgz#d625f8861b018177a5101c2d6186719373bfd28c"
   integrity sha512-mqE/QxhJXy7A1qIdTNBOt8FSiOOZZziKJfUeqvAGsyYRvqpopA4Bmcto64WJv6ckyFKgvLjIptoe+YIdeVvalA==
   dependencies:
     "@voiceflow/base-types" "^2.3.0"
     "@voiceflow/voice-types" "^2.1.0"
+
+"@voiceflow/general-types@3.2.3", "@voiceflow/general-types@^3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-types/-/general-types-3.2.3.tgz#91a62072cacd73b468c688ac4b15dd24430073fa"
+  integrity sha512-waAtPiaE022hPV4NQfjXbDfs/9pMtZ0GdWVGqgPSOHNlb4jQgFG7XDFf8QhTszSrZeO8osfPFbF413r4mgShbw==
+  dependencies:
+    "@voiceflow/base-types" "^2.4.0"
+    "@voiceflow/voice-types" "^2.1.3"
 
 "@voiceflow/git-branch-check@1.2.1":
   version "1.2.1"
@@ -1441,6 +1456,13 @@
   integrity sha512-DYiMPvbWRcfYR5VUTqeZ3bMaGhTVMBifWxPeFc2vPK/tywUK+HmccnXipAwBFujRl17mC6P6icngfbzCmWJcug==
   dependencies:
     "@voiceflow/base-types" "^2.3.0"
+
+"@voiceflow/voice-types@2.1.3", "@voiceflow/voice-types@^2.1.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@voiceflow/voice-types/-/voice-types-2.1.3.tgz#7da6099fbfd8e4aff6ebed994a38d60dc26bde58"
+  integrity sha512-auw+KU7eZ1o2p4qQXaQ8EO4gSvFZb8NAVg7hGIivLZ8f8n7tEYYDTKy2fgRnzbrB73DOJ3AB+wvW7uRxH+WT4g==
+  dependencies:
+    "@voiceflow/base-types" "^2.4.0"
 
 "@zerollup/ts-helpers@^1.7.18":
   version "1.7.18"
