@@ -30,18 +30,20 @@ export const CaptureHandler: HandlerFactory<Node.Capture.Node, typeof utilsObj> 
         runtime.turn.set<Intent>(T.DELEGATE, {
           name: node.intent,
           confirmationStatus: 'NONE',
-          slots: (node.slots || []).reduce(
-            (acc, slotName) => ({
-              ...acc,
-              [slotName]: {
-                name: slotName,
-                value: '',
-                resolutions: {},
-                confirmationStatus: 'NONE',
-              },
-            }),
-            {}
-          ),
+          ...(node.slots && {
+            slots: node.slots.reduce(
+              (acc, slotName) => ({
+                ...acc,
+                [slotName]: {
+                  name: slotName,
+                  value: '',
+                  resolutions: {},
+                  confirmationStatus: 'NONE',
+                },
+              }),
+              {}
+            ),
+          }),
         });
       }
       // quit cycleStack without ending session by stopping on itself
