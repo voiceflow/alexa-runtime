@@ -27,7 +27,22 @@ export const CaptureHandler: HandlerFactory<Node.Capture.Node, typeof utilsObj> 
       utils.addRepromptIfExists({ node, runtime, variables });
 
       if (node.intent) {
-        runtime.turn.set<Intent>(T.DELEGATE, { name: node.intent, confirmationStatus: 'NONE' });
+        runtime.turn.set<Intent>(T.DELEGATE, {
+          name: node.intent,
+          confirmationStatus: 'NONE',
+          slots: (node.slots || []).reduce(
+            (acc, slotName) => ({
+              ...acc,
+              [slotName]: {
+                name: slotName,
+                value: '',
+                resolutions: {},
+                confirmationStatus: 'NONE',
+              },
+            }),
+            {}
+          ),
+        });
       }
       // quit cycleStack without ending session by stopping on itself
       return node.id;
