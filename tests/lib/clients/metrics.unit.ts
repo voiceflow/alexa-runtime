@@ -1,104 +1,106 @@
+import axios from 'axios';
 import { expect } from 'chai';
+import getPort from 'get-port';
 import _ from 'lodash';
-import sinon from 'sinon';
+import { setTimeout as sleep } from 'timers/promises';
+import types from 'util/types';
 
-import config from '@/config';
 import MetricsClient, { Metrics } from '@/lib/clients/metrics';
 
+const baseConfig = async () => ({ PORT_METRICS: await getPort(), NODE_ENV: 'test' });
+
+const assertHelper = async ({ config = {}, expected }: { config?: Record<any, any>; expected: RegExp | ReadonlyArray<RegExp> }) => {
+  const combinedConfig = { ...(await baseConfig()), ...config };
+
+  const metrics = MetricsClient(combinedConfig as any);
+
+  const expressions = types.isRegExp(expected) ? [expected] : expected;
+
+  return {
+    metrics,
+    async assert(): Promise<void> {
+      await sleep(1);
+
+      try {
+        const { data } = await axios.get<string>(`http://localhost:${combinedConfig.PORT_METRICS}/metrics`);
+
+        expressions.forEach((expression) => {
+          expect(data).to.match(expression);
+        });
+      } finally {
+        await metrics.stop();
+      }
+    },
+  };
+};
+
 describe('metrics client unit tests', () => {
-  let metrics: Metrics;
+  it('new', async () => {
+    const config = await baseConfig();
 
-  beforeEach(() => {
-    sinon.restore();
-  });
+    const metrics = new Metrics(config as any);
 
-  afterEach(async () => {
     await metrics.stop();
   });
 
-  it('new', async () => {
-    const NODE_ENV = 'test';
-    const loggerStub = sinon.stub().returns({
-      increment: () => {
-        //
-      },
-    });
-
-    metrics = new Metrics({ ...config, NODE_ENV } as any, loggerStub as any);
-    expect(typeof _.get(metrics, 'client.increment')).to.eql('function');
-
-    expect(loggerStub.calledWithNew()).to.eql(true);
-    expect(loggerStub.args).to.eql([
-      [
-        {
-          apiKey: config.DATADOG_API_KEY,
-          prefix: `vf_server.${NODE_ENV}.`,
-          flushIntervalSeconds: 5,
-        },
-      ],
-    ]);
-  });
-
   it('new with hash', async () => {
-    const NODE_ENV = 'test';
-    const loggerStub = sinon.stub().returns({
-      increment: () => {
-        //
-      },
-    });
+    const config = { CONFIG_ID_HASH: 'hash', ...(await baseConfig()) };
 
-    metrics = new Metrics({ ...config, NODE_ENV, CONFIG_ID_HASH: 'hash' } as any, loggerStub as any);
-    expect(_.get(metrics, 'hashids') !== undefined).to.eql(true);
+    const metrics = new Metrics(config as any);
+
+    expect(_.get(metrics, 'hashids')).to.not.eql(undefined);
+
+    await metrics.stop();
   });
 
   it('request', async () => {
-    metrics = MetricsClient({} as any);
-    const increment = sinon.stub();
-    _.set(metrics, 'client', { increment });
+    const helper = await assertHelper({ expected: /^alexa_request_total 1 \d+$/m });
 
-    metrics.request();
-    expect(increment.args).to.eql([['alexa.request']]);
+    helper.metrics.request();
+
+    await helper.assert();
   });
 
   it('error', async () => {
-    metrics = MetricsClient({} as any);
-    const increment = sinon.stub();
-    _.set(metrics, 'client', { increment });
-    sinon.stub(metrics, '_decodeVersionID').returnsArg(0);
+    const versionID = 'a'.repeat(18);
 
-    const versionID = 'version_id';
-    metrics.error(versionID);
-    expect(increment.args).to.eql([['alexa.request.error', 1, [`skill_id:${versionID}`]]]);
+    const helper = await assertHelper({ expected: /^alexa_request_error_total{skill_id="a{18}"} 1 \d+$/m });
+
+    helper.metrics.error(versionID);
+
+    await helper.assert();
   });
 
   it('invocation', async () => {
-    metrics = MetricsClient({} as any);
-    const increment = sinon.stub();
-    _.set(metrics, 'client', { increment });
-    sinon.stub(metrics, '_decodeVersionID').returnsArg(0);
+    const versionID = 'a'.repeat(18);
 
-    const versionID = 'version_id';
-    metrics.invocation(versionID);
-    expect(increment.args).to.eql([['alexa.invocation', 1, [`skill_id:${versionID}`]]]);
+    const helper = await assertHelper({ expected: /^alexa_invocation_total{skill_id="a{18}"} 1 \d+$/m });
+
+    helper.metrics.invocation(versionID);
+
+    await helper.assert();
   });
 
-  describe('_decodeVersionID', () => {
-    it('no hashids', async () => {
-      metrics = MetricsClient({} as any);
-      const versionID = 'version-id';
-      expect(metrics._decodeVersionID(versionID)).to.eql(versionID);
+  it('httpRequest', async () => {
+    const helper = await assertHelper({ expected: /^http_request_total{operation="operation",status_code="123"} 1 \d+$/m });
+
+    helper.metrics.httpRequest('operation', 123);
+
+    await helper.assert();
+  });
+
+  it('httpRequestDuration', async () => {
+    const helper = await assertHelper({
+      expected: [
+        /^http_request_duration_count{operation="operation",status_code="123"} 2 \d+$/m,
+        /^http_request_duration_sum{operation="operation",status_code="123"} 300 \d+$/m,
+        /^http_request_duration_bucket{operation="operation",status_code="123",le="\+Inf"} 2 \d+$/m,
+      ],
     });
 
-    it('object id', async () => {
-      metrics = MetricsClient({ CONFIG_ID_HASH: 'hash-key' } as any);
-      const versionID = '5f74a6f5e4a40c344b1ef366';
-      expect(metrics._decodeVersionID(versionID)).to.eql(versionID);
-    });
+    helper.metrics.httpRequestDuration('operation', 123, { duration: 200 });
+    helper.metrics.httpRequestDuration('operation', 123, { duration: 100 });
 
-    it('with hashids', async () => {
-      metrics = MetricsClient({ CONFIG_ID_HASH: 'hash-key' } as any);
-      const versionID = 5;
-      expect(metrics._decodeVersionID(_.get(metrics, 'hashids').encode(versionID))).to.eql(versionID);
-    });
+    await helper.assert();
   });
 });

@@ -23,7 +23,6 @@ const CONFIG: Config = {
 
   // Application secrets
   ADMIN_SERVER_DATA_API_TOKEN: getRequiredProcessEnv('ADMIN_SERVER_DATA_API_TOKEN'),
-  DATADOG_API_KEY: getRequiredProcessEnv('DATADOG_API_KEY'),
 
   DYNAMO_ENDPOINT: getOptionalProcessEnv('DYNAMO_ENDPOINT'),
   CODE_HANDLER_ENDPOINT: getOptionalProcessEnv('CODE_HANDLER_ENDPOINT'),

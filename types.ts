@@ -18,7 +18,6 @@ export interface Config {
   AWS_ENDPOINT: string | null;
 
   // Application secrets
-  DATADOG_API_KEY: string;
   ADMIN_SERVER_DATA_API_TOKEN: string;
 
   DYNAMO_ENDPOINT: string | null;
