@@ -60,9 +60,9 @@ jobs:
           ./vfcli init --interactive false --no-telepresence
 
           echo "Creating new environment..."
-          ./vfcli env create --random --interactive false --no-telepresence
+          ./vfcli env create --random --interactive false --no-telepresence --prefix review
           # From the vfcli config file, gets the value from the name YAML property and the replace " to empty
-          ENV_NAME=$(cat /home/runner/.vfcli.yaml | grep test- | awk '/name:/ {print $2}' | sed 's/"//g' )
+          ENV_NAME=$(cat /home/runner/.vfcli.yaml | grep review- | awk '/name:/ {print $2}' | sed 's/"//g' )
 
           NEW_LABEL="env-${ENV_NAME}"
 
@@ -101,7 +101,7 @@ jobs:
           if [[ $NEW_LABEL == *"env-"* ]]
           then
             ENV_NAME=$(sed 's|env-||g' <<< $NEW_LABEL)
-            ./vfcli track create -n  $ENV_NAME -c $COMPONENT -b $BRANCH --interactive false --no-telepresence 
+            ./vfcli track create -n  $ENV_NAME -c $COMPONENT -b $BRANCH --interactive false --no-telepresence
           else
             ./vfcli track create -n  ${{ steps.createNewEnv.outputs.newEnvName }} -c $COMPONENT -b $BRANCH --interactive false --no-telepresence
           fi
