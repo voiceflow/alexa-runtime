@@ -694,7 +694,7 @@
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.12.tgz#6160ae454cd89dae05adc3bb97997f488b608201"
   integrity sha512-aN5IAC8QNtSUdQzxu7lGBgYAOuU1tmRU4c9dIq5OKGf/SBVjXo+ffM2wEjudAWbgpOhy60nLoAGH1xm8fpCKFQ==
 
-"@types/chai@^4.2.11", "@types/chai@^4.2.16", "@types/chai@^4.3.0":
+"@types/chai@^4.2.16", "@types/chai@^4.3.0":
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.3.0.tgz#23509ebc1fa32f1b4d50d6a66c4032d5b8eaabdc"
   integrity sha512-/ceqdqeRraGolFTcfoXNiqjyQhZzbINDngeoAq9GoHa8PPK1yNzTaxWjA6BFWp5Ua9JpXEMSS4s5i9tS0hOJtw==
@@ -821,13 +821,6 @@
   version "8.5.0"
   resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.5.0.tgz#2531d5e300803aa63279b232c014acf780c981c5"
   integrity sha512-9bVao7LvyorRGZCw0VmH/dr7Og+NdjYSsKAxB43OQoComFbBgsEpoR9JW6+qSq/ogwVBg8GI2MfAlk4SYI4OLg==
-  dependencies:
-    "@types/node" "*"
-
-"@types/jsonwebtoken@^8.5.0":
-  version "8.5.6"
-  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.5.6.tgz#1913e5a61e70a192c5a444623da4901a7b1a9d42"
-  integrity sha512-+P3O/xC7nzVizIi5VbF34YtqSonFsdnbXBnWUCYRiKOi1f9gA4sEFvXkrGr/QVV23IbMYvcoerI7nnhDUiWXRQ==
   dependencies:
     "@types/node" "*"
 
@@ -1127,18 +1120,6 @@
     "@voiceflow/voice-types" "^2.1.0"
     ask-smapi-model "1.14.0"
 
-"@voiceflow/api-sdk@1.42.2":
-  version "1.42.2"
-  resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-1.42.2.tgz#f7730fd8c8ef55234403165655073e129e1871bd"
-  integrity sha512-kJvnPzgkCLN0EHefCBsAH0z0RcULdaTWt8qlyEuZUG+MhbsclAVw5JfO/4fsAjnLqoLlJWXWDLWVWSLxtMxBPw==
-  dependencies:
-    "@types/chai" "^4.2.11"
-    "@types/jsonwebtoken" "^8.5.0"
-    "@voiceflow/common" "^6.9.3"
-    atob "^2.1.2"
-    axios "^0.21.1"
-    superstruct "^0.10.12"
-
 "@voiceflow/api-sdk@3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@voiceflow/api-sdk/-/api-sdk-3.3.0.tgz#682a4aea51cabe9ba44c630a4eae056d3d45512d"
@@ -1242,7 +1223,7 @@
   dependencies:
     dotenv "^9.0.2"
 
-"@voiceflow/common@6.9.3", "@voiceflow/common@^6.9.3":
+"@voiceflow/common@6.9.3":
   version "6.9.3"
   resolved "https://registry.yarnpkg.com/@voiceflow/common/-/common-6.9.3.tgz#68dfff5485901f2d62e5e55dd6cd6c65302e8bee"
   integrity sha512-i7/8bCGzbJy+j8NY9v3dR1BjLPNnShbJWR9FQisRbLsml3gwhNuVTO3wY0U+PucR133WGX9vZlIMN+u7ibcXQQ==
