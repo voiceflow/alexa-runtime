@@ -1,17 +1,12 @@
-import { Counter, ValueRecorder } from '@opentelemetry/api-metrics';
-import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
-import { Meter, MeterProvider, MetricExporter } from '@opentelemetry/sdk-metrics-base';
+import { Counter } from '@opentelemetry/api-metrics';
+import * as VFMetrics from '@voiceflow/metrics';
 import Hashids from 'hashids';
 
 import log from '@/logger';
 import { Config } from '@/types';
 
-export class Metrics {
-  private meter: Meter;
-
-  private exporter: MetricExporter;
-
-  private counters: {
+export class Metrics extends VFMetrics.Client.Metrics {
+  protected counters: {
     httpRequest: Counter;
     alexa: {
       error: Counter;
@@ -20,21 +15,14 @@ export class Metrics {
     };
   };
 
-  private recorders: {
-    httpRequestDuration: ValueRecorder;
-  };
-
   private hashids: Hashids | null;
 
   constructor(config: Config) {
-    const port = config.PORT_METRICS ? Number(config.PORT_METRICS) : PrometheusExporter.DEFAULT_OPTIONS.port;
-    const { endpoint } = PrometheusExporter.DEFAULT_OPTIONS;
+    super({ ...config, SERVICE_NAME: 'alexa-runtime' });
 
-    this.exporter = new PrometheusExporter({ port, endpoint }, () => {
-      log.info(`[metrics] exporter ready ${log.vars({ port, path: endpoint })}`);
+    super.once('ready', ({ port, path }: VFMetrics.Client.Events['ready']) => {
+      log.info(`[metrics] exporter ready ${log.vars({ port, path })}`);
     });
-
-    this.meter = new MeterProvider({ exporter: this.exporter, interval: config.NODE_ENV === 'test' ? 0 : 1000 }).getMeter('alexa-runtime');
 
     this.counters = {
       alexa: {
@@ -43,10 +31,6 @@ export class Metrics {
         request: this.meter.createCounter('alexa_request', { description: 'Alexa requests' }),
       },
       httpRequest: this.meter.createCounter('http_request', { description: 'HTTP requests' }),
-    };
-
-    this.recorders = {
-      httpRequestDuration: this.meter.createValueRecorder('http_request_duration', { description: 'Http requests duration' }),
     };
 
     this.hashids = config.CONFIG_ID_HASH ? new Hashids(config.CONFIG_ID_HASH, 10) : null;
@@ -74,24 +58,10 @@ export class Metrics {
     this.counters.httpRequest.bind({ operation, status_code: statusCode.toString() }).add(1);
   }
 
-  httpRequestDuration(operation: string, statusCode: number, opts: { duration: number }): void {
-    this.recorders.httpRequestDuration
-      .bind({
-        operation,
-        status_code: statusCode.toString(),
-      })
-      .record(opts.duration);
-  }
-
   private decodeVersionID(versionID: string): string {
     if (versionID.length === 24 || !this.hashids) return versionID;
 
     return this.hashids.decode(versionID)[0].toString();
-  }
-
-  async stop(): Promise<void> {
-    await this.meter.shutdown();
-    await this.exporter.shutdown();
   }
 }
 
