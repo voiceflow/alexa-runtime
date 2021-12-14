@@ -1,98 +1,55 @@
+import * as VFMetrics from '@voiceflow/metrics';
 import { expect } from 'chai';
 import _ from 'lodash';
-import sinon from 'sinon';
 
-import config from '@/config';
-import MetricsClient, { Metrics } from '@/lib/clients/metrics';
+import MetricsClient from '@/lib/clients/metrics';
+
+const metricsAsserter = new VFMetrics.Testing.MetricsAsserter(MetricsClient);
 
 describe('metrics client unit tests', () => {
-  beforeEach(() => {
-    sinon.restore();
+  it('new with hash', async () => {
+    const config = { CONFIG_ID_HASH: 'hash', ...(await VFMetrics.Testing.createBaseConfig()) };
+
+    const metrics = MetricsClient(config as any);
+
+    expect(_.get(metrics, 'hashids')).to.not.eql(undefined);
+
+    await metrics.stop();
   });
 
-  it('new', () => {
-    const NODE_ENV = 'test';
-    const loggerStub = sinon.stub().returns({
-      increment: () => {
-        //
-      },
-    });
+  it('request', async () => {
+    const fixture = await metricsAsserter.assertMetric({ expected: /^alexa_request_total 1 \d+$/m });
 
-    const metrics = new Metrics({ ...config, NODE_ENV } as any, loggerStub as any);
-    expect(typeof _.get(metrics, 'client.increment')).to.eql('function');
+    fixture.metrics.request();
 
-    expect(loggerStub.calledWithNew()).to.eql(true);
-    expect(loggerStub.args).to.eql([
-      [
-        {
-          apiKey: config.DATADOG_API_KEY,
-          prefix: `vf_server.${NODE_ENV}.`,
-          flushIntervalSeconds: 5,
-        },
-      ],
-    ]);
+    await fixture.assert();
   });
 
-  it('new with hash', () => {
-    const NODE_ENV = 'test';
-    const loggerStub = sinon.stub().returns({
-      increment: () => {
-        //
-      },
-    });
+  it('error', async () => {
+    const versionID = 'a'.repeat(18);
 
-    const metrics = new Metrics({ ...config, NODE_ENV, CONFIG_ID_HASH: 'hash' } as any, loggerStub as any);
-    expect(_.get(metrics, 'hashids') !== undefined).to.eql(true);
+    const fixture = await metricsAsserter.assertMetric({ expected: /^alexa_request_error_total{skill_id="a{18}"} 1 \d+$/m });
+
+    fixture.metrics.error(versionID);
+
+    await fixture.assert();
   });
 
-  it('request', () => {
-    const metrics = MetricsClient({} as any);
-    const increment = sinon.stub();
-    _.set(metrics, 'client', { increment });
+  it('invocation', async () => {
+    const versionID = 'a'.repeat(18);
 
-    metrics.request();
-    expect(increment.args).to.eql([['alexa.request']]);
+    const fixture = await metricsAsserter.assertMetric({ expected: /^alexa_invocation_total{skill_id="a{18}"} 1 \d+$/m });
+
+    fixture.metrics.invocation(versionID);
+
+    await fixture.assert();
   });
 
-  it('error', () => {
-    const metrics = MetricsClient({} as any);
-    const increment = sinon.stub();
-    _.set(metrics, 'client', { increment });
-    sinon.stub(metrics, '_decodeVersionID').returnsArg(0);
+  it('httpRequest', async () => {
+    const fixture = await metricsAsserter.assertMetric({ expected: /^http_request_total{operation="operation",status_code="123"} 1 \d+$/m });
 
-    const versionID = 'version_id';
-    metrics.error(versionID);
-    expect(increment.args).to.eql([['alexa.request.error', 1, [`skill_id:${versionID}`]]]);
-  });
+    fixture.metrics.httpRequest('operation', 123);
 
-  it('invocation', () => {
-    const metrics = MetricsClient({} as any);
-    const increment = sinon.stub();
-    _.set(metrics, 'client', { increment });
-    sinon.stub(metrics, '_decodeVersionID').returnsArg(0);
-
-    const versionID = 'version_id';
-    metrics.invocation(versionID);
-    expect(increment.args).to.eql([['alexa.invocation', 1, [`skill_id:${versionID}`]]]);
-  });
-
-  describe('_decodeVersionID', () => {
-    it('no hashids', () => {
-      const metrics = MetricsClient({} as any);
-      const versionID = 'version-id';
-      expect(metrics._decodeVersionID(versionID)).to.eql(versionID);
-    });
-
-    it('object id', () => {
-      const metrics = MetricsClient({ CONFIG_ID_HASH: 'hash-key' } as any);
-      const versionID = '5f74a6f5e4a40c344b1ef366';
-      expect(metrics._decodeVersionID(versionID)).to.eql(versionID);
-    });
-
-    it('with hashids', () => {
-      const metrics = MetricsClient({ CONFIG_ID_HASH: 'hash-key' } as any);
-      const versionID = 5;
-      expect(metrics._decodeVersionID(_.get(metrics, 'hashids').encode(versionID))).to.eql(versionID);
-    });
+    await fixture.assert();
   });
 });

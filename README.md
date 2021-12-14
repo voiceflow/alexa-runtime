@@ -66,7 +66,6 @@ Also add the following file to the local repository:
 > MIDDLEWARE_VERBOSITY="short"
 >
 > ADMIN_SERVER_DATA_API_TOKEN="none"
-> DATADOG_API_KEY="none"
 >
 > PG_USERNAME='PG_USERNAME'
 > PG_HOST='PG_HOST'
@@ -124,7 +123,6 @@ You should now be able to test your skill using the Alexa Developer Console Skil
 | `PROJECT_SOURCE`       | `VF-Project-nPDdD6qZJ9.json`                 | JSON File inside `/projects` to read project - uses remote `VF_DATA_ENDPOINT` if undefined | NO       |
 | `SESSIONS_SOURCE`      | `local` \| `dynamo` \| `postgres` \| `mongo` |                      if `local` read/write sessions to memory, otherwise default to dynamo | NO       |
 | `VF_DATA_ENDPOINT`     | `http://localhost:8200`                      |           cloud endpoint to read Voiceflow project, ignored if `PROJECT_SOURCE` is defined | YES      |
-| `DATADOG_API_KEY`      | `none`                                       |                                                       datadog API key for logging purposes | YES      |
 | `LOG_LEVEL`            | `none` \| `warn`                             |                                                               logging verbosity and detail | NO       |
 | `MIDDLEWARE_VERBOSITY` | `none` \| `warn` \| `debug`                  |                                              request/response logging verbosity and detail | NO       |
 

@@ -18,7 +18,6 @@ describe('voiceflowManager unit tests', async () => {
       const config = {
         VF_DATA_ENDPOINT: 'random-endpoint',
         VF_DATA_SECRET: 'random-secret',
-        DATADOG_API_KEY: 'random-secret',
       };
       const utils = {
         resume: {
