@@ -1,5 +1,6 @@
 import { Node } from '@voiceflow/alexa-types';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
+import { Intent } from 'ask-sdk-model';
 import _ from 'lodash';
 import wordsToNumbers from 'words-to-numbers';
 
@@ -24,6 +25,27 @@ export const CaptureHandler: HandlerFactory<Node.Capture.Node, typeof utilsObj> 
 
     if (request?.type !== RequestType.INTENT) {
       utils.addRepromptIfExists({ node, runtime, variables });
+
+      if (node.intent) {
+        runtime.turn.set<Intent>(T.DELEGATE, {
+          name: node.intent,
+          confirmationStatus: 'NONE',
+          ...(node.slots && {
+            slots: node.slots.reduce(
+              (acc, slotName) => ({
+                ...acc,
+                [slotName]: {
+                  name: slotName,
+                  value: '',
+                  resolutions: {},
+                  confirmationStatus: 'NONE',
+                },
+              }),
+              {}
+            ),
+          }),
+        });
+      }
       // quit cycleStack without ending session by stopping on itself
       return node.id;
     }
