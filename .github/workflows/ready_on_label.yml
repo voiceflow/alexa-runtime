@@ -1,0 +1,16 @@
+# Marks PR Ready on label
+name: Ready on Label
+on:
+  pull_request:
+    types: [ labeled ]
+
+jobs:
+  mark-as-draft:
+    name: Mark as draft
+    if: github.event.label.name == 'ready for review'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mark as ready 
+        run: gh pr ready $GITHUB_HEAD_REF --repo $GITHUB_REPOSITORY 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_SA_TOKEN }}
