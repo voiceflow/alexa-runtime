@@ -1,4 +1,5 @@
 import { Node } from '@voiceflow/alexa-types';
+import { NodeType } from '@voiceflow/base-types/build/common/node';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { Intent } from 'ask-sdk-model';
 import _ from 'lodash';
@@ -7,19 +8,32 @@ import wordsToNumbers from 'words-to-numbers';
 import { T } from '@/lib/constants';
 
 import { IntentRequest, RequestType } from '../types';
-import { addRepromptIfExists } from '../utils';
+import { addRepromptIfExists, mapSlots } from '../utils';
 import CommandHandler from './command';
 import RepeatHandler from './repeat';
 
+const getSlotValue = (intent: Intent) => {
+  const intentSlots = intent.slots || {};
+  const value = Object.keys(intentSlots).length === 1 && Object.values(intentSlots)[0]?.value;
+  if (!value) return null;
+
+  const num = wordsToNumbers(value);
+  if (typeof num !== 'number' || Number.isNaN(num)) {
+    return value;
+  }
+  return num;
+};
+
 const utilsObj = {
-  wordsToNumbers,
+  mapSlots,
+  getSlotValue,
   addRepromptIfExists,
   commandHandler: CommandHandler(),
   repeatHandler: RepeatHandler(),
 };
 
 export const CaptureHandler: HandlerFactory<Node.Capture.Node, typeof utilsObj> = (utils) => ({
-  canHandle: (node) => !!node.variable,
+  canHandle: (node) => !!node.variable || node.type === NodeType.CAPTURE,
   handle: (node, runtime, variables) => {
     const request = runtime.turn.get<IntentRequest>(T.REQUEST);
 
@@ -63,17 +77,15 @@ export const CaptureHandler: HandlerFactory<Node.Capture.Node, typeof utilsObj> 
 
     const { intent } = request.payload;
 
+    if (!node.variable && node.slots?.length && intent.slots) {
+      variables.merge(utils.mapSlots({ slots: intent.slots, mappings: node.slots.map((slot) => ({ slot, variable: slot })) }));
+    }
+
     // try to match the first slot of the intent to the variable
-    // eslint-disable-next-line you-dont-need-lodash-underscore/keys,you-dont-need-lodash-underscore/values
-    const value = _.keys(intent.slots).length === 1 && _.values(intent.slots)[0]?.value;
-
-    if (value) {
-      const num = utils.wordsToNumbers(value);
-
-      if (typeof num !== 'number' || Number.isNaN(num)) {
+    if (node.variable) {
+      const value = utils.getSlotValue(intent);
+      if (value) {
         variables.set(node.variable, value);
-      } else {
-        variables.set(node.variable, num);
       }
     }
 
