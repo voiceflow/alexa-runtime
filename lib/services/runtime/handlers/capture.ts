@@ -11,6 +11,7 @@ import { IntentRequest, RequestType } from '../types';
 import { addRepromptIfExists, mapSlots } from '../utils';
 import CommandHandler from './command';
 import RepeatHandler from './repeat';
+import { TurnElicitSlot } from './responseBuilders';
 
 const getSlotValue = (intent: Intent) => {
   const intentSlots = intent.slots || {};
@@ -40,11 +41,12 @@ export const CaptureHandler: HandlerFactory<Node.Capture.Node, typeof utilsObj> 
     if (request?.type !== RequestType.INTENT) {
       utils.addRepromptIfExists({ node, runtime, variables });
 
-      if (node.intent) {
-        runtime.turn.set<Intent>(T.DELEGATE, {
-          name: node.intent,
-          confirmationStatus: 'NONE',
-          ...(node.slots && {
+      if (node.intent && node.slots?.[0]) {
+        runtime.turn.set<TurnElicitSlot>(T.ELICIT_SLOT, {
+          slot: node.slots[0],
+          intent: {
+            name: node.intent,
+            confirmationStatus: 'NONE',
             slots: node.slots.reduce(
               (acc, slotName) => ({
                 ...acc,
@@ -57,7 +59,7 @@ export const CaptureHandler: HandlerFactory<Node.Capture.Node, typeof utilsObj> 
               }),
               {}
             ),
-          }),
+          },
         });
       }
       // quit cycleStack without ending session by stopping on itself

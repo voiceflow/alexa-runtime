@@ -28,6 +28,7 @@ import InteractionHandler from './interaction';
 import PaymentHandler, { PaymentResponseBuilder } from './payment';
 import PermissionCardHandler, { PermissionCardResponseBuilder } from './permissionCard';
 import ReminderHandler from './reminder';
+import { DelegateResponseBuilder, ElicitSlotResponseBuilder } from './responseBuilders';
 import SpeakHandler from './speak';
 import StateHandlers from './state';
 import StreamHandler, { StreamResponseBuilder } from './stream';
@@ -42,6 +43,8 @@ export const responseHandlers = [
   DisplayResponseBuilder,
   StreamResponseBuilder,
   DirectiveResponseBuilder,
+  DelegateResponseBuilder,
+  ElicitSlotResponseBuilder,
 ];
 
 const _v1Handler = _V1Handler();
