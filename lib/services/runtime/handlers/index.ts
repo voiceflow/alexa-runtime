@@ -19,6 +19,7 @@ import _V1Handler from './_v1';
 import AccountLinkingHandler, { AccountLinkingResponseBuilder } from './accountLinking';
 import CancelPaymentHandler, { CancelPaymentResponseBuilder } from './cancelPayment';
 import CaptureHandler from './capture';
+import CaptureV2Handler from './captureV2';
 import CardHandler, { CardResponseBuilder } from './card';
 import CodeHandler from './code';
 import DirectiveHandler, { DirectiveResponseBuilder } from './directive';
@@ -55,6 +56,7 @@ export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HAND
   DirectiveHandler(),
   InteractionHandler(),
   CaptureHandler(),
+  CaptureV2Handler(),
   AccountLinkingHandler(),
   PermissionCardHandler(),
   UserInfoHandler(),

@@ -10,6 +10,7 @@ import { addRepromptIfExists, mapSlots } from '../utils';
 import CommandHandler from './command';
 import NoMatchHandler from './noMatch';
 import RepeatHandler from './repeat';
+import { createDelegateIntent } from './utils/directives';
 
 const utilsObj = {
   mapSlots,
@@ -50,7 +51,7 @@ export const InteractionHandler: HandlerFactory<Node.Interaction.Node, typeof ut
 
       if (choice.goTo?.intentName) {
         runtime.storage.set<string>(S.GO_TO_REF, node.id);
-        runtime.turn.set<Intent>(T.DELEGATE, { name: choice.goTo.intentName, slots: {}, confirmationStatus: 'NONE' });
+        runtime.turn.set<Intent>(T.DELEGATE, createDelegateIntent(choice.goTo.intentName));
         return node.id;
       }
 
