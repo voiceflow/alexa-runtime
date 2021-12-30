@@ -49,7 +49,10 @@ export const CaptureV2Handler: HandlerFactory<Node.CaptureV2.Node, typeof utilsO
     const { intent } = request.payload;
 
     if (intent.name === node.intent?.name) {
-      if (node.intent.entities && intent.slots) {
+      const firstEntity = intent.slots?.[node.intent.entities?.[0]!];
+      if (node.variable && firstEntity) {
+        variables.set(node.variable, firstEntity.value);
+      } else if (node.intent.entities && intent.slots) {
         variables.merge(utils.mapSlots({ slots: intent.slots, mappings: node.intent.entities.map((slot) => ({ slot, variable: slot })) }));
       }
       // request for this turn has been processed, delete request
