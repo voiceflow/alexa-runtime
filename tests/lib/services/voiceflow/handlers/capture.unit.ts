@@ -21,8 +21,6 @@ describe('capture handler unit tests', async () => {
   describe('handle', () => {
     it('no request', () => {
       const utils = {
-        commandHandler: { canHandle: () => false },
-        repeatHandler: { canHandle: () => false },
         addRepromptIfExists: sinon.stub(),
       };
 
@@ -38,32 +36,12 @@ describe('capture handler unit tests', async () => {
 
     it('delegation', () => {
       const utils = {
-        commandHandler: { canHandle: () => false },
-        repeatHandler: { canHandle: () => false },
         addRepromptIfExists: sinon.stub(),
       };
 
       const captureHandler = CaptureHandler(utils as any);
 
-      const node = { id: 'node-id', intent: 'intent-name' };
-      const runtime = { turn: { get: sinon.stub().returns(null), set: sinon.stub() } };
-      const variables = { foo: 'bar' };
-
-      expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.id);
-      expect(utils.addRepromptIfExists.args).to.eql([[{ node, runtime, variables }]]);
-      expect(runtime.turn.set.args).to.eql([[T.DELEGATE, { name: node.intent, confirmationStatus: 'NONE' }]]);
-    });
-
-    it('delegation with slots', () => {
-      const utils = {
-        commandHandler: { canHandle: () => false },
-        repeatHandler: { canHandle: () => false },
-        addRepromptIfExists: sinon.stub(),
-      };
-
-      const captureHandler = CaptureHandler(utils as any);
-
-      const node = { id: 'node-id', intent: 'intent-name', slots: ['slot-1'] };
+      const node = { id: 'node-id', intent: 'intent-name', slots: ['slot1'] };
       const runtime = { turn: { get: sinon.stub().returns(null), set: sinon.stub() } };
       const variables = { foo: 'bar' };
 
@@ -71,11 +49,21 @@ describe('capture handler unit tests', async () => {
       expect(utils.addRepromptIfExists.args).to.eql([[{ node, runtime, variables }]]);
       expect(runtime.turn.set.args).to.eql([
         [
-          T.DELEGATE,
+          T.ELICIT_SLOT,
           {
-            name: node.intent,
-            confirmationStatus: 'NONE',
-            slots: { 'slot-1': { name: 'slot-1', confirmationStatus: 'NONE', value: '', resolutions: {} } },
+            slot: node.slots[0],
+            intent: {
+              name: node.intent,
+              confirmationStatus: 'NONE',
+              slots: {
+                slot1: {
+                  confirmationStatus: 'NONE',
+                  name: node.slots[0],
+                  resolutions: {},
+                  value: '',
+                },
+              },
+            },
           },
         ],
       ]);
@@ -83,8 +71,6 @@ describe('capture handler unit tests', async () => {
 
     it('request type not intent', () => {
       const utils = {
-        commandHandler: { canHandle: () => false },
-        repeatHandler: { canHandle: () => false },
         addRepromptIfExists: sinon.stub(),
       };
 
@@ -127,6 +113,7 @@ describe('capture handler unit tests', async () => {
               canHandle: sinon.stub().returns(false),
             },
             repeatHandler: { canHandle: () => false },
+            getSlotValue: sinon.stub().returns(null),
           };
 
           const captureHandler = CaptureHandler(utils as any);
@@ -146,6 +133,7 @@ describe('capture handler unit tests', async () => {
               canHandle: sinon.stub().returns(false),
             },
             repeatHandler: { canHandle: sinon.stub().returns(false) },
+            getSlotValue: sinon.stub().returns(null),
           };
 
           const captureHandler = CaptureHandler(utils as any);
@@ -167,7 +155,7 @@ describe('capture handler unit tests', async () => {
               canHandle: sinon.stub().returns(false),
             },
             repeatHandler: { canHandle: sinon.stub().returns(false) },
-            wordsToNumbers: sinon.stub().returns(word),
+            getSlotValue: sinon.stub().returns(word),
           };
 
           const captureHandler = CaptureHandler(utils as any);
@@ -179,8 +167,8 @@ describe('capture handler unit tests', async () => {
           const variables = { set: sinon.stub() };
 
           expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextId);
-          expect(utils.wordsToNumbers.args).to.eql([[input]]);
-          expect(variables.set.args).to.eql([[node.variable, input]]);
+          expect(utils.getSlotValue.args).to.eql([[request.payload.intent]]);
+          expect(variables.set.args).to.eql([[node.variable, word]]);
           expect(runtime.turn.delete.args).to.eql([[T.REQUEST]]);
         });
 
@@ -192,7 +180,7 @@ describe('capture handler unit tests', async () => {
               canHandle: sinon.stub().returns(false),
             },
             repeatHandler: { canHandle: sinon.stub().returns(false) },
-            wordsToNumbers: sinon.stub().returns(word),
+            getSlotValue: sinon.stub().returns(word),
           };
 
           const captureHandler = CaptureHandler(utils as any);
@@ -204,7 +192,7 @@ describe('capture handler unit tests', async () => {
           const variables = { set: sinon.stub() };
 
           expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(null);
-          expect(utils.wordsToNumbers.args).to.eql([[input]]);
+          expect(utils.getSlotValue.args).to.eql([[request.payload.intent]]);
           expect(variables.set.args).to.eql([[node.variable, word]]);
           expect(runtime.turn.delete.args).to.eql([[T.REQUEST]]);
         });

@@ -19,6 +19,7 @@ import _V1Handler from './_v1';
 import AccountLinkingHandler, { AccountLinkingResponseBuilder } from './accountLinking';
 import CancelPaymentHandler, { CancelPaymentResponseBuilder } from './cancelPayment';
 import CaptureHandler from './capture';
+import CaptureV2Handler from './captureV2';
 import CardHandler, { CardResponseBuilder } from './card';
 import CodeHandler from './code';
 import DirectiveHandler, { DirectiveResponseBuilder } from './directive';
@@ -28,6 +29,7 @@ import InteractionHandler from './interaction';
 import PaymentHandler, { PaymentResponseBuilder } from './payment';
 import PermissionCardHandler, { PermissionCardResponseBuilder } from './permissionCard';
 import ReminderHandler from './reminder';
+import { DelegateResponseBuilder, ElicitSlotResponseBuilder } from './responseBuilders';
 import SpeakHandler from './speak';
 import StateHandlers from './state';
 import StreamHandler, { StreamResponseBuilder } from './stream';
@@ -42,6 +44,8 @@ export const responseHandlers = [
   DisplayResponseBuilder,
   StreamResponseBuilder,
   DirectiveResponseBuilder,
+  DelegateResponseBuilder,
+  ElicitSlotResponseBuilder,
 ];
 
 const _v1Handler = _V1Handler();
@@ -51,6 +55,7 @@ export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HAND
   SpeakHandler(),
   DirectiveHandler(),
   InteractionHandler(),
+  CaptureV2Handler(),
   CaptureHandler(),
   AccountLinkingHandler(),
   PermissionCardHandler(),

@@ -97,11 +97,7 @@ describe('response lifecycle unit tests', () => {
       getRequest: sinon.stub().returns(request),
       storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
       turn: {
-        get: sinon
-          .stub()
-          .returns(true)
-          .withArgs(T.DELEGATE)
-          .returns('delegation'),
+        get: sinon.stub().returns(true),
       },
       stack: { isEmpty: sinon.stub().returns(false) },
       variables: { get: sinon.stub().returns(false) },
@@ -157,7 +153,6 @@ describe('response lifecycle unit tests', () => {
         },
       ],
     ]);
-    expect(input.responseBuilder.addDelegateDirective.args).to.eql([['delegation']]);
   });
 
   it('response variable', async () => {
@@ -195,44 +190,5 @@ describe('response lifecycle unit tests', () => {
 
     expect(await response(runtime as any, input as any)).to.eql({ ...output, ...responseVar, c: undefined });
     expect(runtime.variables.get.args).to.eql([[V.RESPONSE], [V.RESPONSE]]);
-  });
-
-  it('with delegation', async () => {
-    const utils = { responseHandlers: [] };
-
-    const response = responseGenerator(utils);
-
-    const responseVar = { foo: 'bar', b: 'd', c: null };
-
-    const DELEGATION = 'dialog_delegation';
-    const runtime = {
-      storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
-      turn: {
-        get: sinon
-          .stub()
-          .returns(true)
-          .withArgs(T.DELEGATE)
-          .returns(DELEGATION),
-      },
-      stack: { isEmpty: sinon.stub().returns(false) },
-      variables: { get: sinon.stub().returns(responseVar) },
-      getFinalState: sinon.stub().returns({}),
-    };
-    const output = { a: 'b', b: 'c' };
-
-    const input = {
-      responseBuilder: {
-        getResponse: sinon.stub().returns(output),
-        speak: sinon.stub(),
-        withShouldEndSession: sinon.stub(),
-        addDelegateDirective: sinon.stub(),
-      },
-      requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } } },
-      attributesManager: { setPersistentAttributes: sinon.stub() },
-    };
-
-    expect(await response(runtime as any, input as any)).to.eql({ ...output, ...responseVar, c: undefined });
-    expect(runtime.variables.get.args).to.eql([[V.RESPONSE], [V.RESPONSE]]);
-    expect(input.responseBuilder.addDelegateDirective.args).to.eql([[DELEGATION]]);
   });
 });

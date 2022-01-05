@@ -33,6 +33,7 @@ export enum Turn {
   DIRECTIVES = 'directives',
   NEW_STACK = 'newStack',
   DELEGATE = 'delegate',
+  ELICIT_SLOT = 'elicitSlot',
 }
 
 export enum Frame {
