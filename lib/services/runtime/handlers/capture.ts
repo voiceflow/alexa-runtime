@@ -63,7 +63,7 @@ export const CaptureHandler: HandlerFactory<Node.Capture.Node, typeof utilsObj> 
 
     // try to match the first slot of the intent to the variable
     const value = utils.getSlotValue(intent);
-    if (value) {
+    if (value !== null) {
       variables.set(node.variable, value);
     }
 
