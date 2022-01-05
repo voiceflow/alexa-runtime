@@ -12,7 +12,6 @@ import { updateRuntime } from '../utils';
 
 export enum Request {
   SESSION_ENDED = 'SessionEndedRequest',
-  SYSTEM_EXCEPTION = 'System.ExceptionEncountered',
 }
 
 export enum ErrorType {
@@ -33,7 +32,7 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
   canHandle(input: AlexaHandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
-    return type === Request.SESSION_ENDED || type === Request.SYSTEM_EXCEPTION;
+    return type === Request.SESSION_ENDED;
   },
   async handle(input: AlexaHandlerInput) {
     const request = input.requestEnvelope.request as SessionEndedRequest;

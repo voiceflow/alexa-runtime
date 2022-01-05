@@ -12,53 +12,19 @@ describe('alexa request event unit tests', () => {
   describe('EventHandlerGenerator', () => {
     describe('canHandle', () => {
       it('works with truthy getEvent return value', async () => {
-        const runtime = { stack: { getSize: sinon.stub().returns(1) }, getRawState: sinon.stub().returns('getRawState-val') };
-        const input = { attributesManager: { setPersistentAttributes: sinon.stub() } };
-        const utils = {
-          getEvent: sinon.stub().returns('abc'),
-          buildRuntime: sinon.stub().resolves(runtime),
-          attributesManager: { setPersistentAttributes: sinon.stub() },
-        };
+        const utils = { getEvent: sinon.stub().returns('abc'), buildRuntime: sinon.stub().resolves('buildRuntime-val') };
 
-        expect(await EventHandlerGenerator(utils as any).canHandle(input as any)).to.eql(true);
-        expect(utils.getEvent.args).to.eql([[runtime]]);
-        expect(utils.buildRuntime.args).to.eql([[input]]);
-        expect(input.attributesManager.setPersistentAttributes.args).to.eql([['getRawState-val']]);
+        expect(await EventHandlerGenerator(utils as any).canHandle('input-val' as any)).to.eql(true);
+        expect(utils.getEvent.args).to.eql([['buildRuntime-val']]);
+        expect(utils.buildRuntime.args).to.eql([['input-val']]);
       });
 
       it('works with falsy getEvent return value', async () => {
-        const runtime = { stack: { getSize: sinon.stub().returns(1) } };
-        const input = { attributesManager: { setPersistentAttributes: sinon.stub() } };
-        const utils = {
-          getEvent: sinon.stub().returns(''),
-          buildRuntime: sinon.stub().resolves(runtime),
-          attributesManager: { setPersistentAttributes: sinon.stub() },
-        };
+        const utils = { getEvent: sinon.stub().returns(''), buildRuntime: sinon.stub().resolves('buildRuntime-val') };
 
-        expect(await EventHandlerGenerator(utils as any).canHandle(input as any)).to.eql(false);
-        expect(utils.getEvent.args).to.eql([[runtime]]);
-        expect(utils.buildRuntime.args).to.eql([[input]]);
-      });
-
-      it('initialize and hydrates', async () => {
-        const runtime = {
-          stack: { getSize: sinon.stub().returns(0) },
-          hydrateStack: sinon.stub(),
-          getRawState: sinon.stub().returns('getRawState-val'),
-        };
-        const input = { attributesManager: { setPersistentAttributes: sinon.stub() } };
-        const utils = {
-          getEvent: sinon.stub().returns('abc'),
-          buildRuntime: sinon.stub().resolves(runtime),
-          initialize: sinon.stub(),
-        };
-
-        expect(await EventHandlerGenerator(utils as any).canHandle(input as any)).to.eql(true);
-        expect(runtime.hydrateStack.callCount).to.eql(1);
-        expect(utils.initialize.args).to.eql([[runtime, input]]);
-        expect(utils.getEvent.args).to.eql([[runtime]]);
-        expect(utils.buildRuntime.args).to.eql([[input]]);
-        expect(input.attributesManager.setPersistentAttributes.args).to.eql([['getRawState-val']]);
+        expect(await EventHandlerGenerator(utils as any).canHandle('input-val' as any)).to.eql(false);
+        expect(utils.getEvent.args).to.eql([['buildRuntime-val']]);
+        expect(utils.buildRuntime.args).to.eql([['input-val']]);
       });
     });
 
