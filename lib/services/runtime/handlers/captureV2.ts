@@ -15,7 +15,6 @@ import { TurnElicitSlot } from './responseBuilders';
 import { createDelegateIntent, createElicitSlot } from './utils/directives';
 
 const utilsObj = {
-  mapSlots,
   addRepromptIfExists,
   noMatchHandler: NoMatchHandler(),
   commandHandler: CommandHandler(),
@@ -53,7 +52,7 @@ export const CaptureV2Handler: HandlerFactory<Node.CaptureV2.Node, typeof utilsO
       if (node.variable && firstEntity) {
         variables.set(node.variable, firstEntity.value);
       } else if (node.intent.entities && intent.slots) {
-        variables.merge(utils.mapSlots({ slots: intent.slots, mappings: node.intent.entities.map((slot) => ({ slot, variable: slot })) }));
+        variables.merge(mapSlots({ slots: intent.slots, mappings: node.intent.entities.map((slot) => ({ slot, variable: slot })) }));
       }
       // request for this turn has been processed, delete request
       runtime.turn.delete(T.REQUEST);

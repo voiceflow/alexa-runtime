@@ -1,21 +1,20 @@
-import { Intent } from 'ask-sdk-model';
+import { Intent, Slot } from 'ask-sdk-model';
 
 import { TurnElicitSlot } from '../responseBuilders';
 
 export const createDelegateIntent = (intentName: string, slots: string[] = []): Intent => ({
   name: intentName,
   confirmationStatus: 'NONE',
-  slots: slots.reduce(
-    (acc, slotName) => ({
-      ...acc,
-      [slotName]: {
+  slots: Object.fromEntries(
+    slots.map((slotName): [string, Slot] => [
+      slotName,
+      {
         name: slotName,
         value: '',
         resolutions: {},
         confirmationStatus: 'NONE',
       },
-    }),
-    {}
+    ])
   ),
 });
 

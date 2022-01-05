@@ -21,8 +21,6 @@ describe('capture handler unit tests', async () => {
   describe('handle', () => {
     it('no request', () => {
       const utils = {
-        commandHandler: { canHandle: () => false },
-        repeatHandler: { canHandle: () => false },
         addRepromptIfExists: sinon.stub(),
       };
 
@@ -38,8 +36,6 @@ describe('capture handler unit tests', async () => {
 
     it('delegation', () => {
       const utils = {
-        commandHandler: { canHandle: () => false },
-        repeatHandler: { canHandle: () => false },
         addRepromptIfExists: sinon.stub(),
       };
 
@@ -73,40 +69,8 @@ describe('capture handler unit tests', async () => {
       ]);
     });
 
-    it('delegation with slots', () => {
-      const utils = {
-        commandHandler: { canHandle: () => false },
-        repeatHandler: { canHandle: () => false },
-        addRepromptIfExists: sinon.stub(),
-      };
-
-      const captureHandler = CaptureHandler(utils as any);
-
-      const node = { id: 'node-id', intent: 'intent-name', slots: ['slot-1'] };
-      const runtime = { turn: { get: sinon.stub().returns(null), set: sinon.stub() } };
-      const variables = { foo: 'bar' };
-
-      expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.id);
-      expect(utils.addRepromptIfExists.args).to.eql([[{ node, runtime, variables }]]);
-      expect(runtime.turn.set.args).to.eql([
-        [
-          T.ELICIT_SLOT,
-          {
-            slot: node.slots[0],
-            intent: {
-              name: node.intent,
-              confirmationStatus: 'NONE',
-              slots: { 'slot-1': { name: 'slot-1', confirmationStatus: 'NONE', value: '', resolutions: {} } },
-            },
-          },
-        ],
-      ]);
-    });
-
     it('request type not intent', () => {
       const utils = {
-        commandHandler: { canHandle: () => false },
-        repeatHandler: { canHandle: () => false },
         addRepromptIfExists: sinon.stub(),
       };
 
