@@ -113,6 +113,7 @@ describe('capture handler unit tests', async () => {
               canHandle: sinon.stub().returns(false),
             },
             repeatHandler: { canHandle: () => false },
+            getSlotValue: sinon.stub().returns(null),
           };
 
           const captureHandler = CaptureHandler(utils as any);
@@ -132,6 +133,7 @@ describe('capture handler unit tests', async () => {
               canHandle: sinon.stub().returns(false),
             },
             repeatHandler: { canHandle: sinon.stub().returns(false) },
+            getSlotValue: sinon.stub().returns(null),
           };
 
           const captureHandler = CaptureHandler(utils as any);

@@ -1,5 +1,4 @@
 import { Node } from '@voiceflow/alexa-types';
-import { NodeType } from '@voiceflow/base-types/build/common/node';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { Intent } from 'ask-sdk-model';
 import _ from 'lodash';
@@ -35,7 +34,7 @@ const utilsObj = {
 };
 
 export const CaptureHandler: HandlerFactory<Node.Capture.Node, typeof utilsObj> = (utils) => ({
-  canHandle: (node) => !!node.variable || node.type === NodeType.CAPTURE,
+  canHandle: (node) => !!node.variable,
   handle: (node, runtime, variables) => {
     const request = runtime.turn.get<IntentRequest>(T.REQUEST);
 
@@ -62,16 +61,10 @@ export const CaptureHandler: HandlerFactory<Node.Capture.Node, typeof utilsObj> 
 
     const { intent } = request.payload;
 
-    if (!node.variable && node.slots?.length && intent.slots) {
-      variables.merge(utils.mapSlots({ slots: intent.slots, mappings: node.slots.map((slot) => ({ slot, variable: slot })) }));
-    }
-
     // try to match the first slot of the intent to the variable
-    if (node.variable) {
-      const value = utils.getSlotValue(intent);
-      if (value) {
-        variables.set(node.variable, value);
-      }
+    const value = utils.getSlotValue(intent);
+    if (value) {
+      variables.set(node.variable, value);
     }
 
     ({ nextId = null } = node);
