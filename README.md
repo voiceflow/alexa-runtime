@@ -150,4 +150,3 @@ These environment variables are optional and meant for specific blocks that have
 | ------------------------------- | :---------------------- | ----------------------------------------------------------------------------------------------: | -------- |
 | `CODE_HANDLER_ENDPOINT`         | `http://localhost:8804` |                                      stateless cloud service endpoint to execute the code block | NO       |
 | `INTEGRATIONS_HANDLER_ENDPOINT` | `http://localhost:8100` | cloud endpoint for zapier/google blocks - not available if `alexa-runtime` is ran as standalone | NO       |
-| `API_HANDLER_ENDPOINT`          | `http://localhost:8803` |                                     stateless cloud endpoint for the API block to make requests | NO       |
