@@ -1132,6 +1132,30 @@
     jwt-decode "^3.1.2"
     superstruct "^0.10.12"
 
+"@voiceflow/backend-utils@3.5.5":
+  version "3.5.5"
+  resolved "https://registry.yarnpkg.com/@voiceflow/backend-utils/-/backend-utils-3.5.5.tgz#d0677fdec11aaa66858c86c5e97eca2afcf6c2dc"
+  integrity sha512-qK0L9fTmmNGYITLteS1JKlsSb/VToS6wjGpk10Irea4ukjaF5eH0zpUc9XJ8lsvi8BWpkO/s4Dv/RyzR4BadAw==
+  dependencies:
+    "@types/bluebird" "^3.5.33"
+    "@types/chai" "^4.2.16"
+    "@types/express" "^4.17.11"
+    "@types/ioredis" "^4.26.4"
+    "@types/lodash" "^4.14.168"
+    "@types/luxon" "^1.26.4"
+    "@types/sinon" "^10.0.0"
+    "@voiceflow/logger" "1.5.2"
+    "@voiceflow/verror" "^1.1.0"
+    bluebird "^3.7.2"
+    chai "^4.3.4"
+    dotenv "^10.0.0"
+    express "^4.17.1"
+    http-status "^1.4.2"
+    lodash "^4.17.11"
+    luxon "^1.21.3"
+    rate-limiter-flexible "^2.2.2"
+    sinon "^10.0.0"
+
 "@voiceflow/backend-utils@4.2.3":
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/@voiceflow/backend-utils/-/backend-utils-4.2.3.tgz#d5141ee92f72af9d1e97c044f79eb370c1457e37"
@@ -1349,6 +1373,20 @@
   integrity sha512-dtbd18TKASj0AKdDQmmpy3ZxIcv0vQDhP3XYIHGl/VuDJjmXUUaYog+ENZ6u7ow9OkJa2bKk5VmRyJhHivM4tg==
   dependencies:
     current-git-branch "^1.1.0"
+
+"@voiceflow/logger@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@voiceflow/logger/-/logger-1.5.2.tgz#da55a612f5ffaf17ec976f713b202b2f68a78bec"
+  integrity sha512-zp+yArdfUBrGSFf6Sw4T8q9apB3KWLNjt5tjGFimSna2lNJL0JV40hJAaPmb6YL4FVOzj8N0+ZL15uO7mUZGEA==
+  dependencies:
+    "@types/cls-hooked" "^4.3.1"
+    "@types/express-pino-logger" "^4.0.2"
+    "@voiceflow/pino" "6.11.2"
+    "@voiceflow/pino-pretty" "4.4.0"
+    "@zerollup/ts-transform-paths" "^1.7.18"
+    cls-hooked "^4.2.2"
+    nanoid "^3.1.20"
+    pino-http "5.3.0"
 
 "@voiceflow/logger@1.6.0":
   version "1.6.0"
