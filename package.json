@@ -18,7 +18,7 @@
     "@voiceflow/base-types": "2.6.1",
     "@voiceflow/body-parser": "1.21.0",
     "@voiceflow/common": "7.12.1",
-    "@voiceflow/general-runtime": "1.84.1",
+    "@voiceflow/general-runtime": "1.84.2",
     "@voiceflow/general-types": "3.2.13",
     "@voiceflow/logger": "1.6.1",
     "@voiceflow/metrics": "1.1.0",

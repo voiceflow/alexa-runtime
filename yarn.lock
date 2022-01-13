@@ -1298,10 +1298,10 @@
     eslint-plugin-xss "^0.1.9"
     eslint-plugin-you-dont-need-lodash-underscore "^6.12.0"
 
-"@voiceflow/general-runtime@1.84.1":
-  version "1.84.1"
-  resolved "https://registry.yarnpkg.com/@voiceflow/general-runtime/-/general-runtime-1.84.1.tgz#7b7c56ce523f13ffcb190c41eb82a613fa24f935"
-  integrity sha512-e8kyd09CcWYgl3UXQzdjfJTLFoP/5EsgNhAcXnDAsP2YxLMIIZe2qkjPy58tH2OomKoxf/aGCUd4I/jE7CZWfQ==
+"@voiceflow/general-runtime@1.84.2":
+  version "1.84.2"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-runtime/-/general-runtime-1.84.2.tgz#6960f0410fa5e373b3997b3dfac12fa0a55b9c07"
+  integrity sha512-wIT+Vr/Coe8y4b3IV68yxGld5GH+LR12YXi3AhCVeZOZKheQqzU9NHdd41GagPtm2GQ+9rYGBUYgN3unamUbSA==
   dependencies:
     "@opentelemetry/api-metrics" "0.26.0"
     "@types/mathjs" "^6.0.4"
