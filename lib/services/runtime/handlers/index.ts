@@ -50,7 +50,7 @@ export const responseHandlers = [
 
 const _v1Handler = _V1Handler();
 
-export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HANDLER_ENDPOINT }: Config) => [
+export default ({ INTEGRATIONS_HANDLER_ENDPOINT, CODE_HANDLER_ENDPOINT }: Config) => [
   ...StateHandlers(),
   SpeakHandler(),
   DirectiveHandler(),
@@ -73,7 +73,7 @@ export default ({ API_HANDLER_ENDPOINT, INTEGRATIONS_HANDLER_ENDPOINT, CODE_HAND
   FlowHandler(),
   IfHandler(),
   IfV2Handler({ _v1: _v1Handler }),
-  APIHandler({ customAPIEndpoint: API_HANDLER_ENDPOINT }),
+  APIHandler(),
   IntegrationsHandler({ integrationsEndpoint: INTEGRATIONS_HANDLER_ENDPOINT }),
   RandomHandler(),
   SetHandler(),
