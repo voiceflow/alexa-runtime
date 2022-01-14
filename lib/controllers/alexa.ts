@@ -20,7 +20,7 @@ class AlexaController extends AbstractController {
 
   @validate({ VERSION_ID: AlexaController.VALIDATIONS.PARAMS.versionID })
   async handler(req: Request<{ versionID: string }>) {
-    log.info(`handling skill ${req.params.versionID}`);
+    log.warn(`handling skill ${req.params.versionID}`);
     const { alexa, runtimeClient, metrics, dataAPI } = this.services;
 
     metrics.request();
