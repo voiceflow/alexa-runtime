@@ -1,7 +1,6 @@
 import { Validator } from '@voiceflow/backend-utils';
 
 import { AlexaContext } from '@/lib/services/alexa/types';
-import log from '@/logger';
 import { Request } from '@/types';
 
 import { validate } from '../utils';
@@ -20,7 +19,6 @@ class AlexaController extends AbstractController {
 
   @validate({ VERSION_ID: AlexaController.VALIDATIONS.PARAMS.versionID })
   async handler(req: Request<{ versionID: string }>) {
-    log.warn(`handling skill ${req.params.versionID}`);
     const { alexa, runtimeClient, metrics, dataAPI } = this.services;
 
     metrics.request();
