@@ -18,6 +18,11 @@ export enum Request {
   INTENT = 'IntentRequest',
   AUDIO_PLAYER = 'AudioPlayer.',
   SKILL_EVENT_ROOT = 'AlexaSkillEvent.',
-  PERMISSION_ACCEPTED = 'AlexaSkillEvent.SkillPermissionAccepted',
   PERMISSION_CHANGED = 'AlexaSkillEvent.SkillPermissionChanged',
+  PERMISSION_ACCEPTED = 'AlexaSkillEvent.SkillPermissionAccepted',
+  AUDIO_PLAYER_PLAYBACK_FAILED = 'AudioPlayer.PlaybackFailed',
+  AUDIO_PLAYER_PLAYBACK_STARTED = 'AudioPlayer.PlaybackStarted',
+  AUDIO_PLAYER_PLAYBACK_STOPPED = 'AudioPlayer.PlaybackStopped',
+  AUDIO_PLAYER_PLAYBACK_FINISHED = 'AudioPlayer.PlaybackFinished',
+  AUDIO_PLAYER_PLAYBACK_NEARLY_FINISHED = 'AudioPlayer.PlaybackNearlyFinished',
 }

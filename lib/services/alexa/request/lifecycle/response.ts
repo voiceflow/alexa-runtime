@@ -8,7 +8,7 @@ import { responseHandlers } from '@/lib/services/runtime/handlers';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
 import log from '@/logger';
 
-import { DirectivesInvalidWithAudioPlayer } from '../../constants';
+import { DirectivesInvalidWithAudioPlayer, speakNotAllowedRequestTypes } from '../../constants';
 import { AlexaHandlerInput, Request } from '../../types';
 
 const utilsObj = {
@@ -17,14 +17,21 @@ const utilsObj = {
 
 export const responseGenerator = (utils: typeof utilsObj) => async (runtime: AlexaRuntime, input: AlexaHandlerInput): Promise<Response> => {
   const { storage, turn, variables } = runtime;
-  const { responseBuilder, attributesManager } = input;
+  const {
+    responseBuilder,
+    attributesManager,
+    requestEnvelope: { request },
+  } = input;
 
   if (runtime.stack.isEmpty()) {
     turn.set(T.END, true);
   }
 
-  responseBuilder.speak(storage.get<string>(S.OUTPUT) ?? '');
-  responseBuilder.reprompt((turn.get<string>(T.REPROMPT) || storage.get<string>(S.OUTPUT)) ?? '');
+  if (!speakNotAllowedRequestTypes.has(request.type)) {
+    responseBuilder.speak(storage.get<string>(S.OUTPUT) ?? '');
+    responseBuilder.reprompt((turn.get<string>(T.REPROMPT) || storage.get<string>(S.OUTPUT)) ?? '');
+  }
+
   responseBuilder.withShouldEndSession(!!turn.get(T.END));
 
   // eslint-disable-next-line no-restricted-syntax
