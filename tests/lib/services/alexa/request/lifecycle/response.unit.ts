@@ -4,6 +4,7 @@ import sinon from 'sinon';
 
 import { S, T, V } from '@/lib/constants';
 import { responseGenerator } from '@/lib/services/alexa/request/lifecycle/response';
+import { Request } from '@/lib/services/alexa/types';
 
 describe('response lifecycle unit tests', () => {
   it('works correctly', async () => {
@@ -45,6 +46,7 @@ describe('response lifecycle unit tests', () => {
       requestEnvelope: {
         runtime: { System: { user: { accessToken } } },
         session: { sessionId: 'session.id' },
+        request: { type: 'intent' },
       },
       attributesManager: { setPersistentAttributes: sinon.stub() },
     };
@@ -122,6 +124,7 @@ describe('response lifecycle unit tests', () => {
       requestEnvelope: {
         runtime: { System: { user: { accessToken: 'access-token' } } },
         session: { sessionId: 'session.id' },
+        request: { type: 'intent' },
       },
       attributesManager: { setPersistentAttributes: sinon.stub() },
     };
@@ -184,11 +187,49 @@ describe('response lifecycle unit tests', () => {
         reprompt: sinon.stub(),
         withShouldEndSession: sinon.stub(),
       },
-      requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } } },
+      requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } }, request: { type: 'intent' } },
       attributesManager: { setPersistentAttributes: sinon.stub() },
     };
 
     expect(await response(runtime as any, input as any)).to.eql({ ...output, ...responseVar, c: undefined });
     expect(runtime.variables.get.args).to.eql([[V.RESPONSE], [V.RESPONSE]]);
+  });
+
+  it('skips speak if audioplayer event', async () => {
+    const utils = { responseHandlers: [] };
+
+    const response = responseGenerator(utils);
+
+    const responseVar = { foo: 'bar', b: 'd', c: null };
+
+    const runtime = {
+      storage: { set: sinon.stub(), get: sinon.stub().returns('speak') },
+      turn: {
+        get: sinon
+          .stub()
+          .returns(true)
+          .withArgs(T.DELEGATE)
+          .returns(false),
+      },
+      stack: { isEmpty: sinon.stub().returns(false) },
+      variables: { get: sinon.stub().returns(responseVar) },
+      getFinalState: sinon.stub().returns({}),
+    };
+    const output = { a: 'b', b: 'c' };
+
+    const input = {
+      responseBuilder: {
+        getResponse: sinon.stub().returns(output),
+        speak: sinon.stub(),
+        reprompt: sinon.stub(),
+        withShouldEndSession: sinon.stub(),
+      },
+      requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } }, request: { type: Request.AUDIO_PLAYER_PLAYBACK_FAILED } },
+      attributesManager: { setPersistentAttributes: sinon.stub() },
+    };
+
+    expect(await response(runtime as any, input as any)).to.eql({ ...output, ...responseVar, c: undefined });
+    expect(input.responseBuilder.speak.callCount).to.eql(0);
+    expect(input.responseBuilder.reprompt.callCount).to.eql(0);
   });
 });
