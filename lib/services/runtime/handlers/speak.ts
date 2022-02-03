@@ -1,5 +1,5 @@
-import { Node } from '@voiceflow/alexa-types';
-import { Node as BaseNode } from '@voiceflow/base-types';
+import { AlexaNode } from '@voiceflow/alexa-types';
+import { BaseNode } from '@voiceflow/base-types';
 import { replaceVariables, sanitizeVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import _ from 'lodash';
@@ -7,9 +7,9 @@ import _ from 'lodash';
 import { F, S } from '@/lib/constants';
 
 // TODO: probably we can remove it, since prompt is not used in the node handler, and does not exist in the alexa/general service handler
-const isPromptSpeak = (node: Node.Speak.Node & { prompt?: unknown }) => _.isString(node.prompt) && node.prompt !== 'true';
+const isPromptSpeak = (node: AlexaNode.Speak.Node & { prompt?: unknown }) => _.isString(node.prompt) && node.prompt !== 'true';
 
-const SpeakHandler: HandlerFactory<Node.Speak.Node> = () => ({
+const SpeakHandler: HandlerFactory<AlexaNode.Speak.Node> = () => ({
   canHandle: (node) => ('random_speak' in node ? !!node.random_speak : !!node.speak) || isPromptSpeak(node),
 
   handle: (node, runtime, variables) => {

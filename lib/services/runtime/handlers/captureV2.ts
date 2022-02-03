@@ -1,4 +1,4 @@
-import { Node } from '@voiceflow/alexa-types';
+import { AlexaNode } from '@voiceflow/alexa-types';
 import { NodeType } from '@voiceflow/base-types/build/common/node';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { Intent } from 'ask-sdk-model';
@@ -21,7 +21,7 @@ const utilsObj = {
   repeatHandler: RepeatHandler(),
 };
 
-export const CaptureV2Handler: HandlerFactory<Node.CaptureV2.Node, typeof utilsObj> = (utils) => ({
+export const CaptureV2Handler: HandlerFactory<AlexaNode.CaptureV2.Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => node.type === NodeType.CAPTURE_V2,
   handle: (node, runtime, variables) => {
     const request = runtime.turn.get<IntentRequest>(T.REQUEST);

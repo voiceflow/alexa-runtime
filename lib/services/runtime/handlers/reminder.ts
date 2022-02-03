@@ -1,5 +1,5 @@
-import { Node } from '@voiceflow/alexa-types';
-import { Node as BaseNode } from '@voiceflow/base-types';
+import { AlexaNode } from '@voiceflow/alexa-types';
+import { BaseNode } from '@voiceflow/base-types';
 import { replaceVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import axios from 'axios';
@@ -19,7 +19,7 @@ type Trigger =
       scheduledTime: string;
       recurrence?: {
         byDay?: string[];
-        freq: Node.Reminder.RecurrenceFreq;
+        freq: AlexaNode.Reminder.RecurrenceFreq;
       };
       timeZoneId?: string;
     }
@@ -40,7 +40,7 @@ const _deriveSeconds = (text: string, multiplier = 1): number => {
 };
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-export const _createReminderObject = (reminder: Node.Reminder.NodeReminder, variablesMap: Record<string, any>, locale: string) => {
+export const _createReminderObject = (reminder: AlexaNode.Reminder.NodeReminder, variablesMap: Record<string, any>, locale: string) => {
   if (reminder.type !== ReminderType.SCHEDULED_ABSOLUTE && reminder.type !== ReminderType.SCHEDULED_RELATIVE)
     throw new Error('invalid reminder type');
 
@@ -103,7 +103,7 @@ const utilsObj = {
   axios,
 };
 
-export const ReminderHandler: HandlerFactory<Node.Reminder.Node, typeof utilsObj> = (utils) => ({
+export const ReminderHandler: HandlerFactory<AlexaNode.Reminder.Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => {
     return !!node.reminder;
   },

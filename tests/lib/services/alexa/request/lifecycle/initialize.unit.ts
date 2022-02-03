@@ -1,5 +1,5 @@
-import { Node as BaseNode, Version as BaseVersion } from '@voiceflow/base-types';
-import { Constants } from '@voiceflow/general-types';
+import { BaseNode, BaseVersion } from '@voiceflow/base-types';
+import { VoiceflowConstants } from '@voiceflow/voiceflow-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -146,7 +146,7 @@ describe('initialize lifecycle unit tests', async () => {
           locale,
           user_id: userId,
           sessions: 1,
-          platform: Constants.PlatformType.ALEXA,
+          platform: VoiceflowConstants.PlatformType.ALEXA,
           [V.VOICEFLOW]: {
             events: [],
             permissions,
@@ -194,7 +194,7 @@ describe('initialize lifecycle unit tests', async () => {
 
       const fn = initializeGenerator(utils as any);
 
-      delete input.requestEnvelope.context.System.device;
+      delete (input.requestEnvelope.context.System as any).device;
       await fn(runtime as any, input as any);
 
       expect(runtime.storage.set.args[4]).to.eql([S.REPEAT, BaseVersion.RepeatType.ALL]);

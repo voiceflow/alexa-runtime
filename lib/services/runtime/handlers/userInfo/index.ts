@@ -1,4 +1,4 @@
-import { Node } from '@voiceflow/alexa-types';
+import { AlexaNode } from '@voiceflow/alexa-types';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 
 import isPermissionGranted from './utils';
@@ -7,7 +7,7 @@ const utilsObj = {
   isPermissionGranted,
 };
 
-export const UserInfoHandler: HandlerFactory<Node.UserInfo.Node, typeof utilsObj> = (utils) => ({
+export const UserInfoHandler: HandlerFactory<AlexaNode.UserInfo.Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => 'permissions' in node && !!node.permissions,
   handle: async (node, runtime, variables) => {
     if (!('permissions' in node)) {

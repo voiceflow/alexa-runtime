@@ -1,7 +1,7 @@
-import { Constants } from '@voiceflow/alexa-types';
-import { Node as BaseNode } from '@voiceflow/base-types';
+import { AlexaConstants } from '@voiceflow/alexa-types';
+import { BaseNode } from '@voiceflow/base-types';
 import { Frame, Program } from '@voiceflow/general-runtime/build/runtime';
-import { Types as VoiceTypes } from '@voiceflow/voice-types';
+import { VoiceModels } from '@voiceflow/voice-types';
 
 import { IntentName } from '@/lib/services/runtime/types';
 
@@ -24,7 +24,7 @@ export const promptToSSML = (content = '', voice: string | undefined) => {
   return `<voice name="${voice}">${content}</voice>`;
 };
 
-export const createResumeFrame = (resume: VoiceTypes.Prompt<Constants.Voice>, follow: VoiceTypes.Prompt<Constants.Voice> | null) => {
+export const createResumeFrame = (resume: VoiceModels.Prompt<AlexaConstants.Voice>, follow: VoiceModels.Prompt<AlexaConstants.Voice> | null) => {
   return new Frame({
     programID: RESUME_PROGRAM_ID,
     variables: {

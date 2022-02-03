@@ -1,5 +1,5 @@
-import { Constants } from '@voiceflow/alexa-types';
-import { Version as BaseVersion } from '@voiceflow/base-types';
+import { AlexaConstants } from '@voiceflow/alexa-types';
+import { BaseVersion } from '@voiceflow/base-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -8,7 +8,7 @@ import RepeatHandler from '@/lib/services/runtime/handlers/repeat';
 
 describe('repeat handler', () => {
   const repeatHandler = RepeatHandler();
-  const intentRequest = { payload: { intent: { name: Constants.AmazonIntent.REPEAT } } };
+  const intentRequest = { payload: { intent: { name: AlexaConstants.AmazonIntent.REPEAT } } };
 
   describe('can handle', () => {
     it('true', () => {

@@ -1,4 +1,4 @@
-import { Program, Version } from '@voiceflow/alexa-types';
+import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
 import Client, { DataAPI, Runtime } from '@voiceflow/general-runtime/build/runtime';
 import { ResponseBuilder as ASKResponseBuilder } from 'ask-sdk';
 import { Intent } from 'ask-sdk-model';
@@ -48,8 +48,8 @@ export interface EventRequest {
 
 export type AlexaRuntimeRequest = IntentRequest | EventRequest | undefined;
 
-export type AlexaRuntimeClient = Client<AlexaRuntimeRequest, DataAPI<Program.AlexaProgram, Version.AlexaVersion>>;
+export type AlexaRuntimeClient = Client<AlexaRuntimeRequest, DataAPI<AlexaProgram.Program, AlexaVersion.Version>>;
 
-export type AlexaRuntime = Runtime<AlexaRuntimeRequest, DataAPI<Program.AlexaProgram, Version.AlexaVersion>>;
+export type AlexaRuntime = Runtime<AlexaRuntimeRequest, DataAPI<AlexaProgram.Program, AlexaVersion.Version>>;
 
 export type ResponseBuilder = (runtime: AlexaRuntime, builder: ASKResponseBuilder) => void | boolean | Promise<void | boolean>;

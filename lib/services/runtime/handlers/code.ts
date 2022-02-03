@@ -1,4 +1,4 @@
-import { Node as BaseNode } from '@voiceflow/base-types';
+import { BaseNode } from '@voiceflow/base-types';
 import { CodeHandler, HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 
 const CodeHandlerWrapper: HandlerFactory<BaseNode.Code.Node, { endpoint: string | null }> = ({ endpoint }) => {
