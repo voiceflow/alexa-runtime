@@ -184,17 +184,6 @@ workflows:
             branches:
               only: master
 
-      - vfcommon/generate_technical_documentation:
-          <<: *slack-fail-post-step
-          context: dev-test
-          requires:
-            - test-master
-            - test
-            - vfcommon/release
-          filters:
-            branches:
-              only: master
-
       # Update Production branch
       - vfcommon/post_image_push_actions:
           <<: *prod_deploy_filters
