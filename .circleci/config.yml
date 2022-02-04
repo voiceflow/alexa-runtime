@@ -100,7 +100,7 @@ jobs:
       - vfcommon/unit_tests:
           run_in_background: true
       - vfcommon/integration_tests:
-          run_in_background: true
+          wait: true
       - vfcommon/clone_s3_assets:
           from: s3://com.voiceflow.ci.assets/alexa
           to: ~/project/tests/smoke/recordedSessions
