@@ -1,0 +1,5 @@
+status = ["ci/circleci: e2e-check", "ci/circleci: test"]
+delete_merged_branches = true
+use_squash_merge = true
+cut_body_after = "### Implementation details. How do you make this change?"
+required_approvals=1

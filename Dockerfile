@@ -1,18 +1,3 @@
-FROM node:16-alpine as build
-
-ARG NPM_TOKEN
-
-WORKDIR /target
-COPY ./ ./
-
-RUN apk add --no-cache python3 make g++
-
-RUN echo $NPM_TOKEN > .npmrc && \
-  yarn install && \
-  yarn build && \
-  rm -rf build/node_modules && \
-  rm -f .npmrc
-
 FROM node:16-alpine
 
 RUN apk add --no-cache dumb-init python3 make g++
@@ -32,7 +17,9 @@ ENV BUILD_URL=${build_BUILD_URL}
 RUN apk add --no-cache dumb-init
 
 WORKDIR /usr/src/app
-COPY --from=build /target/build ./
+COPY build ./
+COPY package.json ./
+COPY yarn.lock ./
 
 RUN echo $NPM_TOKEN > .npmrc && \
   yarn install --production && \
