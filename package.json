@@ -77,7 +77,7 @@
     "@typescript-eslint/parser": "^4.29.3",
     "@voiceflow/commitlint-config": "1.1.1",
     "@voiceflow/eslint-config": "3.5.0",
-    "@voiceflow/git-branch-check": "1.2.1",
+    "@voiceflow/git-branch-check": "1.2.3",
     "@voiceflow/prettier-config": "1.0.6",
     "@zerollup/ts-transform-paths": "^1.7.9",
     "chai": "^4.2.0",
