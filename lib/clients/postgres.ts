@@ -34,7 +34,7 @@ class PostgresDB extends AbstractClient {
   }
 
   async stop() {
-    await this.client!.end();
+    await this.client?.end();
   }
 }
 

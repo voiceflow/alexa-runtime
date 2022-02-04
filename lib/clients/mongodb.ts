@@ -19,7 +19,7 @@ class MongoDB extends AbstractClient {
   }
 
   async stop() {
-    await this.client!.close();
+    await this.client?.close();
   }
 }
 
