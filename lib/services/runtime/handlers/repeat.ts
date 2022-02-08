@@ -1,4 +1,4 @@
-import { Version as BaseVersion } from '@voiceflow/base-types';
+import { BaseVersion } from '@voiceflow/base-types';
 import { Runtime } from '@voiceflow/general-runtime/build/runtime';
 
 import { F, S, T } from '@/lib/constants';

@@ -1,5 +1,5 @@
-import { Node } from '@voiceflow/alexa-types';
-import { Node as BaseNode } from '@voiceflow/base-types';
+import { AlexaNode } from '@voiceflow/alexa-types';
+import { BaseNode } from '@voiceflow/base-types';
 import { replaceVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { SupportedInterfaces } from 'ask-sdk-model';
@@ -17,7 +17,7 @@ import { deepFindVideos, isVideoEvent, VideoEvent } from './utils';
 export { DisplayResponseBuilder, events };
 
 export interface DisplayNode extends BaseNode.Utils.BaseNode {
-  type: Node.NodeType.DISPLAY;
+  type: AlexaNode.NodeType.DISPLAY;
   nextId?: string;
   display_id?: number;
   datasource?: string;

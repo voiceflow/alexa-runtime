@@ -13,17 +13,17 @@
   },
   "dependencies": {
     "@opentelemetry/api-metrics": "0.26.0",
-    "@voiceflow/alexa-types": "2.2.14",
+    "@voiceflow/alexa-types": "2.4.3",
     "@voiceflow/backend-utils": "3.5.5",
-    "@voiceflow/base-types": "2.6.1",
+    "@voiceflow/base-types": "2.10.3",
     "@voiceflow/body-parser": "1.21.0",
-    "@voiceflow/common": "7.12.1",
-    "@voiceflow/general-runtime": "1.84.2",
-    "@voiceflow/general-types": "3.2.13",
+    "@voiceflow/common": "7.19.3",
+    "@voiceflow/general-runtime": "1.88.0",
     "@voiceflow/logger": "1.6.1",
     "@voiceflow/metrics": "1.1.0",
     "@voiceflow/verror": "1.1.0",
-    "@voiceflow/voice-types": "2.1.13",
+    "@voiceflow/voice-types": "2.3.3",
+    "@voiceflow/voiceflow-types": "3.4.3",
     "ask-sdk": "^2.9.0",
     "ask-sdk-express-adapter": "^2.11.0",
     "ask-sdk-model": "^1.31.0",
@@ -106,7 +106,7 @@
     "ts-node-dev": "^1.1.6",
     "tsconfig-paths": "^3.9.0",
     "ttypescript": "^1.5.8",
-    "typescript": "4.3.5"
+    "typescript": "4.4.4"
   },
   "engines": {
     "node": ">=16"

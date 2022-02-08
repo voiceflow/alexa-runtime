@@ -1,4 +1,4 @@
-import { Node } from '@voiceflow/alexa-types';
+import { AlexaNode } from '@voiceflow/alexa-types';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 
 import { T } from '@/lib/constants';
@@ -12,7 +12,7 @@ export const AccountLinkingResponseBuilder: ResponseBuilder = (runtime, builder)
   }
 };
 
-const AccountLinkingHandler: HandlerFactory<Node.AccountLinking.Node> = () => ({
+const AccountLinkingHandler: HandlerFactory<AlexaNode.AccountLinking.Node> = () => ({
   canHandle: (node) => !!node.link_account,
   handle: (node, runtime) => {
     runtime.turn.set(T.ACCOUNT_LINKING, true);

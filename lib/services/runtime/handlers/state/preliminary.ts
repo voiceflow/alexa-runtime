@@ -1,4 +1,4 @@
-import { Models } from '@voiceflow/base-types';
+import { BaseModels } from '@voiceflow/base-types';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 
 import { T } from '@/lib/constants';
@@ -18,7 +18,7 @@ const utilsObj = {
  * If request comes in but runtime nodeID is not a node that handles events (i.e, interaction, capture, etc..) =>
  * Handle it here
  */
-export const PreliminaryHandler: HandlerFactory<Models.Node<any, any>, typeof utilsObj> = (utils) => ({
+export const PreliminaryHandler: HandlerFactory<BaseModels.Node<any, any>, typeof utilsObj> = (utils) => ({
   canHandle: (node, runtime, variables, program) => {
     const request = runtime.turn.get(T.REQUEST);
     return !!request && !runtime.turn.get(T.NEW_STACK) && !utils.eventHandlers.find((h) => h.canHandle(node, runtime, variables, program));

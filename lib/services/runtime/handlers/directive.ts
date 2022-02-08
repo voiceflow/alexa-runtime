@@ -1,4 +1,4 @@
-import { Node } from '@voiceflow/base-types';
+import { BaseNode } from '@voiceflow/base-types';
 import { replaceVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { Directive } from 'ask-sdk-model';
@@ -21,7 +21,7 @@ const utilsObj = {
   replaceVariables,
 };
 
-export const DirectiveHandler: HandlerFactory<Node.Directive.Node, typeof utilsObj> = (utils) => ({
+export const DirectiveHandler: HandlerFactory<BaseNode.Directive.Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => {
     return _isString(node.directive);
   },

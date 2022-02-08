@@ -1,4 +1,4 @@
-import { Node as BaseNode } from '@voiceflow/base-types';
+import { BaseNode } from '@voiceflow/base-types';
 import Client, { EventType } from '@voiceflow/general-runtime/build/runtime';
 
 import { F, S } from '@/lib/constants';

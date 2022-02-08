@@ -1,4 +1,4 @@
-import { Node as BaseNode } from '@voiceflow/base-types';
+import { BaseNode } from '@voiceflow/base-types';
 import { EventType } from '@voiceflow/general-runtime/build/runtime';
 import { expect } from 'chai';
 import sinon from 'sinon';

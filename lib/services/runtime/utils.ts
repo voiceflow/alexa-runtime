@@ -1,7 +1,7 @@
-import { Models, Nullable } from '@voiceflow/base-types';
+import { BaseModels, Nullable } from '@voiceflow/base-types';
 import { formatIntentName, replaceVariables, transformStringVariableToNumber } from '@voiceflow/common';
 import { Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
-import { Node as VoiceNode } from '@voiceflow/voice-types';
+import { VoiceNode } from '@voiceflow/voice-types';
 import { Slot } from 'ask-sdk-model';
 import _ from 'lodash';
 
@@ -15,13 +15,13 @@ export const mapSlots = ({
   overwrite = false,
 }: {
   slots: { [key: string]: Slot };
-  mappings: Models.SlotMapping[];
+  mappings: BaseModels.SlotMapping[];
   overwrite?: boolean;
 }): Record<string, any> => {
   const variables: Record<string, any> = {};
 
   if (mappings && slots) {
-    mappings.forEach((map: Models.SlotMapping) => {
+    mappings.forEach((map: BaseModels.SlotMapping) => {
       if (!map.slot) return;
 
       const toVariable = map.variable;

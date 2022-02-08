@@ -1,7 +1,7 @@
-import { Node as BaseNode, Nullable } from '@voiceflow/base-types';
+import { BaseNode, Nullable } from '@voiceflow/base-types';
 import { replaceVariables, sanitizeVariables } from '@voiceflow/common';
 import { Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
-import { Node as VoiceNode } from '@voiceflow/voice-types';
+import { VoiceNode } from '@voiceflow/voice-types';
 import _ from 'lodash';
 
 import { S } from '@/lib/constants';

@@ -1,4 +1,4 @@
-import { Version as BaseVersion } from '@voiceflow/base-types';
+import { BaseVersion } from '@voiceflow/base-types';
 
 import { S, T, V } from '@/lib/constants';
 import { AlexaRuntime } from '@/lib/services/runtime/types';

@@ -1,4 +1,4 @@
-import { Node } from '@voiceflow/alexa-types';
+import { AlexaNode } from '@voiceflow/alexa-types';
 import { generateHash, replaceVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import _ from 'lodash';
@@ -132,7 +132,7 @@ const handlerUtils = {
   replaceVariables,
 };
 
-export const StreamHandler: HandlerFactory<Node.Stream.Node, typeof handlerUtils> = (u) => ({
+export const StreamHandler: HandlerFactory<AlexaNode.Stream.Node, typeof handlerUtils> = (u) => ({
   canHandle: (node) => {
     return !!node.play;
   },

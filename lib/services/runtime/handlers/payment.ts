@@ -1,5 +1,5 @@
-import { Node } from '@voiceflow/alexa-types';
-import { Node as BaseNode } from '@voiceflow/base-types';
+import { AlexaNode } from '@voiceflow/alexa-types';
+import { BaseNode } from '@voiceflow/base-types';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { interfaces } from 'ask-sdk-model';
 
@@ -35,7 +35,7 @@ export const PaymentResponseBuilder: ResponseBuilder = (runtime, builder) => {
   }
 };
 
-const PaymentHandler: HandlerFactory<Node.Payment.Node> = () => ({
+const PaymentHandler: HandlerFactory<AlexaNode.Payment.Node> = () => ({
   canHandle: (node) => 'product_id' in node && !!node.product_id,
   handle: (node, runtime) => {
     if (!('product_id' in node)) {
