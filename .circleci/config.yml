@@ -25,14 +25,28 @@ defaults:
   prod_deploy_filters: &prod_deploy_filters
     filters:
       branches:
-        ignore: /.*/
-      tags:
-        only: /^v[0-9]*(\.[0-9]*)*$/
+        only:
+          - production
 
-  ignore_staging_filters: &ignore_staging_filters
+  ignore_master_prod_break_glass_deploy_filters: &ignore_master_prod_break_glass_deploy_filters
+      branches:
+        ignore:
+          - master
+          - production
+          - /^break-glass.*$/
+
+
+  ignore_break_glass_deploy_filters: &ignore_break_glass_deploy_filters
+    filters:
+      branches:
+        ignore:
+          - /^break-glass.*$/
+
+  trying_staging_filters: &trying_staging_filters
     branches:
-      ignore:
+      only:
         - staging
+        - trying
 
   slack-fail-post-step: &slack-fail-post-step
     post-steps:
@@ -44,7 +58,7 @@ defaults:
           branch_pattern: master
 
 orbs:
-  vfcommon: voiceflow/common@0.0.268
+  vfcommon: voiceflow/common@0.0.277
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
@@ -74,122 +88,135 @@ jobs:
       - checkout
       - vfcommon/install_node_modules:
           avoid_post_install_scripts: false
-      - vfcommon/install_node_modules
+      - attach_workspace:
+            at: ~/voiceflow
       - vfcommon/setup_dynamodb
-      - vfcommon/lint_report
-      - vfcommon/lint_dockerfile
+      - vfcommon/lint_report:
+          run_in_background: true
+      - vfcommon/lint_dockerfile:
+          run_in_background: true
       - vfcommon/dependency_tests:
-          step_name: Dependency Tests
-      - vfcommon/build
-      - vfcommon/unit_tests
-      - vfcommon/integration_tests
-      # temp steps
-      - vfcommon/install_aws_cli
+          run_in_background: true
+      - vfcommon/unit_tests:
+          run_in_background: true
+      - vfcommon/integration_tests:
+          wait: true
       - vfcommon/clone_s3_assets:
           from: s3://com.voiceflow.ci.assets/alexa
           to: ~/project/tests/smoke/recordedSessions
       - vfcommon/smoke_tests
       - sonarcloud/scan
 
-  build-push-image:
-    executor: vfcommon/build-executor
-    parameters:
-      image_repo:
-        description: The container image repository
-        type: string
-      image_tag:
-        description: The container image tag
-        type: string
-        default: ''
-      release_pkg:
-        description: The npm package name to be released
-        type: string
-        default: ''
-      dockerfile:
-        description: Name of the Dockerfile to build
-        type: string
-        default: Dockerfile
-    steps:
-      - vfcommon/build_push_image:
-          image_repo: << parameters.image_repo >>
-          release_pkg: << parameters.release_pkg >>
-          image_tag: << parameters.image_tag >>
-          dockerfile: << parameters.dockerfile >>
-
-  post-image-push-actions:
-    executor: vfcommon/build-executor
-    steps:
-      - vfcommon/post_image_push_actions:
-          namespace: << pipeline.parameters.k8s-namespace >>
-          target: << pipeline.parameters.k8s-asset >>
-          tagged: true
-
-  update-track:
-    executor: vfcommon/build-executor
-    steps:
-      - vfcommon/update_track:
-          image_repo: << pipeline.parameters.container-image-url >>
-          component: << pipeline.parameters.track-component >>
-
 # When should each job run and what are their dependencies?
 workflows:
-  # Update tracks, avoiding tags
-  update-track:
-    jobs:
-      - update-track:
-          context: dev-test
-          filters:
-            tags:
-              ignore: /.*/
-            branches:
-              ignore: master
-
-  # Master (production)
-  test-and-release-app:
+  # Merge Queue jobs
+  queue-jobs:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - e2e-check:
           <<: *slack-fail-post-step
           context: dev-test
           filters:
-            <<: *ignore_staging_filters
+            <<: *trying_staging_filters
+
+# Master (production)
+  test-and-release-app:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+    jobs:
+      - vfcommon/install_and_build:
+          avoid_post_install_scripts: false
+          <<: *slack-fail-post-step
+          context: dev-test
+
       - test:
           <<: *slack-fail-post-step
           context: dev-test
-          filters:
-            <<: *ignore_staging_filters
-      - vfcommon/release:
-          <<: *slack-fail-post-step
-          context: dev-test
+          name: test-master
           requires:
-            - e2e-check
-            - test
+            - vfcommon/install_and_build
           filters:
             branches:
               only: master
 
-  deploy-app:
-    jobs:
-      - build-push-image:
-          <<: *prod_deploy_filters
-          name: build-push-image
+      - test:
+          <<: *slack-fail-post-step
+          context: dev-test
+          requires:
+            - vfcommon/install_and_build
+          filters:
+            <<: *ignore_master_prod_break_glass_deploy_filters
+
+      - vfcommon/update_track:
+          <<: *ignore_break_glass_deploy_filters
           context: dev-test
           image_repo: << pipeline.parameters.container-image-url >>
+          component: << pipeline.parameters.track-component >>
           release_pkg: << pipeline.parameters.npm-repo >>
-      - update-track:
-          <<: *prod_deploy_filters
-          context: dev-test
-          name: update-track-release
           requires:
-            - build-push-image
-      - post-image-push-actions:
-          <<: *prod_deploy_filters
+            - test-master
+            - vfcommon/install_and_build
+
+      - vfcommon/release:
+          <<: *slack-fail-post-step
           context: dev-test
           requires:
-            - update-track-release
-      - build-push-image:
+            - vfcommon/install_and_build
+            - test-master
+          filters:
+            branches:
+              only: master
+
+      - vfcommon/sync_branches:
+          check_commit_message: "[bugfix]"
+          ssh_key: << pipeline.parameters.ssh-fingerprint >>
+          context: dev-test
+          name: sync-branches-bugfix
+          requires:
+            - vfcommon/install_and_build
+            - test-master
+            - test
+            - vfcommon/release
+          filters:
+            branches:
+              only: master
+
+      # Update Production branch
+      - vfcommon/post_image_push_actions:
+          <<: *prod_deploy_filters
+          namespace: << pipeline.parameters.k8s-namespace >>
+          target: << pipeline.parameters.k8s-asset >>
+          tagged: true
+          context: dev-test
+          requires:
+            - vfcommon/update_track
+
+      - vfcommon/build_push_image:
           <<: *prod_deploy_filters
           name: build-push-image-e2e
           context: dev-test
           image_repo: << pipeline.parameters.container-image-url >>
-          dockerfile: 'Dockerfile.e2e'
-          image_tag: 'latest-master-e2e'
+          dockerfile: "Dockerfile.e2e"
+          image_tag: "latest-master-e2e"
+          requires:
+            - vfcommon/update_track
+
+
+  # Cron Production update
+  update-production-branch:
+    when:
+      and:
+        - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+        - equal: [ "update-production-branch", << pipeline.schedule.name >> ]
+    jobs:
+      - vfcommon/sync_branches:
+          checkout: true
+          ssh_key: << pipeline.parameters.ssh-fingerprint >>
+          name: sync-branches-scheduled
+          context: dev-test
+          filters:
+            branches:
+              only: master
