@@ -58,7 +58,7 @@ defaults:
           branch_pattern: master
 
 orbs:
-  vfcommon: voiceflow/common@0.0.277
+  vfcommon: voiceflow/common@0.0.283
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
@@ -188,7 +188,7 @@ workflows:
       - vfcommon/post_image_push_actions:
           <<: *prod_deploy_filters
           namespace: << pipeline.parameters.k8s-namespace >>
-          target: << pipeline.parameters.k8s-asset >>
+          component: << pipeline.parameters.track-component >>
           tagged: true
           context: dev-test
           requires:
