@@ -34,7 +34,6 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
   const { stack, storage, variables } = runtime;
 
   storage.delete(S.STREAM_TEMP);
-  storage.delete(S.GO_TO_REF);
 
   // increment user sessions by 1 or initialize
   if (!storage.get(S.SESSIONS)) {

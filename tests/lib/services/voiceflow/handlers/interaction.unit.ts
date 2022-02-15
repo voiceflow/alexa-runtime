@@ -275,7 +275,7 @@ describe('interaction handler unit tests', async () => {
               },
             ],
           ]);
-          expect(runtime.storage.set.args).to.eql([[S.GO_TO_REF, block.id]]);
+          expect(runtime.storage.set.callCount).to.eql(0);
         });
 
         it('skip interactions', () => {
@@ -304,10 +304,6 @@ describe('interaction handler unit tests', async () => {
             turn: { get: sinon.stub().returns(request), delete: sinon.stub(), set: sinon.stub().resolves() },
             storage: {
               delete: sinon.stub(),
-              get: sinon
-                .stub()
-                .withArgs(S.GO_TO_REF)
-                .returns(block.id),
             },
           };
           const variables = { foo: 'bar' };
