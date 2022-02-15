@@ -46,7 +46,7 @@ export const getEvent = (runtime: AlexaRuntime) => {
 
   const frames = runtime.stack.getFrames();
   for (let index = frames.length - 1; index >= 0; index--) {
-    const commands = frames[index]?.getCommands<EventCommand>();
+    const commands = frames[index]?.getCommands<EventCommand>() ?? [];
 
     // eslint-disable-next-line no-restricted-syntax
     for (const command of commands) {

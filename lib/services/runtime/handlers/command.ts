@@ -49,7 +49,7 @@ export const getCommand = (runtime: Runtime, options: CommandOptions = {}) => {
 
   const frames = runtime.stack.getFrames();
   for (let index = frames.length - 1; index >= 0; index--) {
-    const commands = frames[index]?.getCommands<BaseNode.AnyCommonCommand>();
+    const commands = frames[index]?.getCommands<BaseNode.AnyCommonCommand>() ?? [];
 
     for (const command of commands) {
       const commandDiagramID = (isPushCommand(command) && command.diagram_id) || (isIntentCommand(command) && command.diagramID);
