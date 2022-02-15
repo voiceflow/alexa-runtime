@@ -1303,10 +1303,10 @@
     eslint-plugin-xss "^0.1.9"
     eslint-plugin-you-dont-need-lodash-underscore "^6.12.0"
 
-"@voiceflow/general-runtime@1.89.0":
-  version "1.89.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/general-runtime/-/general-runtime-1.89.0.tgz#50a404ec4507ac792277ad099969dd93cfc4e6d8"
-  integrity sha512-NIwCzWojEJM+vzy7d+VnJMAOQnIZpYs6qe8QurdxjcHxhxlAtXD5t9HE9c1wAtcgweuaN8zLyVghNGD3pE6Bpg==
+"@voiceflow/general-runtime@1.89.1":
+  version "1.89.1"
+  resolved "https://registry.yarnpkg.com/@voiceflow/general-runtime/-/general-runtime-1.89.1.tgz#38a9a80a5ba3c81d14d08b6d7bbc978953914248"
+  integrity sha512-dzbj3dKVIqCKiaQD4y3uDMYBcmq2BTNihrZ3ZhIriu+2rqBAQabaJt44JKVY4eMsuYdamq1hOaHr4u8jwxIZsg==
   dependencies:
     "@opentelemetry/api-metrics" "0.26.0"
     "@types/mathjs" "^6.0.4"
@@ -1405,24 +1405,24 @@
     nanoid "^3.1.20"
     pino-http "5.3.0"
 
-"@voiceflow/metrics@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@voiceflow/metrics/-/metrics-1.1.0.tgz#7dc7787b8e84ee11516e321a47989441b45435ed"
-  integrity sha512-6lKC12c+yRK3Omeqjx18eHrFunTlMbFQeRXmOD99xtQPm0t7VpbwX1kEhAY1yUNkV58ALVjYotPx366UgXZE+g==
+"@voiceflow/metrics@1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@voiceflow/metrics/-/metrics-1.1.5.tgz#ac581dfbda565e19ce1fe3ea423c82b6fad3ef3b"
+  integrity sha512-xCUBQJNcIoiDBHfu8A9ZegAa58jpE/yyl/0hLWai6Bwd0wFtTiXrXSN/OseSeeMFQloklvPm/73mILrP1KxVAg==
   dependencies:
     "@opentelemetry/api" "1.0.3"
     "@opentelemetry/api-metrics" "0.26.0"
     "@opentelemetry/exporter-prometheus" "0.26.0"
     "@opentelemetry/sdk-metrics-base" "0.26.0"
     "@types/chai" "^4.3.0"
-    axios "^0.24.0"
+    axios "0.24.0"
     chai "^4.3.4"
     get-port "^5.1.1"
 
-"@voiceflow/metrics@1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@voiceflow/metrics/-/metrics-1.1.5.tgz#ac581dfbda565e19ce1fe3ea423c82b6fad3ef3b"
-  integrity sha512-xCUBQJNcIoiDBHfu8A9ZegAa58jpE/yyl/0hLWai6Bwd0wFtTiXrXSN/OseSeeMFQloklvPm/73mILrP1KxVAg==
+"@voiceflow/metrics@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@voiceflow/metrics/-/metrics-1.2.1.tgz#3b6d8165065189391142100730f94f0fa23e04f3"
+  integrity sha512-yyHw89AzxwXDNGeV1TFvpHEXY7z39/8/Se6N846lgW/5s0HHO83gYwSeRJd1VpzSzRSI7njzr5lWSQHhxw2mCg==
   dependencies:
     "@opentelemetry/api" "1.0.3"
     "@opentelemetry/api-metrics" "0.26.0"
@@ -2002,7 +2002,7 @@ axios@0.21.2, axios@^0.21.1:
   dependencies:
     follow-redirects "^1.14.0"
 
-axios@0.24.0, axios@^0.24.0:
+axios@0.24.0:
   version "0.24.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.24.0.tgz#804e6fa1e4b9c5288501dd9dff56a7a0940d20d6"
   integrity sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==
