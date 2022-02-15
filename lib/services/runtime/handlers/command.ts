@@ -2,6 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 import { AlexaNode } from '@voiceflow/alexa-types';
 import { BaseModels, BaseNode } from '@voiceflow/base-types';
+import { Utils } from '@voiceflow/common';
 import { Frame, Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
 import _ from 'lodash';
 
@@ -22,7 +23,8 @@ export interface CommandOptions {
   diagramID?: string;
 }
 
-const matcher = (intentName: string) => (command: AlexaNode.AnyCommand | null) => !!command && 'intent' in command && command.intent === intentName;
+const matcher = (intentName: string) => (command: AlexaNode.AnyCommand | null) =>
+  !!command && Utils.object.hasProperty(command, 'intent') && command.intent === intentName;
 
 export const getCommand = (runtime: Runtime, options: CommandOptions = {}) => {
   const request = runtime.turn.get<IntentRequest>(T.REQUEST);
