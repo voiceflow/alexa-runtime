@@ -25,6 +25,7 @@ import CodeHandler from './code';
 import DirectiveHandler, { DirectiveResponseBuilder } from './directive';
 import DisplayHandler, { DisplayResponseBuilder } from './display';
 import DisplayHandlerV2 from './displayV2';
+import GoToHandler from './goTo';
 import InteractionHandler from './interaction';
 import PaymentHandler, { PaymentResponseBuilder } from './payment';
 import PermissionCardHandler, { PermissionCardResponseBuilder } from './permissionCard';
@@ -59,6 +60,7 @@ export default ({
 }: Config) => [
   ...StateHandlers(),
   SpeakHandler(),
+  GoToHandler(),
   DirectiveHandler(),
   InteractionHandler(),
   CaptureV2Handler(),

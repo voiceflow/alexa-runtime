@@ -32,10 +32,9 @@ describe('command handler unit tests', async () => {
             stack: { getFrames: sinon.stub().returns({ some }) },
             turn: { get: sinon.stub().returns({ type: RequestType.INTENT, payload: { intent: { name: IntentName.CANCEL } } }) },
           };
-          const extraFrameCommand = sinon.stub().returns(null);
 
-          expect(getCommand(runtime as any, extraFrameCommand as any)).to.eql(null);
-          expect(runtime.stack.getFrames.callCount).to.eql(1);
+          expect(getCommand(runtime as any)).to.eql(null);
+          expect(runtime.stack.getFrames.callCount).to.eql(2);
           expect(some.callCount).to.eql(1);
           // assert some callback
           const fn = some.args[0][0];
@@ -53,9 +52,8 @@ describe('command handler unit tests', async () => {
             stack: { getFrames: sinon.stub().returns({ some: sinon.stub().returns(false) }) },
             turn: { set: sinon.stub(), get: sinon.stub().returns(request) },
           };
-          const extraFrameCommand = sinon.stub().returns(null);
 
-          expect(getCommand(runtime as any, extraFrameCommand as any)).to.eql(null);
+          expect(getCommand(runtime as any)).to.eql(null);
           expect(request.payload.intent.name).to.eql(IntentName.STOP);
           expect(runtime.turn.set.args).to.eql([[T.REQUEST, request]]);
         });
@@ -63,32 +61,26 @@ describe('command handler unit tests', async () => {
 
       it('no extracted frame', () => {
         const runtime = {
-          stack: { foo: 'bar' },
+          stack: { getFrames: sinon.stub().returns([]) },
           turn: { get: sinon.stub().returns({ type: RequestType.INTENT, payload: { intent: { name: 'random_intent' } } }) },
         };
-        const extraFrameCommand = sinon.stub().returns(null);
 
-        expect(getCommand(runtime as any, extraFrameCommand as any)).to.eql(null);
-        expect(extraFrameCommand.args[0][0]).to.eql(runtime.stack);
-
-        // assert matcher
-        const matcher = extraFrameCommand.args[0][1];
-        expect(typeof matcher).to.eql('function');
-        expect(matcher(null)).to.eql(false);
-        expect(matcher({ intent: 'other' })).to.eql(false);
-        expect(matcher({ intent: 'random_intent' })).to.eql(true);
+        expect(getCommand(runtime as any)).to.eql(null);
       });
 
       it('with extracted frame', () => {
+        const command = { intent: 'random_intent' };
+        const frames = [
+          {
+            getCommands: sinon.stub().returns([command]),
+          },
+        ];
         const payload = { intent: { name: 'random_intent', slots: ['slot1', 'slot2'] } };
         const runtime = {
-          stack: { foo: 'bar' },
+          stack: { getFrames: sinon.stub().returns(frames) },
           turn: { get: sinon.stub().returns({ type: RequestType.INTENT, payload }) },
         };
-        const frame = { random: '123' };
-        const extraFrameCommand = sinon.stub().returns(frame);
-
-        expect(getCommand(runtime as any, extraFrameCommand as any)).to.eql({ ...frame, intent: payload.intent });
+        expect(getCommand(runtime as any)).to.eql({ index: 0, command, intent: payload.intent });
       });
     });
   });

@@ -39,19 +39,16 @@ export const InteractionHandler: HandlerFactory<AlexaNode.Interaction.Node, type
     // request for this turn has been processed, delete request
     const { intent } = request.payload;
 
-    const goToRef = runtime.storage.get<string>(S.GO_TO_REF) === node.id;
-    runtime.storage.delete(S.GO_TO_REF);
-
     const index = node.interactions.findIndex((choice) => choice.intent && utils.formatIntentName(choice.intent) === intent.name);
     const choice = node.interactions[index];
-    if (choice && !goToRef) {
+    if (choice) {
       if (choice.mappings && intent.slots) {
         variables.merge(utils.mapSlots({ slots: intent.slots, mappings: choice.mappings }));
       }
 
-      if (choice.goTo?.intentName) {
-        runtime.storage.set<string>(S.GO_TO_REF, node.id);
-        runtime.turn.set<Intent>(T.DELEGATE, createDelegateIntent(choice.goTo.intentName));
+      /** @deprecated this section should be eventually removed in favor of the goto handler */
+      if ((choice as any).goTo?.intentName) {
+        runtime.turn.set<Intent>(T.DELEGATE, createDelegateIntent((choice as any).goTo.intentName));
         return node.id;
       }
 

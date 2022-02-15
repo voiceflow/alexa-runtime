@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import _ from 'lodash';
 import sinon from 'sinon';
 
 import { S, T } from '@/lib/constants';
@@ -275,19 +276,19 @@ describe('interaction handler unit tests', async () => {
               },
             ],
           ]);
-          expect(runtime.storage.set.args).to.eql([[S.GO_TO_REF, block.id]]);
+          expect(runtime.storage.set.callCount).to.eql(0);
         });
 
         it('skip interactions', () => {
-          const intentName = 'random-intent';
+          const intentName = 'other-intent';
           const block = {
             id: 'block-id',
             elseId: 'else-id',
-            interactions: [{ intent: 'random-intent' }],
+            interactions: [{ intent: { name: 'random-intent' } }],
             nextIds: ['id-one', 'id-two'],
           };
           const utils = {
-            formatIntentName: sinon.stub().returns(intentName),
+            formatIntentName: sinon.stub().callsFake(_.identity),
             noMatchHandler: { handle: sinon.stub().returns(block.elseId) },
             commandHandler: {
               canHandle: sinon.stub().returns(false),
@@ -302,13 +303,6 @@ describe('interaction handler unit tests', async () => {
           const request = { type: RequestType.INTENT, payload: { intent: { name: intentName } } };
           const runtime = {
             turn: { get: sinon.stub().returns(request), delete: sinon.stub(), set: sinon.stub().resolves() },
-            storage: {
-              delete: sinon.stub(),
-              get: sinon
-                .stub()
-                .withArgs(S.GO_TO_REF)
-                .returns(block.id),
-            },
           };
           const variables = { foo: 'bar' };
 

@@ -1,5 +1,4 @@
 import { BaseModels } from '@voiceflow/base-types';
-import { extractFrameCommand } from '@voiceflow/general-runtime/build/runtime';
 
 import { AlexaRuntime, EventRequest, RequestType } from '@/lib/services/runtime/types';
 
@@ -38,25 +37,27 @@ export const getVariable = (path: string, data: any) => {
   return !isNaN(curData) && curData.length < 16 ? +curData : curData;
 };
 
-export const _getEvent = (runtime: AlexaRuntime, extractFrame: typeof extractFrameCommand) => {
+export const getEvent = (runtime: AlexaRuntime) => {
   const request = runtime.getRequest();
 
   if (request?.type !== RequestType.EVENT) return null;
 
   const { event } = request.payload;
 
-  const res = extractFrame<EventCommand>(runtime.stack, (command: EventCommand | null) => command?.event === event);
+  const frames = runtime.stack.getFrames();
+  for (let index = frames.length - 1; index >= 0; index--) {
+    const commands = frames[index]?.getCommands<EventCommand>() ?? [];
 
-  if (!res) return null;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const command of commands) {
+      if (command?.event === event) {
+        return { index, command, event };
+      }
+    }
+  }
 
-  return {
-    index: res.index,
-    command: res.command,
-    event,
-  };
+  return null;
 };
-
-export const getEvent = (runtime: AlexaRuntime) => _getEvent(runtime, extractFrameCommand);
 
 const utilsObj = {
   getEvent,

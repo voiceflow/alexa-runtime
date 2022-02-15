@@ -1,6 +1,9 @@
+/* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable no-restricted-syntax */
 import { AlexaNode } from '@voiceflow/alexa-types';
 import { BaseModels, BaseNode } from '@voiceflow/base-types';
-import { extractFrameCommand, Frame, Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
+import { Utils } from '@voiceflow/common';
+import { Frame, Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
 import _ from 'lodash';
 
 import { F, T } from '@/lib/constants';
@@ -16,7 +19,14 @@ const isIntentCommand = (command: BaseNode.AnyCommonCommand): command is BaseNod
   return !isPushCommand(command) && !!(command as BaseNode.Intent.Command).next;
 };
 
-export const getCommand = (runtime: Runtime, extractFrame: typeof extractFrameCommand) => {
+export interface CommandOptions {
+  diagramID?: string;
+}
+
+const matcher = (intentName: string) => (command: AlexaNode.AnyCommand | null) =>
+  !!command && Utils.object.hasProperty(command, 'intent') && command.intent === intentName;
+
+export const getCommand = (runtime: Runtime, options: CommandOptions = {}) => {
   const request = runtime.turn.get<IntentRequest>(T.REQUEST);
 
   if (request?.type !== RequestType.INTENT) return null;
@@ -27,12 +37,10 @@ export const getCommand = (runtime: Runtime, extractFrame: typeof extractFrameCo
   // don't act on a catchall intent
   if (intentName === IntentName.VOICEFLOW) return null;
 
-  const matcher = (command: AlexaNode.AnyCommand | null) => !!command && 'intent' in command && command.intent === intentName;
-
   // If Cancel Intent is not handled turn it into Stop Intent
   // This first loop is AMAZON specific, if cancel intent is not explicitly used anywhere at all, map it to stop intent
   if (intentName === IntentName.CANCEL) {
-    const found = runtime.stack.getFrames().some((frame) => frame.getCommands<AlexaNode.AnyCommand>().some(matcher));
+    const found = runtime.stack.getFrames().some((frame) => frame.getCommands<AlexaNode.AnyCommand>().some(matcher(intentName)));
 
     if (!found) {
       intentName = IntentName.STOP;
@@ -41,31 +49,40 @@ export const getCommand = (runtime: Runtime, extractFrame: typeof extractFrameCo
     }
   }
 
-  const res = extractFrame<BaseNode.AnyCommonCommand>(runtime.stack, matcher);
+  const frames = runtime.stack.getFrames();
+  for (let index = frames.length - 1; index >= 0; index--) {
+    const commands = frames[index]?.getCommands<BaseNode.AnyCommonCommand>() ?? [];
 
-  if (!res) return null;
+    for (const command of commands) {
+      const commandDiagramID = (isPushCommand(command) && command.diagram_id) || (isIntentCommand(command) && command.diagramID);
+      if (options.diagramID && commandDiagramID && options.diagramID !== commandDiagramID) {
+        continue;
+      }
 
-  return {
-    ...res,
-    intent,
-  };
+      if (matcher(intentName)(command)) {
+        return { index, command, intent };
+      }
+    }
+  }
+
+  return null;
 };
 
 const utilsObj = {
   Frame,
   mapSlots,
-  getCommand: (runtime: Runtime) => getCommand(runtime, extractFrameCommand),
+  getCommand,
 };
 
 /**
  * The Command Handler is meant to be used inside other handlers, and should never handle nodes directly
  */
 export const CommandHandler = (utils: typeof utilsObj) => ({
-  canHandle: (runtime: Runtime): boolean => {
-    return !!utils.getCommand(runtime);
+  canHandle: (runtime: Runtime, options?: CommandOptions): boolean => {
+    return !!utils.getCommand(runtime, options);
   },
-  handle: (runtime: Runtime, variables: Store): string | null => {
-    const res = utils.getCommand(runtime);
+  handle: (runtime: Runtime, variables: Store, options?: CommandOptions): string | null => {
+    const res = utils.getCommand(runtime, options);
     if (!res) return null;
 
     let variableMap: BaseModels.CommandMapping[] | undefined;
