@@ -19,14 +19,10 @@ const isIntentCommand = (command: BaseNode.AnyCommonCommand): command is BaseNod
   return !isPushCommand(command) && !!(command as BaseNode.Intent.Command).next;
 };
 
-export interface CommandOptions {
-  diagramID?: string;
-}
-
 const matcher = (intentName: string) => (command: AlexaNode.AnyCommand | null) =>
   !!command && Utils.object.hasProperty(command, 'intent') && command.intent === intentName;
 
-export const getCommand = (runtime: Runtime, options: CommandOptions = {}) => {
+export const getCommand = (runtime: Runtime) => {
   const request = runtime.turn.get<IntentRequest>(T.REQUEST);
 
   if (request?.type !== RequestType.INTENT) return null;
@@ -55,7 +51,7 @@ export const getCommand = (runtime: Runtime, options: CommandOptions = {}) => {
 
     for (const command of commands) {
       const commandDiagramID = (isPushCommand(command) && command.diagram_id) || (isIntentCommand(command) && command.diagramID);
-      if (options.diagramID && commandDiagramID && options.diagramID !== commandDiagramID) {
+      if (request.diagramID && commandDiagramID && request.diagramID !== commandDiagramID) {
         continue;
       }
 
@@ -78,11 +74,11 @@ const utilsObj = {
  * The Command Handler is meant to be used inside other handlers, and should never handle nodes directly
  */
 export const CommandHandler = (utils: typeof utilsObj) => ({
-  canHandle: (runtime: Runtime, options?: CommandOptions): boolean => {
-    return !!utils.getCommand(runtime, options);
+  canHandle: (runtime: Runtime): boolean => {
+    return !!utils.getCommand(runtime);
   },
-  handle: (runtime: Runtime, variables: Store, options?: CommandOptions): string | null => {
-    const res = utils.getCommand(runtime, options);
+  handle: (runtime: Runtime, variables: Store): string | null => {
+    const res = utils.getCommand(runtime);
     if (!res) return null;
 
     let variableMap: BaseModels.CommandMapping[] | undefined;
