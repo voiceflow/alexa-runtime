@@ -3,6 +3,8 @@ import Client, { DataAPI, Runtime } from '@voiceflow/general-runtime/build/runti
 import { ResponseBuilder as ASKResponseBuilder } from 'ask-sdk';
 import { Intent } from 'ask-sdk-model';
 
+import { FullServiceMap } from '..';
+
 export enum RequestType {
   EVENT = 'EVENT',
   INTENT = 'INTENT',
@@ -48,8 +50,8 @@ export interface EventRequest {
 
 export type AlexaRuntimeRequest = IntentRequest | EventRequest | undefined;
 
-export type AlexaRuntimeClient = Client<AlexaRuntimeRequest, DataAPI<AlexaProgram.Program, AlexaVersion.Version>>;
+export type AlexaRuntimeClient = Client<AlexaRuntimeRequest, DataAPI<AlexaProgram.Program, AlexaVersion.Version>, FullServiceMap>;
 
-export type AlexaRuntime = Runtime<AlexaRuntimeRequest, DataAPI<AlexaProgram.Program, AlexaVersion.Version>>;
+export type AlexaRuntime = Runtime<AlexaRuntimeRequest, DataAPI<AlexaProgram.Program, AlexaVersion.Version>, FullServiceMap>;
 
 export type ResponseBuilder = (runtime: AlexaRuntime, builder: ASKResponseBuilder) => void | boolean | Promise<void | boolean>;
