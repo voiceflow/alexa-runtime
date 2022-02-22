@@ -9,6 +9,8 @@ import { AlexaRuntimeRequest } from '../services/runtime/types';
 import { InteractBody, TurnBody } from './ingest-client';
 import { AbstractClient } from './utils';
 
+type Payload = Response | AlexaRuntimeRequest | null;
+
 export class AnalyticsSystem extends AbstractClient {
   private ingestClient?: Ingest.Api<InteractBody, TurnBody>;
 
@@ -29,16 +31,16 @@ export class AnalyticsSystem extends AbstractClient {
   }: {
     eventID: Ingest.Event;
     request: Ingest.RequestType;
-    payload: Response | AlexaRuntimeRequest;
+    payload: Payload;
     turnID: string;
     timestamp: Date;
   }): InteractBody {
-    const isAlexaRuntimeRequest = (p: Response | AlexaRuntimeRequest): p is AlexaRuntimeRequest => (p ? 'type' in p : false);
+    const isAlexaRuntimeRequest = (p: Payload): p is NonNullable<AlexaRuntimeRequest> => (p ? 'type' in p : false);
     return {
       eventId: eventID,
       request: {
         turn_id: turnID,
-        type: isAlexaRuntimeRequest(payload) ? payload!.type.toLocaleLowerCase() : request,
+        type: isAlexaRuntimeRequest(payload) ? payload.type.toLocaleLowerCase() : request,
         format: request,
         payload,
         timestamp: timestamp.toISOString(),
@@ -65,6 +67,7 @@ export class AnalyticsSystem extends AbstractClient {
         session_id: sessionID,
         version_id: versionID,
         timestamp: timestamp.toISOString(),
+        platform: 'alexa',
         metadata: {
           locale: metadata.storage.locale,
         },
@@ -85,34 +88,40 @@ export class AnalyticsSystem extends AbstractClient {
     id: string;
     event: Ingest.Event;
     request: Ingest.RequestType;
-    payload: Response | AlexaRuntimeRequest;
-    sessionid: string;
+    payload: Payload;
+    sessionid?: string;
     metadata: State;
     timestamp: Date;
     turnIDP?: string;
-  }): Promise<string | null> {
+  }): Promise<string> {
     versionID = await this.dataAPI.unhashVersionID(versionID);
     log.trace(`[analytics] track ${log.vars({ versionID })}`);
     switch (event) {
       case Ingest.Event.TURN: {
-        if (sessionid) {
-          const turnIngestBody = this.createTurnBody({ versionID, eventID: event, sessionID: sessionid, metadata, timestamp });
-          const turnResponse = await this.ingestClient?.doIngest(turnIngestBody);
-          const turnID = turnResponse?.data.turn_id!;
-          const interactIngestBody = this.createInteractBody({ eventID: Ingest.Event.INTERACT, request, payload, turnID, timestamp });
-          await this.ingestClient?.doIngest(interactIngestBody);
-          return turnID;
+        if (!sessionid) {
+          throw new Error('sessionid is required');
         }
-        return null;
+
+        const turnIngestBody = this.createTurnBody({ versionID, eventID: event, sessionID: sessionid, metadata, timestamp });
+        const turnResponse = await this.ingestClient?.doIngest(turnIngestBody);
+
+        const turnID = turnResponse?.data.turn_id!;
+        const interactIngestBody = this.createInteractBody({ eventID: Ingest.Event.INTERACT, request, payload, turnID, timestamp });
+
+        await this.ingestClient?.doIngest(interactIngestBody);
+
+        return turnID;
       }
       case Ingest.Event.INTERACT: {
-        if (turnIDP) {
-          const interactIngestBody = this.createInteractBody({ eventID: event, request, payload, turnID: turnIDP, timestamp });
-
-          await this.ingestClient?.doIngest(interactIngestBody);
-          return turnIDP;
+        if (!turnIDP) {
+          throw new Error('turnIDP is required');
         }
-        return null;
+
+        const interactIngestBody = this.createInteractBody({ eventID: event, request, payload, turnID: turnIDP, timestamp });
+
+        await this.ingestClient?.doIngest(interactIngestBody);
+
+        return turnIDP;
       }
       default:
         throw new RangeError(`Unknown event type: ${event}`);

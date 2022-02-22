@@ -58,6 +58,8 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
   }
 
   const versionID = runtime.getVersionID();
+
+  // not using async await, since analytics is not blocking operation
   // Track response on analytics system
   runtime.services.analyticsClient
     .track({
@@ -69,8 +71,8 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
       metadata: runtime.getFinalState(),
       timestamp: new Date(),
     })
-    // Track response on analytics system
-    .then((turnID: string) =>
+    .then((turnID) =>
+      // Track response on analytics system
       runtime.services.analyticsClient.track({
         id: versionID,
         event: Ingest.Event.INTERACT,
@@ -82,9 +84,7 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
         turnIDP: turnID,
       })
     )
-    .catch((error: Error) => {
-      log.error(`[analytics] failed to identify ${log.vars({ versionID, error })}`);
-    });
+    .catch((error: unknown) => log.error(`[analytics] failed to identify ${log.vars({ versionID, error })}`));
 
   return response;
 };
