@@ -36,6 +36,7 @@ export interface IntentRequestPayload {
 export interface IntentRequest {
   type: RequestType.INTENT;
   payload: IntentRequestPayload;
+  diagramID?: string;
 }
 
 export interface EventRequestPayload {
