@@ -1,4 +1,5 @@
 import { AlexaNode } from '@voiceflow/alexa-types';
+import { BaseNode } from '@voiceflow/base-types';
 import { NodeType } from '@voiceflow/base-types/build/common/node';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { Intent } from 'ask-sdk-model';
@@ -37,7 +38,7 @@ export const CaptureV2Handler: HandlerFactory<AlexaNode.CaptureV2.Node, typeof u
     }
 
     // check if there is a command in the stack that fulfills intent
-    if (utils.commandHandler.canHandle(runtime)) {
+    if (node.intentScope !== BaseNode.Utils.IntentScope.NODE && utils.commandHandler.canHandle(runtime)) {
       return utils.commandHandler.handle(runtime, variables);
     }
 
