@@ -1,3 +1,4 @@
+import { BaseNode } from '@voiceflow/base-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -117,6 +118,25 @@ describe('captureV2 handler unit tests', async () => {
       });
 
       describe('command cant handle', () => {
+        it('local scope', () => {
+          const utils = {
+            commandHandler: {
+              canHandle: sinon.stub().returns(false),
+            },
+            noMatchHandler: { handle: sinon.stub().returns('no-match-path') },
+            repeatHandler: { canHandle: () => false },
+          };
+
+          const captureHandler = CaptureV2Handler(utils as any);
+
+          const node = { nextId: 'next-id', intent: {}, intentScope: BaseNode.Utils.IntentScope.NODE };
+          const request = { type: RequestType.INTENT, payload: { intent: { name: 'random', slots: [] } } };
+          const runtime = { turn: { get: sinon.stub().returns(request) } };
+
+          expect(captureHandler.handle(node as any, runtime as any, {} as any, null as any)).to.eql('no-match-path');
+          expect(utils.commandHandler.canHandle.callCount).to.eql(0);
+        });
+
         it('no match', () => {
           const utils = {
             commandHandler: {

@@ -1,3 +1,4 @@
+import { BaseNode } from '@voiceflow/base-types';
 import { expect } from 'chai';
 import _ from 'lodash';
 import sinon from 'sinon';
@@ -139,6 +140,39 @@ describe('interaction handler unit tests', async () => {
           const variables = { foo: 'bar' };
 
           expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.elseId);
+        });
+
+        it('local scope', () => {
+          const node = {
+            id: 'node-id',
+            elseId: 'else-id',
+            interactions: [{ intent: 'intent1' }, { intent: 'intent2' }],
+            intentScope: BaseNode.Utils.IntentScope.NODE,
+          };
+
+          const utils = {
+            formatIntentName: sinon.stub().returns(false),
+            commandHandler: {
+              canHandle: sinon.stub(),
+            },
+            repeatHandler: {
+              canHandle: sinon.stub().returns(false),
+            },
+            noMatchHandler: {
+              handle: sinon.stub().returns(node.elseId),
+            },
+          };
+
+          const interactionHandler = InteractionHandler(utils as any);
+
+          const request = { type: RequestType.INTENT, payload: { intent: { name: 'random-intent' } } };
+          const runtime = {
+            turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
+            storage: { delete: sinon.stub(), get: sinon.stub().returns(undefined) },
+          };
+
+          expect(interactionHandler.handle(node as any, runtime as any, {} as any, null as any)).to.eql(node.elseId);
+          expect(utils.commandHandler.canHandle.callCount).to.eql(0);
         });
 
         it('no choice with noMatches', () => {
