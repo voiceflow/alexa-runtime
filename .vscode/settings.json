@@ -4,6 +4,11 @@
   "eslint.format.enable": true,
   "eslint.lintTask.enable": true,
   "eslint.packageManager": "yarn",
+  "eslint.rules.customizations": [
+    { "rule": "no-use-before-define", "severity": "off" },
+    { "rule": "prettier/prettier", "severity": "off" },
+    { "rule": "simple-import-sort/imports", "severity": "off" }
+  ],
   "javascript.updateImportsOnFileMove.enabled": "always",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[json]": {
