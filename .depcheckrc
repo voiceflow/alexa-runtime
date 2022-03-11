@@ -1,5 +1,14 @@
 {
-  "specials": ["bin", "eslint", "lint-staged", "istanbul", "commitizen", "husky", "prettier", "ttypescript"],
+  "specials": [
+    "bin",
+    "eslint",
+    "lint-staged",
+    "istanbul",
+    "commitizen",
+    "husky",
+    "prettier",
+    "ttypescript"
+  ],
   "ignores": [
     "@commitlint/*",
     "@types/*",
@@ -8,6 +17,8 @@
     "prettier-eslint-cli",
     "fixpack",
     "husky",
-    "lint-staged"
+    "lint-staged",
+    "source-map-support",
+    "eslint-import-resolver-typescript"
   ]
 }
