@@ -152,10 +152,28 @@ jobs:
           command: |
             docker wait cert-generator
             docker-compose -p vf -f docker-compose-vf.yaml up -d server-data-api-e2e
-      # Service dependencies
-      # - vfcommon/check_service_running:
-      #     port: '8011'
-      - vfcommon/check_e2e:
+      - run:
+          name: Start service under test
+          command: |
+            yarn build
+            # copy a config file into this volume and the npm token
+            docker cp alexa-runtime code:/code
+            docker cp ~/.npmrc code:/code/alexa-runtime
+            # start an application container using this volume
+            docker run \
+              --workdir /code/alexa-runtime \
+              --detach \
+              --expose 8012 \
+              --publish 8012:8012 \
+              --name alexa-runtime-e2e \
+              --hostname alexa-runtime.test.e2e \
+              --network="vf_voiceflow" \
+              --volumes-from code \
+              --volume vf_certs:/code/alexa-runtime/certs \
+              --volume vf_caroot:/usr/local/share/ca-certificates \
+              168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1  \
+              /bin/bash -c "update-ca-certificates && yarn install --force && yarn e2e"
+      - check_service_running:
           port: '8012'
       - run:
           name: Get logs
