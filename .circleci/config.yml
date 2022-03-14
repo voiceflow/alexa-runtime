@@ -64,6 +64,7 @@ orbs:
 jobs:
   e2e-check:
     executor: vfcommon/e2e-executor
+    working_directory: ~/code/alexa-runtime
     steps:
       - vfcommon/init_e2e_docker:
           checkout: true
@@ -72,6 +73,18 @@ jobs:
           github_username: GITHUB_USERNAME
           github_token: GITHUB_TOKEN
           cache_prefix: e2e
+      - clone_repo:
+          step_name: "Downloading e2e stack"
+          github_username: GITHUB_USERNAME
+          github_token: GITHUB_TOKEN
+          github_repo_name: "infrastructure-e2e"
+          path_to_clone: "~/code/infrastructure-e2e"
+      - run:
+          name: Start server-data-api
+          working_directory: ~/code/infrastructure-e2e
+          command: |
+            docker-compose -p vf -f docker-compose-vf.yaml pull server-data-api-e2e
+            docker-compose -p vf -f docker-compose-vf.yaml up server-data-api-e2e
       # Service dependencies
       - vfcommon/setup_vf_service_docker:
           service_name: server-data-api
