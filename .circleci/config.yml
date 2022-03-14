@@ -151,7 +151,7 @@ jobs:
           working_directory: ~/code/infrastructure-e2e
           command: |
             docker wait cert-generator
-            docker-compose -p vf -f docker-compose-vf.yaml up server-data-api-e2e -d
+            docker-compose -p vf -f docker-compose-vf.yaml up -d server-data-api-e2e
       # Service dependencies
       - vfcommon/check_service_running:
           port: '8011'
