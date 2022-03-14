@@ -157,7 +157,7 @@ jobs:
           command: |
             yarn build
             # copy a config file into this volume and the npm token
-            docker cp alexa-runtime code:/code
+            docker cp ~/code/alexa-runtime code:/code/alexa-runtime
             docker cp ~/.npmrc code:/code/alexa-runtime
             # start an application container using this volume
             docker run \
@@ -172,9 +172,14 @@ jobs:
               --volume vf_certs:/code/alexa-runtime/certs \
               --volume vf_caroot:/usr/local/share/ca-certificates \
               168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1  \
-              /bin/bash -c "update-ca-certificates && yarn install --force && yarn e2e"
-      - vfcommon/check_service_running:
-          port: '8012'
+              /bin/bash -c "update-ca-certificates && yarn e2e"
+      - run:
+          name: Wait for service to be available
+          command: |
+            docker run \
+              --network vf_voiceflow \
+              168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1 \
+              /bin/bash -c "npx wait-on -t 60000 https://alexa-runtime.test.e2e:8012/health"
       - run:
           name: Get logs
           working_directory: ~/logs
