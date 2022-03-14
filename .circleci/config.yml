@@ -153,8 +153,8 @@ jobs:
             docker wait cert-generator
             docker-compose -p vf -f docker-compose-vf.yaml up -d server-data-api-e2e
       # Service dependencies
-      - vfcommon/check_service_running:
-          port: '8011'
+      # - vfcommon/check_service_running:
+      #     port: '8011'
       - vfcommon/check_e2e:
           port: '8012'
       - run:
@@ -165,6 +165,7 @@ jobs:
             # Getting the logs
             set +e
             docker logs server-data-api-e2e > server-data-api.log
+            docker logs dbcli-e2e > dbcli.log
             set -e
       - store_artifacts:
           path: ~/logs
