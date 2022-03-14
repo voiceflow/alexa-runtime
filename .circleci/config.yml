@@ -90,7 +90,7 @@ jobs:
           version: '20.10.12'
       - vfcommon/docker_login
       - vfcommon/run_command_with_retry:
-          step_name: Download Docker image
+          step_name: Download E2E Docker image
           command: docker pull 168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1
       - vfcommon/init_e2e_docker:
           checkout: true
@@ -118,18 +118,32 @@ jobs:
             docker-compose -p vf -f docker-compose-db.yaml pull
             docker-compose -p vf -f docker-compose-vf.yaml pull server-data-api-e2e
       - run:
+          name: Start Databases
+          working_directory: ~/code/infrastructure-e2e
+          command: |
+            docker-compose -p vf -f docker-compose-db.yaml up -d
+      - run:
           name: Start E2E dependencies
           working_directory: ~/code/infrastructure-e2e
-          background: true
           command: |
-            docker-compose -p vf -f docker-compose-db.yaml up
             docker wait cert-generator
-            docker-compose -p vf -f docker-compose-vf.yaml up server-data-api-e2e
+            docker-compose -p vf -f docker-compose-vf.yaml up server-data-api-e2e -d
       # Service dependencies
       - vfcommon/check_service_running:
           port: '8011'
       - vfcommon/check_e2e:
           port: '8012'
+      - run:
+          name: Get logs
+          working_directory: ~/logs
+          when: on_fail
+          command: |
+            # Getting the logs
+            set +e
+            docker logs server-data-api-e2e > server-data-api.log
+            set -e
+      - store_artifacts:
+          path: ~/logs
 
   test:
     executor: vfcommon/code-test-executor
