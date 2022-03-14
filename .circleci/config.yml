@@ -173,7 +173,7 @@ jobs:
               --volume vf_caroot:/usr/local/share/ca-certificates \
               168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1  \
               /bin/bash -c "update-ca-certificates && yarn install --force && yarn e2e"
-      - check_service_running:
+      - vfcommon/check_service_running:
           port: '8012'
       - run:
           name: Get logs
