@@ -61,9 +61,29 @@ orbs:
   vfcommon: voiceflow/common@0.0.287
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
+executors:
+  e2e-check-executor:
+    parameters:
+      user:
+        description: Default user to run the commands
+        type: string
+        default: "root"
+    docker: # run the steps with Docker
+      - image: 168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1
+        user: << parameters.user >>
+        aws_auth:
+          aws_access_key_id: $AWS_ACCESS_KEY_ID
+          aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+        environment:
+          DEFAULT_COMMIT: master
+          DOCKER_COMPOSE_VERSION: '1.24.1'
+          DOCKERIZE_VERSION: v0.6.1
+          MKCERT_VERSION: v1.4.0
+          NODE_OPTIONS: --max_old_space_size=8192
+
 jobs:
   e2e-check:
-    executor: vfcommon/e2e-executor
+    executor: e2e-check-executor
     working_directory: ~/code/alexa-runtime
     steps:
       - setup_remote_docker:
@@ -76,7 +96,6 @@ jobs:
           checkout: true
           install_node_modules: true
           avoid_post_install_scripts: false
-          setup_db: false
           github_username: GITHUB_USERNAME
           github_token: GITHUB_TOKEN
           cache_prefix: e2e
