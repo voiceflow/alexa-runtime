@@ -58,7 +58,7 @@ defaults:
           branch_pattern: master
 
 orbs:
-  vfcommon: voiceflow/common@dev:0794281
+  vfcommon: voiceflow/common@dev:72cb8ea
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
@@ -98,7 +98,6 @@ workflows:
     jobs:
       - vfcommon/test_e2e_start_service:
           <<: *slack-fail-post-step
-          working_directory: ~/code/alexa-runtime
           service_name: alexa-runtime
           service_port: '8012'
           e2e_service_dependencies: 'server-data-api-e2e'
