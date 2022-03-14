@@ -64,6 +64,11 @@ orbs:
 executors:
   e2e-check-executor:
     resource_class: xlarge
+    parameters:
+      user:
+        description: Default user to run the commands
+        type: string
+        default: "root"
     docker: # run the steps with Docker
       - image: 168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1
         user: << parameters.user >>
