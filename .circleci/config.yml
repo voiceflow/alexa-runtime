@@ -63,11 +63,7 @@ orbs:
 
 executors:
   e2e-check-executor:
-    parameters:
-      user:
-        description: Default user to run the commands
-        type: string
-        default: "root"
+    resource_class: xlarge
     docker: # run the steps with Docker
       - image: 168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1
         user: << parameters.user >>
@@ -100,6 +96,9 @@ jobs:
           github_username: GITHUB_USERNAME
           github_token: GITHUB_TOKEN
           cache_prefix: e2e
+      - run:
+          name: Install NVM
+          command: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
       - vfcommon/clone_repo:
           step_name: "Downloading e2e stack"
           github_username: GITHUB_USERNAME
