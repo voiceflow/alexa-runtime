@@ -73,7 +73,7 @@ jobs:
           github_username: GITHUB_USERNAME
           github_token: GITHUB_TOKEN
           cache_prefix: e2e
-      - clone_repo:
+      - vfcommon/clone_repo:
           step_name: "Downloading e2e stack"
           github_username: GITHUB_USERNAME
           github_token: GITHUB_TOKEN
