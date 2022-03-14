@@ -58,10 +58,29 @@ defaults:
           branch_pattern: master
 
 orbs:
-  vfcommon: voiceflow/common@0.0.322
+  vfcommon: voiceflow/common@0.0.287
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
+  e2e-check:
+    executor: vfcommon/e2e-executor
+    steps:
+      - vfcommon/init_e2e_docker:
+          checkout: true
+          install_node_modules: true
+          avoid_post_install_scripts: false
+          github_username: GITHUB_USERNAME
+          github_token: GITHUB_TOKEN
+          cache_prefix: e2e
+      # Service dependencies
+      - vfcommon/setup_vf_service_docker:
+          service_name: server-data-api
+          github_username: GITHUB_USERNAME
+          github_token: GITHUB_TOKEN
+      - vfcommon/check_service_running:
+          port: '8011'
+      - vfcommon/check_e2e:
+          port: '8012'
 
   test:
     executor: vfcommon/code-test-executor
@@ -96,11 +115,8 @@ workflows:
       not:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
-      - vfcommon/test_e2e_start_service:
+      - e2e-check:
           <<: *slack-fail-post-step
-          service_name: alexa-runtime
-          service_port: '8012'
-          e2e_service_dependencies: 'server-data-api-e2e'
           context: dev-test
           filters:
             <<: *trying_staging_filters
