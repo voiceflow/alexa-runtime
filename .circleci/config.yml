@@ -126,7 +126,7 @@ jobs:
           working_directory: ~/code/infrastructure-e2e
           command: |
             docker-compose -p vf -f docker-compose-db.yaml up -d
-      - run_command_with_retry:
+      - vfcommon/run_command_with_retry:
           step_name: Setup Database
           working_directory: ~/code
           background: true
