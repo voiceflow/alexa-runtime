@@ -64,7 +64,7 @@ orbs:
 jobs:
 
   test:
-    executor: vfcommon/code-test-executor
+    executor: vfcommon/node-executor
     steps:
       - checkout
       - vfcommon/install_node_modules:
