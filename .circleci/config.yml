@@ -69,7 +69,7 @@ jobs:
       - setup_remote_docker:
           version: '20.10.12'
       - vfcommon/docker_login
-      - run_command_with_retry:
+      - vfcommon/run_command_with_retry:
           step_name: Download Docker image
           command: docker pull 168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1
       - vfcommon/init_e2e_docker:
