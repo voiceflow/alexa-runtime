@@ -95,6 +95,7 @@ jobs:
             docker-compose -p vf -f docker-compose-db.yaml pull cert-generator
             docker-compose -p vf -f docker-compose-vf.yaml pull server-data-api-e2e
             docker-compose -p vf -f docker-compose-db.yaml up cert-generator
+            docker wait cert-generator
             docker-compose -p vf -f docker-compose-vf.yaml up server-data-api-e2e
       # Service dependencies
       - vfcommon/check_service_running:
