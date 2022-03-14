@@ -62,14 +62,6 @@ orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
-  e2e-check:
-    executor: vfcommon/e2e-check-executor
-    working_directory: ~/code/alexa-runtime
-    steps:
-      - vfcommon/test_e2e_start_service:
-          service_name: alexa-runtime
-          service_port: '8012'
-          e2e_service_dependencies: 'server-data-api-e2e'
 
   test:
     executor: vfcommon/code-test-executor
@@ -104,8 +96,11 @@ workflows:
       not:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
-      - e2e-check:
+      - vfcommon/test_e2e_start_service:
           <<: *slack-fail-post-step
+          service_name: alexa-runtime
+          service_port: '8012'
+          e2e_service_dependencies: 'server-data-api-e2e'
           context: dev-test
           filters:
             <<: *trying_staging_filters
