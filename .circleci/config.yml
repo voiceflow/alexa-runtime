@@ -66,6 +66,9 @@ jobs:
     executor: vfcommon/e2e-executor
     working_directory: ~/code/alexa-runtime
     steps:
+      - setup_remote_docker:
+          version: '20.10.12'
+      - vfcommon/docker_login
       - vfcommon/init_e2e_docker:
           checkout: true
           install_node_modules: true
@@ -79,9 +82,6 @@ jobs:
           github_token: GITHUB_TOKEN
           github_repo_name: "infrastructure-e2e"
           path_to_clone: "~/code/infrastructure-e2e"
-      - vfcommon/run_command_with_retry:
-          step_name: Download Docker image
-          command: docker pull 168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1
       - run:
           name: Start server-data-api
           working_directory: ~/code/infrastructure-e2e
