@@ -123,7 +123,7 @@ jobs:
           working_directory: ~/code/infrastructure-e2e
           command: |
             docker-compose -p vf -f docker-compose-db.yaml up -d
-      - vf_common/setup_vf_dbs_docker:
+      - vfcommon/setup_vf_dbs_docker:
           github_username: GITHUB_USERNAME
           github_token: GITHUB_TOKEN
           cache_prefix: e2e
