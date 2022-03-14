@@ -86,7 +86,15 @@ jobs:
           name: Start server-data-api
           working_directory: ~/code/infrastructure-e2e
           command: |
+            docker create \
+                --network="vf_voiceflow" \
+                --volume /code \
+                --name code \
+                168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1 \
+                /bin/true
+            docker-compose -p vf -f docker-compose-db.yaml pull cert-generator
             docker-compose -p vf -f docker-compose-vf.yaml pull server-data-api-e2e
+            docker-compose -p vf -f docker-compose-db.yaml up cert-generator
             docker-compose -p vf -f docker-compose-vf.yaml up server-data-api-e2e
       # Service dependencies
       - vfcommon/check_service_running:
