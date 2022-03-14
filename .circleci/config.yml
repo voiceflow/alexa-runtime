@@ -85,6 +85,7 @@ jobs:
       - run:
           name: Start server-data-api
           working_directory: ~/code/infrastructure-e2e
+          background: true
           command: |
             docker create \
                 --network="vf_voiceflow" \
