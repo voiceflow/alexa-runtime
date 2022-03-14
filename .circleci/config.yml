@@ -106,6 +106,9 @@ jobs:
           github_token: GITHUB_TOKEN
           github_repo_name: "infrastructure-e2e"
           path_to_clone: "~/code/infrastructure-e2e"
+      - vfcommon/setup_vf_dbs_machine:
+          github_username: GITHUB_USERNAME
+          github_token: GITHUB_TOKEN
       - run:
           name: Download E2E dependencies
           working_directory: ~/code/infrastructure-e2e
@@ -123,10 +126,24 @@ jobs:
           working_directory: ~/code/infrastructure-e2e
           command: |
             docker-compose -p vf -f docker-compose-db.yaml up -d
-      - vfcommon/setup_vf_dbs_docker:
-          github_username: GITHUB_USERNAME
-          github_token: GITHUB_TOKEN
-          cache_prefix: e2e
+      - run_command_with_retry:
+          step_name: Setup Database
+          working_directory: ~/code
+          background: true
+          command:  |
+            # copy a config file into this volume
+            docker cp database-cli code:/code
+            # start an application container using this volume
+            docker run \
+              --workdir /code/database-cli \
+              --name dbcli-e2e \
+              --hostname dbcli.test.e2e \
+              --network="vf_voiceflow" \
+              --env AWS_ACCESS_KEY_ID="null" \
+              --env AWS_SECRET_ACCESS_KEY="null" \
+              --volumes-from code \
+              168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1  \
+              /bin/bash -c "yarn init:e2e"
       - run:
           name: Start E2E dependencies
           working_directory: ~/code/infrastructure-e2e
