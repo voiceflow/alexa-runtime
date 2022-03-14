@@ -58,13 +58,13 @@ defaults:
           branch_pattern: master
 
 orbs:
-  vfcommon: voiceflow/common@0.0.322
+  vfcommon: voiceflow/common@dev:725391d
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
 
   test:
-    executor: vfcommon/node-executor
+    executor: vfcommon/code-test-executor
     steps:
       - checkout
       - vfcommon/install_node_modules:
