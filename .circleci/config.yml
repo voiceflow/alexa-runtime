@@ -83,9 +83,8 @@ jobs:
           github_repo_name: "infrastructure-e2e"
           path_to_clone: "~/code/infrastructure-e2e"
       - run:
-          name: Start server-data-api
+          name: Download E2E dependencies
           working_directory: ~/code/infrastructure-e2e
-          background: true
           command: |
             docker create \
                 --network="vf_voiceflow" \
@@ -95,6 +94,11 @@ jobs:
                 /bin/true
             docker-compose -p vf -f docker-compose-db.yaml pull cert-generator
             docker-compose -p vf -f docker-compose-vf.yaml pull server-data-api-e2e
+      - run:
+          name: Start E2E dependencies
+          working_directory: ~/code/infrastructure-e2e
+          background: true
+          command: |
             docker-compose -p vf -f docker-compose-db.yaml up cert-generator
             docker wait cert-generator
             docker-compose -p vf -f docker-compose-vf.yaml up server-data-api-e2e
