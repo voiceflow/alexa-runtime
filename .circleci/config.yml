@@ -79,6 +79,9 @@ jobs:
           github_token: GITHUB_TOKEN
           github_repo_name: "infrastructure-e2e"
           path_to_clone: "~/code/infrastructure-e2e"
+      - vfcommon/run_command_with_retry:
+          step_name: Download Docker image
+          command: docker pull 168387678261.dkr.ecr.us-east-1.amazonaws.com/ci-e2e-image:v1
       - run:
           name: Start server-data-api
           working_directory: ~/code/infrastructure-e2e
@@ -86,10 +89,6 @@ jobs:
             docker-compose -p vf -f docker-compose-vf.yaml pull server-data-api-e2e
             docker-compose -p vf -f docker-compose-vf.yaml up server-data-api-e2e
       # Service dependencies
-      - vfcommon/setup_vf_service_docker:
-          service_name: server-data-api
-          github_username: GITHUB_USERNAME
-          github_token: GITHUB_TOKEN
       - vfcommon/check_service_running:
           port: '8011'
       - vfcommon/check_e2e:
