@@ -1,3 +1,4 @@
+import { ExceptionMiddleware } from '@voiceflow/backend-utils';
 import VError from '@voiceflow/verror';
 import compression from 'compression';
 import timeout from 'connect-timeout';
@@ -53,6 +54,8 @@ class ExpressMiddleware {
 
     // All valid routes handled here
     app.use(api(middlewares, controllers));
+
+    app.use(new ExceptionMiddleware().handleError);
   }
 }
 
