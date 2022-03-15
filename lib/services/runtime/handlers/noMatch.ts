@@ -6,6 +6,8 @@ import _ from 'lodash';
 
 import { S } from '@/lib/constants';
 
+import { addRepromptIfExists, RepromptNode } from '../utils';
+
 export type NoMatchCounterStorage = number;
 
 export const EMPTY_AUDIO_STRING = '<audio src=""/>';
@@ -30,7 +32,7 @@ const removeEmptyPrompts = (node: NoMatchNode): string[] =>
   node.noMatch?.prompts?.filter((noMatch) => noMatch != null && noMatch !== EMPTY_AUDIO_STRING) ?? [];
 
 export const NoMatchHandler = () => ({
-  handle: (_node: DeprecatedNoMatchNode, runtime: Runtime, variables: Store) => {
+  handle: (_node: DeprecatedNoMatchNode & RepromptNode, runtime: Runtime, variables: Store) => {
     const node = convertDeprecatedNoMatch(_node);
     const noMatchPrompts = removeEmptyPrompts(node);
 
@@ -47,6 +49,8 @@ export const NoMatchHandler = () => ({
     const speak = (node.noMatch?.randomize ? _.sample(noMatchPrompts) : noMatchPrompts?.[noMatchCounter]) || '';
     const sanitizedVars = sanitizeVariables(variables.getState());
     const output = replaceVariables(speak, sanitizedVars);
+
+    addRepromptIfExists({ node: _node, runtime, variables });
 
     runtime.storage.produce((draft) => {
       draft[S.OUTPUT] += output;

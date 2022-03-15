@@ -39,7 +39,7 @@ export const mapSlots = ({
   return variables;
 };
 
-interface RepromptNode {
+export interface RepromptNode {
   reprompt?: string;
   noReply?: Nullable<VoiceNode.Utils.NodeNoReply>;
 }
@@ -48,7 +48,7 @@ const convertDeprecatedReprompt = <B extends RepromptNode>(node: B) => ({
   ...node,
   noReply: {
     ...node.noReply,
-    prompts: node.noReply?.prompts || node.reprompt ? [node.reprompt] : [],
+    prompts: node.noReply?.prompts || (node.reprompt ? [node.reprompt] : []),
   },
 });
 
