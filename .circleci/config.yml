@@ -58,7 +58,7 @@ defaults:
           branch_pattern: master
 
 orbs:
-  vfcommon: voiceflow/common@0.0.325
+  vfcommon: voiceflow/common@0.0.333
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
@@ -134,15 +134,6 @@ workflows:
           filters:
             <<: *ignore_master_prod_break_glass_deploy_filters
 
-      - vfcommon/update_track:
-          <<: *ignore_break_glass_deploy_filters
-          context: dev-test
-          image_repo: << pipeline.parameters.container-image-url >>
-          component: << pipeline.parameters.track-component >>
-          requires:
-            - test-master
-            - vfcommon/install_and_build
-
       - vfcommon/release:
           <<: *slack-fail-post-step
           context: dev-test
@@ -152,6 +143,16 @@ workflows:
           filters:
             branches:
               only: master
+
+      - vfcommon/update_track:
+          <<: *ignore_break_glass_deploy_filters
+          context: dev-test
+          image_repo: << pipeline.parameters.container-image-url >>
+          component: << pipeline.parameters.track-component >>
+          requires:
+            - test-master
+            - vfcommon/install_and_build
+            - vfcommon/release
 
       - vfcommon/sync_branches:
           check_commit_message: "[bugfix]"
