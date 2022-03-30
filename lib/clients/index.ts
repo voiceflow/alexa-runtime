@@ -14,6 +14,7 @@ import MongoDB from './mongodb';
 import Multimodal, { MultimodalType } from './multimodal';
 import PostgresDB from './postgres';
 import Static, { StaticType } from './static';
+import { AlexaUserIDVerifier } from './verifiers';
 
 export interface ClientMap extends StaticType {
   dynamo: DynamoType;
@@ -42,7 +43,7 @@ const buildClients = (config: Config): ClientMap => {
   const mongo = MongoPersistenceAdapter.enabled(config) ? new MongoDB(config) : null;
   const pg = PostgresPersistenceAdapter.enabled(config) ? new PostgresDB(config) : null;
   const analyticsClient = Analytics({ config, dataAPI });
-  const alexaVerifiers = [new SkillRequestSignatureVerifier(), new TimestampVerifier()];
+  const alexaVerifiers = [new AlexaUserIDVerifier(), new SkillRequestSignatureVerifier(), new TimestampVerifier()];
 
   return {
     ...Static,
