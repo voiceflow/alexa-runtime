@@ -1,6 +1,7 @@
 export { default as APLUserEventHandler } from './aplUserEvent';
 export { default as AudioPlayerEventHandler } from './audioPlayerEvent';
 export { default as CancelPurchaseHandler } from './cancelPurchase';
+export { default as CanFulfillIntentHandler } from './canFulfill';
 export { default as ErrorHandlerGenerator } from './error';
 export { default as EventHandler } from './event';
 export { default as IntentHandler } from './intent';

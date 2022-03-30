@@ -13,6 +13,7 @@ import {
   APLUserEventHandler,
   AudioPlayerEventHandler,
   CancelPurchaseHandler,
+  CanFulfillIntentHandler,
   ErrorHandlerGenerator,
   EventHandler,
   IntentHandler,
@@ -54,6 +55,7 @@ const utilsObj = {
     PlaybackControllerHandler,
     PurchaseHandler,
     SessionEndedHandler,
+    CanFulfillIntentHandler,
   },
   interceptors: { RequestInterceptorGenerator, ResponseInterceptor },
   builder: SkillBuilders,
@@ -90,6 +92,7 @@ const AlexaManager = (services: Services, config: Config, utils = utilsObj) => {
     skill: builder
       .custom()
       .addRequestHandlers(
+        handlers.CanFulfillIntentHandler,
         handlers.EventHandler,
         handlers.LaunchHandler,
         handlers.IntentHandler,
