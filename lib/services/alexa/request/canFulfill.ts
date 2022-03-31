@@ -18,14 +18,18 @@ export const CanFulfillIntentHandler = (): RequestHandler => ({
 
     const version = await input.context.api.getVersion(input.context.versionID);
 
-    const hasIntent = !!version.prototype?.model?.intents?.find?.((_intent) => _intent.name === intent.name);
+    const existingIntent = version.prototype?.model?.intents?.find?.((_intent) => _intent.name === intent.name);
 
     const hasSlots = Object.keys(intent.slots ?? {}).map((slotName) => {
-      const hasSlot = !!version.prototype?.model?.slots?.find?.((_slot) => _slot.name === slotName);
+      const hasSlot =
+        !!existingIntent &&
+        !!version.prototype?.model?.slots?.find?.(
+          (_slot) => existingIntent.slots?.find((intentSlot) => _slot.key === intentSlot.id) && _slot.name === slotName
+        );
       return [slotName, hasSlot] as const;
     });
 
-    const canFulfill = hasIntent && hasSlots.every(([, hasSlot]) => hasSlot);
+    const canFulfill = !!existingIntent && hasSlots.every(([, hasSlot]) => hasSlot);
 
     const response = input.responseBuilder.withCanFulfillIntent({
       canFulfill: canFulfill ? 'YES' : 'NO',

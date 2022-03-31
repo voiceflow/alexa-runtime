@@ -38,10 +38,16 @@ describe('CanFulfillIntentHandler unit tests', () => {
             intents: [
               {
                 name: 'name',
+                slots: [
+                  {
+                    id: '1',
+                  },
+                ],
               },
             ],
             slots: [
               {
+                key: '1',
                 name: 'slot1',
               },
             ],
