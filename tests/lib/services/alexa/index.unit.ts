@@ -21,6 +21,7 @@ describe('alexa manager unit tests', () => {
       };
       const utils = {
         handlers: {
+          CanFulfillIntentHandler: 'CanFulfillIntentHandler',
           EventHandler: 'EventHandler',
           LaunchHandler: 'LaunchHandler',
           IntentHandler: 'IntentHandler',
@@ -48,6 +49,7 @@ describe('alexa manager unit tests', () => {
       expect(utils.builder.custom.callCount).to.eql(1);
       expect(addRequestHandlers.args).to.eql([
         [
+          utils.handlers.CanFulfillIntentHandler,
           utils.handlers.EventHandler,
           utils.handlers.LaunchHandler,
           utils.handlers.IntentHandler,
@@ -96,6 +98,7 @@ describe('alexa manager unit tests', () => {
       };
       const utils = {
         handlers: {
+          CanFulfillIntentHandler: 'CanFulfillIntentHandler',
           EventHandler: 'EventHandler',
           LaunchHandler: 'LaunchHandler',
           IntentHandler: 'IntentHandler',
@@ -123,6 +126,7 @@ describe('alexa manager unit tests', () => {
       expect(utils.builder.custom.callCount).to.eql(1);
       expect(addRequestHandlers.args).to.eql([
         [
+          utils.handlers.CanFulfillIntentHandler,
           utils.handlers.EventHandler,
           utils.handlers.LaunchHandler,
           utils.handlers.IntentHandler,
@@ -165,6 +169,7 @@ describe('alexa manager unit tests', () => {
       };
       const utils = {
         handlers: {
+          CanFulfillIntentHandler: 'CanFulfillIntentHandler',
           EventHandler: 'EventHandler',
           LaunchHandler: 'LaunchHandler',
           IntentHandler: 'IntentHandler',
@@ -192,6 +197,7 @@ describe('alexa manager unit tests', () => {
       expect(utils.builder.custom.callCount).to.eql(1);
       expect(addRequestHandlers.args).to.eql([
         [
+          utils.handlers.CanFulfillIntentHandler,
           utils.handlers.EventHandler,
           utils.handlers.LaunchHandler,
           utils.handlers.IntentHandler,
@@ -234,6 +240,7 @@ describe('alexa manager unit tests', () => {
       };
       const utils = {
         handlers: {
+          CanFulfillIntentHandler: 'CanFulfillIntentHandler',
           EventHandler: 'EventHandler',
           LaunchHandler: 'LaunchHandler',
           IntentHandler: 'IntentHandler',
@@ -261,6 +268,7 @@ describe('alexa manager unit tests', () => {
       expect(utils.builder.custom.callCount).to.eql(1);
       expect(addRequestHandlers.args).to.eql([
         [
+          utils.handlers.CanFulfillIntentHandler,
           utils.handlers.EventHandler,
           utils.handlers.LaunchHandler,
           utils.handlers.IntentHandler,
