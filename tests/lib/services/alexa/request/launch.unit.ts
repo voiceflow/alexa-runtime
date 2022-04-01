@@ -11,7 +11,6 @@ describe('launch handler unit tests', () => {
 
     it('true', () => {
       expect(LaunchHandler.canHandle({ requestEnvelope: { request: { type: Request.LAUNCH } } } as any)).to.eql(true);
-      expect(LaunchHandler.canHandle({ requestEnvelope: { request: { type: Request.CAN_FULFILL_INTENT } } } as any)).to.eql(true);
     });
   });
 

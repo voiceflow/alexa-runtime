@@ -5,7 +5,6 @@ import { buildResponse, buildRuntime, initialize, update } from './lifecycle';
 
 export enum Request {
   LAUNCH = 'LaunchRequest',
-  CAN_FULFILL_INTENT = 'CanFulfillIntentRequest',
 }
 
 const utilsObj = {
@@ -19,7 +18,7 @@ export const LaunchHandlerGenerator = (utils: typeof utilsObj): RequestHandler =
   canHandle(input: AlexaHandlerInput): boolean {
     const { type } = input.requestEnvelope.request;
 
-    return type === Request.LAUNCH || type === Request.CAN_FULFILL_INTENT;
+    return type === Request.LAUNCH;
   },
   async handle(input: AlexaHandlerInput) {
     const runtime = await utils.buildRuntime(input);
