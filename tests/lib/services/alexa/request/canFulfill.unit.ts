@@ -33,25 +33,23 @@ describe('CanFulfillIntentHandler unit tests', () => {
 
     it('can fulfill', async () => {
       const version = {
-        prototype: {
-          model: {
-            intents: [
-              {
-                name: 'name',
-                slots: [
-                  {
-                    id: '1',
-                  },
-                ],
-              },
-            ],
-            slots: [
-              {
-                key: '1',
-                name: 'slot1',
-              },
-            ],
-          },
+        platformData: {
+          intents: [
+            {
+              name: 'name',
+              slots: [
+                {
+                  id: '1',
+                },
+              ],
+            },
+          ],
+          slots: [
+            {
+              key: '1',
+              name: 'slot1',
+            },
+          ],
         },
       };
 
@@ -83,11 +81,9 @@ describe('CanFulfillIntentHandler unit tests', () => {
 
     it('cannot fulfill', async () => {
       const version = {
-        prototype: {
-          model: {
-            intents: [],
-            slots: [],
-          },
+        platformData: {
+          intents: [],
+          slots: [],
         },
       };
 
