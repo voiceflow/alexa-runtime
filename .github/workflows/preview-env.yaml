@@ -62,7 +62,7 @@ jobs:
           echo "Creating new environment..."
           ./vfcli env create --random --interactive false --no-telepresence --prefix review
           # From the vfcli config file, gets the value from the name YAML property and the replace " to empty
-          ENV_NAME=$(cat /home/runner/.vfcli.yaml | grep review- | awk '/name:/ {print $2}' | sed 's/"//g' )
+          ENV_NAME=$(cat /home/runner/.vf/.vfcli.yaml | grep review- | awk '/name:/ {print $2}' | sed 's/"//g' )
 
           NEW_LABEL="env-${ENV_NAME}"
 
