@@ -169,7 +169,7 @@ export interface NewVoiceflowVars {
 export interface NewStateVariables {
   [key: string]: any;
   voiceflow: NewVoiceflowVars;
-  _context: interfaces.system
+  _context: interfaces.system.ViewportState
   _system: interfaces.system.SystemState;
 }
 
