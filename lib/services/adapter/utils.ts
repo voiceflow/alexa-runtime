@@ -125,8 +125,8 @@ interface VariablesAdapterOptions {
 
 export const variablesAdapter = (oldState: OldStateRaw, { system }: VariablesAdapterOptions): NewStateVariables =>
   oldState.globals[0]
-    ? { ...oldState.globals[0], _system: system }
-    : { voiceflow: { events: [], permissions: [], capabilities: {} }, _system: system, _context: context };
+    ? { ...oldState.globals[0], _system: system, _viewport: viewport }
+    : { voiceflow: { events: [], permissions: [], capabilities: {} }, _system: system, _viewport: viewport };
 
 // modify runtime before running adapters
 export const beforeContextModifier = ({ ...runtime }: OldStateRaw) => {
