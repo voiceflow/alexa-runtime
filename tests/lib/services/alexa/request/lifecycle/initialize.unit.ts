@@ -152,6 +152,7 @@ describe('initialize lifecycle unit tests', async () => {
             permissions,
             capabilities,
           },
+          _context: input.requestEnvelope.context,
           _system: input.requestEnvelope.context.System,
         },
       ]);
