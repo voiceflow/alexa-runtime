@@ -43,7 +43,7 @@ export enum Frame {
 export enum Variables {
   TIMESTAMP = 'timestamp',
   SYSTEM = '_system',
-  CONTEXT = '_context',
+  VIEWPORT = '_viewport',
   RESPONSE = '_response',
   VOICEFLOW = 'voiceflow',
 }

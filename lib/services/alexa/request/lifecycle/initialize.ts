@@ -69,7 +69,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
       events: [],
     },
     [V.SYSTEM]: input.requestEnvelope.context.System,
-    [V.CONTEXT]: input.requestEnvelope.context,
+    [V.VIEWPORT]: input.requestEnvelope.context.Viewport,
   });
 
   // initialize all the global variables, as well as slots as global variables
