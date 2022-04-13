@@ -120,7 +120,7 @@ export const storageAdapter = (oldState: OldStateRaw, { accessToken }: StorageAd
 
 interface VariablesAdapterOptions {
   system: interfaces.system.SystemState;
-  viewport: interfaces.system.ViewportState
+  viewport: interfaces.viewpoprt.ViewportState
 }
 
 export const variablesAdapter = (oldState: OldStateRaw, { system }: VariablesAdapterOptions): NewStateVariables =>
