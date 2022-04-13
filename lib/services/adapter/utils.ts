@@ -123,7 +123,7 @@ interface VariablesAdapterOptions {
   viewport: interfaces.viewport.ViewportState
 }
 
-export const variablesAdapter = (oldState: OldStateRaw, { system }: VariablesAdapterOptions): NewStateVariables =>
+export const variablesAdapter = (oldState: OldStateRaw, { system, viewport }: VariablesAdapterOptions): NewStateVariables =>
   oldState.globals[0]
     ? { ...oldState.globals[0], _system: system, _viewport: viewport }
     : { voiceflow: { events: [], permissions: [], capabilities: {} }, _system: system, _viewport: viewport };
