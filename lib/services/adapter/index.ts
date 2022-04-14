@@ -42,7 +42,6 @@ class AdapterManager extends AbstractManager {
       state = beforeContextModifier(state);
 
       const stack = stackAdapter(state);
-      //const variables = variablesAdapter(state, { system: input.requestEnvelope.context.System, viewport: input.requestEnvelope?.context?.Viewport });
       const variables = variablesAdapter(state, { system: input.requestEnvelope.context.System });
       let storage = storageAdapter(state, { accessToken: input.requestEnvelope.context.System.user.accessToken });
 
