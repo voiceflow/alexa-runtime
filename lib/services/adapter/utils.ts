@@ -120,13 +120,19 @@ export const storageAdapter = (oldState: OldStateRaw, { accessToken }: StorageAd
 
 interface VariablesAdapterOptions {
   system: interfaces.system.SystemState;
-  viewport?: interfaces.viewport.ViewportState;
+  //viewport?: interfaces.viewport.ViewportState;
 }
 
+/*
 export const variablesAdapter = (oldState: OldStateRaw, { system, viewport }: VariablesAdapterOptions): NewStateVariables =>
-  oldState.globals[0]
+oldState.globals[0]
     ? { ...oldState.globals[0], _system: system, _viewport: viewport }
     : { voiceflow: { events: [], permissions: [], capabilities: {} }, _system: system, _viewport: viewport };
+*/
+export const variablesAdapter = (oldState: OldStateRaw, { system }: VariablesAdapterOptions): NewStateVariables =>
+  oldState.globals[0]
+    ? { ...oldState.globals[0], _system: system, _viewport: viewport }
+    : { voiceflow: { events: [], permissions: [], capabilities: {}, viewport: {} }, _system: system };
 
 // modify runtime before running adapters
 export const beforeContextModifier = ({ ...runtime }: OldStateRaw) => {

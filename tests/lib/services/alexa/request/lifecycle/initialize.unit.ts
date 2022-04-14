@@ -124,7 +124,7 @@ describe('initialize lifecycle unit tests', async () => {
       storageGet.withArgs(F.SPEAK).returns(lastSpeak);
       const permissions = 'permissions';
       storageGet.withArgs(S.ALEXA_PERMISSIONS).returns(permissions);
-      const capabilities = 'permissions';
+      const capabilities = 'capabilities';
       storageGet.withArgs(S.SUPPORTED_INTERFACES).returns(capabilities);
 
       runtime.storage.get = storageGet;
