@@ -154,7 +154,6 @@ describe('initialize lifecycle unit tests', async () => {
             viewport,
           },
           _system: input.requestEnvelope.context.System,
-          //_viewport: input.requestEnvelope.context.Viewport,
         },
       ]);
       expect(utils.client.Store.initialize.args[0]).to.eql([runtime.variables, metaObj.variables, 0]);
