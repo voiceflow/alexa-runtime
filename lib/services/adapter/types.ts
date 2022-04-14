@@ -40,7 +40,7 @@ type OldGlobals = [
       events: any[];
       permissions: string[];
       capabilities: SupportedInterfaces;
-      viewport?: interfaces.viewport.ViewportState
+      viewport?: interfaces.viewport.ViewportState;
     };
   }
 ];
