@@ -35,7 +35,7 @@ type OldRandoms = Record<string, string[]>;
 type OldGlobals = [
   {
     [key: string]: any;
-    voiceflow: { [key: string]: any; events: any[]; permissions: string[]; capabilities: SupportedInterfaces; };
+    voiceflow: { [key: string]: any; events: any[]; permissions: string[]; capabilities: SupportedInterfaces; }
   }
 ];
 
