@@ -34,6 +34,7 @@ export const oldBasic = {
         permissions: [],
         events: [],
         capabilities: {},
+        viewport: {},
       },
       locale: 'en-US',
       platform: VoiceflowConstants.PlatformType.ALEXA,
@@ -129,6 +130,7 @@ export const newBasic = {
       permissions: [],
       events: [],
       capabilities: {},
+      viewport: {},
     },
     locale: 'en-US',
     platform: VoiceflowConstants.PlatformType.ALEXA,
@@ -181,6 +183,7 @@ export const oldInteraction = {
         permissions: [],
         events: [],
         capabilities: {},
+        viewport: {},
       },
       ageSlot: 45,
       locale: 'en-US',
@@ -280,6 +283,7 @@ export const newInteraction = {
       permissions: [],
       events: [],
       capabilities: {},
+      viewport: {},
     },
     locale: 'en-US',
     platform: VoiceflowConstants.PlatformType.ALEXA,
@@ -351,6 +355,7 @@ export const newMissing = {
       permissions: [],
       events: [],
       capabilities: {},
+      viewport: {},
     },
   },
   storage: {
@@ -380,6 +385,7 @@ export const oldOutputMap = {
         permissions: [],
         events: [],
         capabilities: {},
+        viewport: {},
       },
       citySlot: 0,
       locale: 'en-US',
@@ -513,6 +519,7 @@ export const newOutputMap = {
       permissions: [],
       events: [],
       capabilities: {},
+      viewport: {},
     },
     locale: 'en-US',
     platform: VoiceflowConstants.PlatformType.ALEXA,
@@ -542,6 +549,7 @@ export const oldCommandCalled = {
         permissions: [],
         events: [],
         capabilities: {},
+        viewport: {},
       },
       locale: 'en-US',
       user_id:
@@ -655,6 +663,7 @@ export const newCommandCalled = {
       permissions: [],
       events: [],
       capabilities: {},
+      viewport: {},
     },
     locale: 'en-US',
     platform: VoiceflowConstants.PlatformType.ALEXA,
@@ -702,6 +711,7 @@ export const oldStreamOne = {
         capabilities: {
           AudioPlayer: {},
         },
+        viewport: {},
       },
       locale: 'en-US',
       user_id:
@@ -803,6 +813,7 @@ export const newStreamOne = {
       capabilities: {
         AudioPlayer: {},
       },
+      viewport: {},
     },
     locale: 'en-US',
     platform: VoiceflowConstants.PlatformType.ALEXA,
@@ -867,6 +878,7 @@ export const oldStreamTwo = {
         capabilities: {
           AudioPlayer: {},
         },
+        viewport: {},
       },
       locale: 'en-US',
       user_id:
@@ -951,6 +963,7 @@ export const oldStreamTwo = {
           capabilities: {
             AudioPlayer: {},
           },
+          viewport: {},
         },
         locale: 'en-US',
         user_id:
@@ -1024,6 +1037,7 @@ export const newStreamTwo = {
       capabilities: {
         AudioPlayer: {},
       },
+      viewport: {},
     },
     locale: 'en-US',
     platform: VoiceflowConstants.PlatformType.ALEXA,
@@ -1088,6 +1102,7 @@ export const oldStreamTwoNoLine = {
         capabilities: {
           AudioPlayer: {},
         },
+        viewport: {},
       },
       locale: 'en-US',
       user_id:
@@ -1171,6 +1186,7 @@ export const oldStreamTwoNoLine = {
           capabilities: {
             AudioPlayer: {},
           },
+          viewport: {},
         },
         locale: 'en-US',
         user_id:
@@ -1244,6 +1260,7 @@ export const newStreamTwoNoLine = {
       capabilities: {
         AudioPlayer: {},
       },
+      viewport: {},
     },
     locale: 'en-US',
     platform: VoiceflowConstants.PlatformType.ALEXA,
@@ -1308,6 +1325,7 @@ export const oldDisplay = {
         permissions: [],
         events: [],
         capabilities: {},
+        viewport: {},
       },
       locale: 'en-US',
       platform: VoiceflowConstants.PlatformType.ALEXA,
@@ -1394,6 +1412,7 @@ export const newDisplay = {
       permissions: [],
       events: [],
       capabilities: {},
+      viewport: {},
     },
     locale: 'en-US',
     platform: VoiceflowConstants.PlatformType.ALEXA,
@@ -1435,6 +1454,7 @@ export const newDisplay = {
           permissions: [],
           events: [],
           capabilities: {},
+          viewport: {},
         },
         locale: 'en-US',
         platform: VoiceflowConstants.PlatformType.ALEXA,

@@ -66,6 +66,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
       // TODO: implement all exposed voiceflow variables
       permissions: storage.get(S.ALEXA_PERMISSIONS),
       capabilities: storage.get(S.SUPPORTED_INTERFACES),
+      viewport: input.requestEnvelope?.context?.Viewport,
       events: [],
     },
     [V.SYSTEM]: input.requestEnvelope.context.System,
