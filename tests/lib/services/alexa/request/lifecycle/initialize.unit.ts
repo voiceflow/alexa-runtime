@@ -151,7 +151,7 @@ describe('initialize lifecycle unit tests', async () => {
             events: [],
             permissions,
             capabilities,
-            viewport,
+            viewport: input.requestEnvelope.context?.Viewport,
           },
           _system: input.requestEnvelope.context.System,
         },
