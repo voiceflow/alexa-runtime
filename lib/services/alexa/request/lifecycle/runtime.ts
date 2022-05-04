@@ -1,4 +1,5 @@
 import { EventType, State } from '@voiceflow/general-runtime/build/runtime';
+import { VoiceflowConstants } from '@voiceflow/voiceflow-types';
 
 import { S, T, V } from '@/lib/constants';
 import { AlexaRuntimeRequest, RequestType } from '@/lib/services/runtime/types';
@@ -23,13 +24,27 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
   }
 
   const runtime = runtimeClient.createRuntime(versionID, rawState, request);
+  const { turn, storage, variables } = runtime;
 
-  runtime.turn.set(T.HANDLER_INPUT, input);
-  runtime.turn.set(T.PREVIOUS_OUTPUT, runtime.storage.get(S.OUTPUT));
-  runtime.storage.set(S.OUTPUT, '');
-  runtime.storage.set(S.ACCESS_TOKEN, requestEnvelope.context.System.user.accessToken);
+  turn.set(T.HANDLER_INPUT, input);
+  runtime.turn.set(T.PREVIOUS_OUTPUT, storage.get(S.OUTPUT));
+  storage.set(S.OUTPUT, '');
+  storage.set(S.ACCESS_TOKEN, requestEnvelope.context.System.user.accessToken);
+  storage.set(S.SUPPORTED_INTERFACES, requestEnvelope.context.System.device?.supportedInterfaces);
 
-  runtime.variables.set(V.RESPONSE, null);
+  // hidden system variables (code node only)
+  variables.merge({
+    [V.VOICEFLOW]: {
+      // TODO: implement all exposed voiceflow variables
+      permissions: storage.get(S.ALEXA_PERMISSIONS),
+      capabilities: requestEnvelope.context.System.device?.supportedInterfaces,
+      viewport: requestEnvelope.context?.Viewport,
+      events: [],
+    },
+    [V.SYSTEM]: requestEnvelope.context.System,
+    // reset response
+    [V.RESPONSE]: null,
+  });
 
   runtime.setEvent(EventType.stateDidCatch, (error) => log.error(`[app] [runtime] stack error caught ${log.vars({ error: JSON.stringify(error) })}`));
   runtime.setEvent(EventType.handlerDidCatch, (error) =>
