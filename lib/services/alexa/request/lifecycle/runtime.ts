@@ -25,23 +25,24 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
 
   const runtime = runtimeClient.createRuntime(versionID, rawState, request);
   const { turn, storage, variables } = runtime;
+  const system = requestEnvelope.context?.System;
 
   turn.set(T.HANDLER_INPUT, input);
   runtime.turn.set(T.PREVIOUS_OUTPUT, storage.get(S.OUTPUT));
   storage.set(S.OUTPUT, '');
-  storage.set(S.ACCESS_TOKEN, requestEnvelope.context.System.user.accessToken);
-  storage.set(S.SUPPORTED_INTERFACES, requestEnvelope.context.System.device?.supportedInterfaces);
+  storage.set(S.ACCESS_TOKEN, system?.user?.accessToken);
+  storage.set(S.SUPPORTED_INTERFACES, system?.device?.supportedInterfaces);
 
   // hidden system variables (code node only)
   variables.merge({
     [V.VOICEFLOW]: {
       // TODO: implement all exposed voiceflow variables
       permissions: storage.get(S.ALEXA_PERMISSIONS),
-      capabilities: requestEnvelope.context.System.device?.supportedInterfaces,
+      capabilities: system?.device?.supportedInterfaces,
       viewport: requestEnvelope.context?.Viewport,
       events: [],
     },
-    [V.SYSTEM]: requestEnvelope.context.System,
+    [V.SYSTEM]: system,
     // reset response
     [V.RESPONSE]: null,
   });
