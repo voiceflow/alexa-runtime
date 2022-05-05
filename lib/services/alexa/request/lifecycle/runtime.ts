@@ -1,4 +1,5 @@
 import { EventType, State } from '@voiceflow/general-runtime/build/runtime';
+import safeJSONStringify from 'safe-json-stringify';
 
 import { S, T, V } from '@/lib/constants';
 import { AlexaRuntimeRequest, RequestType } from '@/lib/services/runtime/types';
@@ -31,9 +32,11 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
 
   runtime.variables.set(V.RESPONSE, null);
 
-  runtime.setEvent(EventType.stateDidCatch, (error) => log.error(`[app] [runtime] stack error caught ${log.vars({ error: JSON.stringify(error) })}`));
+  runtime.setEvent(EventType.stateDidCatch, (error) =>
+    log.error(`[app] [runtime] stack error caught ${log.vars({ error: safeJSONStringify(error) })}`)
+  );
   runtime.setEvent(EventType.handlerDidCatch, (error) =>
-    log.error(`[app] [runtime] handler error caught ${log.vars({ error: JSON.stringify(error) })}`)
+    log.error(`[app] [runtime] handler error caught ${log.vars({ error: safeJSONStringify(error) })}`)
   );
 
   return runtime;

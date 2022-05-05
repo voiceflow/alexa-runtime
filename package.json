@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@opentelemetry/api-metrics": "0.26.0",
+    "@types/safe-json-stringify": "^1.1.2",
     "@voiceflow/alexa-types": "2.6.1",
     "@voiceflow/backend-utils": "4.4.0",
     "@voiceflow/base-types": "2.17.0",
@@ -47,6 +48,7 @@
     "pg-format": "^1.0.4",
     "randomstring": "^1.1.5",
     "regenerator-runtime": "^0.13.3",
+    "safe-json-stringify": "^1.2.0",
     "words-to-numbers": "^1.5.1"
   },
   "devDependencies": {
