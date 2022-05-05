@@ -4,7 +4,7 @@ import { S } from '@/lib/constants';
 
 import { PaymentStorage } from '../payment';
 
-const SUCCESS_PATHS = ['PENDING_PURCHASE', 'ACCEPTED', 'ALREADY_PURCHASED'];
+const SUCCESS_PATHS: Set<string> = new Set(['PENDING_PURCHASE', 'ACCEPTED', 'ALREADY_PURCHASED']);
 
 const paymentStateHandler: HandlerFactory<any> = () => ({
   canHandle: (_, runtime) => !!runtime.storage.get<PaymentStorage>(S.PAYMENT),
@@ -13,7 +13,7 @@ const paymentStateHandler: HandlerFactory<any> = () => ({
 
     runtime.storage.delete(S.PAYMENT);
 
-    if (payment?.status && SUCCESS_PATHS.includes(payment.status)) {
+    if (payment?.status && SUCCESS_PATHS.has(payment.status)) {
       return payment.successPath ?? null;
     }
 

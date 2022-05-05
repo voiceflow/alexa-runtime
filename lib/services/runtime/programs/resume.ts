@@ -14,14 +14,15 @@ export enum ResumeVariables {
   FOLLOW_VOICE = '__voice1__',
 }
 
-export const promptToSSML = (content = '', voice: string | undefined) => {
-  if (!voice || voice === 'Alexa' || !content) {
-    return content;
+export const promptToSSML = (content: string | undefined, voice: string | undefined) => {
+  const contentValue = content ?? '';
+  if (!voice || voice === 'Alexa' || !contentValue) {
+    return contentValue;
   }
   if (voice === 'audio') {
-    return `<audio src="${content}"/>`;
+    return `<audio src="${contentValue}"/>`;
   }
-  return `<voice name="${voice}">${content}</voice>`;
+  return `<voice name="${voice}">${contentValue}</voice>`;
 };
 
 export const createResumeFrame = (resume: VoiceModels.Prompt<AlexaConstants.Voice>, follow: VoiceModels.Prompt<AlexaConstants.Voice> | null) => {

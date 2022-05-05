@@ -6,14 +6,14 @@ import { IntentName } from '@/lib/services/runtime/types';
 
 import { ContextRequestHandler } from './types';
 
-const MEDIA_CONTROL_INTENTS = [IntentName.PAUSE, IntentName.RESUME];
+const MEDIA_CONTROL_INTENTS: Set<IntentName> = new Set([IntentName.PAUSE, IntentName.RESUME]);
 
 const EventHandler: ContextRequestHandler = {
   canHandle: (input, runtime) => {
     const request = input.requestEnvelope.request as IntentRequest;
     const displayInfo = runtime.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
 
-    return !!displayInfo && Object.keys(displayInfo.playingVideos).length > 0 && MEDIA_CONTROL_INTENTS.includes(request.intent.name as IntentName);
+    return !!displayInfo && Object.keys(displayInfo.playingVideos).length > 0 && MEDIA_CONTROL_INTENTS.has(request.intent.name as IntentName);
   },
   async handle(input, runtime) {
     const request = input.requestEnvelope.request as IntentRequest;
