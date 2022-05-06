@@ -782,6 +782,11 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.9.tgz#97edc9037ea0c38585320b28964dde3b39e4660d"
   integrity sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ==
 
+"@types/json-stringify-safe@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@types/json-stringify-safe/-/json-stringify-safe-5.0.0.tgz#df34d054419d39323a3730966bacba02ac5e474e"
+  integrity sha512-UUA1sH0RSRROdInuDOA1yoRzbi5xVFD1RHCoOvNRPTNwR8zBkJ/84PZ6NhKVDtKp0FTeIccJCdQz1X2aJPr4uw==
+
 "@types/json5@^0.0.29":
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
@@ -926,11 +931,6 @@
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
-
-"@types/safe-json-stringify@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@types/safe-json-stringify/-/safe-json-stringify-1.1.2.tgz#913796617042de2259f62ce82843c239258ca287"
-  integrity sha512-Hj/LZMBXFH3Qj9sNmNu6syBpkZqBaM00HgP7naf9CnZhB3kdxmrenWUD2cY6vvTWjuBM3NPOLknPKDUOQuTWXA==
 
 "@types/serve-static@*":
   version "1.13.10"

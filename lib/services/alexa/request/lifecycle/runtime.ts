@@ -1,5 +1,5 @@
 import { EventType, State } from '@voiceflow/general-runtime/build/runtime';
-import safeJSONStringify from 'safe-json-stringify';
+import safeJSONStringify from 'json-stringify-safe';
 
 import { S, T, V } from '@/lib/constants';
 import { AlexaRuntimeRequest, RequestType } from '@/lib/services/runtime/types';
