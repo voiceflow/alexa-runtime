@@ -12,14 +12,16 @@ describe('runtime lifecycle unit tests', () => {
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('output') },
       turn: { set: sinon.stub() },
-      variables: { set: sinon.stub() },
+      variables: { merge: sinon.stub() },
       setEvent: sinon.stub(),
     };
 
     const accessToken = 'access-token';
+    const Viewport = 'viewport';
+    const supportedInterfaces = 'supported-interfaces';
     const input = {
       attributesManager: { getPersistentAttributes: sinon.stub().returns(rawState) },
-      requestEnvelope: { request: null, context: { System: { user: { accessToken } } } },
+      requestEnvelope: { request: null, context: { Viewport, System: { device: { supportedInterfaces }, user: { accessToken } } } },
       context: {
         versionID: 'version-id',
         runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
@@ -32,14 +34,30 @@ describe('runtime lifecycle unit tests', () => {
       [T.HANDLER_INPUT, input],
       [T.PREVIOUS_OUTPUT, 'output'],
     ]);
-    expect(runtime.storage.get.args).to.eql([[S.OUTPUT]]);
+    expect(runtime.storage.get.args).to.eql([[S.OUTPUT], [S.ALEXA_PERMISSIONS]]);
     expect(runtime.storage.set.args).to.eql([
       [S.OUTPUT, ''],
       [S.ACCESS_TOKEN, accessToken],
+      [S.SUPPORTED_INTERFACES, supportedInterfaces],
     ]);
     expect(runtime.setEvent.args[0][0]).to.eql('stateDidCatch');
     expect(runtime.setEvent.args[1][0]).to.eql('handlerDidCatch');
-    expect(runtime.variables.set.args).to.eql([[V.RESPONSE, null]]);
+    expect(runtime.variables.merge.args).to.eql([
+      [
+        {
+          [V.VOICEFLOW]: {
+            // TODO: implement all exposed voiceflow variables
+            permissions: 'output',
+            capabilities: supportedInterfaces,
+            viewport: Viewport,
+            events: [],
+          },
+          [V.SYSTEM]: input.requestEnvelope.context.System,
+          // reset response
+          [V.RESPONSE]: null,
+        },
+      ],
+    ]);
   });
 
   it('with event', async () => {
@@ -47,7 +65,7 @@ describe('runtime lifecycle unit tests', () => {
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('output') },
       turn: { set: sinon.stub() },
-      variables: { set: sinon.stub() },
+      variables: { merge: sinon.stub() },
       setEvent: sinon.stub(),
     };
 
@@ -66,7 +84,6 @@ describe('runtime lifecycle unit tests', () => {
     ]);
     expect(runtime.setEvent.args[0][0]).to.eql('stateDidCatch');
     expect(runtime.setEvent.args[1][0]).to.eql('handlerDidCatch');
-    expect(runtime.variables.set.args).to.eql([[V.RESPONSE, null]]);
   });
 
   it('with intent', async () => {
@@ -74,7 +91,7 @@ describe('runtime lifecycle unit tests', () => {
     const runtime = {
       storage: { set: sinon.stub(), get: sinon.stub().returns('output') },
       turn: { set: sinon.stub() },
-      variables: { set: sinon.stub() },
+      variables: { merge: sinon.stub() },
       setEvent: sinon.stub(),
     };
 
@@ -93,6 +110,5 @@ describe('runtime lifecycle unit tests', () => {
     ]);
     expect(runtime.setEvent.args[0][0]).to.eql('stateDidCatch');
     expect(runtime.setEvent.args[1][0]).to.eql('handlerDidCatch');
-    expect(runtime.variables.set.args).to.eql([[V.RESPONSE, null]]);
   });
 });

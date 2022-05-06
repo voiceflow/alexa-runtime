@@ -24,13 +24,28 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
   }
 
   const runtime = runtimeClient.createRuntime(versionID, rawState, request);
+  const { turn, storage, variables } = runtime;
+  const system = requestEnvelope.context?.System;
 
-  runtime.turn.set(T.HANDLER_INPUT, input);
-  runtime.turn.set(T.PREVIOUS_OUTPUT, runtime.storage.get(S.OUTPUT));
-  runtime.storage.set(S.OUTPUT, '');
-  runtime.storage.set(S.ACCESS_TOKEN, requestEnvelope.context.System.user.accessToken);
+  turn.set(T.HANDLER_INPUT, input);
+  runtime.turn.set(T.PREVIOUS_OUTPUT, storage.get(S.OUTPUT));
+  storage.set(S.OUTPUT, '');
+  storage.set(S.ACCESS_TOKEN, system?.user?.accessToken);
+  storage.set(S.SUPPORTED_INTERFACES, system?.device?.supportedInterfaces);
 
-  runtime.variables.set(V.RESPONSE, null);
+  // hidden system variables (code node only)
+  variables.merge({
+    [V.VOICEFLOW]: {
+      // TODO: implement all exposed voiceflow variables
+      permissions: storage.get(S.ALEXA_PERMISSIONS),
+      capabilities: system?.device?.supportedInterfaces,
+      viewport: requestEnvelope.context?.Viewport,
+      events: [],
+    },
+    [V.SYSTEM]: system,
+    // reset response
+    [V.RESPONSE]: null,
+  });
 
   runtime.setEvent(EventType.stateDidCatch, (error) =>
     log.error(`[app] [runtime] stack error caught ${log.vars({ error: safeJSONStringify(error) })}`)

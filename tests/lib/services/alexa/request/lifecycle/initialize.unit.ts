@@ -124,8 +124,6 @@ describe('initialize lifecycle unit tests', async () => {
       storageGet.withArgs(F.SPEAK).returns(lastSpeak);
       const permissions = 'permissions';
       storageGet.withArgs(S.ALEXA_PERMISSIONS).returns(permissions);
-      const capabilities = 'capabilities';
-      storageGet.withArgs(S.SUPPORTED_INTERFACES).returns(capabilities);
 
       runtime.storage.get = storageGet;
 
@@ -137,9 +135,8 @@ describe('initialize lifecycle unit tests', async () => {
       expect(runtime.storage.set.args[0]).to.eql([S.SESSIONS, 1]);
       expect(runtime.storage.set.args[1]).to.eql([S.LOCALE, input.requestEnvelope.request.locale]);
       expect(runtime.storage.set.args[2]).to.eql([S.USER, userId]);
-      expect(runtime.storage.set.args[3]).to.eql([S.SUPPORTED_INTERFACES, input.requestEnvelope.context.System.device?.supportedInterfaces]);
-      expect(runtime.storage.set.args[4]).to.eql([S.ALEXA_PERMISSIONS, metaObj.platformData.settings.permissions]);
-      expect(runtime.storage.set.args[5]).to.eql([S.REPEAT, metaObj.platformData.settings.repeat]);
+      expect(runtime.storage.set.args[3]).to.eql([S.ALEXA_PERMISSIONS, metaObj.platformData.settings.permissions]);
+      expect(runtime.storage.set.args[4]).to.eql([S.REPEAT, metaObj.platformData.settings.repeat]);
       expect(runtime.variables.merge.args[0]).to.eql([
         {
           timestamp: 0,
@@ -147,13 +144,6 @@ describe('initialize lifecycle unit tests', async () => {
           user_id: userId,
           sessions: 1,
           platform: VoiceflowConstants.PlatformType.ALEXA,
-          [V.VOICEFLOW]: {
-            events: [],
-            permissions,
-            capabilities,
-            viewport: input.requestEnvelope.context?.Viewport,
-          },
-          _system: input.requestEnvelope.context.System,
         },
       ]);
       expect(utils.client.Store.initialize.args[0]).to.eql([runtime.variables, metaObj.variables, 0]);
@@ -198,8 +188,7 @@ describe('initialize lifecycle unit tests', async () => {
       delete (input.requestEnvelope.context.System as any).device;
       await fn(runtime as any, input as any);
 
-      expect(runtime.storage.set.args[4]).to.eql([S.REPEAT, BaseVersion.RepeatType.ALL]);
-      expect(runtime.storage.set.args[2]).to.eql([S.SUPPORTED_INTERFACES, undefined]);
+      expect(runtime.storage.set.args[3]).to.eql([S.REPEAT, BaseVersion.RepeatType.ALL]);
       expect(runtime.api.getVersion.args).to.eql([[VERSION_ID]]);
     });
 
@@ -316,7 +305,7 @@ describe('initialize lifecycle unit tests', async () => {
 
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
-          expect(runtime.storage.set.args[5]).to.eql([S.OUTPUT, '']);
+          expect(runtime.storage.set.args[4]).to.eql([S.OUTPUT, '']);
           expect(runtime.trace.addTrace.args).to.eql([[{ type: BaseNode.Utils.TraceType.SPEAK, payload: { message: '', type: 'message' } }]]);
           expect(runtime.api.getVersion.args).to.eql([[VERSION_ID]]);
         });
@@ -334,7 +323,7 @@ describe('initialize lifecycle unit tests', async () => {
 
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
-          expect(runtime.storage.set.args[5]).to.eql([S.OUTPUT, lastSpeak]);
+          expect(runtime.storage.set.args[4]).to.eql([S.OUTPUT, lastSpeak]);
           expect(runtime.trace.addTrace.args).to.eql([[{ type: BaseNode.Utils.TraceType.SPEAK, payload: { message: lastSpeak, type: 'message' } }]]);
           expect(runtime.api.getVersion.args).to.eql([[VERSION_ID]]);
         });

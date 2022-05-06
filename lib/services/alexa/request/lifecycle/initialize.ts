@@ -47,7 +47,6 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
   // set based on input
   storage.set(S.LOCALE, requestEnvelope.request.locale);
   storage.set(S.USER, requestEnvelope.context.System.user.userId);
-  storage.set(S.SUPPORTED_INTERFACES, requestEnvelope.context.System.device?.supportedInterfaces);
 
   // set based on metadata
   storage.set(S.ALEXA_PERMISSIONS, settings.permissions ?? []);
@@ -60,16 +59,6 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
     user_id: storage.get(S.USER),
     sessions: storage.get(S.SESSIONS),
     platform: VoiceflowConstants.PlatformType.ALEXA,
-
-    // hidden system variables (code node only)
-    [V.VOICEFLOW]: {
-      // TODO: implement all exposed voiceflow variables
-      permissions: storage.get(S.ALEXA_PERMISSIONS),
-      capabilities: storage.get(S.SUPPORTED_INTERFACES),
-      viewport: input.requestEnvelope?.context?.Viewport,
-      events: [],
-    },
-    [V.SYSTEM]: input.requestEnvelope.context.System,
   });
 
   // initialize all the global variables, as well as slots as global variables
