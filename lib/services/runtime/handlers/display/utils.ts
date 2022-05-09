@@ -54,6 +54,5 @@ export const shouldRebuildDisplay = (
   variables: Record<string, any>,
   lastVariables: Record<string, any> = {}
 ) => {
-  const dataSourceVariables = dataSourceVars ?? [];
-  return dataSourceVariables.some((name) => variables[name] !== lastVariables[name]);
+  return (dataSourceVars ?? []).some((name) => variables[name] !== lastVariables[name]);
 };
