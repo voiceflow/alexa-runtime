@@ -49,5 +49,10 @@ export const getEventToSend = (argument: string) => ({ type: EVENT_SEND_EVENT, a
 
 export const isVideoEvent = (event: string) => (data?: any) => _.isString(data) && data.toLowerCase().includes(event.toLowerCase());
 
-export const shouldRebuildDisplay = (dataSourceVars: string[] = [], variables: Record<string, any>, lastVariables: Record<string, any> = {}) =>
-  dataSourceVars.some((name) => variables[name] !== lastVariables[name]);
+export const shouldRebuildDisplay = (
+  dataSourceVars: string[] | undefined,
+  variables: Record<string, any>,
+  lastVariables: Record<string, any> = {}
+) => {
+  return (dataSourceVars ?? []).some((name) => variables[name] !== lastVariables[name]);
+};
