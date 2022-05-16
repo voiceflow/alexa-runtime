@@ -1,18 +1,16 @@
 import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
 import { DataAPI, State } from '@voiceflow/general-runtime/build/runtime';
-import { Response } from 'ask-sdk-model';
 
 import log from '@/logger';
 import { Config } from '@/types';
 
 import { AlexaRuntimeRequest } from '../services/runtime/types';
-import { InteractBody, TurnBody } from './ingest-client';
+import { InteractionBody, Payload, TraceBody } from './ingest-client';
 import { AbstractClient } from './utils';
 
-type Payload = Response | AlexaRuntimeRequest | null;
-
+const isAlexaRuntimeRequest = (p: Payload): p is NonNullable<AlexaRuntimeRequest> => (p ? 'type' in p : false);
 export class AnalyticsSystem extends AbstractClient {
-  private ingestClient?: Ingest.Api<InteractBody, TurnBody>;
+  private ingestClient?: Ingest.Api<InteractionBody, TraceBody>;
 
   constructor(config: Config, public dataAPI: DataAPI) {
     super(config);
@@ -22,77 +20,74 @@ export class AnalyticsSystem extends AbstractClient {
     }
   }
 
-  private createInteractBody({
-    eventID,
-    request,
-    payload,
-    turnID,
-    timestamp,
-  }: {
-    eventID: Ingest.Event;
-    request: Ingest.RequestType;
-    payload: Payload;
-    turnID: string;
-    timestamp: Date;
-  }): InteractBody {
-    const isAlexaRuntimeRequest = (p: Payload): p is NonNullable<AlexaRuntimeRequest> => (p ? 'type' in p : false);
+  private createTraceBody({ request, payload, timestamp }: { request: Ingest.RequestType; payload: Payload; timestamp: Date }): TraceBody {
     return {
-      eventId: eventID,
-      request: {
-        turn_id: turnID,
-        type: isAlexaRuntimeRequest(payload) ? payload.type.toLocaleLowerCase() : request,
-        format: request,
-        payload,
-        timestamp: timestamp.toISOString(),
-      },
-    } as InteractBody;
+      type: isAlexaRuntimeRequest(payload) ? payload.type.toLocaleLowerCase() : request,
+      format: request,
+      payload,
+      startTime: timestamp.toISOString(),
+    };
   }
 
-  private createTurnBody({
+  private createInteractionBody({
+    projectID,
     versionID,
-    eventID,
     sessionID,
     metadata,
     timestamp,
+    initialRequest,
+    initialPayload,
+    request,
+    payload,
   }: {
+    projectID: string;
     versionID: string;
-    eventID: Ingest.Event;
     sessionID: string;
     metadata: State;
     timestamp: Date;
-  }): TurnBody {
+    initialRequest: Ingest.RequestType;
+    initialPayload: Payload;
+    request: Ingest.RequestType;
+    payload: Payload;
+  }): InteractionBody {
     return {
-      eventId: eventID,
-      request: {
-        session_id: sessionID,
-        version_id: versionID,
-        timestamp: timestamp.toISOString(),
-        platform: 'alexa',
-        metadata: {
-          locale: metadata.storage.locale,
-        },
+      projectID,
+      sessionID,
+      versionID,
+      startTime: timestamp.toISOString(),
+      platform: 'alexa',
+      metadata: {
+        locale: metadata.storage.locale,
       },
-    } as TurnBody;
+      traces: [
+        this.createTraceBody({ request: initialRequest, payload: initialPayload, timestamp }),
+        this.createTraceBody({ request, payload, timestamp }),
+      ],
+    };
   }
 
   async track({
-    id: versionID,
+    projectID,
+    versionID,
     event,
+    initialRequest,
+    initialPayload,
     request,
     payload,
     sessionid,
     metadata,
     timestamp,
-    turnIDP,
   }: {
-    id: string;
+    projectID: string;
+    versionID: string;
     event: Ingest.Event;
+    initialRequest: Ingest.RequestType;
+    initialPayload: Payload;
     request: Ingest.RequestType;
     payload: Payload;
     sessionid?: string;
     metadata: State;
     timestamp: Date;
-    turnIDP?: string;
   }): Promise<string> {
     versionID = await this.dataAPI.unhashVersionID(versionID);
     log.trace(`[analytics] track ${log.vars({ versionID })}`);
@@ -101,6 +96,7 @@ export class AnalyticsSystem extends AbstractClient {
         if (!sessionid) {
           throw new Error('sessionid is required');
         }
+<<<<<<< HEAD
 
         const turnIngestBody = this.createTurnBody({
           versionID,
@@ -140,6 +136,24 @@ export class AnalyticsSystem extends AbstractClient {
         await this.ingestClient?.doIngest(interactIngestBody);
 
         return turnIDP;
+=======
+        const interactionBody = this.createInteractionBody({
+          projectID,
+          versionID,
+          sessionID: sessionid,
+          metadata,
+          timestamp,
+          initialRequest,
+          initialPayload,
+          request,
+          payload,
+        });
+        const interactionResponse = await this.ingestClient?.ingestInteraction(interactionBody);
+        return interactionResponse?.data.turnID!;
+      }
+      case Ingest.Event.INTERACT: {
+        throw new RangeError('INTERACT events are not supported');
+>>>>>>> 25ac416 (feat: modify analytics service call to new ingest service (VF-3505))
       }
       default:
         throw new RangeError(`Unknown event type: ${event}`);

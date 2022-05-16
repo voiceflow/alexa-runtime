@@ -5,10 +5,16 @@ import { Response } from 'ask-sdk-model';
 
 import { AlexaRuntimeRequest } from '../services/runtime/types';
 
-export type TurnBody = Ingest.TurnBody<{
-  stack?: FrameState[];
-  storage?: State;
-  variables?: State;
-}>;
+export type InteractionBody = Ingest.InteractionBody<
+  {
+    stack?: FrameState[];
+    storage?: State;
+    variables?: State;
+    locale?: string;
+  },
+  Payload
+>;
 
-export type InteractBody = Ingest.InteractBody<Response | AlexaRuntimeRequest>;
+export type Payload = Response | AlexaRuntimeRequest | null;
+
+export type TraceBody = Ingest.TraceBody<Payload>;
