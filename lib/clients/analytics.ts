@@ -8,7 +8,7 @@ import { AlexaRuntimeRequest } from '../services/runtime/types';
 import { InteractionBody, Payload, TraceBody } from './ingest-client';
 import { AbstractClient } from './utils';
 
-const isAlexaRuntimeRequest = (p: Payload): p is NonNullable<AlexaRuntimeRequest> => (p ? 'type' in p : false);
+const isAlexaRuntimeRequest = (p: Payload): p is NonNullable<AlexaRuntimeRequest> => (p && 'type' in p) ?? false;
 export class AnalyticsSystem extends AbstractClient {
   private ingestClient?: Ingest.Api<InteractionBody, TraceBody>;
 
@@ -20,12 +20,10 @@ export class AnalyticsSystem extends AbstractClient {
     }
   }
 
-  private createTraceBody({ request, payload, timestamp }: { request: Ingest.RequestType; payload: Payload; timestamp: Date }): TraceBody {
+  private createTraceBody({ request, payload }: { request: Ingest.RequestType; payload: Payload }): TraceBody {
     return {
       type: isAlexaRuntimeRequest(payload) ? payload.type.toLocaleLowerCase() : request,
-      format: request,
       payload,
-      startTime: timestamp.toISOString(),
     };
   }
 
@@ -35,8 +33,8 @@ export class AnalyticsSystem extends AbstractClient {
     sessionID,
     metadata,
     timestamp,
-    initialRequest,
-    initialPayload,
+    actionRequest,
+    actionPayload,
     request,
     payload,
   }: {
@@ -45,8 +43,8 @@ export class AnalyticsSystem extends AbstractClient {
     sessionID: string;
     metadata: State;
     timestamp: Date;
-    initialRequest: Ingest.RequestType;
-    initialPayload: Payload;
+    actionRequest: Ingest.RequestType;
+    actionPayload: Payload;
     request: Ingest.RequestType;
     payload: Payload;
   }): InteractionBody {
@@ -59,10 +57,11 @@ export class AnalyticsSystem extends AbstractClient {
       metadata: {
         locale: metadata.storage.locale,
       },
-      traces: [
-        this.createTraceBody({ request: initialRequest, payload: initialPayload, timestamp }),
-        this.createTraceBody({ request, payload, timestamp }),
-      ],
+      action: {
+        type: actionRequest,
+        payload: actionPayload!,
+      },
+      traces: [this.createTraceBody({ request, payload })],
     };
   }
 
@@ -70,8 +69,8 @@ export class AnalyticsSystem extends AbstractClient {
     projectID,
     versionID,
     event,
-    initialRequest,
-    initialPayload,
+    actionRequest,
+    actionPayload,
     request,
     payload,
     sessionid,
@@ -81,8 +80,8 @@ export class AnalyticsSystem extends AbstractClient {
     projectID: string;
     versionID: string;
     event: Ingest.Event;
-    initialRequest: Ingest.RequestType;
-    initialPayload: Payload;
+    actionRequest: Ingest.RequestType;
+    actionPayload: Payload;
     request: Ingest.RequestType;
     payload: Payload;
     sessionid?: string;
@@ -143,8 +142,8 @@ export class AnalyticsSystem extends AbstractClient {
           sessionID: sessionid,
           metadata,
           timestamp,
-          initialRequest,
-          initialPayload,
+          actionRequest,
+          actionPayload,
           request,
           payload,
         });

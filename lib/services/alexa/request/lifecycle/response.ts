@@ -70,11 +70,11 @@ export const responseGenerator = (utils: typeof utilsObj) => async (
       projectID,
       versionID,
       event: Ingest.Event.TURN,
-      initialRequest:
+      actionRequest:
         input?.requestEnvelope?.request?.type === 'LaunchRequest'
           ? Ingest.RequestType.LAUNCH
           : Ingest.RequestType.REQUEST,
-      initialPayload: runtime.getRequest(),
+      actionPayload: runtime.getRequest(),
       request: Ingest.RequestType.RESPONSE,
       payload: response,
       sessionid: input.requestEnvelope.session?.sessionId,
