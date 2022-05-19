@@ -1,26 +1,42 @@
-import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
+import { Api as IngestApi, Client as IngestClient } from '@voiceflow/event-ingestion-service/build/lib/client';
+import { Event, IngestableInteraction, IngestableTrace, RequestType } from '@voiceflow/event-ingestion-service/build/lib/types';
 import { DataAPI, State } from '@voiceflow/general-runtime/build/runtime';
+import { FrameState } from '@voiceflow/general-runtime/build/runtime/lib/Runtime/Stack';
+import { Response } from 'ask-sdk-model';
 
 import log from '@/logger';
 import { Config } from '@/types';
 
 import { AlexaRuntimeRequest } from '../services/runtime/types';
-import { InteractionBody, Payload, TraceBody } from './ingest-client';
 import { AbstractClient } from './utils';
+
+type InteractionBody = IngestableInteraction<
+  {
+    stack?: FrameState[];
+    storage?: State;
+    variables?: State;
+    locale?: string;
+  },
+  Payload
+>;
+
+type Payload = Response | AlexaRuntimeRequest | null;
+
+type TraceBody = IngestableTrace<Payload>;
 
 const isAlexaRuntimeRequest = (p: Payload): p is NonNullable<AlexaRuntimeRequest> => (p && 'type' in p) ?? false;
 export class AnalyticsSystem extends AbstractClient {
-  private ingestClient?: Ingest.Api<InteractionBody, TraceBody>;
+  private ingestClient?: IngestApi<InteractionBody, TraceBody>;
 
   constructor(config: Config, public dataAPI: DataAPI) {
     super(config);
 
     if (config.INGEST_WEBHOOK_ENDPOINT) {
-      this.ingestClient = Ingest.Client(config.INGEST_WEBHOOK_ENDPOINT, undefined);
+      this.ingestClient = IngestClient(config.INGEST_WEBHOOK_ENDPOINT, undefined);
     }
   }
 
-  private createTraceBody({ request, payload }: { request: Ingest.RequestType; payload: Payload }): TraceBody {
+  private createTraceBody({ request, payload }: { request: RequestType; payload: Payload }): TraceBody {
     return {
       type: isAlexaRuntimeRequest(payload) ? payload.type.toLocaleLowerCase() : request,
       payload,
@@ -43,9 +59,9 @@ export class AnalyticsSystem extends AbstractClient {
     sessionID: string;
     metadata: State;
     timestamp: Date;
-    actionRequest: Ingest.RequestType;
+    actionRequest: RequestType;
     actionPayload: Payload;
-    request: Ingest.RequestType;
+    request: RequestType;
     payload: Payload;
   }): InteractionBody {
     return {
@@ -79,10 +95,10 @@ export class AnalyticsSystem extends AbstractClient {
   }: {
     projectID: string;
     versionID: string;
-    event: Ingest.Event;
-    actionRequest: Ingest.RequestType;
+    event: Event;
+    actionRequest: RequestType;
     actionPayload: Payload;
-    request: Ingest.RequestType;
+    request: RequestType;
     payload: Payload;
     sessionid?: string;
     metadata: State;
@@ -91,7 +107,7 @@ export class AnalyticsSystem extends AbstractClient {
     versionID = await this.dataAPI.unhashVersionID(versionID);
     log.trace(`[analytics] track ${log.vars({ versionID })}`);
     switch (event) {
-      case Ingest.Event.TURN: {
+      case Event.TURN: {
         if (!sessionid) {
           throw new Error('sessionid is required');
         }
@@ -150,7 +166,7 @@ export class AnalyticsSystem extends AbstractClient {
         const interactionResponse = await this.ingestClient?.ingestInteraction(interactionBody);
         return interactionResponse?.data.turnID!;
       }
-      case Ingest.Event.INTERACT: {
+      case Event.INTERACT: {
         throw new RangeError('INTERACT events are not supported');
 >>>>>>> 25ac416 (feat: modify analytics service call to new ingest service (VF-3505))
       }

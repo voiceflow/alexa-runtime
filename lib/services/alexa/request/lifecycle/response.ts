@@ -1,4 +1,4 @@
-import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
+import { Event, RequestType } from '@voiceflow/event-ingestion-service/build/lib/types';
 import { Response } from 'ask-sdk-model';
 import _isObject from 'lodash/isObject';
 import _mapValues from 'lodash/mapValues';
@@ -69,13 +69,11 @@ export const responseGenerator = (utils: typeof utilsObj) => async (
     .track({
       projectID,
       versionID,
-      event: Ingest.Event.TURN,
+      event: Event.TURN,
       actionRequest:
-        input?.requestEnvelope?.request?.type === 'LaunchRequest'
-          ? Ingest.RequestType.LAUNCH
-          : Ingest.RequestType.REQUEST,
+        input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
       actionPayload: runtime.getRequest(),
-      request: Ingest.RequestType.RESPONSE,
+      request: RequestType.RESPONSE,
       payload: response,
       sessionid: input.requestEnvelope.session?.sessionId,
       metadata: runtime.getFinalState(),

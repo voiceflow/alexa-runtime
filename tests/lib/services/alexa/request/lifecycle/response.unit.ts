@@ -1,4 +1,4 @@
-import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
+import { Event, RequestType } from '@voiceflow/event-ingestion-service/build/lib/types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -68,10 +68,10 @@ describe('response lifecycle unit tests', () => {
     ).to.deep.equal({
       projectID,
       versionID,
-      event: Ingest.Event.TURN,
-      actionRequest: Ingest.RequestType.REQUEST,
+      event: Event.TURN,
+      actionRequest: RequestType.REQUEST,
       actionPayload: request,
-      request: Ingest.RequestType.RESPONSE,
+      request: RequestType.RESPONSE,
       payload: output,
       sessionid: input.requestEnvelope.session.sessionId,
       metadata: finalState,
@@ -142,10 +142,10 @@ describe('response lifecycle unit tests', () => {
     ).to.deep.eq({
       projectID,
       versionID,
-      event: Ingest.Event.TURN,
-      actionRequest: Ingest.RequestType.REQUEST,
+      event: Event.TURN,
+      actionRequest: RequestType.REQUEST,
       actionPayload: request,
-      request: Ingest.RequestType.RESPONSE,
+      request: RequestType.RESPONSE,
       payload: output,
       sessionid: input.requestEnvelope.session.sessionId,
       metadata: {},
