@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "ES2021",
     "moduleResolution": "node",
     "module": "commonjs",
     "declaration": false,
@@ -25,15 +25,11 @@
     "listEmittedFiles": false,
     "listFiles": false,
     "pretty": true,
-    "lib": [
-      "es2017"
-    ],
+    "lib": ["ES2021"],
     "outDir": "./build",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "compileOnSave": false,
@@ -42,6 +38,7 @@
     "typings/**/*.d.ts"
   ],
   "exclude": [
-    "node_modules/**"
+    "node_modules/**",
+    "build"
   ]
 }
