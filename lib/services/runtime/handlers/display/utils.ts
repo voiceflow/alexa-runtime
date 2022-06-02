@@ -47,7 +47,8 @@ export const deepFindVideos = (collection: any) => deepFind<Video>(collection, {
 
 export const getEventToSend = (argument: string) => ({ type: EVENT_SEND_EVENT, arguments: [argument] });
 
-export const isVideoEvent = (event: string) => (data?: any) => _.isString(data) && data.toLowerCase().includes(event.toLowerCase());
+export const isVideoEvent = (event: string) => (data?: any) =>
+  _.isString(data) && data.toLowerCase().includes(event.toLowerCase());
 
 export const shouldRebuildDisplay = (
   dataSourceVars: string[] | undefined,

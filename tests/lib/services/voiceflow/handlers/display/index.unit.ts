@@ -2,7 +2,11 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '@/lib/services/runtime/handlers/display/constants';
+import {
+  APL_INTERFACE_NAME,
+  ENDED_EVENT_PREFIX,
+  EVENT_SEND_EVENT,
+} from '@/lib/services/runtime/handlers/display/constants';
 import DefaultDisplayHandler, { DisplayHandler, getVariables } from '@/lib/services/runtime/handlers/display/index';
 
 describe('displayHandler.unit tests', () => {
@@ -20,12 +24,18 @@ describe('displayHandler.unit tests', () => {
 
   describe('handle', () => {
     it('supportedInterfaces is null', async () => {
-      const runtime = { storage: { get: sinon.stub().returns(null) }, variables: { getState: sinon.stub().returns(null) } };
+      const runtime = {
+        storage: { get: sinon.stub().returns(null) },
+        variables: { getState: sinon.stub().returns(null) },
+      };
       expect(await displayHandler.handle({} as any, runtime as any, null as any, null as any)).to.eql(null);
     });
 
     it('supportedInterfaces does not have APL_INTERFACE_NAME', async () => {
-      const runtime = { storage: { get: sinon.stub().returns({}) }, variables: { getState: sinon.stub().returns(null) } };
+      const runtime = {
+        storage: { get: sinon.stub().returns({}) },
+        variables: { getState: sinon.stub().returns(null) },
+      };
       const nextId = 'next-id';
       expect(await displayHandler.handle({ nextId } as any, runtime as any, null as any, null as any)).to.eql(nextId);
     });
@@ -61,7 +71,11 @@ describe('displayHandler.unit tests', () => {
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
       };
       const rawCommand = ['a', 'b'];
-      const node = { display_id: 'display-id', apl_commands: JSON.stringify(rawCommand), datasource: '{hello} there, {name}' };
+      const node = {
+        display_id: 'display-id',
+        apl_commands: JSON.stringify(rawCommand),
+        datasource: '{hello} there, {name}',
+      };
       expect(await displayHandler.handle(node as any, runtime as any, null as any, null as any)).to.eql(null);
       expect(runtime.storage.set.args).to.eql([
         [

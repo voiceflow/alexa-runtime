@@ -2,17 +2,26 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import CancelPurchaseHandler, { CancelPurchaseHandlerGenerator, Request } from '@/lib/services/alexa/request/cancelPurchase';
+import CancelPurchaseHandler, {
+  CancelPurchaseHandlerGenerator,
+  Request,
+} from '@/lib/services/alexa/request/cancelPurchase';
 
 describe('cancel purchase handler unit tests', () => {
   describe('canHandle', () => {
     it('false', () => {
-      expect(CancelPurchaseHandler.canHandle({ requestEnvelope: { request: { type: 'random-type', name: 'random-name' } } } as any)).to.eql(false);
+      expect(
+        CancelPurchaseHandler.canHandle({
+          requestEnvelope: { request: { type: 'random-type', name: 'random-name' } },
+        } as any)
+      ).to.eql(false);
     });
 
     it('true', () => {
       expect(
-        CancelPurchaseHandler.canHandle({ requestEnvelope: { request: { type: Request.RESPONSE_TYPE, name: Request.REQ_NAME } } } as any)
+        CancelPurchaseHandler.canHandle({
+          requestEnvelope: { request: { type: Request.RESPONSE_TYPE, name: Request.REQ_NAME } },
+        } as any)
       ).to.eql(true);
     });
   });

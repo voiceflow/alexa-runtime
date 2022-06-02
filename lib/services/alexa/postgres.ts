@@ -19,7 +19,11 @@ class PostgresPersistenceAdapter implements PersistenceAdapter {
 
   async getAttributes(requestEnvelope: RequestEnvelope) {
     const userId = this.idGenerator(requestEnvelope);
-    const session = (await this.pg.client.query(this.pg.format('SELECT attributes FROM %I WHERE id = %L', this.pg.sessionsTable, userId))).rows[0];
+    const session = (
+      await this.pg.client.query(
+        this.pg.format('SELECT attributes FROM %I WHERE id = %L', this.pg.sessionsTable, userId)
+      )
+    ).rows[0];
     return session?.attributes || {};
   }
 

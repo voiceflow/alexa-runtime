@@ -12,7 +12,9 @@ export const PermissionCardResponseBuilder: ResponseBuilder = (runtime, builder)
   const permissionCard = runtime.turn.get<PermissionCardTurn>(T.PERMISSION_CARD);
 
   if (permissionCard) {
-    const permissions = Array.isArray(permissionCard) ? permissionCard : runtime.storage.get<string[]>(S.ALEXA_PERMISSIONS);
+    const permissions = Array.isArray(permissionCard)
+      ? permissionCard
+      : runtime.storage.get<string[]>(S.ALEXA_PERMISSIONS);
 
     if (permissions?.length) {
       builder.withAskForPermissionsConsentCard(permissions);

@@ -18,7 +18,13 @@ interface NoMatchNode extends BaseNode.Utils.BaseNode {
 
 interface DeprecatedNoMatchNode extends NoMatchNode, VoiceNode.Utils.DeprecatedNodeNoMatch {}
 
-const convertDeprecatedNoMatch = ({ noMatch, elseId, noMatches, randomize, ...node }: DeprecatedNoMatchNode): NoMatchNode => {
+const convertDeprecatedNoMatch = ({
+  noMatch,
+  elseId,
+  noMatches,
+  randomize,
+  ...node
+}: DeprecatedNoMatchNode): NoMatchNode => {
   const mergedNoMatch: VoiceNode.Utils.NodeNoMatch = {
     prompts: noMatch?.prompts ?? noMatches,
     randomize: noMatch?.randomize ?? randomize,

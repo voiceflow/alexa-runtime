@@ -2,7 +2,10 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S, T } from '@/lib/constants';
-import DefaultStreamStateHandler, { StreamFailPhrase, StreamStateHandler } from '@/lib/services/runtime/handlers/state/stream';
+import DefaultStreamStateHandler, {
+  StreamFailPhrase,
+  StreamStateHandler,
+} from '@/lib/services/runtime/handlers/state/stream';
 import { StreamAction } from '@/lib/services/runtime/handlers/stream';
 import { IntentName } from '@/lib/services/runtime/types';
 
@@ -11,9 +14,14 @@ describe('stream state handler unit tests', () => {
 
   describe('canHandle', () => {
     it('false', () => {
-      expect(streamStateHandler.canHandle(null as any, { storage: { get: sinon.stub().returns(null) } } as any, null as any, null as any)).to.eql(
-        false
-      );
+      expect(
+        streamStateHandler.canHandle(
+          null as any,
+          { storage: { get: sinon.stub().returns(null) } } as any,
+          null as any,
+          null as any
+        )
+      ).to.eql(false);
       expect(
         streamStateHandler.canHandle(
           null as any,
@@ -87,7 +95,10 @@ describe('stream state handler unit tests', () => {
         const fn3 = runtime.storage.produce.args[2][0];
         const draft4 = { [S.STREAM_PLAY]: { title: 'old title', description: 'old desc' } };
         fn3(draft4);
-        expect(draft4[S.STREAM_PLAY]).to.eql({ title: variablesMap.titleVar, description: updatedStreamPlay.regex_description });
+        expect(draft4[S.STREAM_PLAY]).to.eql({
+          title: variablesMap.titleVar,
+          description: updatedStreamPlay.regex_description,
+        });
         expect(runtime.end.callCount).to.eql(1);
       });
 
@@ -337,7 +348,9 @@ describe('stream state handler unit tests', () => {
           },
           turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
         };
-        expect(streamStateHandler.handle(null as any, runtime as any, null as any, null as any)).to.eql(streamPlay.nextId);
+        expect(streamStateHandler.handle(null as any, runtime as any, null as any, null as any)).to.eql(
+          streamPlay.nextId
+        );
         expect(runtime.storage.set.args).to.eql([
           [
             S.STREAM_PAUSE,

@@ -32,9 +32,16 @@ export interface ClientMap extends StaticType {
 const buildClients = (config: Config): ClientMap => {
   const dynamo = Dynamo(config);
   const dataAPI = config.PROJECT_SOURCE
-    ? new LocalDataApi<AlexaProgram.Program, AlexaVersion.Version>({ projectSource: config.PROJECT_SOURCE }, { fs: Static.fs, path: Static.path })
+    ? new LocalDataApi<AlexaProgram.Program, AlexaVersion.Version>(
+        { projectSource: config.PROJECT_SOURCE },
+        { fs: Static.fs, path: Static.path }
+      )
     : new ServerDataApi<AlexaProgram.Program, AlexaVersion.Version>(
-        { platform: VoiceflowConstants.PlatformType.ALEXA, adminToken: config.ADMIN_SERVER_DATA_API_TOKEN, dataEndpoint: config.VF_DATA_ENDPOINT },
+        {
+          platform: VoiceflowConstants.PlatformType.ALEXA,
+          adminToken: config.ADMIN_SERVER_DATA_API_TOKEN,
+          dataEndpoint: config.VF_DATA_ENDPOINT,
+        },
         { axios: Static.axios }
       );
   const multimodal = Multimodal(dataAPI);

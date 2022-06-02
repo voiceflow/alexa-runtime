@@ -54,7 +54,11 @@ describe('voiceflow manager utils unit tests', async () => {
         slotC: { resolutions: { resolutionsPerAuthority: [{ values: [{ value: { name: 'nested' } }] }] } },
       };
 
-      expect(mapSlots({ mappings: mappings as any, slots: slots as any })).to.eql({ var1: 1, var2: 'value', var4: 'nested' });
+      expect(mapSlots({ mappings: mappings as any, slots: slots as any })).to.eql({
+        var1: 1,
+        var2: 'value',
+        var4: 'nested',
+      });
     });
   });
 });

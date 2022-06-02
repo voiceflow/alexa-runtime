@@ -15,7 +15,10 @@ const utilsObj = {
   responseHandlers,
 };
 
-export const responseGenerator = (utils: typeof utilsObj) => async (runtime: AlexaRuntime, input: AlexaHandlerInput): Promise<Response> => {
+export const responseGenerator = (utils: typeof utilsObj) => async (
+  runtime: AlexaRuntime,
+  input: AlexaHandlerInput
+): Promise<Response> => {
   const { storage, turn, variables } = runtime;
   const {
     responseBuilder,
@@ -65,7 +68,10 @@ export const responseGenerator = (utils: typeof utilsObj) => async (runtime: Ale
     .track({
       id: versionID,
       event: Ingest.Event.TURN,
-      request: input?.requestEnvelope?.request?.type === 'LaunchRequest' ? Ingest.RequestType.LAUNCH : Ingest.RequestType.REQUEST,
+      request:
+        input?.requestEnvelope?.request?.type === 'LaunchRequest'
+          ? Ingest.RequestType.LAUNCH
+          : Ingest.RequestType.REQUEST,
       payload: runtime.getRequest(),
       sessionid: input.requestEnvelope.session?.sessionId,
       metadata: runtime.getFinalState(),

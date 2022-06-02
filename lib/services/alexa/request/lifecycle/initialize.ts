@@ -20,7 +20,10 @@ const utilsObj = {
   },
 };
 
-export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: AlexaRuntime, input: AlexaHandlerInput): Promise<void> => {
+export const initializeGenerator = (utils: typeof utilsObj) => async (
+  runtime: AlexaRuntime,
+  input: AlexaHandlerInput
+): Promise<void> => {
   const { requestEnvelope } = input;
   const versionID = runtime.getVersionID();
 
@@ -79,7 +82,9 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
   const { session = { type: BaseVersion.SessionType.RESTART } } = settings;
   // restart logic
   const shouldRestart =
-    stack.isEmpty() || session.type === BaseVersion.SessionType.RESTART || variables.get<{ resume?: boolean }>(V.VOICEFLOW)?.resume === false;
+    stack.isEmpty() ||
+    session.type === BaseVersion.SessionType.RESTART ||
+    variables.get<{ resume?: boolean }>(V.VOICEFLOW)?.resume === false;
   if (shouldRestart) {
     // start the stack with just the root flow
     stack.flush();
@@ -92,7 +97,9 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (runtime: A
     stack.top().storage.set(F.CALLED_COMMAND, true);
 
     // if there is an existing resume flow, remove itself and anything above it
-    const resumeStackIndex = stack.getFrames().findIndex((frame) => frame.getProgramID() === utils.resume.RESUME_PROGRAM_ID);
+    const resumeStackIndex = stack
+      .getFrames()
+      .findIndex((frame) => frame.getProgramID() === utils.resume.RESUME_PROGRAM_ID);
     if (resumeStackIndex >= 0) {
       stack.popTo(resumeStackIndex);
     }

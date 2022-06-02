@@ -6,11 +6,15 @@ import CanFulfillIntentHandler, { Request } from '@/lib/services/alexa/request/c
 describe('CanFulfillIntentHandler unit tests', () => {
   describe('canHandle', () => {
     it('false', () => {
-      expect(CanFulfillIntentHandler.canHandle({ requestEnvelope: { request: { type: 'random' } } } as any)).to.eql(false);
+      expect(CanFulfillIntentHandler.canHandle({ requestEnvelope: { request: { type: 'random' } } } as any)).to.eql(
+        false
+      );
     });
 
     it('true', () => {
-      expect(CanFulfillIntentHandler.canHandle({ requestEnvelope: { request: { type: Request.CAN_FULFILL_INTENT } } } as any)).to.eql(true);
+      expect(
+        CanFulfillIntentHandler.canHandle({ requestEnvelope: { request: { type: Request.CAN_FULFILL_INTENT } } } as any)
+      ).to.eql(true);
     });
   });
 

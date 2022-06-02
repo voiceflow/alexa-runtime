@@ -28,7 +28,10 @@ export const mapSlots = ({
       const fromSlot = formatIntentName(map.slot);
 
       const resolution = slots[fromSlot]?.resolutions?.resolutionsPerAuthority?.[0];
-      const fromSlotValue = (resolution?.authority !== ALEXA_AUTHORITY && resolution?.values?.[0].value?.name) || slots[fromSlot]?.value || null;
+      const fromSlotValue =
+        (resolution?.authority !== ALEXA_AUTHORITY && resolution?.values?.[0].value?.name) ||
+        slots[fromSlot]?.value ||
+        null;
 
       if (toVariable && (fromSlotValue || overwrite)) {
         variables[toVariable] = transformStringVariableToNumber(fromSlotValue);
@@ -52,7 +55,15 @@ const convertDeprecatedReprompt = <B extends RepromptNode>(node: B) => ({
   },
 });
 
-export const addRepromptIfExists = <B extends RepromptNode>({ node, runtime, variables }: { node: B; runtime: Runtime; variables: Store }): void => {
+export const addRepromptIfExists = <B extends RepromptNode>({
+  node,
+  runtime,
+  variables,
+}: {
+  node: B;
+  runtime: Runtime;
+  variables: Store;
+}): void => {
   const noReplyNode = convertDeprecatedReprompt(node);
   const prompt = _.sample(noReplyNode.noReply.prompts);
   if (prompt) {

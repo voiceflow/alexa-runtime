@@ -73,7 +73,9 @@ export const DisplayHandler: HandlerFactory<AlexaNode.Display.Node, typeof utils
 
     const onEndEvents = _.flatMap(results, (result) => result.item.onEnd).filter(Boolean) as VideoEvent[];
 
-    const hasOnEndEvent = onEndEvents.some((event) => event.type === EVENT_SEND_EVENT && event.arguments?.includes?.(ENDED_EVENT_PREFIX));
+    const hasOnEndEvent = onEndEvents.some(
+      (event) => event.type === EVENT_SEND_EVENT && event.arguments?.includes?.(ENDED_EVENT_PREFIX)
+    );
 
     if (hasOnEndEvent) {
       runtime.stack.top().setNodeID(node.nextId ?? null);

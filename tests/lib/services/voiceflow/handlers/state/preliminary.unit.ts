@@ -8,7 +8,14 @@ describe('preliminary handler unit tests', () => {
   describe('canHandle', () => {
     it('not expected request', () => {
       const runtime = { turn: { get: sinon.stub().returns(null) } };
-      expect(PreliminaryHandlerFactory({ eventHandlers: [] } as any).canHandle(null as any, runtime as any, null as any, null as any)).to.eql(false);
+      expect(
+        PreliminaryHandlerFactory({ eventHandlers: [] } as any).canHandle(
+          null as any,
+          runtime as any,
+          null as any,
+          null as any
+        )
+      ).to.eql(false);
     });
 
     it('is new stack', () => {
@@ -22,7 +29,14 @@ describe('preliminary handler unit tests', () => {
             .returns(true),
         },
       };
-      expect(PreliminaryHandlerFactory({ eventHandlers: [] } as any).canHandle(null as any, runtime as any, null as any, null as any)).to.eql(false);
+      expect(
+        PreliminaryHandlerFactory({ eventHandlers: [] } as any).canHandle(
+          null as any,
+          runtime as any,
+          null as any,
+          null as any
+        )
+      ).to.eql(false);
     });
 
     it('handler found', () => {
@@ -37,7 +51,14 @@ describe('preliminary handler unit tests', () => {
         },
       };
       const eventHandlers = [{ canHandle: sinon.stub().returns(true) }];
-      expect(PreliminaryHandlerFactory({ eventHandlers } as any).canHandle(null as any, runtime as any, null as any, null as any)).to.eql(false);
+      expect(
+        PreliminaryHandlerFactory({ eventHandlers } as any).canHandle(
+          null as any,
+          runtime as any,
+          null as any,
+          null as any
+        )
+      ).to.eql(false);
     });
 
     it('true', () => {
@@ -51,7 +72,14 @@ describe('preliminary handler unit tests', () => {
             .returns(null),
         },
       };
-      expect(PreliminaryHandlerFactory({ eventHandlers: [] } as any).canHandle(null as any, runtime as any, null as any, null as any)).to.eql(true);
+      expect(
+        PreliminaryHandlerFactory({ eventHandlers: [] } as any).canHandle(
+          null as any,
+          runtime as any,
+          null as any,
+          null as any
+        )
+      ).to.eql(true);
     });
   });
 

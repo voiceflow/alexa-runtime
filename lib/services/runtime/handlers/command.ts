@@ -11,7 +11,9 @@ import { F, T } from '@/lib/constants';
 import { IntentName, IntentRequest, RequestType } from '../types';
 import { mapSlots } from '../utils';
 
-const isPushCommand = (command: BaseNode.AnyCommonCommand): command is BaseNode.Command.Command & { diagram_id: string } => {
+const isPushCommand = (
+  command: BaseNode.AnyCommonCommand
+): command is BaseNode.Command.Command & { diagram_id: string } => {
   return !!(command as BaseNode.Command.Command).diagram_id;
 };
 
@@ -36,7 +38,9 @@ export const getCommand = (runtime: Runtime) => {
   // If Cancel Intent is not handled turn it into Stop Intent
   // This first loop is AMAZON specific, if cancel intent is not explicitly used anywhere at all, map it to stop intent
   if (intentName === IntentName.CANCEL) {
-    const found = runtime.stack.getFrames().some((frame) => frame.getCommands<AlexaNode.AnyCommand>().some(matcher(intentName)));
+    const found = runtime.stack
+      .getFrames()
+      .some((frame) => frame.getCommands<AlexaNode.AnyCommand>().some(matcher(intentName)));
 
     if (!found) {
       intentName = IntentName.STOP;
@@ -50,7 +54,8 @@ export const getCommand = (runtime: Runtime) => {
     const commands = frames[index]?.getCommands<BaseNode.AnyCommonCommand>() ?? [];
 
     for (const command of commands) {
-      const commandDiagramID = (isPushCommand(command) && command.diagram_id) || (isIntentCommand(command) && command.diagramID);
+      const commandDiagramID =
+        (isPushCommand(command) && command.diagram_id) || (isIntentCommand(command) && command.diagramID);
       if (request.diagramID && commandDiagramID && request.diagramID !== commandDiagramID) {
         continue;
       }

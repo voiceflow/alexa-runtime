@@ -12,7 +12,10 @@ describe('repeat handler', () => {
 
   describe('can handle', () => {
     it('true', () => {
-      const runtime = { turn: { get: sinon.stub().returns(intentRequest) }, storage: { get: sinon.stub().returns(BaseVersion.RepeatType.ALL) } };
+      const runtime = {
+        turn: { get: sinon.stub().returns(intentRequest) },
+        storage: { get: sinon.stub().returns(BaseVersion.RepeatType.ALL) },
+      };
       expect(repeatHandler.canHandle(runtime as any)).to.eql(true);
       expect(runtime.storage.get.args[0][0]).to.eql(S.REPEAT);
       expect(runtime.turn.get.args[0][0]).to.eql(T.REQUEST);

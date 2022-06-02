@@ -55,7 +55,12 @@ describe('adapterManager unit tests', async () => {
       const adapter = new AdapterManager(null as any, null as any);
       adapter.transformState = transformContextStub;
 
-      const input = { attributesManager: { getPersistentAttributes: sinon.stub().resolves(oldState), setPersistentAttributes: sinon.stub() } };
+      const input = {
+        attributesManager: {
+          getPersistentAttributes: sinon.stub().resolves(oldState),
+          setPersistentAttributes: sinon.stub(),
+        },
+      };
 
       await adapter.state(input as any);
       expect(input.attributesManager.getPersistentAttributes.callCount).to.eql(1);

@@ -3,7 +3,12 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import SessionEndedHandler, { ErrorType, Request, RequestReason, SessionEndedHandlerGenerator } from '@/lib/services/alexa/request/sessionEnded';
+import SessionEndedHandler, {
+  ErrorType,
+  Request,
+  RequestReason,
+  SessionEndedHandlerGenerator,
+} from '@/lib/services/alexa/request/sessionEnded';
 import log from '@/logger';
 
 describe('session ended handler unit tests', () => {
@@ -26,7 +31,10 @@ describe('session ended handler unit tests', () => {
         const handler = SessionEndedHandlerGenerator(utils as any);
 
         const output = 'output';
-        const input = { responseBuilder: { getResponse: sinon.stub().returns(output) }, requestEnvelope: { request: {} } };
+        const input = {
+          responseBuilder: { getResponse: sinon.stub().returns(output) },
+          requestEnvelope: { request: {} },
+        };
 
         expect(await handler.handle(input as any)).to.eql(output);
         expect(utils.updateRuntime.args[0][0]).to.eql(input);
@@ -44,7 +52,10 @@ describe('session ended handler unit tests', () => {
           const handler = SessionEndedHandlerGenerator(utils as any);
 
           const output = 'output';
-          const input = { responseBuilder: { getResponse: sinon.stub().returns(output) }, requestEnvelope: { request: {} } };
+          const input = {
+            responseBuilder: { getResponse: sinon.stub().returns(output) },
+            requestEnvelope: { request: {} },
+          };
 
           expect(await handler.handle(input as any)).to.eql(output);
           expect(utils.updateRuntime.args[0][0]).to.eql(input);
@@ -61,14 +72,19 @@ describe('session ended handler unit tests', () => {
           const handler = SessionEndedHandlerGenerator(utils as any);
 
           const output = 'output';
-          const input = { responseBuilder: { getResponse: sinon.stub().returns(output) }, requestEnvelope: { request: {} } };
+          const input = {
+            responseBuilder: { getResponse: sinon.stub().returns(output) },
+            requestEnvelope: { request: {} },
+          };
 
           expect(await handler.handle(input as any)).to.eql(output);
           expect(utils.updateRuntime.args[0][0]).to.eql(input);
           const fn = utils.updateRuntime.args[0][1];
 
           // assert updateRuntime callback
-          const runtime = { storage: { get: sinon.stub().returns({ playingVideos: { foo: 'bar' } }), produce: sinon.stub() } };
+          const runtime = {
+            storage: { get: sinon.stub().returns({ playingVideos: { foo: 'bar' } }), produce: sinon.stub() },
+          };
           fn(runtime);
           expect(runtime.storage.get.args).to.eql([[S.DISPLAY_INFO]]);
           const fn2 = runtime.storage.produce.args[0][0];

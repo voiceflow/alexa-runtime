@@ -21,7 +21,11 @@ export const validate = (validations: Validations) => (
   return descriptor;
 };
 
-export const factory = () => (_target: () => Middleware, _key: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
+export const factory = () => (
+  _target: () => Middleware,
+  _key: string,
+  descriptor: PropertyDescriptor
+): PropertyDescriptor => {
   descriptor.value = Object.assign(descriptor.value, { callback: true });
 
   return descriptor;

@@ -2,8 +2,15 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import { APL_INTERFACE_NAME, DOCUMENT_VIDEO_TYPE, RENDER_DOCUMENT_DIRECTIVE_TYPE } from '@/lib/services/runtime/handlers/display/constants';
-import DisplayResponseBuilder, { CommandsResponseBuilder, DocumentResponseBuilder } from '@/lib/services/runtime/handlers/display/responseBuilder';
+import {
+  APL_INTERFACE_NAME,
+  DOCUMENT_VIDEO_TYPE,
+  RENDER_DOCUMENT_DIRECTIVE_TYPE,
+} from '@/lib/services/runtime/handlers/display/constants';
+import DisplayResponseBuilder, {
+  CommandsResponseBuilder,
+  DocumentResponseBuilder,
+} from '@/lib/services/runtime/handlers/display/responseBuilder';
 import { VideoCommand, VideoCommandType } from '@/lib/services/runtime/handlers/display/types';
 
 describe('DisplayResponseBuilder unit tests', () => {
@@ -43,7 +50,10 @@ describe('DisplayResponseBuilder unit tests', () => {
 
     it('has commands', async () => {
       const commands = ['a', 'b'];
-      const runtime = { versionID: 'version-id', storage: { produce: sinon.stub(), get: sinon.stub().returns({ commands }) } };
+      const runtime = {
+        versionID: 'version-id',
+        storage: { produce: sinon.stub(), get: sinon.stub().returns({ commands }) },
+      };
       const builder = { addDirective: sinon.stub() };
       expect(await CommandsResponseBuilder(runtime as any, builder as any)).to.eql(undefined);
       expect(builder.addDirective.args).to.eql([
@@ -60,7 +70,10 @@ describe('DisplayResponseBuilder unit tests', () => {
     it('command updates playVideo', async () => {
       const clock = sinon.useFakeTimers(Date.now()); // fake Date.now
       const commands = [{ type: VideoCommandType.CONTROL_MEDIA, command: VideoCommand.PLAY, componentId: 'test' }];
-      const runtime = { versionID: 'version-id', storage: { produce: sinon.stub(), get: sinon.stub().returns({ commands }) } };
+      const runtime = {
+        versionID: 'version-id',
+        storage: { produce: sinon.stub(), get: sinon.stub().returns({ commands }) },
+      };
       const builder = { addDirective: sinon.stub() };
       expect(await CommandsResponseBuilder(runtime as any, builder as any)).to.eql(undefined);
 
@@ -121,7 +134,9 @@ describe('DisplayResponseBuilder unit tests', () => {
     it('no document.document or datasource', async () => {
       const document = { document: 'document', dataSources: null };
       const runtime = {
-        storage: { get: sinon.stub().returns({ shouldUpdate: true, currentDisplay: 'current-display', dataSource: '{var1}' }) },
+        storage: {
+          get: sinon.stub().returns({ shouldUpdate: true, currentDisplay: 'current-display', dataSource: '{var1}' }),
+        },
         variables: { getState: sinon.stub().returns({ var1: '{"invalid"}' }) },
         services: {
           multimodal: { getDisplayDocument: sinon.stub().returns(document) },

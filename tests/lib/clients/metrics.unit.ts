@@ -28,7 +28,9 @@ describe('metrics client unit tests', () => {
   it('error', async () => {
     const versionID = 'a'.repeat(18);
 
-    const fixture = await metricsAsserter.assertMetric({ expected: /^alexa_request_error_total{skill_id="a{18}"} 1 \d+$/m });
+    const fixture = await metricsAsserter.assertMetric({
+      expected: /^alexa_request_error_total{skill_id="a{18}"} 1 \d+$/m,
+    });
 
     fixture.metrics.error(versionID);
 
@@ -38,7 +40,9 @@ describe('metrics client unit tests', () => {
   it('invocation', async () => {
     const versionID = 'a'.repeat(18);
 
-    const fixture = await metricsAsserter.assertMetric({ expected: /^alexa_invocation_total{skill_id="a{18}"} 1 \d+$/m });
+    const fixture = await metricsAsserter.assertMetric({
+      expected: /^alexa_invocation_total{skill_id="a{18}"} 1 \d+$/m,
+    });
 
     fixture.metrics.invocation(versionID);
 
@@ -46,7 +50,9 @@ describe('metrics client unit tests', () => {
   });
 
   it('httpRequest', async () => {
-    const fixture = await metricsAsserter.assertMetric({ expected: /^http_request_total{operation="operation",status_code="123"} 1 \d+$/m });
+    const fixture = await metricsAsserter.assertMetric({
+      expected: /^http_request_total{operation="operation",status_code="123"} 1 \d+$/m,
+    });
 
     fixture.metrics.httpRequest('operation', 123);
 

@@ -4,7 +4,10 @@ import { AlexaRuntime } from '@/lib/services/runtime/types';
 
 import { AlexaHandlerInput } from './types';
 
-export const updateRuntime = async (input: AlexaHandlerInput, produce: (runtime: AlexaRuntime) => Promise<void> | void) => {
+export const updateRuntime = async (
+  input: AlexaHandlerInput,
+  produce: (runtime: AlexaRuntime) => Promise<void> | void
+) => {
   const { versionID, runtimeClient } = input.context;
 
   const rawState = await input.attributesManager.getPersistentAttributes();

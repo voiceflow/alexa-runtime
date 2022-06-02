@@ -40,7 +40,9 @@ export const InteractionHandler: HandlerFactory<AlexaNode.Interaction.Node, type
     // request for this turn has been processed, delete request
     const { intent } = request.payload;
 
-    const index = node.interactions.findIndex((choice) => choice.intent && utils.formatIntentName(choice.intent) === intent.name);
+    const index = node.interactions.findIndex(
+      (choice) => choice.intent && utils.formatIntentName(choice.intent) === intent.name
+    );
     const choice = node.interactions[index];
     if (choice) {
       if (choice.mappings && intent.slots) {

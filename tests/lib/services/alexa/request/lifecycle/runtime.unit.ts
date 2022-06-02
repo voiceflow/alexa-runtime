@@ -21,7 +21,10 @@ describe('runtime lifecycle unit tests', () => {
     const supportedInterfaces = 'supported-interfaces';
     const input = {
       attributesManager: { getPersistentAttributes: sinon.stub().returns(rawState) },
-      requestEnvelope: { request: null, context: { Viewport, System: { device: { supportedInterfaces }, user: { accessToken } } } },
+      requestEnvelope: {
+        request: null,
+        context: { Viewport, System: { device: { supportedInterfaces }, user: { accessToken } } },
+      },
       context: {
         versionID: 'version-id',
         runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
@@ -80,7 +83,11 @@ describe('runtime lifecycle unit tests', () => {
 
     expect(await buildRuntime(input as any)).to.eql(runtime);
     expect(input.context.runtimeClient.createRuntime.args).to.eql([
-      [input.context.versionID, rawState, { type: RequestType.EVENT, payload: { event: 'randomEvent', data: input.requestEnvelope.request } }],
+      [
+        input.context.versionID,
+        rawState,
+        { type: RequestType.EVENT, payload: { event: 'randomEvent', data: input.requestEnvelope.request } },
+      ],
     ]);
     expect(runtime.setEvent.args[0][0]).to.eql('stateDidCatch');
     expect(runtime.setEvent.args[1][0]).to.eql('handlerDidCatch');

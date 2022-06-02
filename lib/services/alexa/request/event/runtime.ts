@@ -2,7 +2,10 @@ import { BaseModels } from '@voiceflow/base-types';
 
 import { AlexaRuntime, EventRequest, RequestType } from '@/lib/services/runtime/types';
 
-export type EventCommand = BaseModels.Command<'event', { event: string; next: string | null; mappings: { path: string; var: string }[] }>;
+export type EventCommand = BaseModels.Command<
+  'event',
+  { event: string; next: string | null; mappings: { path: string; var: string }[] }
+>;
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export const getVariable = (path: string, data: any) => {

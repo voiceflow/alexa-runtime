@@ -17,7 +17,9 @@ describe('speak handler unit tests', async () => {
     });
 
     it('true', async () => {
-      expect(speakHandler.canHandle({ random_speak: ['a', 'b', 'c'] } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(
+        speakHandler.canHandle({ random_speak: ['a', 'b', 'c'] } as any, null as any, null as any, null as any)
+      ).to.eql(true);
       expect(speakHandler.canHandle({ prompt: 'false' } as any, null as any, null as any, null as any)).to.eql(true);
       expect(speakHandler.canHandle({ speak: 'hi' } as any, null as any, null as any, null as any)).to.eql(true);
     });
@@ -75,7 +77,9 @@ describe('speak handler unit tests', async () => {
       fn(draft);
 
       expect(draft[S.OUTPUT]).to.eq('previous random 1.23 or here');
-      expect(runtime.trace.addTrace.args).to.eql([[{ type: 'speak', payload: { message: 'random 1.23 or here', type: 'message' } }]]);
+      expect(runtime.trace.addTrace.args).to.eql([
+        [{ type: 'speak', payload: { message: 'random 1.23 or here', type: 'message' } }],
+      ]);
     });
 
     it('speak is not string', () => {

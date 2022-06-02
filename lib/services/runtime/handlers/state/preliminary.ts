@@ -21,7 +21,11 @@ const utilsObj = {
 export const PreliminaryHandler: HandlerFactory<BaseModels.Node<any, any>, typeof utilsObj> = (utils) => ({
   canHandle: (node, runtime, variables, program) => {
     const request = runtime.turn.get(T.REQUEST);
-    return !!request && !runtime.turn.get(T.NEW_STACK) && !utils.eventHandlers.find((h) => h.canHandle(node, runtime, variables, program));
+    return (
+      !!request &&
+      !runtime.turn.get(T.NEW_STACK) &&
+      !utils.eventHandlers.find((h) => h.canHandle(node, runtime, variables, program))
+    );
   },
   handle: (node, runtime, variables) => {
     // check if there is a command in the stack that fulfills request

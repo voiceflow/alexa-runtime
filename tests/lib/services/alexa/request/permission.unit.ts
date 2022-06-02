@@ -22,7 +22,10 @@ describe('permission handler unit test', () => {
     describe('does not enter if', () => {
       it('wrong type', async () => {
         const output = 'output';
-        const input = { requestEnvelope: { request: { type: 'random-type' } }, responseBuilder: { getResponse: sinon.stub().returns(output) } };
+        const input = {
+          requestEnvelope: { request: { type: 'random-type' } },
+          responseBuilder: { getResponse: sinon.stub().returns(output) },
+        };
         expect(await PermissionHandler.handle(input as any)).to.eql(output);
       });
 
@@ -56,7 +59,9 @@ describe('permission handler unit test', () => {
         const output = 'output';
         const permissions = [{ scope: 'p1' }, { scope: 'p2' }, {}, { scope: 'p3' }];
         const input = {
-          requestEnvelope: { request: { type: Request.PERMISSION_ACCEPTED, body: { acceptedPermissions: permissions } } },
+          requestEnvelope: {
+            request: { type: Request.PERMISSION_ACCEPTED, body: { acceptedPermissions: permissions } },
+          },
           responseBuilder: { getResponse: sinon.stub().returns(output) },
         };
         expect(await handler.handle(input as any)).to.eql(output);

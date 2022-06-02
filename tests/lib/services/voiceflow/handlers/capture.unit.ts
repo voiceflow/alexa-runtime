@@ -14,7 +14,9 @@ describe('capture handler unit tests', async () => {
     });
 
     it('true', async () => {
-      expect(CaptureHandler(null as any).canHandle({ variable: 'var1' } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(
+        CaptureHandler(null as any).canHandle({ variable: 'var1' } as any, null as any, null as any, null as any)
+      ).to.eql(true);
     });
   });
 

@@ -13,7 +13,9 @@ describe('permission card handler unit tests', () => {
     });
 
     it('true', () => {
-      expect(accountLinkingHandler.canHandle({ link_account: true } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(
+        accountLinkingHandler.canHandle({ link_account: true } as any, null as any, null as any, null as any)
+      ).to.eql(true);
     });
   });
 

@@ -2,7 +2,11 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from '@/lib/services/runtime/handlers/display/constants';
+import {
+  APL_INTERFACE_NAME,
+  ENDED_EVENT_PREFIX,
+  EVENT_SEND_EVENT,
+} from '@/lib/services/runtime/handlers/display/constants';
 import { DisplayHandler } from '@/lib/services/runtime/handlers/displayV2/index';
 
 describe('displayV2 unit tests', () => {
@@ -31,7 +35,9 @@ describe('displayV2 unit tests', () => {
       const node = { nextId: 'nextId-val' } as any;
       const runtime = { storage: { get: sinon.stub().returns({ [APL_INTERFACE_NAME]: '' }) } } as any;
       const variables = { abc: 'def' } as any;
-      const utils = { commandHandler: { canHandle: sinon.stub().returns(true), handle: sinon.stub().returns('commandHandle-ret') } } as any;
+      const utils = {
+        commandHandler: { canHandle: sinon.stub().returns(true), handle: sinon.stub().returns('commandHandle-ret') },
+      } as any;
 
       expect(await DisplayHandler(utils).handle(node, runtime, variables, null as any)).to.eql('commandHandle-ret');
       expect(runtime.storage.get.args).to.eql([[S.SUPPORTED_INTERFACES]]);
@@ -43,7 +49,9 @@ describe('displayV2 unit tests', () => {
       const node = { nextId: 'nextId-val' } as any;
       const runtime = { storage: { get: sinon.stub().returns({ [APL_INTERFACE_NAME]: undefined }) } } as any;
       const variables = { abc: 'def' } as any;
-      const utils = { commandHandler: { canHandle: sinon.stub().returns(false), handle: sinon.stub().returns('commandHandle-ret') } } as any;
+      const utils = {
+        commandHandler: { canHandle: sinon.stub().returns(false), handle: sinon.stub().returns('commandHandle-ret') },
+      } as any;
 
       expect(await DisplayHandler(utils).handle(node, runtime, variables, null as any)).to.eql('nextId-val');
       expect(runtime.storage.get.args).to.eql([[S.SUPPORTED_INTERFACES]]);
@@ -55,7 +63,9 @@ describe('displayV2 unit tests', () => {
       const node = { nextId: 'nextId-val' } as any;
       const runtime = { storage: { get: sinon.stub().returns(undefined) } } as any;
       const variables = { abc: 'def' } as any;
-      const utils = { commandHandler: { canHandle: sinon.stub().returns(false), handle: sinon.stub().returns('commandHandle-ret') } } as any;
+      const utils = {
+        commandHandler: { canHandle: sinon.stub().returns(false), handle: sinon.stub().returns('commandHandle-ret') },
+      } as any;
 
       expect(await DisplayHandler(utils).handle(node, runtime, variables, null as any)).to.eql('nextId-val');
       expect(runtime.storage.get.args).to.eql([[S.SUPPORTED_INTERFACES]]);
@@ -64,7 +74,12 @@ describe('displayV2 unit tests', () => {
     });
 
     it('works if has onEndEvent', async () => {
-      const node = { nextId: 'nextId-val', aplCommands: 'aplCommands-val', document: 'document-val', datasource: 'datasource-val' } as any;
+      const node = {
+        nextId: 'nextId-val',
+        aplCommands: 'aplCommands-val',
+        document: 'document-val',
+        datasource: 'datasource-val',
+      } as any;
       const topReturnObj = { setNodeID: sinon.stub() };
       const runtime = {
         end: sinon.stub(),
@@ -72,7 +87,10 @@ describe('displayV2 unit tests', () => {
         storage: { get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }), set: sinon.stub() },
       } as any;
       const variables = { abc: 'def', getState: sinon.stub().returns('getState-val') } as any;
-      const onEndEvents = [{ item: { onEnd: { type: EVENT_SEND_EVENT, arguments: [ENDED_EVENT_PREFIX] } } }, { item: {} }];
+      const onEndEvents = [
+        { item: { onEnd: { type: EVENT_SEND_EVENT, arguments: [ENDED_EVENT_PREFIX] } } },
+        { item: {} },
+      ];
       const utils = {
         getVariables: sinon.stub().returns('getVariables-val'),
         deepFindVideos: sinon.stub().returns(onEndEvents),
@@ -120,7 +138,10 @@ describe('displayV2 unit tests', () => {
         storage: { get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }), set: sinon.stub() },
       } as any;
       const variables = { abc: 'def', getState: sinon.stub().returns('getState-val') } as any;
-      const onEndEvents = [{ item: { onEnd: { type: EVENT_SEND_EVENT, arguments: [ENDED_EVENT_PREFIX] } } }, { item: {} }];
+      const onEndEvents = [
+        { item: { onEnd: { type: EVENT_SEND_EVENT, arguments: [ENDED_EVENT_PREFIX] } } },
+        { item: {} },
+      ];
       const utils = {
         getVariables: sinon.stub().returns('getVariables-val'),
         deepFindVideos: sinon.stub().returns(onEndEvents),
@@ -160,7 +181,12 @@ describe('displayV2 unit tests', () => {
     });
 
     it('works if has no onEndEvent', async () => {
-      const node = { nextId: 'nextId-val', aplCommands: 'aplCommands-val', document: 'document-val', datasource: 'datasource-val' } as any;
+      const node = {
+        nextId: 'nextId-val',
+        aplCommands: 'aplCommands-val',
+        document: 'document-val',
+        datasource: 'datasource-val',
+      } as any;
       const topReturnObj = { setNodeID: sinon.stub() };
       const runtime = {
         end: sinon.stub(),
@@ -208,7 +234,12 @@ describe('displayV2 unit tests', () => {
     });
 
     it('works if has no document', async () => {
-      const node = { nextId: 'nextId-val', aplCommands: 'aplCommands-val', document: '', datasource: 'datasource-val' } as any;
+      const node = {
+        nextId: 'nextId-val',
+        aplCommands: 'aplCommands-val',
+        document: '',
+        datasource: 'datasource-val',
+      } as any;
       const topReturnObj = { setNodeID: sinon.stub() };
       const runtime = {
         end: sinon.stub(),

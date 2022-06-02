@@ -26,7 +26,8 @@ export const PurchaseHandlerGenerator = (utils: typeof utilsObj): RequestHandler
   },
   async handle(input: AlexaHandlerInput) {
     const { payload, status } = input.requestEnvelope.request as interfaces.connections.ConnectionsResponse;
-    const result: false | undefined | interfaces.monetization.v1.PurchaseResult = +(status?.code || 0) < 300 && payload?.purchaseResult;
+    const result: false | undefined | interfaces.monetization.v1.PurchaseResult =
+      +(status?.code || 0) < 300 && payload?.purchaseResult;
 
     await utils.updateRuntime(input, (runtime) => {
       runtime.storage.produce<{ [S.PAYMENT]: PaymentStorage }>((draft) => {

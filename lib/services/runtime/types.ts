@@ -51,8 +51,19 @@ export interface EventRequest {
 
 export type AlexaRuntimeRequest = IntentRequest | EventRequest | undefined;
 
-export type AlexaRuntimeClient = Client<AlexaRuntimeRequest, DataAPI<AlexaProgram.Program, AlexaVersion.Version>, FullServiceMap>;
+export type AlexaRuntimeClient = Client<
+  AlexaRuntimeRequest,
+  DataAPI<AlexaProgram.Program, AlexaVersion.Version>,
+  FullServiceMap
+>;
 
-export type AlexaRuntime = Runtime<AlexaRuntimeRequest, DataAPI<AlexaProgram.Program, AlexaVersion.Version>, FullServiceMap>;
+export type AlexaRuntime = Runtime<
+  AlexaRuntimeRequest,
+  DataAPI<AlexaProgram.Program, AlexaVersion.Version>,
+  FullServiceMap
+>;
 
-export type ResponseBuilder = (runtime: AlexaRuntime, builder: ASKResponseBuilder) => void | boolean | Promise<void | boolean>;
+export type ResponseBuilder = (
+  runtime: AlexaRuntime,
+  builder: ASKResponseBuilder
+) => void | boolean | Promise<void | boolean>;
