@@ -39,11 +39,11 @@ const _deriveSeconds = (text: string, multiplier = 1): number => {
   return number * multiplier;
 };
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 export const _createReminderObject = (
   reminder: AlexaNode.Reminder.NodeReminder,
   variablesMap: Record<string, any>,
   locale: string
+  // eslint-disable-next-line sonarjs/cognitive-complexity
 ) => {
   if (reminder.type !== ReminderType.SCHEDULED_ABSOLUTE && reminder.type !== ReminderType.SCHEDULED_RELATIVE)
     throw new Error('invalid reminder type');

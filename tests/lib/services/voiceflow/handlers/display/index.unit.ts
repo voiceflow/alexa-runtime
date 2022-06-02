@@ -132,7 +132,8 @@ describe('displayHandler.unit tests', () => {
         };
         const node = { display_id: 'display-id', apl_commands: 'commands', datasource: 'random' };
         expect(await handler.handle(node as any, runtime as any, null as any, null as any)).to.eql(null);
-        expect(runtime.storage.set.args[0][1].dataSourceVariables).to.eql([]); // assert datasource with no variables in string
+        // assert datasource with no variables in string
+        expect(runtime.storage.set.args[0][1].dataSourceVariables).to.eql([]);
         expect(utils.deepFindVideos.args).to.eql([[document]]);
       });
 
