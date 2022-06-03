@@ -41,7 +41,9 @@ describe('mongo persistence unit tests', () => {
       const userID = 'user-id';
       _.set(adapter, 'idGenerator', sinon.stub().returns(userID));
 
-      await expect(adapter.saveAttributes({} as any, {} as any)).to.eventually.rejectedWith('store runtime session error');
+      await expect(adapter.saveAttributes({} as any, {} as any)).to.eventually.rejectedWith(
+        'store runtime session error'
+      );
     });
 
     it('works', async () => {

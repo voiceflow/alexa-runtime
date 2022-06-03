@@ -25,7 +25,9 @@ describe('alexa controller unit tests', () => {
 
       const req = { body: { var1: 'val1' }, params: { versionID: 'version-id' } };
       expect(await alexaController.handler(req as any)).to.eql(output);
-      expect(skill.invoke.args).to.eql([[req.body, { versionID: req.params.versionID, runtimeClient: client, api: dataAPI }]]);
+      expect(skill.invoke.args).to.eql([
+        [req.body, { versionID: req.params.versionID, runtimeClient: client, api: dataAPI }],
+      ]);
       expect(services.metrics.request.callCount).to.eql(1);
     });
   });

@@ -10,7 +10,9 @@ describe('user info handler unit test', () => {
     });
 
     it('true', () => {
-      expect(UserInfoHandler(null as any).canHandle({ permissions: {} } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(
+        UserInfoHandler(null as any).canHandle({ permissions: {} } as any, null as any, null as any, null as any)
+      ).to.eql(true);
     });
   });
 
@@ -18,12 +20,16 @@ describe('user info handler unit test', () => {
     describe('no permissions in array', () => {
       it('with success_id', async () => {
         const node = { success_id: 'success-id', permissions: [] };
-        expect(await UserInfoHandler(null as any).handle(node as any, null as any, null as any, null as any)).to.eql(node.success_id);
+        expect(await UserInfoHandler(null as any).handle(node as any, null as any, null as any, null as any)).to.eql(
+          node.success_id
+        );
       });
 
       it('without success_id', async () => {
         const node = { permissions: [] };
-        expect(await UserInfoHandler(null as any).handle(node as any, null as any, null as any, null as any)).to.eql(null);
+        expect(await UserInfoHandler(null as any).handle(node as any, null as any, null as any, null as any)).to.eql(
+          null
+        );
       });
     });
 
@@ -37,7 +43,9 @@ describe('user info handler unit test', () => {
           const runtime = 'runtime';
           const variables = 'variables';
 
-          expect(await handler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.success_id);
+          expect(await handler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(
+            node.success_id
+          );
           expect(utils.isPermissionGranted.args).to.eql([
             [node.permissions[0], runtime, variables],
             [node.permissions[1], runtime, variables],

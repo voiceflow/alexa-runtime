@@ -40,11 +40,15 @@ describe('user info utils unit test', () => {
       describe('permissions in storage is false', () => {
         it('null', async () => {
           const runtime = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns(null) } };
-          expect(await isPermissionGranted({ selected: { value: 'random' } }, runtime as any, null as any)).to.eql(false);
+          expect(await isPermissionGranted({ selected: { value: 'random' } }, runtime as any, null as any)).to.eql(
+            false
+          );
         });
         it('empty', async () => {
           const runtime = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([]) } };
-          expect(await isPermissionGranted({ selected: { value: 'random' } }, runtime as any, null as any)).to.eql(false);
+          expect(await isPermissionGranted({ selected: { value: 'random' } }, runtime as any, null as any)).to.eql(
+            false
+          );
         });
       });
     });
@@ -52,22 +56,37 @@ describe('user info utils unit test', () => {
     describe('no permissionVariable', () => {
       it('no map_to', async () => {
         const permissionValue = 'p1';
-        const runtime = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
-        expect(await isPermissionGranted({ selected: { value: permissionValue } }, runtime as any, null as any)).to.eql(false);
+        const runtime = {
+          turn: { get: sinon.stub().returns({}) },
+          storage: { get: sinon.stub().returns([permissionValue]) },
+        };
+        expect(await isPermissionGranted({ selected: { value: permissionValue } }, runtime as any, null as any)).to.eql(
+          false
+        );
       });
 
       it('no value', async () => {
         const permissionValue = 'p1';
-        const runtime = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+        const runtime = {
+          turn: { get: sinon.stub().returns({}) },
+          storage: { get: sinon.stub().returns([permissionValue]) },
+        };
         expect(
-          await isPermissionGranted({ selected: { value: permissionValue }, map_to: { value: null } } as any, runtime as any, null as any)
+          await isPermissionGranted(
+            { selected: { value: permissionValue }, map_to: { value: null } } as any,
+            runtime as any,
+            null as any
+          )
         ).to.eql(false);
       });
     });
 
     it('PERMISSIONS.NOTIFICATIONS_WRITE', async () => {
       const permissionValue = AlexaNode.PermissionType.ALEXA_DEVICES_ALL_NOTIFICATIONS_WRITE;
-      const runtime = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const runtime = {
+        turn: { get: sinon.stub().returns({}) },
+        storage: { get: sinon.stub().returns([permissionValue]) },
+      };
       const permission = { selected: { value: permissionValue } };
       expect(await isPermissionGranted(permission as any, runtime as any, null as any)).to.eql(true);
     });
@@ -75,23 +94,34 @@ describe('user info utils unit test', () => {
     it('PERMISSIONS.REMINDERS_READ_WRITE', async () => {
       const permissionValue = AlexaNode.PermissionType.ALEXA_ALERTS_REMINDERS_SKILL_READ_WRITE;
       const handlerInput = 'handler-input';
-      const runtime = { turn: { get: sinon.stub().returns(handlerInput) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const runtime = {
+        turn: { get: sinon.stub().returns(handlerInput) },
+        storage: { get: sinon.stub().returns([permissionValue]) },
+      };
       const permission = { selected: { value: permissionValue } };
       const utils = { _remindersPermissions: sinon.stub().returns(true) };
-      expect(await isPermissionGrantedGenerator(utils as any)(permission as any, runtime as any, null as any)).to.eql(true);
+      expect(await isPermissionGrantedGenerator(utils as any)(permission as any, runtime as any, null as any)).to.eql(
+        true
+      );
       expect(utils._remindersPermissions.args).to.eql([[handlerInput]]);
     });
 
     it('PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_READ', async () => {
       const permissionValue = AlexaNode.PermissionType.ALEXA_HOUSEHOLD_LISTS_READ;
-      const runtime = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const runtime = {
+        turn: { get: sinon.stub().returns({}) },
+        storage: { get: sinon.stub().returns([permissionValue]) },
+      };
       const permission = { selected: { value: permissionValue } };
       expect(await isPermissionGranted(permission as any, runtime as any, null as any)).to.eql(true);
     });
 
     it('PERMISSIONS.ALEXA_HOUSEHOLD_LISTS_WRITE', async () => {
       const permissionValue = AlexaNode.PermissionType.ALEXA_HOUSEHOLD_LISTS_WRITE;
-      const runtime = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const runtime = {
+        turn: { get: sinon.stub().returns({}) },
+        storage: { get: sinon.stub().returns([permissionValue]) },
+      };
       const permission = { selected: { value: permissionValue } };
       expect(await isPermissionGranted(permission as any, runtime as any, null as any)).to.eql(true);
     });
@@ -102,7 +132,10 @@ describe('user info utils unit test', () => {
 
       const permissionValue = AlexaNode.PermissionType.UNOFFICIAL_ISP;
       const handlerInput = 'handler-input';
-      const runtime = { turn: { get: sinon.stub().returns(handlerInput) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const runtime = {
+        turn: { get: sinon.stub().returns(handlerInput) },
+        storage: { get: sinon.stub().returns([permissionValue]) },
+      };
       const permission = { selected: { value: permissionValue } };
       expect(await fn(permission as any, runtime as any, null as any)).to.eql(true);
       expect(utils._ispPermission.args).to.eql([[handlerInput]]);
@@ -125,14 +158,23 @@ describe('user info utils unit test', () => {
           .withArgs(S.LOCALE)
           .returns(locale);
         const runtime = { turn: { get: sinon.stub().returns(handlerInput) }, storage: { get: storageGet } };
-        const permission = { selected: { value: permissionValue }, map_to: { value: permissionVariable }, product: { value: 'value' } };
+        const permission = {
+          selected: { value: permissionValue },
+          map_to: { value: permissionVariable },
+          product: { value: 'value' },
+        };
         expect(await fn(permission as any, runtime as any, variables as any)).to.eql(true);
-        expect(utils._productPermission.args).to.eql([[handlerInput, permission, permissionVariable, runtime.storage.get(S.LOCALE), variables]]);
+        expect(utils._productPermission.args).to.eql([
+          [handlerInput, permission, permissionVariable, runtime.storage.get(S.LOCALE), variables],
+        ]);
       });
 
       it('no product value', async () => {
         const permissionValue = AlexaNode.PermissionType.UNOFFICIAL_PRODUCT;
-        const runtime = { turn: { get: sinon.stub().returns({}) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+        const runtime = {
+          turn: { get: sinon.stub().returns({}) },
+          storage: { get: sinon.stub().returns([permissionValue]) },
+        };
         const permission = { selected: { value: permissionValue } };
         expect(await isPermissionGranted(permission as any, runtime as any, null as any)).to.eql(false);
       });
@@ -167,7 +209,10 @@ describe('user info utils unit test', () => {
       const permissionVariable = 'permission-variable';
       const handlerInput = 'handler-input';
       const variables = 'variables';
-      const runtime = { turn: { get: sinon.stub().returns(handlerInput) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const runtime = {
+        turn: { get: sinon.stub().returns(handlerInput) },
+        storage: { get: sinon.stub().returns([permissionValue]) },
+      };
       const permission = { selected: { value: permissionValue }, map_to: { value: permissionVariable } };
       expect(await fn(permission as any, runtime as any, variables as any)).to.eql(true);
       expect(utils._personIdReadPermission.args).to.eql([[handlerInput, permissionVariable, variables]]);
@@ -181,7 +226,10 @@ describe('user info utils unit test', () => {
       const permissionVariable = 'permission-variable';
       const handlerInput = 'handler-input';
       const variables = 'variables';
-      const runtime = { turn: { get: sinon.stub().returns(handlerInput) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const runtime = {
+        turn: { get: sinon.stub().returns(handlerInput) },
+        storage: { get: sinon.stub().returns([permissionValue]) },
+      };
       const permission = { selected: { value: permissionValue }, map_to: { value: permissionVariable } };
       expect(await fn(permission as any, runtime as any, variables as any)).to.eql(true);
       expect(utils._profileEmailReadPermission.args).to.eql([[handlerInput, permissionVariable, variables]]);
@@ -195,7 +243,10 @@ describe('user info utils unit test', () => {
       const permissionVariable = 'permission-variable';
       const handlerInput = 'handler-input';
       const variables = 'variables';
-      const runtime = { turn: { get: sinon.stub().returns(handlerInput) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const runtime = {
+        turn: { get: sinon.stub().returns(handlerInput) },
+        storage: { get: sinon.stub().returns([permissionValue]) },
+      };
       const permission = { selected: { value: permissionValue }, map_to: { value: permissionVariable } };
       expect(await fn(permission as any, runtime as any, variables as any)).to.eql(true);
       expect(utils._profileNameReadPermission.args).to.eql([[handlerInput, permissionVariable, variables]]);
@@ -209,7 +260,10 @@ describe('user info utils unit test', () => {
       const permissionVariable = 'permission-variable';
       const handlerInput = 'handler-input';
       const variables = 'variables';
-      const runtime = { turn: { get: sinon.stub().returns(handlerInput) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const runtime = {
+        turn: { get: sinon.stub().returns(handlerInput) },
+        storage: { get: sinon.stub().returns([permissionValue]) },
+      };
       const permission = { selected: { value: permissionValue }, map_to: { value: permissionVariable } };
       expect(await fn(permission as any, runtime as any, variables as any)).to.eql(true);
       expect(utils._profileNumberReadPermission.args).to.eql([[handlerInput, permissionVariable, variables]]);
@@ -223,7 +277,10 @@ describe('user info utils unit test', () => {
       const permissionVariable = 'permission-variable';
       const handlerInput = 'handler-input';
       const variables = 'variables';
-      const runtime = { turn: { get: sinon.stub().returns(handlerInput) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const runtime = {
+        turn: { get: sinon.stub().returns(handlerInput) },
+        storage: { get: sinon.stub().returns([permissionValue]) },
+      };
       const permission = { selected: { value: permissionValue }, map_to: { value: permissionVariable } };
       expect(await fn(permission as any, runtime as any, variables as any)).to.eql(true);
       expect(utils._geolocationRead.args).to.eql([[handlerInput, permissionVariable, variables]]);
@@ -232,10 +289,15 @@ describe('user info utils unit test', () => {
     it('PERMISSIONS.PAYMENTS_AUTO_PAY_CONSENT', async () => {
       const permissionValue = AlexaNode.PermissionType.PAYMENTS_AUTO_PAY_CONSENT;
       const handlerInput = 'input';
-      const runtime = { turn: { get: sinon.stub().returns(handlerInput) }, storage: { get: sinon.stub().returns([permissionValue]) } };
+      const runtime = {
+        turn: { get: sinon.stub().returns(handlerInput) },
+        storage: { get: sinon.stub().returns([permissionValue]) },
+      };
       const permission = { selected: { value: permissionValue } };
       const utils = { _amazonPayRead: sinon.stub().returns(true) };
-      expect(await isPermissionGrantedGenerator(utils as any)(permission as any, runtime as any, null as any)).to.eql(true);
+      expect(await isPermissionGrantedGenerator(utils as any)(permission as any, runtime as any, null as any)).to.eql(
+        true
+      );
       expect(utils._amazonPayRead.args).to.eql([[handlerInput]]);
     });
   });
@@ -264,7 +326,9 @@ describe('user info utils unit test', () => {
     });
 
     it('no person', () => {
-      expect(_personIdReadPermission({ requestEnvelope: { context: { System: {} } } } as any, null as any, null as any)).to.eql(false);
+      expect(
+        _personIdReadPermission({ requestEnvelope: { context: { System: {} } } } as any, null as any, null as any)
+      ).to.eql(false);
     });
 
     it('no permissionVariable', () => {
@@ -359,7 +423,9 @@ describe('user info utils unit test', () => {
     it('no permissionVariable', async () => {
       const number = 'user number';
       const getProfileMobileNumber = sinon.stub().resolves(number);
-      const handlerInput = { serviceClientFactory: { getUpsServiceClient: sinon.stub().returns({ getProfileMobileNumber }) } };
+      const handlerInput = {
+        serviceClientFactory: { getUpsServiceClient: sinon.stub().returns({ getProfileMobileNumber }) },
+      };
       expect(await _profileNumberReadPermission(handlerInput as any, null as any, null as any)).to.eql(true);
     });
 
@@ -367,20 +433,28 @@ describe('user info utils unit test', () => {
       it('number is not object', async () => {
         const number = 'user number';
         const getProfileMobileNumber = sinon.stub().resolves(number);
-        const handlerInput = { serviceClientFactory: { getUpsServiceClient: sinon.stub().returns({ getProfileMobileNumber }) } };
+        const handlerInput = {
+          serviceClientFactory: { getUpsServiceClient: sinon.stub().returns({ getProfileMobileNumber }) },
+        };
         const permissionVariable = 'permission-variable';
         const variables = { set: sinon.stub() };
-        expect(await _profileNumberReadPermission(handlerInput as any, permissionVariable, variables as any)).to.eql(true);
+        expect(await _profileNumberReadPermission(handlerInput as any, permissionVariable, variables as any)).to.eql(
+          true
+        );
         expect(variables.set.args).to.eql([[permissionVariable, number]]);
       });
 
       it('number is null', async () => {
         const number = null;
         const getProfileMobileNumber = sinon.stub().resolves(number);
-        const handlerInput = { serviceClientFactory: { getUpsServiceClient: sinon.stub().returns({ getProfileMobileNumber }) } };
+        const handlerInput = {
+          serviceClientFactory: { getUpsServiceClient: sinon.stub().returns({ getProfileMobileNumber }) },
+        };
         const permissionVariable = 'permission-variable';
         const variables = { set: sinon.stub() };
-        expect(await _profileNumberReadPermission(handlerInput as any, permissionVariable, variables as any)).to.eql(true);
+        expect(await _profileNumberReadPermission(handlerInput as any, permissionVariable, variables as any)).to.eql(
+          true
+        );
         expect(variables.set.args).to.eql([[permissionVariable, number]]);
       });
 
@@ -388,10 +462,14 @@ describe('user info utils unit test', () => {
         const number = { countryCode: '+1', phoneNumber: '123-456-6789' };
 
         const getProfileMobileNumber = sinon.stub().resolves(number);
-        const handlerInput = { serviceClientFactory: { getUpsServiceClient: sinon.stub().returns({ getProfileMobileNumber }) } };
+        const handlerInput = {
+          serviceClientFactory: { getUpsServiceClient: sinon.stub().returns({ getProfileMobileNumber }) },
+        };
         const permissionVariable = 'permission-variable';
         const variables = { set: sinon.stub() };
-        expect(await _profileNumberReadPermission(handlerInput as any, permissionVariable, variables as any)).to.eql(true);
+        expect(await _profileNumberReadPermission(handlerInput as any, permissionVariable, variables as any)).to.eql(
+          true
+        );
         expect(variables.set.args).to.eql([[permissionVariable, `${number.countryCode}${number.phoneNumber}`]]);
       });
     });
@@ -400,7 +478,11 @@ describe('user info utils unit test', () => {
   describe('_geolocationRead', () => {
     it('no permissions', async () => {
       expect(
-        await _geolocationRead({ requestEnvelope: { context: { System: { user: { permissions: null } } } } } as any, null as any, null as any)
+        await _geolocationRead(
+          { requestEnvelope: { context: { System: { user: { permissions: null } } } } } as any,
+          null as any,
+          null as any
+        )
       ).to.eql(false);
     });
 
@@ -419,7 +501,9 @@ describe('user info utils unit test', () => {
         requestEnvelope: {
           context: {
             Geolocation: null,
-            System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
+            System: {
+              user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } },
+            },
           },
         },
       };
@@ -433,7 +517,9 @@ describe('user info utils unit test', () => {
         requestEnvelope: {
           context: {
             Geolocation: { locationServices: null },
-            System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
+            System: {
+              user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } },
+            },
           },
         },
       };
@@ -448,7 +534,9 @@ describe('user info utils unit test', () => {
           requestEnvelope: {
             context: {
               Geolocation: { locationServices: { access: 'random' } },
-              System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
+              System: {
+                user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } },
+              },
             },
           },
         };
@@ -461,7 +549,9 @@ describe('user info utils unit test', () => {
           requestEnvelope: {
             context: {
               Geolocation: { locationServices: { access: 'ENABLED', status: 'random' } },
-              System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
+              System: {
+                user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } },
+              },
             },
           },
         };
@@ -473,7 +563,9 @@ describe('user info utils unit test', () => {
           requestEnvelope: {
             context: {
               Geolocation: { locationServices: { access: 'ENABLED', status: 'RUNNING' } },
-              System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
+              System: {
+                user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } },
+              },
             },
           },
         };
@@ -489,7 +581,9 @@ describe('user info utils unit test', () => {
             requestEnvelope: {
               context: {
                 Geolocation: geoObject,
-                System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
+                System: {
+                  user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } },
+                },
               },
             },
           };
@@ -505,7 +599,9 @@ describe('user info utils unit test', () => {
             requestEnvelope: {
               context: {
                 Geolocation: geoObject,
-                System: { user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } } },
+                System: {
+                  user: { permissions: { scopes: { 'alexa::devices:all:geolocation:read': { status: 'GRANTED' } } } },
+                },
               },
             },
           };
@@ -552,7 +648,9 @@ describe('user info utils unit test', () => {
       const _ispPermission = _ispPermissionGenerator(apiCall);
       const handlerInput = 'input';
       expect(await _ispPermission(handlerInput as any)).to.eql(true);
-      expect(apiCall.args).to.eql([[handlerInput, '/v1/users/~current/skills/~current/settings/voicePurchasing.enabled']]);
+      expect(apiCall.args).to.eql([
+        [handlerInput, '/v1/users/~current/skills/~current/settings/voicePurchasing.enabled'],
+      ]);
     });
 
     describe('false', () => {
@@ -577,83 +675,145 @@ describe('user info utils unit test', () => {
     });
 
     it('no product', async () => {
-      expect(await _productPermission(null as any, { product: null } as any, null as any, null as any, null as any)).to.eql(false);
+      expect(
+        await _productPermission(null as any, { product: null } as any, null as any, null as any, null as any)
+      ).to.eql(false);
     });
 
     it('no product value', async () => {
-      expect(await _productPermission(null as any, { product: { value: null } } as any, null as any, null as any, null as any)).to.eql(false);
+      expect(
+        await _productPermission(
+          null as any,
+          { product: { value: null } } as any,
+          null as any,
+          null as any,
+          null as any
+        )
+      ).to.eql(false);
     });
 
     it('no factory', async () => {
-      expect(await _productPermission({} as any, { product: { value: 'value' } } as any, null as any, null as any, null as any)).to.eql(false);
+      expect(
+        await _productPermission(
+          {} as any,
+          { product: { value: 'value' } } as any,
+          null as any,
+          null as any,
+          null as any
+        )
+      ).to.eql(false);
     });
 
     it('no result', async () => {
       const getInSkillProduct = sinon.stub().resolves(null);
-      const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };
+      const handlerInput = {
+        serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) },
+      };
       const productValue = 'product-value';
       const permission = { product: { value: productValue } };
       const locale = 'locale';
-      expect(await _productPermission(handlerInput as any, permission as any, null as any, locale, null as any)).to.eql(false);
+      expect(await _productPermission(handlerInput as any, permission as any, null as any, locale, null as any)).to.eql(
+        false
+      );
       expect(getInSkillProduct.args).to.eql([[locale, productValue]]);
     });
 
     it('getInSkillProduct throws', async () => {
       const getInSkillProduct = sinon.stub().throws();
-      const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };
+      const handlerInput = {
+        serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) },
+      };
       const productValue = 'product-value';
       const permission = { product: { value: productValue } };
       const locale = 'locale';
-      expect(await _productPermission(handlerInput as any, permission as any, null as any, locale, null as any)).to.eql(false);
+      expect(await _productPermission(handlerInput as any, permission as any, null as any, locale, null as any)).to.eql(
+        false
+      );
     });
 
     it('result entitled and entitlementReason wrong', async () => {
       const getInSkillProduct = sinon.stub().resolves({ entitled: 'random', entitlementReason: 'random' });
-      const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };
+      const handlerInput = {
+        serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) },
+      };
       const productValue = 'product-value';
       const permission = { product: { value: productValue } };
       const locale = 'locale';
-      expect(await _productPermission(handlerInput as any, permission as any, null as any, locale, null as any)).to.eql(false);
+      expect(await _productPermission(handlerInput as any, permission as any, null as any, locale, null as any)).to.eql(
+        false
+      );
       expect(getInSkillProduct.args).to.eql([[locale, productValue]]);
     });
 
     it('result type not CONSUMABLE', async () => {
-      const getInSkillProduct = sinon.stub().resolves({ entitled: PRODUCT.ENTITLED, entitlementReason: PRODUCT.AUTO_ENTITLED, type: 'random' });
-      const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };
+      const getInSkillProduct = sinon
+        .stub()
+        .resolves({ entitled: PRODUCT.ENTITLED, entitlementReason: PRODUCT.AUTO_ENTITLED, type: 'random' });
+      const handlerInput = {
+        serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) },
+      };
       const productValue = 'product-value';
       const permission = { product: { value: productValue } };
       const locale = 'locale';
-      expect(await _productPermission(handlerInput as any, permission as any, null as any, locale, null as any)).to.eql(true);
+      expect(await _productPermission(handlerInput as any, permission as any, null as any, locale, null as any)).to.eql(
+        true
+      );
       expect(getInSkillProduct.args).to.eql([[locale, productValue]]);
     });
 
     describe('result type CONSUMABLE and permissionValue', async () => {
       it('entitlementReason is PRODUCT.AUTO_ENTITLED', async () => {
-        const getInSkillProduct = sinon
-          .stub()
-          .resolves({ entitled: PRODUCT.ENTITLED, entitlementReason: PRODUCT.AUTO_ENTITLED, type: PRODUCT.CONSUMABLE, activeEntitlementCount: 0 });
-        const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };
+        const getInSkillProduct = sinon.stub().resolves({
+          entitled: PRODUCT.ENTITLED,
+          entitlementReason: PRODUCT.AUTO_ENTITLED,
+          type: PRODUCT.CONSUMABLE,
+          activeEntitlementCount: 0,
+        });
+        const handlerInput = {
+          serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) },
+        };
         const productValue = 'product-value';
         const permission = { product: { value: productValue } };
         const locale = 'locale';
         const permissionVariable = 'permission-value';
         const variables = { set: sinon.stub() };
-        expect(await _productPermission(handlerInput as any, permission as any, permissionVariable as any, locale, variables as any)).to.eql(true);
+        expect(
+          await _productPermission(
+            handlerInput as any,
+            permission as any,
+            permissionVariable as any,
+            locale,
+            variables as any
+          )
+        ).to.eql(true);
         expect(variables.set.args).to.eql([[permissionVariable, 100]]);
       });
 
       it('entitlementReason is not PRODUCT.AUTO_ENTITLED', async () => {
         const count = 5;
-        const getInSkillProduct = sinon
-          .stub()
-          .resolves({ entitled: PRODUCT.ENTITLED, entitlementReason: 'random', type: PRODUCT.CONSUMABLE, activeEntitlementCount: count });
-        const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };
+        const getInSkillProduct = sinon.stub().resolves({
+          entitled: PRODUCT.ENTITLED,
+          entitlementReason: 'random',
+          type: PRODUCT.CONSUMABLE,
+          activeEntitlementCount: count,
+        });
+        const handlerInput = {
+          serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) },
+        };
         const productValue = 'product-value';
         const permission = { product: { value: productValue } };
         const locale = 'locale';
         const permissionVariable = 'permission-value';
         const variables = { set: sinon.stub() };
-        expect(await _productPermission(handlerInput as any, permission as any, permissionVariable as any, locale, variables as any)).to.eql(true);
+        expect(
+          await _productPermission(
+            handlerInput as any,
+            permission as any,
+            permissionVariable as any,
+            locale,
+            variables as any
+          )
+        ).to.eql(true);
         expect(variables.set.args).to.eql([[permissionVariable, count]]);
       });
     });
@@ -661,31 +821,45 @@ describe('user info utils unit test', () => {
     describe('ISP if node', () => {
       it('transaction set to 0', async () => {
         const getInSkillProduct = sinon.stub().resolves(null);
-        const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };
+        const handlerInput = {
+          serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) },
+        };
         const transactionValue = 'transaction-value';
         const permission = { product: { value: 'value' }, transaction: { value: transactionValue } };
         const variables = { set: sinon.stub() };
-        expect(await _productPermission(handlerInput as any, permission as any, null as any, null as any, variables as any)).to.eql(false);
+        expect(
+          await _productPermission(handlerInput as any, permission as any, null as any, null as any, variables as any)
+        ).to.eql(false);
         expect(variables.set.args).to.eql([[transactionValue, 0]]);
       });
 
       it('transaction set to APPROVED_BY_PARENT', async () => {
-        const getInSkillProduct = sinon.stub().resolves({ entitlementReason: PRODUCT.PURCHASED, entitled: PRODUCT.ENTITLED });
-        const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };
+        const getInSkillProduct = sinon
+          .stub()
+          .resolves({ entitlementReason: PRODUCT.PURCHASED, entitled: PRODUCT.ENTITLED });
+        const handlerInput = {
+          serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) },
+        };
         const transactionValue = 'transaction-value';
         const permission = { product: { value: 'value' }, transaction: { value: transactionValue } };
         const variables = { set: sinon.stub() };
-        expect(await _productPermission(handlerInput as any, permission as any, null as any, null as any, variables as any)).to.eql(true);
+        expect(
+          await _productPermission(handlerInput as any, permission as any, null as any, null as any, variables as any)
+        ).to.eql(true);
         expect(variables.set.args).to.eql([[transactionValue, 'APPROVED_BY_PARENT']]);
       });
 
       it('transaction set to FTU', async () => {
         const getInSkillProduct = sinon.stub().resolves({ entitlementReason: PRODUCT.AUTO_ENTITLED });
-        const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };
+        const handlerInput = {
+          serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) },
+        };
         const transactionValue = 'transaction-value';
         const permission = { product: { value: 'value' }, transaction: { value: transactionValue } };
         const variables = { set: sinon.stub() };
-        expect(await _productPermission(handlerInput as any, permission as any, null as any, null as any, variables as any)).to.eql(true);
+        expect(
+          await _productPermission(handlerInput as any, permission as any, null as any, null as any, variables as any)
+        ).to.eql(true);
         expect(variables.set.args).to.eql([[transactionValue, 'FTU']]);
       });
 
@@ -695,11 +869,15 @@ describe('user info utils unit test', () => {
           const fn = _productPermissionGenerator(apiCall);
 
           const getInSkillProduct = sinon.stub().resolves({ purchasable: PRODUCT.NOT_PURCHASABLE });
-          const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };
+          const handlerInput = {
+            serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) },
+          };
           const transactionValue = 'transaction-value';
           const permission = { product: { value: 'value' }, transaction: { value: transactionValue } };
           const variables = { set: sinon.stub() };
-          expect(await fn(handlerInput as any, permission as any, null as any, null as any, variables as any)).to.eql(false);
+          expect(await fn(handlerInput as any, permission as any, null as any, null as any, variables as any)).to.eql(
+            false
+          );
           expect(variables.set.args).to.eql([[transactionValue, 0]]);
         });
 
@@ -718,11 +896,15 @@ describe('user info utils unit test', () => {
           const fn = _productPermissionGenerator(apiCall);
 
           const getInSkillProduct = sinon.stub().resolves({ purchasable: PRODUCT.NOT_PURCHASABLE });
-          const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };
+          const handlerInput = {
+            serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) },
+          };
           const transactionValue = 'transaction-value';
           const permission = { product: { value: productValue }, transaction: { value: transactionValue } };
           const variables = { set: sinon.stub() };
-          expect(await fn(handlerInput as any, permission as any, null as any, null as any, variables as any)).to.eql(false);
+          expect(await fn(handlerInput as any, permission as any, null as any, null as any, variables as any)).to.eql(
+            false
+          );
           expect(variables.set.args).to.eql([[transactionValue, status]]);
         });
 
@@ -739,11 +921,15 @@ describe('user info utils unit test', () => {
           const fn = _productPermissionGenerator(apiCall);
 
           const getInSkillProduct = sinon.stub().resolves({ purchasable: PRODUCT.NOT_PURCHASABLE });
-          const handlerInput = { serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) } };
+          const handlerInput = {
+            serviceClientFactory: { getMonetizationServiceClient: sinon.stub().returns({ getInSkillProduct }) },
+          };
           const transactionValue = 'transaction-value';
           const permission = { product: { value: 'value' }, transaction: { value: transactionValue } };
           const variables = { set: sinon.stub() };
-          expect(await fn(handlerInput as any, permission as any, null as any, null as any, variables as any)).to.eql(false);
+          expect(await fn(handlerInput as any, permission as any, null as any, null as any, variables as any)).to.eql(
+            false
+          );
           expect(variables.set.args).to.eql([[transactionValue, 0]]);
         });
       });
@@ -753,7 +939,11 @@ describe('user info utils unit test', () => {
   describe('_amazonPayRead', () => {
     it('true', async () => {
       const handlerInput = {
-        requestEnvelope: { context: { System: { user: { permissions: { scopes: { 'payments:autopay_consent': { status: 'GRANTED' } } } } } } },
+        requestEnvelope: {
+          context: {
+            System: { user: { permissions: { scopes: { 'payments:autopay_consent': { status: 'GRANTED' } } } } },
+          },
+        },
       };
 
       expect(await _amazonPayRead(handlerInput as any)).to.eql(true);
@@ -762,7 +952,11 @@ describe('user info utils unit test', () => {
     it('false', async () => {
       const handlerInput = {
         requestEnvelope: {
-          context: { System: { user: { permissions: { scopes: { 'payments:autopay_consent': { status: 'some other status' } } } } } },
+          context: {
+            System: {
+              user: { permissions: { scopes: { 'payments:autopay_consent': { status: 'some other status' } } } },
+            },
+          },
         },
       };
 

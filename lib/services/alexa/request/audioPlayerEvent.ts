@@ -70,7 +70,10 @@ export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): Reques
         } else if (streamPlay.action === StreamAction.START && !storage.get(S.STREAM_TEMP)) {
           // check for next stream
           const tempRuntime = runtimeClient.createRuntime(versionID, rawState as State);
-          tempRuntime.storage.set(S.STREAM_PLAY, { ...tempRuntime.storage.get<StreamPlay>(S.STREAM_PLAY), action: StreamAction.NEXT });
+          tempRuntime.storage.set(S.STREAM_PLAY, {
+            ...tempRuntime.storage.get<StreamPlay>(S.STREAM_PLAY),
+            action: StreamAction.NEXT,
+          });
 
           await utils.update(tempRuntime);
 
@@ -81,19 +84,35 @@ export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): Reques
               tempRuntime.storage.produce((draft: any) => {
                 draft[S.STREAM_PLAY].token = token;
               });
-              builder.addAudioPlayerPlayDirective(AudioDirective.ENQUEUE, url, token, 0, storage.get<StreamPlay>(S.STREAM_PLAY)!.token, metaData);
+              builder.addAudioPlayerPlayDirective(
+                AudioDirective.ENQUEUE,
+                url,
+                token,
+                0,
+                storage.get<StreamPlay>(S.STREAM_PLAY)!.token,
+                metaData
+              );
             }
             storage.set(S.STREAM_TEMP, tempRuntime.getRawState());
           }
         } else if (streamPlay.action === StreamAction.RESUME && storage.get(S.STREAM_TEMP)) {
           // resume with next stream present
-          const { url, token, metaData } = utils._streamMetaData(storage.get<{ [S.STREAM_PLAY]: StreamPlay }>(S.STREAM_TEMP)![S.STREAM_PLAY]);
+          const { url, token, metaData } = utils._streamMetaData(
+            storage.get<{ [S.STREAM_PLAY]: StreamPlay }>(S.STREAM_TEMP)![S.STREAM_PLAY]
+          );
 
           if (url && token) {
             storage.produce((draft: any) => {
               draft[S.STREAM_TEMP][S.STREAM_PLAY].token = token;
             });
-            builder.addAudioPlayerPlayDirective(AudioDirective.ENQUEUE, url, token, 0, storage.get<StreamPlay>(S.STREAM_PLAY)!.token, metaData);
+            builder.addAudioPlayerPlayDirective(
+              AudioDirective.ENQUEUE,
+              url,
+              token,
+              0,
+              storage.get<StreamPlay>(S.STREAM_PLAY)!.token,
+              metaData
+            );
           }
         }
         break;

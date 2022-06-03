@@ -13,7 +13,11 @@ const EventHandler: ContextRequestHandler = {
     const request = input.requestEnvelope.request as IntentRequest;
     const displayInfo = runtime.storage.get(S.DISPLAY_INFO) as DisplayInfo | undefined;
 
-    return !!displayInfo && Object.keys(displayInfo.playingVideos).length > 0 && MEDIA_CONTROL_INTENTS.has(request.intent.name as IntentName);
+    return (
+      !!displayInfo &&
+      Object.keys(displayInfo.playingVideos).length > 0 &&
+      MEDIA_CONTROL_INTENTS.has(request.intent.name as IntentName)
+    );
   },
   async handle(input, runtime) {
     const request = input.requestEnvelope.request as IntentRequest;

@@ -5,6 +5,16 @@ module.exports = {
       files: ['*.ts'],
       extends: ['@voiceflow/eslint-config/typescript'],
       rules: {
+        'max-len': [
+          'error',
+          {
+            code: 120,
+            ignoreUrls: true,
+            ignoreStrings: true,
+            ignoreTemplateLiterals: true,
+            ignoreRegExpLiterals: true,
+          },
+        ],
         'no-underscore-dangle': 'off',
         'no-secrets/no-secrets': 'off',
         'no-param-reassign': 'off',

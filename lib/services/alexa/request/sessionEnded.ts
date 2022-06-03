@@ -59,7 +59,12 @@ export const SessionEndedHandlerGenerator = (utils: typeof utilsObj): RequestHan
           })}`
         );
       } else if (request.reason === RequestReason.ERROR) {
-        utils.log.warn(`[app] [runtime] session ended ${utils.log.vars({ versionID: runtime.versionID, error: JSON.stringify(request.error) })}`);
+        utils.log.warn(
+          `[app] [runtime] session ended ${utils.log.vars({
+            versionID: runtime.versionID,
+            error: JSON.stringify(request.error),
+          })}`
+        );
       }
 
       const displayInfo = runtime.storage.get<DisplayInfo | undefined>(S.DISPLAY_INFO);

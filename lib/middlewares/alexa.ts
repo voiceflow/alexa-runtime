@@ -18,7 +18,9 @@ class AlexaMiddleware extends AbstractMiddleware {
       try {
         req.body = JSON.parse(req.body);
       } catch (error) {
-        log.debug(`[http] [${this.constructor.name}] failed to parse JSON from body ${log.vars({ body: req.body, error })}`);
+        log.debug(
+          `[http] [${this.constructor.name}] failed to parse JSON from body ${log.vars({ body: req.body, error })}`
+        );
         return res.status(400).json({ status: 'failure', reason: error.message });
       }
 
@@ -35,7 +37,9 @@ class AlexaMiddleware extends AbstractMiddleware {
           })
         );
       } catch (error) {
-        log.debug(`[http] [${this.constructor.name}] request verification failed ${log.vars({ body: req.body, error })}`);
+        log.debug(
+          `[http] [${this.constructor.name}] request verification failed ${log.vars({ body: req.body, error })}`
+        );
         return res.status(400).json({ status: 'failure', reason: error.message });
       }
 

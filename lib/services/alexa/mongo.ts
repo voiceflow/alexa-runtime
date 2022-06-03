@@ -23,7 +23,9 @@ class MongoPersistenceAdapter implements PersistenceAdapter {
 
   async getAttributes(requestEnvelope: RequestEnvelope): Promise<Record<string, any>> {
     const userId = this.idGenerator(requestEnvelope);
-    const session = await this.mongo.db.collection(this.collectionName).findOne<{ attributes: Record<string, any> }>({ id: userId });
+    const session = await this.mongo.db
+      .collection(this.collectionName)
+      .findOne<{ attributes: Record<string, any> }>({ id: userId });
     return session?.attributes || {};
   }
 
@@ -31,7 +33,9 @@ class MongoPersistenceAdapter implements PersistenceAdapter {
     const userId = this.idGenerator(requestEnvelope);
     const {
       result: { ok },
-    } = await this.mongo.db.collection(this.collectionName).updateOne({ id: userId }, { $set: { id: userId, attributes } }, { upsert: true });
+    } = await this.mongo.db
+      .collection(this.collectionName)
+      .updateOne({ id: userId }, { $set: { id: userId, attributes } }, { upsert: true });
 
     if (!ok) {
       throw Error('store runtime session error');

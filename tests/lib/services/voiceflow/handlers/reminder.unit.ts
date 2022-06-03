@@ -12,7 +12,9 @@ describe('reminder handler unit test', () => {
     });
 
     it('true', () => {
-      expect(ReminderHandler(null as any).canHandle({ reminder: {} } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(
+        ReminderHandler(null as any).canHandle({ reminder: {} } as any, null as any, null as any, null as any)
+      ).to.eql(true);
     });
   });
 
@@ -22,7 +24,9 @@ describe('reminder handler unit test', () => {
       const runtime = { turn: { get: sinon.stub().returns(input) } };
 
       const node = { fail_id: 'fail-id' };
-      expect(await ReminderHandler(null as any).handle(node as any, runtime as any, null as any, null as any)).to.eql(node.fail_id);
+      expect(await ReminderHandler(null as any).handle(node as any, runtime as any, null as any, null as any)).to.eql(
+        node.fail_id
+      );
       expect(runtime.turn.get.args).to.eql([[T.HANDLER_INPUT]]);
     });
 
@@ -31,7 +35,9 @@ describe('reminder handler unit test', () => {
       const runtime = { turn: { get: sinon.stub().returns(input) } };
 
       const node = { fail_id: 'fail-id' };
-      expect(await ReminderHandler(null as any).handle(node as any, runtime as any, null as any, null as any)).to.eql(node.fail_id);
+      expect(await ReminderHandler(null as any).handle(node as any, runtime as any, null as any, null as any)).to.eql(
+        node.fail_id
+      );
     });
 
     it('works correctly', async () => {
@@ -69,7 +75,9 @@ describe('reminder handler unit test', () => {
 
   describe('_createReminderObject', () => {
     it('wrong type', async () => {
-      expect(() => _createReminderObject({ type: 'random' } as any, null as any, null as any)).to.throw('invalid reminder type');
+      expect(() => _createReminderObject({ type: 'random' } as any, null as any, null as any)).to.throw(
+        'invalid reminder type'
+      );
     });
 
     describe('correct type', () => {
@@ -96,7 +104,8 @@ describe('reminder handler unit test', () => {
             pushNotification: { status: 'ENABLED' },
             trigger: {
               type: reminder.type,
-              offsetInSeconds: variablesMap.hours * 60 * 60 + parseInt(reminder.time.m, 10) * 60 + parseInt(reminder.time.s, 10),
+              offsetInSeconds:
+                variablesMap.hours * 60 * 60 + parseInt(reminder.time.m, 10) * 60 + parseInt(reminder.time.s, 10),
             },
           });
           stub.restore();
@@ -114,7 +123,9 @@ describe('reminder handler unit test', () => {
               s: '0',
             },
           };
-          expect(() => _createReminderObject(reminder as any, variablesMap, locale)).to.throw('invalid relative seconds');
+          expect(() => _createReminderObject(reminder as any, variablesMap, locale)).to.throw(
+            'invalid relative seconds'
+          );
         });
       });
 
@@ -175,7 +186,11 @@ describe('reminder handler unit test', () => {
               s: '3',
             },
           };
-          const result = _createReminderObject(reminder as any, { reminder_month: '02', reminder_year: '2023' }, locale);
+          const result = _createReminderObject(
+            reminder as any,
+            { reminder_month: '02', reminder_year: '2023' },
+            locale
+          );
           expect(result.trigger).to.eql({
             type: reminder.type,
             scheduledTime: '2023-02-01T01:02:03',

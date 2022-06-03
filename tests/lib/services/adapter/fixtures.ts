@@ -540,7 +540,8 @@ export const newOutputMap = {
 
 // command called
 export const oldCommandCalled = {
-  last_speak: "This is where you'll insert your own help message. Make sure this message ends with a choice, like this. Would you like to continue?",
+  last_speak:
+    "This is where you'll insert your own help message. Make sure this message ends with a choice, like this. Would you like to continue?",
   sessions: 1,
   globals: [
     {
@@ -593,7 +594,8 @@ export const oldCommandCalled = {
   line_id: '53ac199f-ecbd-4d67-91d5-77ffedef3bbf',
   platform: VoiceflowConstants.PlatformType.ALEXA,
   lastOutput: 'say smth',
-  output: "This is where you'll insert your own help message. Make sure this message ends with a choice, like this. Would you like to continue?",
+  output:
+    "This is where you'll insert your own help message. Make sure this message ends with a choice, like this. Would you like to continue?",
   repeat: 100,
   root_start: true,
   customer_info: {},
@@ -632,7 +634,8 @@ export const newCommandCalled = {
       nodeID: '53ac199f-ecbd-4d67-91d5-77ffedef3bbf',
       variables: {},
       storage: {
-        speak: "This is where you'll insert your own help message. Make sure this message ends with a choice, like this. Would you like to continue?",
+        speak:
+          "This is where you'll insert your own help message. Make sure this message ends with a choice, like this. Would you like to continue?",
       },
       programID: 'Vm1dTzzVCIyhFcaMmYPRrRl30ol0OREG',
       commands: [],
@@ -670,7 +673,8 @@ export const newCommandCalled = {
     timestamp: 1588970568,
   },
   storage: {
-    output: "This is where you'll insert your own help message. Make sure this message ends with a choice, like this. Would you like to continue?",
+    output:
+      "This is where you'll insert your own help message. Make sure this message ends with a choice, like this. Would you like to continue?",
     sessions: 1,
     repeat: 100,
     alexa_permissions: [],

@@ -22,7 +22,11 @@ describe('postgres persistence unit tests', () => {
 
     it('found', async () => {
       const attributes = { foo: 'bar' };
-      const pg = { sessionsTable: '_sessions', client: { query: sinon.stub().returns({ rows: [{ attributes }] }) }, format };
+      const pg = {
+        sessionsTable: '_sessions',
+        client: { query: sinon.stub().returns({ rows: [{ attributes }] }) },
+        format,
+      };
       const adapter = new PostgresPersistenceAdapter(pg as any);
       const userID = 'user-id';
       _.set(adapter, 'idGenerator', sinon.stub().returns(userID));

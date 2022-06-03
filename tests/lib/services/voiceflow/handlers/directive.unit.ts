@@ -13,7 +13,9 @@ describe('directive handler unit tests', () => {
     });
 
     it('true', () => {
-      expect(directiveHandler.canHandle({ directive: 'foo' } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(directiveHandler.canHandle({ directive: 'foo' } as any, null as any, null as any, null as any)).to.eql(
+        true
+      );
     });
   });
 

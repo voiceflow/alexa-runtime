@@ -7,13 +7,17 @@ import PurchaseHandler, { PurchaseHandlerGenerator, Request } from '@/lib/servic
 describe('purchase handler unit tests', () => {
   describe('canHandle', () => {
     it('false', () => {
-      expect(PurchaseHandler.canHandle({ requestEnvelope: { request: { type: 'random-type', name: 'random-name' } } } as any)).to.eql(false);
+      expect(
+        PurchaseHandler.canHandle({ requestEnvelope: { request: { type: 'random-type', name: 'random-name' } } } as any)
+      ).to.eql(false);
     });
 
     it('true', () => {
-      expect(PurchaseHandler.canHandle({ requestEnvelope: { request: { type: Request.RESPONSE_TYPE, name: Request.REQ_NAME } } } as any)).to.eql(
-        true
-      );
+      expect(
+        PurchaseHandler.canHandle({
+          requestEnvelope: { request: { type: Request.RESPONSE_TYPE, name: Request.REQ_NAME } },
+        } as any)
+      ).to.eql(true);
     });
   });
 

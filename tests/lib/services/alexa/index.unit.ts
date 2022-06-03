@@ -34,7 +34,10 @@ describe('alexa manager unit tests', () => {
           CancelPurchaseHandler: 'CancelPurchaseHandler',
           ErrorHandlerGenerator: sinon.stub().returns('ErrorHandler'),
         },
-        interceptors: { ResponseInterceptor: 'ResponseInterceptor', RequestInterceptorGenerator: sinon.stub().returns('RequestInterceptor') },
+        interceptors: {
+          ResponseInterceptor: 'ResponseInterceptor',
+          RequestInterceptorGenerator: sinon.stub().returns('RequestInterceptor'),
+        },
         builder: { custom: sinon.stub().returns({ addRequestHandlers }) },
         adapters: {
           CustomDynamoDbPersistenceAdapter: sinon.stub().returns({ foo: 'bar' }),
@@ -111,7 +114,10 @@ describe('alexa manager unit tests', () => {
           CancelPurchaseHandler: 'CancelPurchaseHandler',
           ErrorHandlerGenerator: sinon.stub().returns('ErrorHandler'),
         },
-        interceptors: { ResponseInterceptor: 'ResponseInterceptor', RequestInterceptorGenerator: sinon.stub().returns('RequestInterceptor') },
+        interceptors: {
+          ResponseInterceptor: 'ResponseInterceptor',
+          RequestInterceptorGenerator: sinon.stub().returns('RequestInterceptor'),
+        },
         builder: { custom: sinon.stub().returns({ addRequestHandlers }) },
         adapters: {
           MemoryPersistenceAdapter: sinon.stub().returns({ foo: 'bar' }),
@@ -182,7 +188,10 @@ describe('alexa manager unit tests', () => {
           CancelPurchaseHandler: 'CancelPurchaseHandler',
           ErrorHandlerGenerator: sinon.stub().returns('ErrorHandler'),
         },
-        interceptors: { ResponseInterceptor: 'ResponseInterceptor', RequestInterceptorGenerator: sinon.stub().returns('RequestInterceptor') },
+        interceptors: {
+          ResponseInterceptor: 'ResponseInterceptor',
+          RequestInterceptorGenerator: sinon.stub().returns('RequestInterceptor'),
+        },
         builder: { custom: sinon.stub().returns({ addRequestHandlers }) },
         adapters: {
           MongoPersistenceAdapter: sinon.stub().returns({ foo: 'bar' }),
@@ -253,7 +262,10 @@ describe('alexa manager unit tests', () => {
           CancelPurchaseHandler: 'CancelPurchaseHandler',
           ErrorHandlerGenerator: sinon.stub().returns('ErrorHandler'),
         },
-        interceptors: { ResponseInterceptor: 'ResponseInterceptor', RequestInterceptorGenerator: sinon.stub().returns('RequestInterceptor') },
+        interceptors: {
+          ResponseInterceptor: 'ResponseInterceptor',
+          RequestInterceptorGenerator: sinon.stub().returns('RequestInterceptor'),
+        },
         builder: { custom: sinon.stub().returns({ addRequestHandlers }) },
         adapters: {
           PostgresPersistenceAdapter: sinon.stub().returns({ foo: 'bar' }),

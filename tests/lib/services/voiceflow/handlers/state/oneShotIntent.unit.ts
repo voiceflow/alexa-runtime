@@ -10,7 +10,10 @@ describe('one shot intent handler unit tests', () => {
 
   describe('canHandle', () => {
     it('false', () => {
-      const runtime = { turn: { get: sinon.stub().returns(false) }, getRequest: sinon.stub().returns({ type: RequestType.INTENT }) };
+      const runtime = {
+        turn: { get: sinon.stub().returns(false) },
+        getRequest: sinon.stub().returns({ type: RequestType.INTENT }),
+      };
       const result = oneShotIntentHandler.canHandle(null as any, runtime as any, null as any, null as any);
       expect(result).to.eql(false);
       expect(runtime.turn.get.args).to.eql([[T.NEW_STACK]]);
@@ -26,13 +29,21 @@ describe('one shot intent handler unit tests', () => {
     });
 
     it('false with command handler', () => {
-      const runtime = { turn: { get: sinon.stub().returns(true) }, getRequest: sinon.stub().returns({ type: RequestType.INTENT }) };
+      const runtime = {
+        turn: { get: sinon.stub().returns(true) },
+        getRequest: sinon.stub().returns({ type: RequestType.INTENT }),
+      };
       const utils = {
         commandHandler: {
           canHandle: sinon.stub().returns(false),
         },
       };
-      const result = OneShotIntentHandler(utils as any).canHandle(null as any, runtime as any, null as any, null as any);
+      const result = OneShotIntentHandler(utils as any).canHandle(
+        null as any,
+        runtime as any,
+        null as any,
+        null as any
+      );
       expect(result).to.eql(false);
       expect(runtime.turn.get.args).to.eql([[T.NEW_STACK]]);
       expect(runtime.getRequest.callCount).to.eql(1);
@@ -40,13 +51,21 @@ describe('one shot intent handler unit tests', () => {
     });
 
     it('true', () => {
-      const runtime = { turn: { get: sinon.stub().returns(true) }, getRequest: sinon.stub().returns({ type: RequestType.INTENT }) };
+      const runtime = {
+        turn: { get: sinon.stub().returns(true) },
+        getRequest: sinon.stub().returns({ type: RequestType.INTENT }),
+      };
       const utils = {
         commandHandler: {
           canHandle: sinon.stub().returns(true),
         },
       };
-      const result = OneShotIntentHandler(utils as any).canHandle(null as any, runtime as any, null as any, null as any);
+      const result = OneShotIntentHandler(utils as any).canHandle(
+        null as any,
+        runtime as any,
+        null as any,
+        null as any
+      );
       expect(result).to.eql(true);
       expect(runtime.turn.get.args).to.eql([[T.NEW_STACK]]);
       expect(runtime.getRequest.callCount).to.eql(1);

@@ -13,7 +13,9 @@ describe('permission card handler unit tests', () => {
     });
 
     it('true', () => {
-      expect(permissionCardHandler.canHandle({ permission_card: {} } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(
+        permissionCardHandler.canHandle({ permission_card: {} } as any, null as any, null as any, null as any)
+      ).to.eql(true);
     });
   });
 
@@ -67,7 +69,10 @@ describe('permission card handler unit tests', () => {
 
       describe('not array', () => {
         it('storage key null', () => {
-          const runtime = { turn: { get: sinon.stub().returns('string') }, storage: { get: sinon.stub().returns(null) } };
+          const runtime = {
+            turn: { get: sinon.stub().returns('string') },
+            storage: { get: sinon.stub().returns(null) },
+          };
           PermissionCardResponseBuilder(runtime as any, null as any);
           expect(runtime.turn.get.args).to.eql([[T.PERMISSION_CARD]]);
           expect(runtime.storage.get.args).to.eql([[S.ALEXA_PERMISSIONS]]);

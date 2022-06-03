@@ -62,7 +62,10 @@ describe('video control handler', () => {
 
     it('with commands', async () => {
       const output = 'output';
-      const runtime = { versionID: 'version-id', storage: { get: sinon.stub().returns({ playingVideos: { id1: 'hello' } }) } };
+      const runtime = {
+        versionID: 'version-id',
+        storage: { get: sinon.stub().returns({ playingVideos: { id1: 'hello' } }) },
+      };
       const input = {
         requestEnvelope: { request: { intent: { name: IntentName.RESUME } } },
         responseBuilder: { getResponse: sinon.stub().returns(output), addDirective: sinon.stub() },

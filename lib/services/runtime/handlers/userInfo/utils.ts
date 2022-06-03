@@ -37,7 +37,9 @@ export const _alexaApiCallGenerator = (http: AxiosStatic) => (handlerInput: Alex
 
 const _alexaApiCall = _alexaApiCallGenerator(axios);
 
-export const _ispPermissionGenerator = (apiCall: typeof _alexaApiCall) => async (handlerInput: AlexaHandlerInput): Promise<boolean> => {
+export const _ispPermissionGenerator = (apiCall: typeof _alexaApiCall) => async (
+  handlerInput: AlexaHandlerInput
+): Promise<boolean> => {
   try {
     const voicePurchasingEndpoint = '/v1/users/~current/skills/~current/settings/voicePurchasing.enabled';
     const status = await apiCall(handlerInput, voicePurchasingEndpoint);
@@ -143,7 +145,11 @@ export const _productPermissionGenerator = (apiCall: typeof _alexaApiCall) => as
 
 export const _productPermission = _productPermissionGenerator(_alexaApiCall);
 
-export const _accountLinkingPermission = async (accessToken: string, permissionVariable: string | undefined, variables: Store): Promise<boolean> => {
+export const _accountLinkingPermission = async (
+  accessToken: string,
+  permissionVariable: string | undefined,
+  variables: Store
+): Promise<boolean> => {
   if (accessToken) {
     if (permissionVariable) variables.set(permissionVariable, accessToken);
 
@@ -152,7 +158,11 @@ export const _accountLinkingPermission = async (accessToken: string, permissionV
   return false;
 };
 
-export const _personIdReadPermission = (handlerInput: AlexaHandlerInput, permissionVariable: string | undefined, variables: Store): boolean => {
+export const _personIdReadPermission = (
+  handlerInput: AlexaHandlerInput,
+  permissionVariable: string | undefined,
+  variables: Store
+): boolean => {
   try {
     const { person } = handlerInput.requestEnvelope.context.System;
     if (!person) return false;
@@ -225,7 +235,9 @@ export const _profileNumberReadPermission = async (
     if (permissionVariable) {
       variables.set(
         permissionVariable,
-        typeof number === 'object' && number?.countryCode && number.phoneNumber ? `${number.countryCode}${number.phoneNumber}` : number
+        typeof number === 'object' && number?.countryCode && number.phoneNumber
+          ? `${number.countryCode}${number.phoneNumber}`
+          : number
       );
     }
     return true;
@@ -239,7 +251,9 @@ export const _geolocationRead = async (
   permissionVariable: string | undefined,
   variables: Store
 ): Promise<boolean> => {
-  const skillPermissionGranted = handlerInput.requestEnvelope.context.System.user.permissions?.scopes?.['alexa::devices:all:geolocation:read'].status;
+  const skillPermissionGranted =
+    handlerInput.requestEnvelope.context.System.user.permissions?.scopes?.['alexa::devices:all:geolocation:read']
+      .status;
 
   if (skillPermissionGranted !== 'GRANTED') {
     return false;
@@ -266,7 +280,8 @@ export const _geolocationRead = async (
 };
 
 export const _amazonPayRead = async (handlerInput: AlexaHandlerInput): Promise<boolean> => {
-  const skillPermissionGranted = handlerInput.requestEnvelope.context.System.user.permissions?.scopes?.['payments:autopay_consent'].status;
+  const skillPermissionGranted =
+    handlerInput.requestEnvelope.context.System.user.permissions?.scopes?.['payments:autopay_consent'].status;
 
   return skillPermissionGranted === 'GRANTED';
 };
@@ -302,7 +317,8 @@ export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
   if (
     !permissionValue ||
     !handlerInput ||
-    ((!Array.isArray(runtime.storage.get<string[]>(S.PERMISSIONS)) || !runtime.storage.get<string[]>(S.PERMISSIONS)!.includes(permissionValue)) &&
+    ((!Array.isArray(runtime.storage.get<string[]>(S.PERMISSIONS)) ||
+      !runtime.storage.get<string[]>(S.PERMISSIONS)!.includes(permissionValue)) &&
       !permissionValue.startsWith('UNOFFICIAL') &&
       !permissionValue.startsWith('alexa::person_id') &&
       !permissionValue.startsWith('payments:autopay_consent'))
@@ -328,7 +344,13 @@ export const isPermissionGrantedGenerator = (utils: typeof utilsObj) => async (
   }
 
   if (permissionValue === AlexaNode.PermissionType.UNOFFICIAL_PRODUCT && permission.product?.value) {
-    return utils._productPermission(handlerInput, permission, permissionVariable, runtime.storage.get<string>(S.LOCALE)!, variables);
+    return utils._productPermission(
+      handlerInput,
+      permission,
+      permissionVariable,
+      runtime.storage.get<string>(S.LOCALE)!,
+      variables
+    );
   }
 
   if (permissionValue === AlexaNode.PermissionType.UNOFFICIAL_ACCOUNT_LINKING) {

@@ -2,7 +2,11 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { S } from '@/lib/constants';
-import APLUserEventHandler, { APLUserEventHandlerGenerator, Request, SourceHandler } from '@/lib/services/alexa/request/aplUserEvent';
+import APLUserEventHandler, {
+  APLUserEventHandlerGenerator,
+  Request,
+  SourceHandler,
+} from '@/lib/services/alexa/request/aplUserEvent';
 import { updateRuntime } from '@/lib/services/alexa/utils';
 import { DOCUMENT_VIDEO_TYPE, ENDED_EVENT_PREFIX } from '@/lib/services/runtime/handlers/display/constants';
 
@@ -13,7 +17,9 @@ describe('APL User Event Handler unit tests', () => {
     });
 
     it('true', () => {
-      expect(APLUserEventHandler.canHandle({ requestEnvelope: { request: { type: Request.APL_USER_EVENT } } } as any)).to.eql(true);
+      expect(
+        APLUserEventHandler.canHandle({ requestEnvelope: { request: { type: Request.APL_USER_EVENT } } } as any)
+      ).to.eql(true);
     });
   });
 
@@ -44,7 +50,9 @@ describe('APL User Event Handler unit tests', () => {
         const output = 'output';
         const sourceId = 'id';
         const input = {
-          requestEnvelope: { request: { source: { handler: SourceHandler.END, type: DOCUMENT_VIDEO_TYPE, id: sourceId } } },
+          requestEnvelope: {
+            request: { source: { handler: SourceHandler.END, type: DOCUMENT_VIDEO_TYPE, id: sourceId } },
+          },
           responseBuilder: { getResponse: sinon.stub().returns(output) },
         };
         expect(await handler.handle(input as any)).to.eql(output);
@@ -75,7 +83,9 @@ describe('APL User Event Handler unit tests', () => {
         const output = 'output';
         const sourceId = 'id';
         const input = {
-          requestEnvelope: { request: { source: { handler: SourceHandler.PLAY, type: DOCUMENT_VIDEO_TYPE, id: sourceId } } },
+          requestEnvelope: {
+            request: { source: { handler: SourceHandler.PLAY, type: DOCUMENT_VIDEO_TYPE, id: sourceId } },
+          },
           responseBuilder: { getResponse: sinon.stub().returns(output) },
         };
         expect(await handler.handle(input as any)).to.eql(output);

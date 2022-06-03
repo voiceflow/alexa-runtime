@@ -33,7 +33,10 @@ class AdapterManager extends AbstractManager {
     }
   }
 
-  async transformState(state: OldStateRaw | { attributes: OldStateRaw; id: string }, input: HandlerInput): Promise<NewStateRaw | EmptyObject> {
+  async transformState(
+    state: OldStateRaw | { attributes: OldStateRaw; id: string },
+    input: HandlerInput
+  ): Promise<NewStateRaw | EmptyObject> {
     if ('attributes' in state) {
       state = state.attributes;
     }

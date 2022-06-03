@@ -8,11 +8,17 @@ import { IntentName } from '@/lib/services/runtime/types';
 describe('playback controller handler unit tests', () => {
   describe('canHandle', () => {
     it('false', () => {
-      expect(PlaybackControllerHandler.canHandle({ requestEnvelope: { request: { type: 'random' } } } as any)).to.eql(false);
+      expect(PlaybackControllerHandler.canHandle({ requestEnvelope: { request: { type: 'random' } } } as any)).to.eql(
+        false
+      );
     });
 
     it('true', () => {
-      expect(PlaybackControllerHandler.canHandle({ requestEnvelope: { request: { type: 'PlaybackController.SMTH' } } } as any)).to.eql(true);
+      expect(
+        PlaybackControllerHandler.canHandle({
+          requestEnvelope: { request: { type: 'PlaybackController.SMTH' } },
+        } as any)
+      ).to.eql(true);
     });
   });
 
@@ -30,7 +36,10 @@ describe('playback controller handler unit tests', () => {
 
       const input = { requestEnvelope: { request: { type: `PlaybackController.${Command.NEXT}` } } };
       expect(await handler.handle(input as any)).to.eql(output);
-      expect(utils.IntentHandler.handle.args[0][0].requestEnvelope.request.intent).to.eql({ name: IntentName.NEXT, confirmationStatus: 'NONE' });
+      expect(utils.IntentHandler.handle.args[0][0].requestEnvelope.request.intent).to.eql({
+        name: IntentName.NEXT,
+        confirmationStatus: 'NONE',
+      });
     });
 
     it('Command.PREV', async () => {
@@ -46,7 +55,10 @@ describe('playback controller handler unit tests', () => {
 
       const input = { requestEnvelope: { request: { type: `PlaybackController.${Command.PREV}` } } };
       expect(await handler.handle(input as any)).to.eql(output);
-      expect(utils.IntentHandler.handle.args[0][0].requestEnvelope.request.intent).to.eql({ name: IntentName.PREV, confirmationStatus: 'NONE' });
+      expect(utils.IntentHandler.handle.args[0][0].requestEnvelope.request.intent).to.eql({
+        name: IntentName.PREV,
+        confirmationStatus: 'NONE',
+      });
     });
 
     it('Command.PLAY', async () => {
@@ -62,7 +74,10 @@ describe('playback controller handler unit tests', () => {
 
       const input = { requestEnvelope: { request: { type: `PlaybackController.${Command.PLAY}` } } };
       expect(await handler.handle(input as any)).to.eql(output);
-      expect(utils.IntentHandler.handle.args[0][0].requestEnvelope.request.intent).to.eql({ name: IntentName.RESUME, confirmationStatus: 'NONE' });
+      expect(utils.IntentHandler.handle.args[0][0].requestEnvelope.request.intent).to.eql({
+        name: IntentName.RESUME,
+        confirmationStatus: 'NONE',
+      });
     });
 
     it('Command.PAUSE', async () => {
@@ -78,7 +93,10 @@ describe('playback controller handler unit tests', () => {
 
       const input = { requestEnvelope: { request: { type: `PlaybackController.${Command.PAUSE}` } } };
       expect(await handler.handle(input as any)).to.eql(output);
-      expect(utils.IntentHandler.handle.args[0][0].requestEnvelope.request.intent).to.eql({ name: IntentName.PAUSE, confirmationStatus: 'NONE' });
+      expect(utils.IntentHandler.handle.args[0][0].requestEnvelope.request.intent).to.eql({
+        name: IntentName.PAUSE,
+        confirmationStatus: 'NONE',
+      });
     });
 
     it('Other Intent', async () => {
@@ -94,7 +112,10 @@ describe('playback controller handler unit tests', () => {
 
       const input = { requestEnvelope: { request: { type: 'PlaybackController.UNKNOWN' } } };
       expect(await handler.handle(input as any)).to.eql(output);
-      expect(utils.IntentHandler.handle.args[0][0].requestEnvelope.request.intent).to.eql({ name: IntentName.FALLBACK, confirmationStatus: 'NONE' });
+      expect(utils.IntentHandler.handle.args[0][0].requestEnvelope.request.intent).to.eql({
+        name: IntentName.FALLBACK,
+        confirmationStatus: 'NONE',
+      });
     });
   });
 });

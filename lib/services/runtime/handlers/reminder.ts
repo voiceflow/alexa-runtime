@@ -39,8 +39,12 @@ const _deriveSeconds = (text: string, multiplier = 1): number => {
   return number * multiplier;
 };
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
-export const _createReminderObject = (reminder: AlexaNode.Reminder.NodeReminder, variablesMap: Record<string, any>, locale: string) => {
+export const _createReminderObject = (
+  reminder: AlexaNode.Reminder.NodeReminder,
+  variablesMap: Record<string, any>,
+  locale: string
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+) => {
   if (reminder.type !== ReminderType.SCHEDULED_ABSOLUTE && reminder.type !== ReminderType.SCHEDULED_RELATIVE)
     throw new Error('invalid reminder type');
 
@@ -116,7 +120,11 @@ export const ReminderHandler: HandlerFactory<AlexaNode.Reminder.Node, typeof uti
 
       if (!apiEndpoint || !apiAccessToken) throw new Error('invalid login token');
 
-      const reminderObject = utils._createReminderObject(node.reminder, variables.getState(), runtime.storage.get<string>(S.LOCALE)!);
+      const reminderObject = utils._createReminderObject(
+        node.reminder,
+        variables.getState(),
+        runtime.storage.get<string>(S.LOCALE)!
+      );
 
       await utils.axios.post(`${apiEndpoint}/v1/alerts/reminders`, reminderObject, {
         headers: {

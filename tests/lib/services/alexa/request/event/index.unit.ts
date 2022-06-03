@@ -12,7 +12,10 @@ describe('alexa request event unit tests', () => {
   describe('EventHandlerGenerator', () => {
     describe('canHandle', () => {
       it('works with truthy getEvent return value', async () => {
-        const runtime = { stack: { getSize: sinon.stub().returns(1) }, getRawState: sinon.stub().returns('getRawState-val') };
+        const runtime = {
+          stack: { getSize: sinon.stub().returns(1) },
+          getRawState: sinon.stub().returns('getRawState-val'),
+        };
         const input = { attributesManager: { setPersistentAttributes: sinon.stub() } };
         const utils = {
           getEvent: sinon.stub().returns('abc'),

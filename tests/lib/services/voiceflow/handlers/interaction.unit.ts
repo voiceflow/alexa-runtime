@@ -16,7 +16,14 @@ describe('interaction handler unit tests', async () => {
     });
 
     it('true', async () => {
-      expect(InteractionHandler(null as any).canHandle({ interactions: { foo: 'bar' } } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(
+        InteractionHandler(null as any).canHandle(
+          { interactions: { foo: 'bar' } } as any,
+          null as any,
+          null as any,
+          null as any
+        )
+      ).to.eql(true);
     });
   });
 
@@ -29,7 +36,11 @@ describe('interaction handler unit tests', async () => {
       const interactionHandler = InteractionHandler(utils as any);
 
       const node = { id: 'node-id', interactions: [{ intent: 'one' }, { intent: 'two' }] };
-      const runtime = { trace: { addTrace: sinon.stub() }, storage: { delete: sinon.stub() }, turn: { get: sinon.stub().returns(null) } };
+      const runtime = {
+        trace: { addTrace: sinon.stub() },
+        storage: { delete: sinon.stub() },
+        turn: { get: sinon.stub().returns(null) },
+      };
       const variables = { foo: 'bar' };
 
       expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.id);
@@ -115,7 +126,11 @@ describe('interaction handler unit tests', async () => {
         });
 
         it('no choice with elseId', () => {
-          const node = { id: 'node-id', elseId: 'else-id', interactions: [{ intent: 'intent1' }, { intent: 'intent2' }] };
+          const node = {
+            id: 'node-id',
+            elseId: 'else-id',
+            interactions: [{ intent: 'intent1' }, { intent: 'intent2' }],
+          };
 
           const utils = {
             formatIntentName: sinon.stub().returns(false),
@@ -139,7 +154,9 @@ describe('interaction handler unit tests', async () => {
           };
           const variables = { foo: 'bar' };
 
-          expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.elseId);
+          expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(
+            node.elseId
+          );
         });
 
         it('local scope', () => {
@@ -227,7 +244,12 @@ describe('interaction handler unit tests', async () => {
 
           const interactionHandler = InteractionHandler(utils as any);
 
-          const node = { id: 'node-id', elseId: 'else-id', interactions: [{ intent: 'random-intent  ' }], nextIds: ['id-one'] };
+          const node = {
+            id: 'node-id',
+            elseId: 'else-id',
+            interactions: [{ intent: 'random-intent  ' }],
+            nextIds: ['id-one'],
+          };
           const request = { type: RequestType.INTENT, payload: { intent: { name: intentName } } };
           const runtime = {
             trace: { debug: sinon.stub() },
@@ -236,7 +258,9 @@ describe('interaction handler unit tests', async () => {
           };
           const variables = { foo: 'bar' };
 
-          expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextIds[0]);
+          expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(
+            node.nextIds[0]
+          );
           expect(runtime.trace.debug.args).to.eql([]);
         });
 
@@ -272,7 +296,9 @@ describe('interaction handler unit tests', async () => {
           };
           const variables = { foo: 'bar' };
 
-          expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextIds[1]);
+          expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(
+            node.nextIds[1]
+          );
           expect(runtime.trace.debug.args).to.eql([]);
         });
 
@@ -299,7 +325,9 @@ describe('interaction handler unit tests', async () => {
           };
           const variables = { foo: 'bar' };
 
-          expect(interactionHandler.handle(block as any, runtime as any, variables as any, null as any)).to.eql(block.id);
+          expect(interactionHandler.handle(block as any, runtime as any, variables as any, null as any)).to.eql(
+            block.id
+          );
           expect(runtime.turn.set.args).to.eql([
             [
               T.DELEGATE,
@@ -340,7 +368,9 @@ describe('interaction handler unit tests', async () => {
           };
           const variables = { foo: 'bar' };
 
-          expect(interactionHandler.handle(block as any, runtime as any, variables as any, null as any)).to.eql(block.elseId);
+          expect(interactionHandler.handle(block as any, runtime as any, variables as any, null as any)).to.eql(
+            block.elseId
+          );
         });
 
         it('choice with mappings', () => {
@@ -369,7 +399,10 @@ describe('interaction handler unit tests', async () => {
             interactions: [{ intent: 'random-intent  ', mappings: { foo: 'bar' } }],
             nextIds: ['id-one'],
           };
-          const request = { type: RequestType.INTENT, payload: { intent: { name: intentName, slots: { foo2: 'bar2' } } } };
+          const request = {
+            type: RequestType.INTENT,
+            payload: { intent: { name: intentName, slots: { foo2: 'bar2' } } },
+          };
           const runtime = {
             trace: { debug: sinon.stub() },
             turn: { get: sinon.stub().returns(request), delete: sinon.stub() },
@@ -377,8 +410,12 @@ describe('interaction handler unit tests', async () => {
           };
           const variables = { merge: sinon.stub() };
 
-          expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(node.nextIds[0]);
-          expect(utils.mapSlots.args).to.eql([[{ mappings: node.interactions[0].mappings, slots: request.payload.intent.slots }]]);
+          expect(interactionHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(
+            node.nextIds[0]
+          );
+          expect(utils.mapSlots.args).to.eql([
+            [{ mappings: node.interactions[0].mappings, slots: request.payload.intent.slots }],
+          ]);
           expect(variables.merge.args).to.eql([[mappedSlots]]);
           expect(runtime.trace.debug.args).to.eql([]);
         });

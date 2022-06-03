@@ -14,7 +14,10 @@ describe('alexa manager utils unit tests', () => {
 
       const handlerInput = {
         context: { versionID: 'version-id', runtimeClient },
-        attributesManager: { setPersistentAttributes: sinon.stub(), getPersistentAttributes: sinon.stub().returns(rawStateBefore) },
+        attributesManager: {
+          setPersistentAttributes: sinon.stub(),
+          getPersistentAttributes: sinon.stub().returns(rawStateBefore),
+        },
       };
       const produce = sinon.stub();
 

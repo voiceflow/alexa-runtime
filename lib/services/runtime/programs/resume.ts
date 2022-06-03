@@ -25,7 +25,10 @@ export const promptToSSML = (content: string | undefined, voice: string | undefi
   return `<voice name="${voice}">${contentValue}</voice>`;
 };
 
-export const createResumeFrame = (resume: VoiceModels.Prompt<AlexaConstants.Voice>, follow: VoiceModels.Prompt<AlexaConstants.Voice> | null) => {
+export const createResumeFrame = (
+  resume: VoiceModels.Prompt<AlexaConstants.Voice>,
+  follow: VoiceModels.Prompt<AlexaConstants.Voice> | null
+) => {
   return new Frame({
     programID: RESUME_PROGRAM_ID,
     variables: {

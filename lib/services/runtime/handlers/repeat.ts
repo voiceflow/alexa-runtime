@@ -11,14 +11,17 @@ const RepeatHandler = {
     const repeat = runtime.storage.get<BaseVersion.RepeatType>(S.REPEAT);
 
     return (
-      !!repeat && request?.payload.intent.name === IntentName.REPEAT && [BaseVersion.RepeatType.ALL, BaseVersion.RepeatType.DIALOG].includes(repeat)
+      !!repeat &&
+      request?.payload.intent.name === IntentName.REPEAT &&
+      [BaseVersion.RepeatType.ALL, BaseVersion.RepeatType.DIALOG].includes(repeat)
     );
   },
   handle: (runtime: Runtime) => {
     const repeat = runtime.storage.get<BaseVersion.RepeatType>(S.REPEAT);
     const top = runtime.stack.top();
 
-    const output = (repeat === BaseVersion.RepeatType.ALL ? runtime.turn.get(T.PREVIOUS_OUTPUT) : top.storage.get(F.SPEAK)) || '';
+    const output =
+      (repeat === BaseVersion.RepeatType.ALL ? runtime.turn.get(T.PREVIOUS_OUTPUT) : top.storage.get(F.SPEAK)) || '';
 
     runtime.storage.produce<{ [S.OUTPUT]: string }>((draft) => {
       draft[S.OUTPUT] += output;

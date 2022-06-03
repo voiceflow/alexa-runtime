@@ -33,7 +33,10 @@ const utilsObj = {
 };
 
 export const StreamStateHandler: HandlerFactory<any, typeof utilsObj> = (utils) => ({
-  canHandle: (_, runtime) => !!(runtime.storage.get(S.STREAM_PLAY) && runtime.storage.get<StreamPlay>(S.STREAM_PLAY)!.action !== StreamAction.END),
+  canHandle: (_, runtime) =>
+    !!(
+      runtime.storage.get(S.STREAM_PLAY) && runtime.storage.get<StreamPlay>(S.STREAM_PLAY)!.action !== StreamAction.END
+    ),
   // eslint-disable-next-line sonarjs/cognitive-complexity
   handle: (_, runtime, variables) => {
     const request = runtime.turn.get(T.REQUEST) as IntentRequest;

@@ -42,7 +42,12 @@ describe('response lifecycle unit tests', () => {
     const output = 'output';
 
     const input = {
-      responseBuilder: { getResponse: sinon.stub().returns(output), speak: sinon.stub(), reprompt: sinon.stub(), withShouldEndSession: sinon.stub() },
+      responseBuilder: {
+        getResponse: sinon.stub().returns(output),
+        speak: sinon.stub(),
+        reprompt: sinon.stub(),
+        withShouldEndSession: sinon.stub(),
+      },
       requestEnvelope: {
         runtime: { System: { user: { accessToken } } },
         session: { sessionId: 'session.id' },
@@ -224,7 +229,10 @@ describe('response lifecycle unit tests', () => {
         reprompt: sinon.stub(),
         withShouldEndSession: sinon.stub(),
       },
-      requestEnvelope: { runtime: { System: { user: { accessToken: 'access-token' } } }, request: { type: Request.AUDIO_PLAYER_PLAYBACK_FAILED } },
+      requestEnvelope: {
+        runtime: { System: { user: { accessToken: 'access-token' } } },
+        request: { type: Request.AUDIO_PLAYER_PLAYBACK_FAILED },
+      },
       attributesManager: { setPersistentAttributes: sinon.stub() },
     };
 

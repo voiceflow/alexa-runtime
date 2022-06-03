@@ -207,7 +207,9 @@ describe('card handler unit tests', async () => {
       CardResponseBuilder(runtime as any, builder as any);
 
       expect(runtime.turn.get.args[0]).to.eql([T.CARD]);
-      expect(builder.withStandardCard.args).to.eql([[card.title, card.text, card.image.smallImageUrl, card.image.largeImageUrl]]);
+      expect(builder.withStandardCard.args).to.eql([
+        [card.title, card.text, card.image.smallImageUrl, card.image.largeImageUrl],
+      ]);
     });
   });
 

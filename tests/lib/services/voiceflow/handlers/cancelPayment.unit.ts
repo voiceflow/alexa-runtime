@@ -13,7 +13,9 @@ describe('cancel payment handler unit tests', () => {
     });
 
     it('true', () => {
-      expect(cancelPaymentHandler.canHandle({ cancel_product_id: '1' } as any, null as any, null as any, null as any)).to.eql(true);
+      expect(
+        cancelPaymentHandler.canHandle({ cancel_product_id: '1' } as any, null as any, null as any, null as any)
+      ).to.eql(true);
     });
   });
 

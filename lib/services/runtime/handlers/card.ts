@@ -20,8 +20,11 @@ export const CardResponseBuilder: ResponseBuilder = (runtime, builder) => {
   }
 };
 
-export const addVariables = (regex: typeof replaceVariables) => (value: string | undefined, variables: Store, defaultValue = '') =>
-  value ? regex(value, variables.getState()) : defaultValue;
+export const addVariables = (regex: typeof replaceVariables) => (
+  value: string | undefined,
+  variables: Store,
+  defaultValue = ''
+) => (value ? regex(value, variables.getState()) : defaultValue);
 
 const utilsObj = {
   addVariables: addVariables(replaceVariables),
@@ -52,7 +55,11 @@ export const CardHandler: HandlerFactory<BaseNode.Card.Node, typeof utilsObj> = 
 
     if (card.type === BaseNode.Card.CardType.STANDARD && card.image?.largeImageUrl) {
       newCard.image.largeImageUrl = utils.addVariables(card.image.largeImageUrl, variables);
-      newCard.image.smallImageUrl = utils.addVariables(card.image.smallImageUrl, variables, newCard.image.largeImageUrl);
+      newCard.image.smallImageUrl = utils.addVariables(
+        card.image.smallImageUrl,
+        variables,
+        newCard.image.largeImageUrl
+      );
     }
 
     runtime.turn.set(T.CARD, newCard);
