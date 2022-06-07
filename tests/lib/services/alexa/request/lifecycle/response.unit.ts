@@ -1,4 +1,4 @@
-import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
+import { Event, RequestType } from '@voiceflow/event-ingestion-service/build/lib/types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -22,6 +22,7 @@ describe('response lifecycle unit tests', () => {
     turnGet.withArgs(T.END).returns(true);
     turnGet.withArgs(T.DELEGATE).returns(false);
     const versionID = 'version.id';
+    const projectID = 'project.id';
     const turnID = 'turn-id';
     const request = { foo: 'bar' };
     const runtime = {
@@ -37,6 +38,7 @@ describe('response lifecycle unit tests', () => {
         },
       },
       getVersionID: sinon.stub().returns(versionID),
+      api: { getVersion: sinon.stub().resolves({ projectID }) },
     };
     const accessToken = 'access-token';
     const output = 'output';
@@ -57,34 +59,27 @@ describe('response lifecycle unit tests', () => {
     };
 
     expect(await response(runtime as any, input as any)).to.eql(output);
-    const [[{ timestamp }], [{ timestamp: timestamp2 }]] = runtime.services.analyticsClient.track.args;
+    let timestampToExpect;
+    expect(
+      await Promise.resolve(runtime.services.analyticsClient.track).then(() => {
+        [[{ timestamp: timestampToExpect }]] = runtime.services.analyticsClient.track.args;
+        return runtime.services.analyticsClient.track.args[0][0];
+      })
+    ).to.deep.equal({
+      projectID,
+      versionID,
+      event: Event.TURN,
+      actionRequest: RequestType.REQUEST,
+      actionPayload: request,
+      request: RequestType.RESPONSE,
+      payload: output,
+      sessionid: input.requestEnvelope.session.sessionId,
+      metadata: finalState,
+      timestamp: timestampToExpect,
+    });
     expect(runtime.turn.set.args).to.eql([[T.END, true]]);
     expect(runtime.storage.get.args).to.eql([[S.OUTPUT], [S.OUTPUT]]);
-    expect(runtime.services.analyticsClient.track.args).to.eql([
-      [
-        {
-          id: versionID,
-          event: Ingest.Event.TURN,
-          request: Ingest.RequestType.REQUEST,
-          payload: request,
-          sessionid: input.requestEnvelope.session.sessionId,
-          metadata: finalState,
-          timestamp,
-        },
-      ],
-      [
-        {
-          id: versionID,
-          event: Ingest.Event.INTERACT,
-          request: Ingest.RequestType.RESPONSE,
-          payload: output,
-          sessionid: input.requestEnvelope.session.sessionId,
-          metadata: finalState,
-          timestamp: timestamp2,
-          turnIDP: turnID,
-        },
-      ],
-    ]);
+
     expect(input.responseBuilder.speak.args).to.eql([['speak']]);
     expect(input.responseBuilder.reprompt.args).to.eql([['speak']]);
     expect(input.responseBuilder.withShouldEndSession.args).to.eql([[true]]);
@@ -98,6 +93,7 @@ describe('response lifecycle unit tests', () => {
 
     const response = responseGenerator(utils);
     const versionID = 'version.id';
+    const projectID = 'project.id';
     const turnID = 'turn-id';
     const request = { foo: 'bar' };
     const runtime = {
@@ -115,6 +111,7 @@ describe('response lifecycle unit tests', () => {
         },
       },
       getVersionID: sinon.stub().returns(versionID),
+      api: { getVersion: sinon.stub().resolves({ projectID }) },
     };
     const output = 'output';
 
@@ -135,32 +132,25 @@ describe('response lifecycle unit tests', () => {
     };
 
     expect(await response(runtime as any, input as any)).to.eql(output);
-    const [[{ timestamp }], [{ timestamp: timestamp2 }]] = runtime.services.analyticsClient.track.args;
-    expect(runtime.services.analyticsClient.track.args).to.deep.eq([
-      [
-        {
-          id: versionID,
-          event: Ingest.Event.TURN,
-          request: Ingest.RequestType.REQUEST,
-          payload: request,
-          sessionid: input.requestEnvelope.session.sessionId,
-          metadata: {},
-          timestamp,
-        },
-      ],
-      [
-        {
-          id: versionID,
-          event: Ingest.Event.INTERACT,
-          request: Ingest.RequestType.RESPONSE,
-          payload: output,
-          sessionid: input.requestEnvelope.session.sessionId,
-          metadata: {},
-          timestamp: timestamp2,
-          turnIDP: turnID,
-        },
-      ],
-    ]);
+
+    let timestampToExpect;
+    expect(
+      await Promise.resolve(runtime.services.analyticsClient.track).then(() => {
+        [[{ timestamp: timestampToExpect }]] = runtime.services.analyticsClient.track.args;
+        return runtime.services.analyticsClient.track.args[0][0];
+      })
+    ).to.deep.eq({
+      projectID,
+      versionID,
+      event: Event.TURN,
+      actionRequest: RequestType.REQUEST,
+      actionPayload: request,
+      request: RequestType.RESPONSE,
+      payload: output,
+      sessionid: input.requestEnvelope.session.sessionId,
+      metadata: {},
+      timestamp: timestampToExpect,
+    });
   });
 
   it('response variable', async () => {

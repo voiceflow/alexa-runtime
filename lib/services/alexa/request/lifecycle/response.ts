@@ -1,4 +1,4 @@
-import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
+import { Event, RequestType } from '@voiceflow/event-ingestion-service/build/lib/types';
 import { Response } from 'ask-sdk-model';
 import _isObject from 'lodash/isObject';
 import _mapValues from 'lodash/mapValues';
@@ -61,35 +61,24 @@ export const responseGenerator = (utils: typeof utilsObj) => async (
   }
 
   const versionID = runtime.getVersionID();
+  const { projectID } = await runtime.api.getVersion(versionID);
 
   // not using async await, since analytics is not blocking operation
   // Track response on analytics system
   runtime.services.analyticsClient
     .track({
-      id: versionID,
-      event: Ingest.Event.TURN,
-      request:
-        input?.requestEnvelope?.request?.type === 'LaunchRequest'
-          ? Ingest.RequestType.LAUNCH
-          : Ingest.RequestType.REQUEST,
-      payload: runtime.getRequest(),
+      projectID,
+      versionID,
+      event: Event.TURN,
+      actionRequest:
+        input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
+      actionPayload: runtime.getRequest(),
+      request: RequestType.RESPONSE,
+      payload: response,
       sessionid: input.requestEnvelope.session?.sessionId,
       metadata: runtime.getFinalState(),
       timestamp: new Date(),
     })
-    .then((turnID) =>
-      // Track response on analytics system
-      runtime.services.analyticsClient.track({
-        id: versionID,
-        event: Ingest.Event.INTERACT,
-        request: Ingest.RequestType.RESPONSE,
-        payload: response,
-        sessionid: input.requestEnvelope.session?.sessionId,
-        metadata: runtime.getFinalState(),
-        timestamp: new Date(),
-        turnIDP: turnID,
-      })
-    )
     .catch((error: unknown) => log.error(`[analytics] failed to identify ${log.vars({ versionID, error })}`));
 
   return response;

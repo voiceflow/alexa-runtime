@@ -1,145 +1,137 @@
-import * as Ingest from '@voiceflow/general-runtime/build/lib/clients/ingest-client';
+import { Api as IngestApi, Client as IngestClient } from '@voiceflow/event-ingestion-service/build/lib/client';
+import {
+  Event,
+  IngestableInteraction,
+  IngestableTrace,
+  RequestType,
+} from '@voiceflow/event-ingestion-service/build/lib/types';
 import { DataAPI, State } from '@voiceflow/general-runtime/build/runtime';
+import { FrameState } from '@voiceflow/general-runtime/build/runtime/lib/Runtime/Stack';
 import { Response } from 'ask-sdk-model';
 
 import log from '@/logger';
 import { Config } from '@/types';
 
 import { AlexaRuntimeRequest } from '../services/runtime/types';
-import { InteractBody, TurnBody } from './ingest-client';
 import { AbstractClient } from './utils';
+
+type InteractionBody = IngestableInteraction<
+  {
+    stack?: FrameState[];
+    storage?: State;
+    variables?: State;
+    locale?: string;
+  },
+  Payload
+>;
 
 type Payload = Response | AlexaRuntimeRequest | null;
 
+type TraceBody = IngestableTrace<Payload>;
+
+const isAlexaRuntimeRequest = (p: Payload): p is NonNullable<AlexaRuntimeRequest> => (p && 'type' in p) ?? false;
 export class AnalyticsSystem extends AbstractClient {
-  private ingestClient?: Ingest.Api<InteractBody, TurnBody>;
+  private ingestClient?: IngestApi<InteractionBody, TraceBody>;
 
   constructor(config: Config, public dataAPI: DataAPI) {
     super(config);
 
-    if (config.INGEST_WEBHOOK_ENDPOINT) {
-      this.ingestClient = Ingest.Client(config.INGEST_WEBHOOK_ENDPOINT, undefined);
+    if (config.INGEST_V2_WEBHOOK_ENDPOINT) {
+      this.ingestClient = IngestClient(config.INGEST_V2_WEBHOOK_ENDPOINT, undefined);
     }
   }
 
-  private createInteractBody({
-    eventID,
-    request,
-    payload,
-    turnID,
-    timestamp,
-  }: {
-    eventID: Ingest.Event;
-    request: Ingest.RequestType;
-    payload: Payload;
-    turnID: string;
-    timestamp: Date;
-  }): InteractBody {
-    const isAlexaRuntimeRequest = (p: Payload): p is NonNullable<AlexaRuntimeRequest> => (p ? 'type' in p : false);
+  private createTraceBody({ request, payload }: { request: RequestType; payload: Payload }): TraceBody {
     return {
-      eventId: eventID,
-      request: {
-        turn_id: turnID,
-        type: isAlexaRuntimeRequest(payload) ? payload.type.toLocaleLowerCase() : request,
-        format: request,
-        payload,
-        timestamp: timestamp.toISOString(),
-      },
-    } as InteractBody;
+      type: isAlexaRuntimeRequest(payload) ? payload.type.toLocaleLowerCase() : request,
+      payload,
+    };
   }
 
-  private createTurnBody({
+  private createInteractionBody({
+    projectID,
     versionID,
-    eventID,
     sessionID,
     metadata,
     timestamp,
+    actionRequest,
+    actionPayload,
+    request,
+    payload,
   }: {
+    projectID: string;
     versionID: string;
-    eventID: Ingest.Event;
     sessionID: string;
     metadata: State;
     timestamp: Date;
-  }): TurnBody {
+    actionRequest: RequestType;
+    actionPayload: Payload;
+    request: RequestType;
+    payload: Payload;
+  }): InteractionBody {
     return {
-      eventId: eventID,
-      request: {
-        session_id: sessionID,
-        version_id: versionID,
-        timestamp: timestamp.toISOString(),
-        platform: 'alexa',
-        metadata: {
-          locale: metadata.storage.locale,
-        },
+      projectID,
+      sessionID,
+      versionID,
+      startTime: timestamp.toISOString(),
+      platform: 'alexa',
+      metadata: {
+        locale: metadata.storage.locale,
       },
-    } as TurnBody;
+      action: {
+        type: actionRequest,
+        payload: actionPayload!,
+      },
+      traces: [this.createTraceBody({ request, payload })],
+    };
   }
 
   async track({
-    id: versionID,
+    projectID,
+    versionID,
     event,
+    actionRequest,
+    actionPayload,
     request,
     payload,
     sessionid,
     metadata,
     timestamp,
-    turnIDP,
   }: {
-    id: string;
-    event: Ingest.Event;
-    request: Ingest.RequestType;
+    projectID: string;
+    versionID: string;
+    event: Event;
+    actionRequest: RequestType;
+    actionPayload: Payload;
+    request: RequestType;
     payload: Payload;
     sessionid?: string;
     metadata: State;
     timestamp: Date;
-    turnIDP?: string;
   }): Promise<string> {
     versionID = await this.dataAPI.unhashVersionID(versionID);
     log.trace(`[analytics] track ${log.vars({ versionID })}`);
     switch (event) {
-      case Ingest.Event.TURN: {
+      case Event.TURN: {
         if (!sessionid) {
           throw new Error('sessionid is required');
         }
-
-        const turnIngestBody = this.createTurnBody({
+        const interactionBody = this.createInteractionBody({
+          projectID,
           versionID,
-          eventID: event,
           sessionID: sessionid,
           metadata,
           timestamp,
-        });
-        const turnResponse = await this.ingestClient?.doIngest(turnIngestBody);
-
-        const turnID = turnResponse?.data.turn_id!;
-        const interactIngestBody = this.createInteractBody({
-          eventID: Ingest.Event.INTERACT,
+          actionRequest,
+          actionPayload,
           request,
           payload,
-          turnID,
-          timestamp,
         });
-
-        await this.ingestClient?.doIngest(interactIngestBody);
-
-        return turnID;
+        const interactionResponse = await this.ingestClient?.ingestInteraction(interactionBody);
+        return interactionResponse?.data.turnID!;
       }
-      case Ingest.Event.INTERACT: {
-        if (!turnIDP) {
-          throw new Error('turnIDP is required');
-        }
-
-        const interactIngestBody = this.createInteractBody({
-          eventID: event,
-          request,
-          payload,
-          turnID: turnIDP,
-          timestamp,
-        });
-
-        await this.ingestClient?.doIngest(interactIngestBody);
-
-        return turnIDP;
+      case Event.INTERACT: {
+        throw new RangeError('INTERACT events are not supported');
       }
       default:
         throw new RangeError(`Unknown event type: ${event}`);
