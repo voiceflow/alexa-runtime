@@ -1,5 +1,10 @@
 import { Api as IngestApi, Client as IngestClient } from '@voiceflow/event-ingestion-service/build/lib/client';
-import { Event, IngestableInteraction, IngestableTrace, RequestType } from '@voiceflow/event-ingestion-service/build/lib/types';
+import {
+  Event,
+  IngestableInteraction,
+  IngestableTrace,
+  RequestType,
+} from '@voiceflow/event-ingestion-service/build/lib/types';
 import { DataAPI, State } from '@voiceflow/general-runtime/build/runtime';
 import { FrameState } from '@voiceflow/general-runtime/build/runtime/lib/Runtime/Stack';
 import { Response } from 'ask-sdk-model';
@@ -111,47 +116,6 @@ export class AnalyticsSystem extends AbstractClient {
         if (!sessionid) {
           throw new Error('sessionid is required');
         }
-<<<<<<< HEAD
-
-        const turnIngestBody = this.createTurnBody({
-          versionID,
-          eventID: event,
-          sessionID: sessionid,
-          metadata,
-          timestamp,
-        });
-        const turnResponse = await this.ingestClient?.doIngest(turnIngestBody);
-
-        const turnID = turnResponse?.data.turn_id!;
-        const interactIngestBody = this.createInteractBody({
-          eventID: Ingest.Event.INTERACT,
-          request,
-          payload,
-          turnID,
-          timestamp,
-        });
-
-        await this.ingestClient?.doIngest(interactIngestBody);
-
-        return turnID;
-      }
-      case Ingest.Event.INTERACT: {
-        if (!turnIDP) {
-          throw new Error('turnIDP is required');
-        }
-
-        const interactIngestBody = this.createInteractBody({
-          eventID: event,
-          request,
-          payload,
-          turnID: turnIDP,
-          timestamp,
-        });
-
-        await this.ingestClient?.doIngest(interactIngestBody);
-
-        return turnIDP;
-=======
         const interactionBody = this.createInteractionBody({
           projectID,
           versionID,
@@ -168,7 +132,6 @@ export class AnalyticsSystem extends AbstractClient {
       }
       case Event.INTERACT: {
         throw new RangeError('INTERACT events are not supported');
->>>>>>> 25ac416 (feat: modify analytics service call to new ingest service (VF-3505))
       }
       default:
         throw new RangeError(`Unknown event type: ${event}`);
