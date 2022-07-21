@@ -17,7 +17,7 @@
     "@voiceflow/backend-utils": "4.8.1",
     "@voiceflow/base-types": "2.47.2",
     "@voiceflow/body-parser": "1.21.1",
-    "@voiceflow/common": "7.27.3",
+    "@voiceflow/common": "8.1.2",
     "@voiceflow/event-ingestion-service": "1.2.2",
     "@voiceflow/general-runtime": "1.103.1",
     "@voiceflow/logger": "1.6.1",
