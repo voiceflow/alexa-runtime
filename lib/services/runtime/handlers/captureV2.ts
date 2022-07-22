@@ -1,6 +1,5 @@
 import { AlexaNode } from '@voiceflow/alexa-types';
 import { BaseNode } from '@voiceflow/base-types';
-import { NodeType } from '@voiceflow/base-types/build/common/node';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import { Intent } from 'ask-sdk-model';
 import _ from 'lodash';
@@ -23,7 +22,7 @@ const utilsObj = {
 };
 
 export const CaptureV2Handler: HandlerFactory<AlexaNode.CaptureV2.Node, typeof utilsObj> = (utils) => ({
-  canHandle: (node) => node.type === NodeType.CAPTURE_V2,
+  canHandle: (node) => node.type === BaseNode.NodeType.CAPTURE_V2,
   handle: (node, runtime, variables) => {
     const request = runtime.turn.get<IntentRequest>(T.REQUEST);
 
