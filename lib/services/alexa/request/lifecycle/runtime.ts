@@ -13,7 +13,7 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
 
   const rawState = (await attributesManager.getPersistentAttributes()) as State;
 
-  const alexaRequest = requestEnvelope.request;
+  const { request: alexaRequest, context } = requestEnvelope;
 
   let request: AlexaRuntimeRequest;
 
@@ -25,7 +25,7 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
 
   const runtime = runtimeClient.createRuntime(versionID, rawState, request);
   const { turn, storage, variables } = runtime;
-  const system = requestEnvelope.context?.System;
+  const system = context?.System;
 
   turn.set(T.HANDLER_INPUT, input);
   runtime.turn.set(T.PREVIOUS_OUTPUT, storage.get(S.OUTPUT));
@@ -43,6 +43,7 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
       events: [],
     },
     [V.SYSTEM]: system,
+    [V.CONTEXT]: context,
     // reset response
     [V.RESPONSE]: null,
   });
