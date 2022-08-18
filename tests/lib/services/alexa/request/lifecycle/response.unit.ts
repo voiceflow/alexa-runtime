@@ -15,7 +15,7 @@ describe('response lifecycle unit tests', () => {
 
     const response = responseGenerator(utils);
 
-    const finalState = 'final-state';
+    const finalState = { stack: {}, variables: { foo: 'bar' }, storage: {} };
     const storageGet = sinon.stub().returns('speak');
     const turnGet = sinon.stub();
     turnGet.withArgs(T.REPROMPT).returns(null);
@@ -85,7 +85,18 @@ describe('response lifecycle unit tests', () => {
     expect(input.responseBuilder.withShouldEndSession.args).to.eql([[true]]);
     expect(responseHandler1.args).to.eql([[runtime, input.responseBuilder]]);
     expect(responseHandler2.args).to.eql([[runtime, input.responseBuilder]]);
-    expect(input.attributesManager.setPersistentAttributes.args).to.eql([[finalState]]);
+    expect(input.attributesManager.setPersistentAttributes.args).to.eql([
+      [
+        {
+          ...finalState,
+          variables: {
+            ...finalState.variables,
+            [V.CONTEXT]: undefined,
+            [V.SYSTEM]: undefined,
+          },
+        },
+      ],
+    ]);
   });
 
   it('stack not empty', async () => {

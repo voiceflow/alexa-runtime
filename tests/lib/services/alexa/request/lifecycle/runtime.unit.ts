@@ -56,6 +56,7 @@ describe('runtime lifecycle unit tests', () => {
             events: [],
           },
           [V.SYSTEM]: input.requestEnvelope.context.System,
+          [V.CONTEXT]: input.requestEnvelope.context,
           // reset response
           [V.RESPONSE]: null,
         },

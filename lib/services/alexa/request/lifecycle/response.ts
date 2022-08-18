@@ -1,4 +1,5 @@
 import { Event, RequestType } from '@voiceflow/event-ingestion-service/build/lib/types';
+import { State } from '@voiceflow/general-runtime/build/runtime';
 import { Response } from 'ask-sdk-model';
 import _isObject from 'lodash/isObject';
 import _mapValues from 'lodash/mapValues';
@@ -14,6 +15,15 @@ import { AlexaHandlerInput, Request } from '../../types';
 const utilsObj = {
   responseHandlers,
 };
+
+const removeHiddenVariables = (state: State): State => ({
+  ...state,
+  variables: {
+    ...state.variables,
+    [V.CONTEXT]: undefined,
+    [V.SYSTEM]: undefined,
+  },
+});
 
 export const responseGenerator = (utils: typeof utilsObj) => async (
   runtime: AlexaRuntime,
@@ -43,7 +53,7 @@ export const responseGenerator = (utils: typeof utilsObj) => async (
     await handler(runtime, responseBuilder);
   }
 
-  attributesManager.setPersistentAttributes(runtime.getFinalState());
+  attributesManager.setPersistentAttributes(removeHiddenVariables(runtime.getFinalState()));
 
   const response = responseBuilder.getResponse();
 
