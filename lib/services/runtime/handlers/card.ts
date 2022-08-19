@@ -33,7 +33,6 @@ const utilsObj = {
 export const CardHandler: HandlerFactory<BaseNode.Card.Node, typeof utilsObj> = (utils) => ({
   canHandle: (node) => !!node.card,
   handle: (node, runtime, variables) => {
-    runtime.trace.debug('__CARD ALR__ - entered', BaseNode.NodeType.CARD);
     const { card } = node;
     const type = card.type ?? BaseNode.Card.CardType.SIMPLE;
 
