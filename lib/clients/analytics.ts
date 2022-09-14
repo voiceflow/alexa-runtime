@@ -109,7 +109,6 @@ export class AnalyticsSystem extends AbstractClient {
     metadata: State;
     timestamp: Date;
   }): Promise<string> {
-    versionID = await this.dataAPI.unhashVersionID(versionID);
     log.trace(`[analytics] track ${log.vars({ versionID })}`);
     switch (event) {
       case Event.TURN: {
