@@ -7,6 +7,8 @@ import _ from 'lodash';
 
 import { T } from '@/lib/constants';
 
+import { isPrompt } from './types';
+
 const ALEXA_AUTHORITY = 'AlexaEntities';
 
 export const mapSlots = ({
@@ -55,6 +57,20 @@ const convertDeprecatedReprompt = <B extends RepromptNode>(node: B) => ({
   },
 });
 
+export const getGlobalNoMatchPrompt = (runtime: Runtime) => {
+  const { version } = runtime;
+  return isPrompt(version?.platformData.settings?.globalNoMatch?.prompt)
+    ? version?.platformData.settings?.globalNoMatch?.prompt
+    : null;
+};
+
+const getGlobalNoReplyPrompt = (runtime: Runtime) => {
+  const { version } = runtime;
+  return isPrompt(version?.platformData?.settings.globalNoReply?.prompt)
+    ? version?.platformData?.settings.globalNoReply?.prompt
+    : null;
+};
+
 export const addRepromptIfExists = <B extends RepromptNode>({
   node,
   runtime,
@@ -65,8 +81,11 @@ export const addRepromptIfExists = <B extends RepromptNode>({
   variables: Store;
 }): void => {
   const noReplyNode = convertDeprecatedReprompt(node);
-  const prompt = _.sample(noReplyNode.noReply.prompts);
-  if (prompt) {
-    runtime.turn.set(T.REPROMPT, replaceVariables(prompt, variables.getState()));
+  const content = noReplyNode.noReply.prompts?.length
+    ? _.sample(noReplyNode.noReply.prompts)
+    : getGlobalNoReplyPrompt(runtime)?.content;
+
+  if (content) {
+    runtime.turn.set(T.REPROMPT, replaceVariables(content, variables.getState()));
   }
 };

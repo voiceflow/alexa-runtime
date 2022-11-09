@@ -4,6 +4,8 @@ import sinon from 'sinon';
 import { S } from '@/lib/constants';
 import { EMPTY_AUDIO_STRING, NoMatchHandler } from '@/lib/services/runtime/handlers/noMatch';
 
+const GlobalNoMatch = { prompt: { voice: 'Alexa', content: 'Sorry, could not understand what you said' } };
+
 describe('noMatch handler unit tests', () => {
   describe('handle', () => {
     it('next id', () => {
@@ -20,9 +22,11 @@ describe('noMatch handler unit tests', () => {
           get: sinon.stub().returns(2),
         },
       };
-
+      const variables = {
+        getState: sinon.stub().returns({}),
+      };
       const noMatchHandler = NoMatchHandler();
-      expect(noMatchHandler.handle(node as any, runtime as any, {} as any)).to.eql(node.noMatch.nodeID);
+      expect(noMatchHandler.handle(node as any, runtime as any, variables as any)).to.eql(node.noMatch.nodeID);
     });
 
     it('with old noMatch format', () => {
@@ -109,6 +113,58 @@ describe('noMatch handler unit tests', () => {
       const draft3 = { [S.OUTPUT]: 'msg: ' };
       cb2(draft3);
       expect(draft3).to.eql({ [S.OUTPUT]: 'msg: the counter is 5.23' });
+    });
+
+    it('with global noMatch', () => {
+      const node = {
+        id: 'node-id',
+        noMatch: {
+          prompts: [],
+        },
+      };
+      const runtime = {
+        storage: {
+          set: sinon.stub(),
+          produce: sinon.stub(),
+          delete: sinon.stub(),
+          get: sinon.stub().returns(null),
+        },
+        trace: {
+          addTrace: sinon.stub(),
+        },
+        version: {
+          platformData: {
+            settings: {
+              globalNoMatch: GlobalNoMatch,
+            },
+          },
+        },
+      };
+      const variables = {
+        getState: sinon.stub().returns({ counter: 5.2345 }),
+      };
+
+      const noMatchHandler = NoMatchHandler();
+      expect(noMatchHandler.handle(node as any, runtime as any, variables as any)).to.eql(node.id);
+      expect(runtime.trace.addTrace.args).to.eql([
+        [
+          {
+            type: 'speak',
+            payload: {
+              message: 'Sorry, could not understand what you said',
+              type: 'message',
+            },
+          },
+        ],
+      ]);
+
+      expect(runtime.storage.set.args).to.eql([[S.NO_MATCHES_COUNTER, 1]]);
+
+      // adds output
+      const cb2 = runtime.storage.produce.args[0][0];
+      const draft3 = { [S.OUTPUT]: 'msg: ' };
+      cb2(draft3);
+      expect(draft3).to.eql({ [S.OUTPUT]: 'msg: Sorry, could not understand what you said' });
     });
 
     it('without noMatch', () => {

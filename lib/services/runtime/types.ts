@@ -1,9 +1,19 @@
-import { AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
+import { AlexaConstants, AlexaProgram, AlexaVersion } from '@voiceflow/alexa-types';
 import Client, { DataAPI, Runtime } from '@voiceflow/general-runtime/build/runtime';
 import { ResponseBuilder as ASKResponseBuilder } from 'ask-sdk';
 import { Intent } from 'ask-sdk-model';
 
 import { FullServiceMap } from '..';
+
+export interface Prompt {
+  voice: AlexaConstants.Voice;
+  content: string;
+}
+
+export const isPrompt = (prompt: unknown): prompt is Prompt => {
+  if (!prompt || typeof prompt !== 'object') return false;
+  return 'voice' in prompt && 'content' in prompt;
+};
 
 export enum RequestType {
   EVENT = 'EVENT',

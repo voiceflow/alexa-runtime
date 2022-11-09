@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 import { S } from '@/lib/constants';
 
-import { addRepromptIfExists, RepromptNode } from '../utils';
+import { addRepromptIfExists, getGlobalNoMatchPrompt, RepromptNode } from '../utils';
 
 export type NoMatchCounterStorage = number;
 
@@ -37,26 +37,37 @@ const convertDeprecatedNoMatch = ({
 const removeEmptyPrompts = (node: NoMatchNode): string[] =>
   node.noMatch?.prompts?.filter((noMatch) => noMatch != null && noMatch !== EMPTY_AUDIO_STRING) ?? [];
 
+const getOutput = (runtime: Runtime, node: NoMatchNode, noMatchCounter: number, variables: Store) => {
+  const noMatchPrompts = removeEmptyPrompts(node);
+
+  const exhaustedReprompts = noMatchCounter >= noMatchPrompts.length;
+  const sanitizedVars = sanitizeVariables(variables.getState());
+  const globalNoMatchPrompt = getGlobalNoMatchPrompt(runtime);
+
+  if (exhaustedReprompts) {
+    return replaceVariables(globalNoMatchPrompt?.content, sanitizedVars);
+  }
+
+  const speak = (node.noMatch?.randomize ? _.sample(noMatchPrompts) : noMatchPrompts?.[noMatchCounter]) || '';
+  return replaceVariables(speak, sanitizedVars);
+};
+
 export const NoMatchHandler = () => ({
   handle: (_node: DeprecatedNoMatchNode & RepromptNode, runtime: Runtime, variables: Store) => {
     const node = convertDeprecatedNoMatch(_node);
-    const noMatchPrompts = removeEmptyPrompts(node);
-
     const noMatchCounter = runtime.storage.get<NoMatchCounterStorage>(S.NO_MATCHES_COUNTER) ?? 0;
 
-    if (noMatchCounter >= noMatchPrompts.length) {
+    const output = getOutput(runtime, node, noMatchCounter, variables);
+
+    if (!output) {
       // clean up no matches counter
       runtime.storage.delete(S.NO_MATCHES_COUNTER);
       return node.noMatch?.nodeID ?? null;
     }
 
-    runtime.storage.set(S.NO_MATCHES_COUNTER, noMatchCounter + 1);
-
-    const speak = (node.noMatch?.randomize ? _.sample(noMatchPrompts) : noMatchPrompts?.[noMatchCounter]) || '';
-    const sanitizedVars = sanitizeVariables(variables.getState());
-    const output = replaceVariables(speak, sanitizedVars);
-
     addRepromptIfExists({ node: _node, runtime, variables });
+
+    runtime.storage.set(S.NO_MATCHES_COUNTER, noMatchCounter + 1);
 
     runtime.storage.produce((draft) => {
       draft[S.OUTPUT] += output;
@@ -71,4 +82,6 @@ export const NoMatchHandler = () => ({
   },
 });
 
-export default () => NoMatchHandler();
+const createNoMatchHandler = () => NoMatchHandler();
+
+export default createNoMatchHandler;
