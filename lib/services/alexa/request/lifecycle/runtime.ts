@@ -8,7 +8,7 @@ import log from '@/logger';
 import { AlexaHandlerInput, Request } from '../../types';
 
 const buildRuntime = async (input: AlexaHandlerInput) => {
-  const { versionID, runtimeClient } = input.context;
+  const { versionID, runtimeClient, api } = input.context;
   const { attributesManager, requestEnvelope } = input;
 
   const rawState = (await attributesManager.getPersistentAttributes()) as State;
@@ -23,7 +23,8 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
     request = { type: RequestType.EVENT, payload: { event: alexaRequest.type, data: alexaRequest } };
   }
 
-  const runtime = runtimeClient.createRuntime(versionID, rawState, request);
+  const version = await api.getVersion(versionID);
+  const runtime = runtimeClient.createRuntime(versionID, rawState, request, undefined, version);
   const { turn, storage, variables } = runtime;
   const system = context?.System;
 

@@ -4,6 +4,8 @@ import sinon from 'sinon';
 import { T } from '@/lib/constants';
 import { addRepromptIfExists, mapSlots } from '@/lib/services/runtime/utils';
 
+const GlobalNoReply = { prompt: { voice: 'Alexa', content: 'Sorry, could not understand what you said' } };
+
 describe('voiceflow manager utils unit tests', async () => {
   afterEach(() => sinon.restore());
 
@@ -24,6 +26,45 @@ describe('voiceflow manager utils unit tests', async () => {
       addRepromptIfExists({ node, runtime: runtime as any, variables: variables as any });
 
       expect(runtime.turn.set.args[0]).to.eql([T.REPROMPT, 'hello there']);
+    });
+
+    it('has global no-match and has reprompt', () => {
+      const runtime = {
+        turn: { set: sinon.stub() },
+        version: {
+          platformData: {
+            settings: {
+              globalNoReply: GlobalNoReply,
+            },
+          },
+        },
+      };
+      const node = { reprompt: 'hello {var}' };
+      const varState = { var: 'there' };
+      const variables = { getState: sinon.stub().returns(varState) };
+
+      addRepromptIfExists({ node, runtime: runtime as any, variables: variables as any });
+
+      expect(runtime.turn.set.args[0]).to.eql([T.REPROMPT, 'hello there']);
+    });
+
+    it('has global no-match and has no reprompt', () => {
+      const runtime = {
+        turn: { set: sinon.stub() },
+        version: {
+          platformData: {
+            settings: {
+              globalNoReply: GlobalNoReply,
+            },
+          },
+        },
+      };
+
+      const variables = { getState: sinon.stub() };
+
+      addRepromptIfExists({ node: { foo: 'bar' } as any, runtime: runtime as any, variables: variables as any });
+
+      expect(runtime.turn.set.args[0]).to.eql([T.REPROMPT, 'Sorry, could not understand what you said']);
     });
   });
 
