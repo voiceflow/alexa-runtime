@@ -115,6 +115,52 @@ describe('noMatch handler unit tests', () => {
       expect(draft3).to.eql({ [S.OUTPUT]: 'msg: the counter is 5.23' });
     });
 
+    it('with new noMatch format and noMatch with path action', () => {
+      const node = {
+        id: 'node-id',
+        noMatch: {
+          nodeID: 'next-id',
+          prompts: ['the counter is {counter}'],
+        },
+      };
+      const runtime = {
+        storage: {
+          set: sinon.stub(),
+          produce: sinon.stub(),
+          get: sinon.stub().returns(null),
+          delete: sinon.stub(),
+        },
+        trace: {
+          addTrace: sinon.stub(),
+        },
+      };
+      const variables = {
+        getState: sinon.stub().returns({ counter: 5.2345 }),
+      };
+
+      const noMatchHandler = NoMatchHandler();
+      expect(noMatchHandler.handle(node as any, runtime as any, variables as any)).to.eql('next-id');
+      expect(runtime.trace.addTrace.args).to.eql([
+        [
+          {
+            type: 'speak',
+            payload: {
+              message: 'the counter is 5.23',
+              type: 'message',
+            },
+          },
+        ],
+      ]);
+
+      expect(runtime.storage.delete.callCount).to.eql(1);
+
+      // adds output
+      const cb2 = runtime.storage.produce.args[0][0];
+      const draft3 = { [S.OUTPUT]: 'msg: ' };
+      cb2(draft3);
+      expect(draft3).to.eql({ [S.OUTPUT]: 'msg: the counter is 5.23' });
+    });
+
     it('with global noMatch', () => {
       const node = {
         id: 'node-id',
