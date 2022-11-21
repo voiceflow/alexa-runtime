@@ -65,10 +65,6 @@ export const NoMatchHandler = () => ({
       return node.noMatch?.nodeID ?? null;
     }
 
-    addRepromptIfExists({ node: _node, runtime, variables });
-
-    runtime.storage.set(S.NO_MATCHES_COUNTER, noMatchCounter + 1);
-
     runtime.storage.produce((draft) => {
       draft[S.OUTPUT] += output;
     });
@@ -77,6 +73,14 @@ export const NoMatchHandler = () => ({
       type: BaseNode.Utils.TraceType.SPEAK,
       payload: { message: output, type: BaseNode.Speak.TraceSpeakType.MESSAGE },
     });
+
+    if (node.noMatch?.nodeID) {
+      runtime.storage.delete(S.NO_MATCHES_COUNTER);
+      return node.noMatch.nodeID;
+    }
+
+    runtime.storage.set(S.NO_MATCHES_COUNTER, noMatchCounter + 1);
+    addRepromptIfExists({ node: _node, runtime, variables });
 
     return node.id;
   },
