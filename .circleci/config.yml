@@ -169,6 +169,18 @@ workflows:
             branches:
               only: master
 
+      - vfcommon/sync_branches:
+          check_commit_message: "[breakglass]"
+          ssh_key: << pipeline.parameters.ssh-fingerprint >>
+          checkout: true
+          context: dev-test
+          name: sync-branches-break-glass
+          requires:
+            - vfcommon/install_and_build
+          filters:
+            branches:
+              only: master
+
       # Update Production branch
       - vfcommon/post_image_push_actions:
           <<: *prod_deploy_filters
@@ -206,3 +218,5 @@ workflows:
           filters:
             branches:
               only: master
+
+# VS Code Extension Version: 1.5.1
