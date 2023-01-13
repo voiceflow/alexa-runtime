@@ -58,7 +58,9 @@ describe('audio player event handler unit test', () => {
 
       expect(await AudioPlayerEventHandler.handle(input as any)).to.eql(output);
       expect(input.attributesManager.getPersistentAttributes.callCount).to.eql(1);
-      expect(runtimeClient.createRuntime.args).to.eql([[input.context.versionID, initialRawState]]);
+      expect(runtimeClient.createRuntime.args).to.eql([
+        [{ versionID: input.context.versionID, state: initialRawState }],
+      ]);
       expect(input.attributesManager.setPersistentAttributes.args).to.eql([[rawState]]);
     });
 

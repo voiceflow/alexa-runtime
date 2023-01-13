@@ -24,7 +24,12 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
   }
 
   const version = await api.getVersion(versionID);
-  const runtime = runtimeClient.createRuntime(versionID, rawState, request, undefined, version);
+  const runtime = runtimeClient.createRuntime({
+    versionID,
+    state: rawState,
+    request,
+    version,
+  });
   const { turn, storage, variables } = runtime;
   const system = context?.System;
 

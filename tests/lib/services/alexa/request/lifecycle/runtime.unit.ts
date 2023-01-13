@@ -36,7 +36,7 @@ describe('runtime lifecycle unit tests', () => {
 
     expect(await buildRuntime(input as any)).to.eql(runtime);
     expect(input.context.runtimeClient.createRuntime.args).to.eql([
-      [input.context.versionID, rawState, undefined, undefined, { id: 'version-id' }],
+      [{ versionID: input.context.versionID, state: rawState, version: { id: 'version-id' }, request: undefined }],
     ]);
     expect(runtime.turn.set.args).to.eql([
       [T.HANDLER_INPUT, input],
@@ -93,11 +93,12 @@ describe('runtime lifecycle unit tests', () => {
     expect(await buildRuntime(input as any)).to.eql(runtime);
     expect(input.context.runtimeClient.createRuntime.args).to.eql([
       [
-        input.context.versionID,
-        rawState,
-        { type: RequestType.EVENT, payload: { event: 'randomEvent', data: input.requestEnvelope.request } },
-        undefined,
-        { id: 'version-id' },
+        {
+          versionID: input.context.versionID,
+          state: rawState,
+          request: { type: RequestType.EVENT, payload: { event: 'randomEvent', data: input.requestEnvelope.request } },
+          version: { id: 'version-id' },
+        },
       ],
     ]);
     expect(runtime.setEvent.args[0][0]).to.eql('stateDidCatch');
@@ -128,11 +129,12 @@ describe('runtime lifecycle unit tests', () => {
     expect(await buildRuntime(input as any)).to.eql(runtime);
     expect(input.context.runtimeClient.createRuntime.args).to.eql([
       [
-        input.context.versionID,
-        rawState,
-        { type: RequestType.INTENT, payload: input.requestEnvelope.request },
-        undefined,
-        { id: 'version-id' },
+        {
+          versionID: input.context.versionID,
+          state: rawState,
+          request: { type: RequestType.INTENT, payload: input.requestEnvelope.request },
+          version: { id: 'version-id' },
+        },
       ],
     ]);
     expect(runtime.setEvent.args[0][0]).to.eql('stateDidCatch');

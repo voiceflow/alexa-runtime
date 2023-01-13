@@ -30,7 +30,7 @@ export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): Reques
   async handle(input: AlexaHandlerInput) {
     const { versionID, runtimeClient } = input.context;
     const rawState = await input.attributesManager.getPersistentAttributes();
-    let runtime = runtimeClient.createRuntime(versionID, rawState as State);
+    let runtime = runtimeClient.createRuntime({ versionID, state: rawState as State });
     const { storage } = runtime;
 
     const { request } = input.requestEnvelope;
@@ -42,7 +42,7 @@ export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): Reques
     switch (audioPlayerEventName) {
       case AudioEvent.PlaybackStarted:
         if (storage.get(S.STREAM_FINISHED) && storage.get(S.STREAM_TEMP)) {
-          runtime = runtimeClient.createRuntime(versionID, storage.get(S.STREAM_TEMP) as State);
+          runtime = runtimeClient.createRuntime({ versionID, state: storage.get(S.STREAM_TEMP) as State });
         } else {
           storage.delete(S.STREAM_FINISHED);
         }
@@ -69,7 +69,7 @@ export const AudioPlayerEventHandlerGenerator = (utils: typeof utilsObj): Reques
           }
         } else if (streamPlay.action === StreamAction.START && !storage.get(S.STREAM_TEMP)) {
           // check for next stream
-          const tempRuntime = runtimeClient.createRuntime(versionID, rawState as State);
+          const tempRuntime = runtimeClient.createRuntime({ versionID, state: rawState as State });
           tempRuntime.storage.set(S.STREAM_PLAY, {
             ...tempRuntime.storage.get<StreamPlay>(S.STREAM_PLAY),
             action: StreamAction.NEXT,

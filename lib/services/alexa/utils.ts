@@ -12,7 +12,7 @@ export const updateRuntime = async (
 
   const rawState = await input.attributesManager.getPersistentAttributes();
 
-  const runtime = runtimeClient.createRuntime(versionID, rawState as State);
+  const runtime = runtimeClient.createRuntime({ versionID, state: rawState as State });
 
   await produce(runtime);
 

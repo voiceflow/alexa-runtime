@@ -23,7 +23,9 @@ describe('alexa manager utils unit tests', () => {
 
       await updateRuntime(handlerInput as any, produce as any);
 
-      expect(runtimeClient.createRuntime.args).to.eql([[handlerInput.context.versionID, rawStateBefore]]);
+      expect(runtimeClient.createRuntime.args).to.eql([
+        [{ versionID: handlerInput.context.versionID, state: rawStateBefore }],
+      ]);
       expect(produce.args).to.eql([[runtime]]);
       expect(handlerInput.attributesManager.setPersistentAttributes.args).to.eql([[rawStateAfter]]);
     });
