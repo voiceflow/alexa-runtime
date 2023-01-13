@@ -1,3 +1,4 @@
+import { VoiceflowConstants } from '@voiceflow/voiceflow-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -5,13 +6,23 @@ import { T } from '@/lib/constants';
 import { addRepromptIfExists, mapSlots } from '@/lib/services/runtime/utils';
 
 const GlobalNoReply = { prompt: { voice: 'Alexa', content: 'Sorry, could not understand what you said' } };
+const GlobalEmtptyNoReply = { prompt: { voice: 'Alexa', content: '' } };
 
 describe('voiceflow manager utils unit tests', async () => {
   afterEach(() => sinon.restore());
 
   describe('addRepromptIfExists', () => {
     it('does not have repropmt', () => {
-      const runtime = { turn: { set: sinon.stub() } };
+      const runtime = {
+        turn: { set: sinon.stub() },
+        version: {
+          platformData: {
+            settings: {
+              globalNoReply: GlobalEmtptyNoReply,
+            },
+          },
+        },
+      };
       addRepromptIfExists({ node: { foo: 'bar' } as any, runtime: runtime as any, variables: null as any });
 
       expect(runtime.turn.set.callCount).to.eql(0);
@@ -65,6 +76,24 @@ describe('voiceflow manager utils unit tests', async () => {
       addRepromptIfExists({ node: { foo: 'bar' } as any, runtime: runtime as any, variables: variables as any });
 
       expect(runtime.turn.set.args[0]).to.eql([T.REPROMPT, 'Sorry, could not understand what you said']);
+    });
+
+    it('should display default global no-match message, has not edited global no-match and has no reprompt', () => {
+      const runtime = {
+        turn: { set: sinon.stub() },
+        version: {
+          platformData: {
+            settings: {
+              globalNoReply: null,
+            },
+          },
+        },
+      };
+      const variables = { getState: sinon.stub() };
+
+      addRepromptIfExists({ node: { foo: 'bar' } as any, runtime: runtime as any, variables: variables as any });
+
+      expect(runtime.turn.set.args[0]).to.eql([T.REPROMPT, VoiceflowConstants.defaultMessages.globalNoReply]);
     });
   });
 

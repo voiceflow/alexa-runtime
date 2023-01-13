@@ -30,13 +30,22 @@ describe('runtime lifecycle unit tests', () => {
         runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
         api: {
           getVersion: sinon.stub().returns({ id: 'version-id' }),
+          getProject: sinon.stub().returns({ id: 'project-id' }),
         },
       },
     };
 
     expect(await buildRuntime(input as any)).to.eql(runtime);
     expect(input.context.runtimeClient.createRuntime.args).to.eql([
-      [{ versionID: input.context.versionID, state: rawState, version: { id: 'version-id' }, request: undefined }],
+      [
+        {
+          versionID: input.context.versionID,
+          state: rawState,
+          version: { id: 'version-id' },
+          project: { id: 'project-id' },
+          request: undefined,
+        },
+      ],
     ]);
     expect(runtime.turn.set.args).to.eql([
       [T.HANDLER_INPUT, input],
@@ -86,6 +95,7 @@ describe('runtime lifecycle unit tests', () => {
         runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
         api: {
           getVersion: sinon.stub().returns({ id: 'version-id' }),
+          getProject: sinon.stub().returns({ id: 'project-id' }),
         },
       },
     };
@@ -98,6 +108,7 @@ describe('runtime lifecycle unit tests', () => {
           state: rawState,
           request: { type: RequestType.EVENT, payload: { event: 'randomEvent', data: input.requestEnvelope.request } },
           version: { id: 'version-id' },
+          project: { id: 'project-id' },
         },
       ],
     ]);
@@ -122,6 +133,7 @@ describe('runtime lifecycle unit tests', () => {
         runtimeClient: { createRuntime: sinon.stub().returns(runtime) },
         api: {
           getVersion: sinon.stub().returns({ id: 'version-id' }),
+          getProject: sinon.stub().returns({ id: 'project-id' }),
         },
       },
     };
@@ -134,6 +146,7 @@ describe('runtime lifecycle unit tests', () => {
           state: rawState,
           request: { type: RequestType.INTENT, payload: input.requestEnvelope.request },
           version: { id: 'version-id' },
+          project: { id: 'project-id' },
         },
       ],
     ]);
