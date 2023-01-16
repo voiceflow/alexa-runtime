@@ -1,9 +1,7 @@
 import { BaseModels, Nullable } from '@voiceflow/base-types';
 import { formatIntentName, replaceVariables, transformStringVariableToNumber } from '@voiceflow/common';
-import { isPromptContentInitialyzed } from '@voiceflow/general-runtime/build/lib/services/runtime/utils';
 import { Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
 import { VoiceNode } from '@voiceflow/voice-types';
-import { VoiceflowConstants } from '@voiceflow/voiceflow-types';
 import { Slot } from 'ask-sdk-model';
 import _ from 'lodash';
 
@@ -86,11 +84,6 @@ export const addRepromptIfExists = <B extends RepromptNode>({
   const content = noReplyNode.noReply.prompts?.length
     ? _.sample(noReplyNode.noReply.prompts)
     : getGlobalNoReplyPrompt(runtime)?.content;
-
-  if (!isPromptContentInitialyzed(content)) {
-    runtime.turn.set(T.REPROMPT, VoiceflowConstants.defaultMessages.globalNoReply);
-    return;
-  }
 
   if (content) {
     runtime.turn.set(T.REPROMPT, replaceVariables(content, variables.getState()));
