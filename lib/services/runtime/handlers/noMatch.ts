@@ -1,7 +1,9 @@
 import { BaseNode, Nullable } from '@voiceflow/base-types';
 import { replaceVariables, sanitizeVariables } from '@voiceflow/common';
+import { isPromptContentInitialyzed } from '@voiceflow/general-runtime/build/lib/services/runtime/utils';
 import { Runtime, Store } from '@voiceflow/general-runtime/build/runtime';
 import { VoiceNode } from '@voiceflow/voice-types';
+import { VoiceflowConstants } from '@voiceflow/voiceflow-types';
 import _ from 'lodash';
 
 import { S } from '@/lib/constants';
@@ -44,12 +46,16 @@ const getOutput = (runtime: Runtime, node: NoMatchNode, noMatchCounter: number, 
   const sanitizedVars = sanitizeVariables(variables.getState());
   const globalNoMatchPrompt = getGlobalNoMatchPrompt(runtime);
 
-  if (exhaustedReprompts) {
-    return replaceVariables(globalNoMatchPrompt?.content, sanitizedVars);
+  if (!exhaustedReprompts) {
+    const speak = (node.noMatch?.randomize ? _.sample(noMatchPrompts) : noMatchPrompts?.[noMatchCounter]) || '';
+    return replaceVariables(speak, sanitizedVars);
   }
 
-  const speak = (node.noMatch?.randomize ? _.sample(noMatchPrompts) : noMatchPrompts?.[noMatchCounter]) || '';
-  return replaceVariables(speak, sanitizedVars);
+  if (!isPromptContentInitialyzed(globalNoMatchPrompt?.content)) {
+    return VoiceflowConstants.defaultMessages.globalNoMatch;
+  }
+
+  return replaceVariables(globalNoMatchPrompt?.content, sanitizedVars);
 };
 
 export const NoMatchHandler = () => ({

@@ -5,6 +5,7 @@ import { S } from '@/lib/constants';
 import { EMPTY_AUDIO_STRING, NoMatchHandler } from '@/lib/services/runtime/handlers/noMatch';
 
 const GlobalNoMatch = { prompt: { voice: 'Alexa', content: 'Sorry, could not understand what you said' } };
+const GlobalEmptyNoMatch = { prompt: { voice: 'Alexa', content: '' } };
 
 describe('noMatch handler unit tests', () => {
   describe('handle', () => {
@@ -20,6 +21,10 @@ describe('noMatch handler unit tests', () => {
         storage: {
           delete: sinon.stub(),
           get: sinon.stub().returns(2),
+          produce: sinon.stub(),
+        },
+        trace: {
+          addTrace: sinon.stub(),
         },
       };
       const variables = {
@@ -40,6 +45,7 @@ describe('noMatch handler unit tests', () => {
           set: sinon.stub(),
           get: sinon.stub().returns(0),
         },
+        turn: { set: sinon.stub() },
         trace: {
           addTrace: sinon.stub(),
         },
@@ -86,6 +92,9 @@ describe('noMatch handler unit tests', () => {
         },
         trace: {
           addTrace: sinon.stub(),
+        },
+        turn: {
+          set: sinon.stub(),
         },
       };
       const variables = {
@@ -178,6 +187,9 @@ describe('noMatch handler unit tests', () => {
         trace: {
           addTrace: sinon.stub(),
         },
+        turn: {
+          set: sinon.stub(),
+        },
         version: {
           platformData: {
             settings: {
@@ -222,33 +234,20 @@ describe('noMatch handler unit tests', () => {
           set: sinon.stub(),
           delete: sinon.stub(),
           get: sinon.stub(),
+          produce: sinon.stub(),
         },
         trace: {
           addTrace: sinon.stub(),
         },
-      };
-      const variables = {
-        getState: sinon.stub().returns({}),
-      };
-
-      const noMatchHandler = NoMatchHandler();
-      expect(noMatchHandler.handle(node as any, runtime as any, variables as any)).to.eql(null);
-      expect(runtime.trace.addTrace.callCount).to.eql(0);
-    });
-
-    it('with choices', () => {
-      const node = {
-        id: 'node-id',
-        interactions: [{ intent: 'address_intent' }, { intent: 'phone_number_intent' }],
-      };
-      const runtime = {
-        storage: {
+        turn: {
           set: sinon.stub(),
-          delete: sinon.stub(),
-          get: sinon.stub().returns(0),
         },
-        trace: {
-          addTrace: sinon.stub(),
+        version: {
+          platformData: {
+            settings: {
+              globalNoMatch: GlobalEmptyNoMatch,
+            },
+          },
         },
       };
       const variables = {
@@ -277,6 +276,9 @@ describe('noMatch handler unit tests', () => {
         trace: {
           addTrace: sinon.stub(),
         },
+        turn: {
+          set: sinon.stub(),
+        },
       };
       const variables = {
         getState: sinon.stub().returns({}),
@@ -302,6 +304,9 @@ describe('noMatch handler unit tests', () => {
         trace: {
           addTrace: sinon.stub(),
         },
+        turn: {
+          set: sinon.stub(),
+        },
       };
       const variables = {
         getState: sinon.stub().returns({}),
@@ -319,6 +324,7 @@ describe('noMatch handler unit tests', () => {
         noMatches: [EMPTY_AUDIO_STRING, NON_NULL_STRING],
       };
       const runtime = {
+        turn: { set: sinon.stub() },
         storage: {
           set: sinon.stub(),
           produce: sinon.stub(),
