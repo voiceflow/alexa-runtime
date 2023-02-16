@@ -22,8 +22,7 @@ const GenerativeHandler: HandlerFactory<VoiceNode.Generative.Node> = () => ({
 
     if (!node.prompt) return nextID;
 
-    const ML_GATEWAY_PORT = Config.ML_GATEWAY_PORT.split('/api')[0];
-    const generativeEndpoint = `${ML_GATEWAY_PORT}/api/v1/generation/generative-response`;
+    const generativeEndpoint = `${Config.ML_GATEWAY_PORT}/api/v1/generation/generative-response`;
 
     const sanitizedVars = sanitizeVariables(variables.getState());
     const prompt = replaceVariables(node.prompt, sanitizedVars);
