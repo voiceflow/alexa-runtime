@@ -60,6 +60,8 @@ export interface Config {
   ANALYTICS_ENDPOINT: string | null;
   ANALYTICS_WRITE_KEY: string | null;
   INGEST_V2_WEBHOOK_ENDPOINT: string | null;
+
+  ML_GATEWAY_PORT: string | null;
 }
 
 export interface Request<P extends Record<string, any> = EmptyObject> extends Express.Request<P> {
