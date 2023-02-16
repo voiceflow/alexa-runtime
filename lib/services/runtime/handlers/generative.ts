@@ -31,7 +31,10 @@ const GenerativeHandler: HandlerFactory<VoiceNode.Generative.Node> = () => ({
     const response = await axios
       .post<{ result: string }>(generativeEndpoint, { prompt, length })
       .then(({ data: { result } }) => result)
-      .catch(() => null);
+      .catch((error) => {
+        log.error(error);
+        return null;
+      });
 
     if (!response) return nextID;
 
