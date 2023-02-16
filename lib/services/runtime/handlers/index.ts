@@ -26,6 +26,7 @@ import CodeHandler from './code';
 import DirectiveHandler, { DirectiveResponseBuilder } from './directive';
 import DisplayHandler, { DisplayResponseBuilder } from './display';
 import DisplayHandlerV2 from './displayV2';
+import GenerativeHandler from './generative';
 import GoToHandler from './goTo';
 import InteractionHandler from './interaction';
 import PaymentHandler, { PaymentResponseBuilder } from './payment';
@@ -60,6 +61,7 @@ export default ({
   API_MAX_TIMEOUT_MS,
 }: Config) => [
   ...StateHandlers(),
+  GenerativeHandler(),
   SpeakHandler(),
   GoToHandler(),
   DirectiveHandler(),

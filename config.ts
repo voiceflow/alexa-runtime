@@ -67,6 +67,8 @@ const CONFIG: Config = {
   ANALYTICS_WRITE_KEY: getOptionalProcessEnv('ANALYTICS_WRITE_KEY') || null,
 
   INGEST_V2_WEBHOOK_ENDPOINT: getOptionalProcessEnv('INGEST_V2_WEBHOOK_ENDPOINT') || null,
+
+  ML_GATEWAY_PORT: getOptionalProcessEnv('ML_GATEWAY_PORT') || null,
 };
 
 export default CONFIG;
