@@ -2,10 +2,12 @@ import { EventType, State } from '@voiceflow/general-runtime/build/runtime';
 import safeJSONStringify from 'json-stringify-safe';
 
 import { S, T, V } from '@/lib/constants';
-import { AlexaRuntimeRequest, RequestType } from '@/lib/services/runtime/types';
+import { AlexaRuntimeRequest, IntentName, RequestType } from '@/lib/services/runtime/types';
 import log from '@/logger';
 
 import { AlexaHandlerInput, Request } from '../../types';
+
+const withShouldEndSessionIntents = new Set<string>([IntentName.STOP, IntentName.CANCEL]);
 
 const buildRuntime = async (input: AlexaHandlerInput) => {
   const { versionID, runtimeClient, api } = input.context;
@@ -63,6 +65,10 @@ const buildRuntime = async (input: AlexaHandlerInput) => {
   runtime.setEvent(EventType.handlerDidCatch, (error) =>
     log.error(`[app] [runtime] handler error caught ${log.vars({ error: safeJSONStringify(error) })}`)
   );
+
+  if (request?.type === RequestType.INTENT && withShouldEndSessionIntents.has(request.payload.intent.name)) {
+    turn.set(T.END, true);
+  }
 
   return runtime;
 };
