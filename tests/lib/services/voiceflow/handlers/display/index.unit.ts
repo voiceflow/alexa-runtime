@@ -25,6 +25,7 @@ describe('displayHandler.unit tests', () => {
   describe('handle', () => {
     it('supportedInterfaces is null', async () => {
       const runtime = {
+        stack: { top: sinon.stub() },
         storage: { get: sinon.stub().returns(null) },
         variables: { getState: sinon.stub().returns(null) },
       };
@@ -33,6 +34,7 @@ describe('displayHandler.unit tests', () => {
 
     it('supportedInterfaces does not have APL_INTERFACE_NAME', async () => {
       const runtime = {
+        stack: { top: sinon.stub() },
         storage: { get: sinon.stub().returns({}) },
         variables: { getState: sinon.stub().returns(null) },
       };
@@ -42,6 +44,7 @@ describe('displayHandler.unit tests', () => {
 
     it('no document', async () => {
       const runtime = {
+        stack: { top: sinon.stub() },
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
         variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
@@ -66,6 +69,7 @@ describe('displayHandler.unit tests', () => {
 
     it('valid json command', async () => {
       const runtime = {
+        stack: { top: sinon.stub() },
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
         variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
@@ -95,6 +99,7 @@ describe('displayHandler.unit tests', () => {
 
     it('undefined command', async () => {
       const runtime = {
+        stack: { top: sinon.stub() },
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
         variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
@@ -126,6 +131,7 @@ describe('displayHandler.unit tests', () => {
 
         const document = 'document';
         const runtime = {
+          stack: { top: sinon.stub() },
           storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
           variables: { getState: sinon.stub().returns(null) },
           services: { multimodal: { getDisplayDocument: sinon.stub().returns(document) } },
