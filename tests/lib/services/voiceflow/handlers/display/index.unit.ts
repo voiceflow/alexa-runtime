@@ -48,6 +48,7 @@ describe('displayHandler.unit tests', () => {
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
         variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
+        version: 'version',
       };
       const node = { display_id: 'display-id', apl_commands: 'commands', datasource: '{hello} there, {name}' };
       expect(await displayHandler.handle(node as any, runtime as any, null as any, null as any)).to.eql(null);
@@ -64,7 +65,7 @@ describe('displayHandler.unit tests', () => {
           },
         ],
       ]);
-      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id]]);
+      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id, runtime.version]]);
     });
 
     it('valid json command', async () => {
@@ -73,6 +74,7 @@ describe('displayHandler.unit tests', () => {
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
         variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
+        version: 'version',
       };
       const rawCommand = ['a', 'b'];
       const node = {
@@ -94,7 +96,7 @@ describe('displayHandler.unit tests', () => {
           },
         ],
       ]);
-      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id]]);
+      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id, runtime.version]]);
     });
 
     it('undefined command', async () => {
@@ -103,6 +105,7 @@ describe('displayHandler.unit tests', () => {
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
         variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
+        version: 'version',
       };
 
       const node = { display_id: 'display-id', datasource: '{hello} there, {name}' };
@@ -120,7 +123,7 @@ describe('displayHandler.unit tests', () => {
           },
         ],
       ]);
-      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id]]);
+      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id, runtime.version]]);
     });
 
     describe('with document', () => {

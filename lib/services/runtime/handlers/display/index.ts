@@ -7,7 +7,6 @@ import _ from 'lodash';
 
 import { S } from '@/lib/constants';
 import { FullServiceMap } from '@/lib/services';
-import log from '@/logger';
 
 import { APL_INTERFACE_NAME, ENDED_EVENT_PREFIX, EVENT_SEND_EVENT } from './constants';
 import * as events from './events';
@@ -70,15 +69,9 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
       dataSourceVariables: utils.getVariables(dataSource),
     };
 
-    const programID = runtime.stack.top()?.getProgramID?.();
-    if (displayID) {
-      log.warn(
-        `[display handler]: versionID ${runtime.getVersionID?.()}, programID ${programID}, displayID ${displayID}`
-      );
-    }
     runtime.storage.set(S.DISPLAY_INFO, displayInfo);
 
-    const document = await services.multimodal.getDisplayDocument(displayID);
+    const document = await services.multimodal.getDisplayDocument(displayID, runtime.version);
 
     if (!document) {
       return nextId;

@@ -1,9 +1,12 @@
 import { DataAPI } from '@voiceflow/general-runtime/build/runtime';
+import _isEqual from 'lodash/isEqual';
+
+import log from '@/logger';
 
 class Multimodal {
   constructor(private dataAPI: DataAPI) {}
 
-  getDisplayDocument = async (displayId: number): Promise<null | Record<string, any>> => {
+  getDisplayDocument = async (displayId: number, version?: any): Promise<null | Record<string, any>> => {
     if (displayId < 0) {
       return null;
     }
@@ -15,7 +18,17 @@ class Multimodal {
         return null;
       }
 
-      return JSON.parse(data.document);
+      const document = JSON.parse(data.document);
+
+      try {
+        log.warn(
+          `[display check] displayId: ${displayId} ${_isEqual(document, JSON.parse(version?.displays?.[displayId]))}`
+        );
+      } catch (e) {
+        log.warn(`[display check] displayId: ${displayId} ERROR`);
+      }
+
+      return document;
     } catch (e) {
       return null;
     }
