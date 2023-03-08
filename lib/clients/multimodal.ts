@@ -22,7 +22,10 @@ class Multimodal {
 
       try {
         log.warn(
-          `[display check] displayId: ${displayId} ${_isEqual(document, JSON.parse(version?.displays?.[displayId]))}`
+          `[display check] displayId: ${displayId} ${_isEqual(
+            document,
+            JSON.parse(version?.platformData?.displays?.[displayId])
+          )}`
         );
       } catch (e) {
         log.warn(`[display check] displayId: ${displayId} ERROR`);
