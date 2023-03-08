@@ -71,7 +71,7 @@ export const DisplayHandler: HandlerFactory<DisplayNode, typeof utilsObj> = (uti
 
     runtime.storage.set(S.DISPLAY_INFO, displayInfo);
 
-    const document = await services.multimodal.getDisplayDocument(displayID, runtime.version);
+    const document = await services.multimodal.getDisplayDocument(displayID);
 
     if (!document) {
       return nextId;

@@ -25,7 +25,6 @@ describe('displayHandler.unit tests', () => {
   describe('handle', () => {
     it('supportedInterfaces is null', async () => {
       const runtime = {
-        stack: { top: sinon.stub() },
         storage: { get: sinon.stub().returns(null) },
         variables: { getState: sinon.stub().returns(null) },
       };
@@ -34,7 +33,6 @@ describe('displayHandler.unit tests', () => {
 
     it('supportedInterfaces does not have APL_INTERFACE_NAME', async () => {
       const runtime = {
-        stack: { top: sinon.stub() },
         storage: { get: sinon.stub().returns({}) },
         variables: { getState: sinon.stub().returns(null) },
       };
@@ -44,11 +42,9 @@ describe('displayHandler.unit tests', () => {
 
     it('no document', async () => {
       const runtime = {
-        stack: { top: sinon.stub() },
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
         variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
-        version: 'version',
       };
       const node = { display_id: 'display-id', apl_commands: 'commands', datasource: '{hello} there, {name}' };
       expect(await displayHandler.handle(node as any, runtime as any, null as any, null as any)).to.eql(null);
@@ -65,16 +61,14 @@ describe('displayHandler.unit tests', () => {
           },
         ],
       ]);
-      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id, runtime.version]]);
+      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id]]);
     });
 
     it('valid json command', async () => {
       const runtime = {
-        stack: { top: sinon.stub() },
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
         variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
-        version: 'version',
       };
       const rawCommand = ['a', 'b'];
       const node = {
@@ -96,16 +90,14 @@ describe('displayHandler.unit tests', () => {
           },
         ],
       ]);
-      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id, runtime.version]]);
+      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id]]);
     });
 
     it('undefined command', async () => {
       const runtime = {
-        stack: { top: sinon.stub() },
         storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
         variables: { getState: sinon.stub().returns(null) },
         services: { multimodal: { getDisplayDocument: sinon.stub().returns(null) } },
-        version: 'version',
       };
 
       const node = { display_id: 'display-id', datasource: '{hello} there, {name}' };
@@ -123,7 +115,7 @@ describe('displayHandler.unit tests', () => {
           },
         ],
       ]);
-      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id, runtime.version]]);
+      expect(runtime.services.multimodal.getDisplayDocument.args).to.eql([[node.display_id]]);
     });
 
     describe('with document', () => {
@@ -134,7 +126,6 @@ describe('displayHandler.unit tests', () => {
 
         const document = 'document';
         const runtime = {
-          stack: { top: sinon.stub() },
           storage: { set: sinon.stub(), get: sinon.stub().returns({ [APL_INTERFACE_NAME]: true }) },
           variables: { getState: sinon.stub().returns(null) },
           services: { multimodal: { getDisplayDocument: sinon.stub().returns(document) } },
