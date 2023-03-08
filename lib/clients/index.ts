@@ -11,13 +11,13 @@ import Analytics, { AnalyticsSystem } from './analytics';
 import Dynamo, { DynamoType } from './dynamo';
 import Metrics, { MetricsType } from './metrics';
 import MongoDB from './mongodb';
-import Multimodal, { MultimodalType } from './multimodal';
+import Multimodal from './multimodal';
 import PostgresDB from './postgres';
 import Static, { StaticType } from './static';
 
 export interface ClientMap extends StaticType {
   dynamo: DynamoType;
-  multimodal: MultimodalType;
+  multimodal: Multimodal;
   dataAPI: DataAPI<AlexaProgram.Program, AlexaVersion.Version>;
   metrics: MetricsType;
   mongo: MongoDB | null;
@@ -44,7 +44,7 @@ const buildClients = (config: Config): ClientMap => {
         },
         { axios: Static.axios }
       );
-  const multimodal = Multimodal(dataAPI);
+  const multimodal = new Multimodal();
   const metrics = Metrics(config);
   const mongo = MongoPersistenceAdapter.enabled(config) ? new MongoDB(config) : null;
   const pg = PostgresPersistenceAdapter.enabled(config) ? new PostgresDB(config) : null;
