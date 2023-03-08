@@ -38,7 +38,7 @@ export const DocumentResponseBuilder: ResponseBuilder = async (runtime, builder)
     let document;
 
     if (!displayInfo.document) {
-      document = await services.multimodal.getDisplayDocument(displayInfo.currentDisplay!, runtime.project);
+      document = services.multimodal.getDisplayDocument(displayInfo.currentDisplay!, runtime.project);
 
       if (!document) {
         return;

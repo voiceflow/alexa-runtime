@@ -1,48 +1,14 @@
-import { DataAPI } from '@voiceflow/general-runtime/build/runtime';
-import _isEqual from 'lodash/isEqual';
-
-import log from '@/logger';
-
 class Multimodal {
-  constructor(private dataAPI: DataAPI) {}
-
-  getDisplayDocument = async (displayId: number, project?: any): Promise<null | Record<string, any>> => {
-    if (displayId < 0) {
-      return null;
-    }
-
+  getDisplayDocument = (displayId: number, project?: any): null | Record<string, any> => {
     try {
-      const data = await this.dataAPI.fetchDisplayById(displayId);
+      const document = project?.platformData?.displays?.[displayId];
+      if (!document) return null;
 
-      if (!data?.document) {
-        return null;
-      }
-
-      const document = JSON.parse(data.document);
-
-      try {
-        log.warn(
-          `[display init] displayId: ${displayId} version: ${!!project}, displays: ${!!project?.platformData?.displays}`
-        );
-        log.warn(
-          `[display check] displayId: ${displayId} ${_isEqual(
-            document,
-            JSON.parse(project?.platformData?.displays?.[displayId])
-          )}`
-        );
-      } catch (e) {
-        log.warn(`[display check] displayId: ${displayId} ERROR ${e}`);
-      }
-
-      return document;
+      return JSON.parse(document);
     } catch (e) {
       return null;
     }
   };
 }
 
-const MultimodalClient = (dataAPI: DataAPI) => new Multimodal(dataAPI);
-
-export type MultimodalType = Multimodal;
-
-export default MultimodalClient;
+export default Multimodal;
