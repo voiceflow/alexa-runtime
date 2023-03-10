@@ -133,7 +133,7 @@ describe('captureV2 handler unit tests', async () => {
 
           const node = { nextId: 'next-id', intent: {}, intentScope: BaseNode.Utils.IntentScope.NODE };
           const request = { type: RequestType.INTENT, payload: { intent: { name: 'random', slots: [] } } };
-          const runtime = { turn: { get: sinon.stub().returns(request) } };
+          const runtime = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
 
           expect(captureHandler.handle(node as any, runtime as any, {} as any, null as any)).to.eql('no-match-path');
           expect(utils.commandHandler.canHandle.callCount).to.eql(0);
@@ -152,7 +152,7 @@ describe('captureV2 handler unit tests', async () => {
 
           const node = { nextId: 'next-id', intent: {} };
           const request = { type: RequestType.INTENT, payload: { intent: { name: 'random', slots: [] } } };
-          const runtime = { turn: { get: sinon.stub().returns(request) } };
+          const runtime = { turn: { get: sinon.stub().returns(request), delete: sinon.stub() } };
           const variables = { foo: 'bar' };
 
           expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(
@@ -176,7 +176,7 @@ describe('captureV2 handler unit tests', async () => {
           const slotName = 'slot1';
           const node = { id: nodeID, nextId: 'next-id', intent: { name: 'intent-name', entities: [slotName] } };
           const request = { type: RequestType.INTENT, payload: { intent: {} } };
-          const runtime = { turn: { get: sinon.stub().returns(request), set: sinon.stub() } };
+          const runtime = { turn: { get: sinon.stub().returns(request), set: sinon.stub(), delete: sinon.stub() } };
           const variables = { foo: 'bar' };
 
           expect(captureHandler.handle(node as any, runtime as any, variables as any, null as any)).to.eql(nodeID);
