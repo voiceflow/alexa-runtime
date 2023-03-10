@@ -58,14 +58,11 @@ Also add the following file to the local repository:
 >
 > PORT=4000
 > SESSIONS_DYNAMO_TABLE="none"
-> VF_DATA_ENDPOINT="none"
 >
 > INTEGRATIONS_HANDLER_ENDPOINT="none"
 >
 > LOG_LEVEL="debug"
 > MIDDLEWARE_VERBOSITY="short"
->
-> ADMIN_SERVER_DATA_API_TOKEN="none"
 >
 > PG_USERNAME='PG_USERNAME'
 > PG_HOST='PG_HOST'

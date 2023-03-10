@@ -15,10 +15,7 @@ describe('voiceflowManager unit tests', async () => {
         setEvent: sinon.stub(),
       };
       const services = {};
-      const config = {
-        VF_DATA_ENDPOINT: 'random-endpoint',
-        VF_DATA_SECRET: 'random-secret',
-      };
+      const config = {};
       const utils = {
         resume: {
           ResumeDiagram: { foo: 'bar' },
