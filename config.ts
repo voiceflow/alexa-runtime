@@ -21,9 +21,6 @@ const CONFIG: Config = {
   AWS_REGION: getOptionalProcessEnv('AWS_REGION'),
   AWS_ENDPOINT: getOptionalProcessEnv('AWS_ENDPOINT'),
 
-  // Application secrets
-  ADMIN_SERVER_DATA_API_TOKEN: getRequiredProcessEnv('ADMIN_SERVER_DATA_API_TOKEN'),
-
   DYNAMO_ENDPOINT: getOptionalProcessEnv('DYNAMO_ENDPOINT'),
   CODE_HANDLER_ENDPOINT: getOptionalProcessEnv('CODE_HANDLER_ENDPOINT'),
   INTEGRATIONS_HANDLER_ENDPOINT: getRequiredProcessEnv('INTEGRATIONS_HANDLER_ENDPOINT'),
@@ -41,8 +38,6 @@ const CONFIG: Config = {
 
   // diagrams table
   SESSIONS_DYNAMO_TABLE: getRequiredProcessEnv('SESSIONS_DYNAMO_TABLE'),
-
-  VF_DATA_ENDPOINT: getRequiredProcessEnv('VF_DATA_ENDPOINT'),
 
   // Logging
   LOG_LEVEL: getOptionalProcessEnv('LOG_LEVEL'),

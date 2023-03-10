@@ -18,8 +18,6 @@ export interface Config {
   AWS_ENDPOINT: string | null;
 
   // Application secrets
-  ADMIN_SERVER_DATA_API_TOKEN: string;
-
   DYNAMO_ENDPOINT: string | null;
   CODE_HANDLER_ENDPOINT: string | null;
   INTEGRATIONS_HANDLER_ENDPOINT: string;
@@ -36,7 +34,6 @@ export interface Config {
 
   SESSIONS_DYNAMO_TABLE: string;
 
-  VF_DATA_ENDPOINT: string;
   // Logging
   LOG_LEVEL: string | null;
   MIDDLEWARE_VERBOSITY: string | null;
