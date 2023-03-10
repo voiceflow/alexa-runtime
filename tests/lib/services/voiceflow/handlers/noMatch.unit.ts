@@ -148,7 +148,7 @@ describe('noMatch handler unit tests', () => {
       };
 
       const noMatchHandler = NoMatchHandler();
-      expect(noMatchHandler.handle(node as any, runtime as any, variables as any)).to.eql('next-id');
+      expect(noMatchHandler.handle(node as any, runtime as any, variables as any)).to.eql('node-id');
       expect(runtime.trace.addTrace.args).to.eql([
         [
           {
@@ -161,7 +161,7 @@ describe('noMatch handler unit tests', () => {
         ],
       ]);
 
-      expect(runtime.storage.delete.callCount).to.eql(1);
+      expect(runtime.storage.delete.callCount).to.eql(0);
 
       // adds output
       const cb2 = runtime.storage.produce.args[0][0];

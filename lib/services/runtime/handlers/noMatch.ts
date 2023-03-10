@@ -51,6 +51,12 @@ const getOutput = (runtime: Runtime, node: NoMatchNode, noMatchCounter: number, 
     return replaceVariables(speak, sanitizedVars);
   }
 
+  // if we have exhausted reprompts AND there is a following action,
+  // we should not continue prompting
+  if (node.noMatch?.nodeID) {
+    return null;
+  }
+
   if (!isPromptContentInitialyzed(globalNoMatchPrompt?.content)) {
     return VoiceflowConstants.defaultMessages.globalNoMatch;
   }
@@ -79,11 +85,6 @@ export const NoMatchHandler = () => ({
       type: BaseNode.Utils.TraceType.SPEAK,
       payload: { message: output, type: BaseNode.Speak.TraceSpeakType.MESSAGE },
     });
-
-    if (node.noMatch?.nodeID) {
-      runtime.storage.delete(S.NO_MATCHES_COUNTER);
-      return node.noMatch.nodeID;
-    }
 
     runtime.storage.set(S.NO_MATCHES_COUNTER, noMatchCounter + 1);
     addRepromptIfExists({ node: _node, runtime, variables });

@@ -62,11 +62,12 @@ export const CaptureV2Handler: HandlerFactory<AlexaNode.CaptureV2.Node, typeof u
     }
 
     // handle noMatch
+    runtime.turn.delete(T.REQUEST);
     const noMatchPath = utils.noMatchHandler.handle(node, runtime, variables);
+
     if (noMatchPath === node.id && node.intent?.entities) {
       runtime.turn.set<Intent>(T.DELEGATE, createDelegateIntent(node.intent.name, node.intent.entities));
     }
-
     return noMatchPath;
   },
 });
