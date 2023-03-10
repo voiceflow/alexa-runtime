@@ -75,21 +75,24 @@ export const responseGenerator = (utils: typeof utilsObj) => async (
 
   // not using async await, since analytics is not blocking operation
   // Track response on analytics system
-  runtime.services.analyticsClient
-    .track({
-      projectID,
-      versionID,
-      event: Event.TURN,
-      actionRequest:
-        input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
-      actionPayload: runtime.getRequest(),
-      request: RequestType.RESPONSE,
-      payload: response,
-      sessionid: input.requestEnvelope.session?.sessionId,
-      metadata: runtime.getFinalState(),
-      timestamp: new Date(),
-    })
-    .catch((error: unknown) => log.error(`[analytics] failed to identify ${log.vars({ versionID, error })}`));
+  const sessionid = input.requestEnvelope.session?.sessionId;
+  if (sessionid) {
+    runtime.services.analyticsClient
+      .track({
+        projectID,
+        versionID,
+        event: Event.TURN,
+        actionRequest:
+          input?.requestEnvelope?.request?.type === 'LaunchRequest' ? RequestType.LAUNCH : RequestType.REQUEST,
+        actionPayload: runtime.getRequest(),
+        request: RequestType.RESPONSE,
+        payload: response,
+        sessionid,
+        metadata: runtime.getFinalState(),
+        timestamp: new Date(),
+      })
+      .catch((error: unknown) => log.error(`[analytics] failed to identify ${log.vars({ versionID, error })}`));
+  }
 
   return response;
 };
