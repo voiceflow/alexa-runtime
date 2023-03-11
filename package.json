@@ -19,7 +19,7 @@
     "@voiceflow/body-parser": "1.21.1",
     "@voiceflow/common": "8.2.0",
     "@voiceflow/event-ingestion-service": "1.2.3",
-    "@voiceflow/general-runtime": "1.133.0",
+    "@voiceflow/general-runtime": "1.133.1",
     "@voiceflow/logger": "1.6.1",
     "@voiceflow/metrics": "1.4.1",
     "@voiceflow/verror": "1.1.3",
