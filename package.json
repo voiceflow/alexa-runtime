@@ -68,7 +68,7 @@
     "@types/ioredis": "^4.26.4",
     "@types/json-stringify-safe": "^5.0.0",
     "@types/jsonwebtoken": "^8.3.5",
-    "@types/lodash": "^4.14.149",
+    "@types/lodash": "^4.14.191",
     "@types/mocha": "^5.2.7",
     "@types/mongodb": "^3.6.20",
     "@types/node": "16.11.36",
