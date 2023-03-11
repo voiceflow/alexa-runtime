@@ -28,6 +28,7 @@ export interface ClientMap extends StaticType {
  * Build all clients
  */
 const buildClients = (config: Config): ClientMap => {
+  // TODO: remove dynamo
   const dynamo = Dynamo(config);
   const mongo = new MongoDB(config);
 
@@ -46,8 +47,8 @@ const buildClients = (config: Config): ClientMap => {
 
   return {
     ...Static,
-    mongo,
     pg,
+    mongo,
     dynamo,
     dataAPI,
     metrics,
