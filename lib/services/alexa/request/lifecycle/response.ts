@@ -1,5 +1,6 @@
 import { Event, RequestType } from '@voiceflow/event-ingestion-service/build/lib/types';
 import { State } from '@voiceflow/general-runtime/build/runtime';
+import { escapeXmlCharacters } from 'ask-sdk';
 import { Response } from 'ask-sdk-model';
 import _isObject from 'lodash/isObject';
 import _mapValues from 'lodash/mapValues';
@@ -14,6 +15,7 @@ import { AlexaHandlerInput, Request } from '../../types';
 
 const utilsObj = {
   responseHandlers,
+  escapeXmlCharacters,
 };
 
 const removeHiddenVariables = (state: State): State => ({
@@ -41,8 +43,10 @@ export const responseGenerator = (utils: typeof utilsObj) => async (
   }
 
   if (!speakNotAllowedRequestTypes.has(request.type)) {
-    responseBuilder.speak(storage.get<string>(S.OUTPUT) ?? '');
-    responseBuilder.reprompt((turn.get<string>(T.REPROMPT) || storage.get<string>(S.OUTPUT)) ?? '');
+    responseBuilder.speak(utils.escapeXmlCharacters(storage.get<string>(S.OUTPUT) ?? ''));
+    responseBuilder.reprompt(
+      utils.escapeXmlCharacters((turn.get<string>(T.REPROMPT) || storage.get<string>(S.OUTPUT)) ?? '')
+    );
   }
 
   responseBuilder.withShouldEndSession(!!turn.get(T.END));

@@ -11,7 +11,10 @@ describe('response lifecycle unit tests', () => {
     const responseHandler1 = sinon.stub();
     const responseHandler2 = sinon.stub();
 
-    const utils = { responseHandlers: [responseHandler1, responseHandler2] };
+    const utils = {
+      responseHandlers: [responseHandler1, responseHandler2],
+      escapeXmlCharacters: (input: string): string => input,
+    };
 
     const response = responseGenerator(utils);
 
@@ -100,7 +103,7 @@ describe('response lifecycle unit tests', () => {
   });
 
   it('stack not empty', async () => {
-    const utils = { responseHandlers: [] };
+    const utils = { responseHandlers: [], escapeXmlCharacters: (input: string): string => input };
 
     const response = responseGenerator(utils);
     const versionID = 'version.id';
@@ -165,7 +168,7 @@ describe('response lifecycle unit tests', () => {
   });
 
   it('response variable', async () => {
-    const utils = { responseHandlers: [] };
+    const utils = { responseHandlers: [], escapeXmlCharacters: (input: string): string => input };
 
     const response = responseGenerator(utils);
 
@@ -202,7 +205,7 @@ describe('response lifecycle unit tests', () => {
   });
 
   it('skips speak if audioplayer event', async () => {
-    const utils = { responseHandlers: [] };
+    const utils = { responseHandlers: [], escapeXmlCharacters: (input: string): string => input };
 
     const response = responseGenerator(utils);
 
