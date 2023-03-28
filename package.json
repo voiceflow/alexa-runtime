@@ -49,7 +49,8 @@
     "pg-format": "^1.0.4",
     "randomstring": "^1.1.5",
     "regenerator-runtime": "^0.13.3",
-    "words-to-numbers": "^1.5.1"
+    "words-to-numbers": "^1.5.1",
+    "xmlbuilder2": "3.0.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",

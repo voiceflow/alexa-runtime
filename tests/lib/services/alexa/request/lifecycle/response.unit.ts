@@ -13,7 +13,7 @@ describe('response lifecycle unit tests', () => {
 
     const utils = {
       responseHandlers: [responseHandler1, responseHandler2],
-      escapeXmlCharacters: (input: string): string => input,
+      encodeSSML: (input: string): string => input,
     };
 
     const response = responseGenerator(utils);
@@ -103,7 +103,7 @@ describe('response lifecycle unit tests', () => {
   });
 
   it('stack not empty', async () => {
-    const utils = { responseHandlers: [], escapeXmlCharacters: (input: string): string => input };
+    const utils = { responseHandlers: [], encodeSSML: (input: string): string => input };
 
     const response = responseGenerator(utils);
     const versionID = 'version.id';
@@ -168,7 +168,7 @@ describe('response lifecycle unit tests', () => {
   });
 
   it('response variable', async () => {
-    const utils = { responseHandlers: [], escapeXmlCharacters: (input: string): string => input };
+    const utils = { responseHandlers: [], encodeSSML: (input: string): string => input };
 
     const response = responseGenerator(utils);
 
@@ -205,7 +205,7 @@ describe('response lifecycle unit tests', () => {
   });
 
   it('skips speak if audioplayer event', async () => {
-    const utils = { responseHandlers: [], escapeXmlCharacters: (input: string): string => input };
+    const utils = { responseHandlers: [], encodeSSML: (input: string): string => input };
 
     const response = responseGenerator(utils);
 
