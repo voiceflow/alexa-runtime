@@ -53,7 +53,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: 'us-east-1'
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GH_SA_TOKEN }}
         run: |
           sleep $[ ( $RANDOM % 10 ) ]s # Add dither to desync multiple tag request firings
 
@@ -68,7 +67,7 @@ jobs:
           NEW_LABEL="env-${ENV_NAME}"
 
           # Get all components and retrieve the line that has the json output
-          COMPONENT_URL=$(./vfcli component list  --interactive false --full  --output json --no-telepresence -n ${ENV_NAME} | jq -cr '.[] | select(.id | contains("creator-app")).endpoint')
+          COMPONENT_URL=$(./vfcli component list  --interactive false --verbose --output json  --no-telepresence -n ${ENV_NAME} | grep { | jq -cr '.[] | select(.id | contains("creator-app")).endpoint')
           echo ${COMPONENT_URL}
 
           echo -e "::set-output name=newEnvName::${ENV_NAME}"
