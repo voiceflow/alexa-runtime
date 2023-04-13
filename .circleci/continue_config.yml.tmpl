@@ -20,33 +20,17 @@ parameters:
     type: string
     default: 'alexa-runtime'
 
+{{- $borsBranches := coll.Slice "trying" "staging" }}
+{{- $masterProdBranches := coll.Slice "master" "prod" }}
+
 # Reusable YAML chunks
 defaults:
-  prod_deploy_filters: &prod_deploy_filters
-    filters:
-      branches:
-        only:
-          - production
-
-  ignore_master_prod_break_glass_deploy_filters: &ignore_master_prod_break_glass_deploy_filters
-      branches:
-        ignore:
-          - master
-          - production
-          - /^break-glass.*$/
-
-
-  ignore_break_glass_deploy_filters: &ignore_break_glass_deploy_filters
-    filters:
-      branches:
-        ignore:
-          - /^break-glass.*$/
-
-  trying_staging_filters: &trying_staging_filters
+  bors_branches_filters: &bors_branches_filters
     branches:
       only:
-        - staging
-        - trying
+        {{- range $borsBranches }}
+        - {{ . }}
+        {{- end }}
 
   slack-fail-post-step: &slack-fail-post-step
     post-steps:
@@ -58,11 +42,10 @@ defaults:
           branch_pattern: master
 
 orbs:
-  vfcommon: voiceflow/common@0.17.2
+  vfcommon: voiceflow/common@{{ .values.common_orb_version }}
   sonarcloud: sonarsource/sonarcloud@1.0.2
 
 jobs:
-
   test:
     executor: vfcommon/code-test-executor
     steps:
@@ -88,28 +71,15 @@ jobs:
       - vfcommon/smoke_tests
       - sonarcloud/scan
 
-# When should each job run and what are their dependencies?
-workflows:
-  # Merge Queue jobs
-  queue-jobs:
-    when:
-      not:
-        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
-    jobs:
-      - vfcommon/test_e2e_start_service:
-          <<: *slack-fail-post-step
-          service_name: alexa-runtime
-          service_port: '8012'
-          e2e_service_dependencies: 'server-data-api-e2e'
-          context: dev-test
-          filters:
-            <<: *trying_staging_filters
 
-# Master (production)
-  test-and-release-app:
-    when:
-      not:
-        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+workflows:
+  {{- if has $masterProdBranches .values.branch }}
+  test-and-release:
+  {{- else if has $borsBranches .values.branch }}
+  e2e-tests:
+  {{- else }}
+  test:
+  {{- end }}
     jobs:
       - vfcommon/install_and_build:
           avoid_post_install_scripts: false
@@ -119,50 +89,90 @@ workflows:
       - test:
           <<: *slack-fail-post-step
           context: dev-test
-          name: test-master
           requires:
             - vfcommon/install_and_build
           filters:
             branches:
-              only: master
-
-      - test:
-          <<: *slack-fail-post-step
-          context: dev-test
-          requires:
-            - vfcommon/install_and_build
-          filters:
-            <<: *ignore_master_prod_break_glass_deploy_filters
+              ignore:
+                - production
+                - /^break-glass.*$/
 
       - vfcommon/release:
           <<: *slack-fail-post-step
           context: dev-test
           requires:
             - vfcommon/install_and_build
-            - test-master
+            - test
           filters:
             branches:
               only: master
 
       - vfcommon/update_track:
-          <<: *ignore_break_glass_deploy_filters
           context: dev-test
           image_repo: << pipeline.parameters.container-image-url >>
           component: << pipeline.parameters.track-component >>
           requires:
-            - test-master
+            {{- if eq .values.branch "master" }}
+            - test
+            {{- end }}
             - vfcommon/install_and_build
             - vfcommon/release
+          filters:
+            branches:
+              ignore:
+                - /^break-glass.*$/
+
+      - vfcommon/provision-env:
+          context: dev-test
+          env-name: {{ .values.e2e_env_name }}
+          filters: *bors_branches_filters
+      - vfcommon/prepare-env:
+          context: dev-test
+          env-name: {{ .values.e2e_env_name }}
+          branch: {{ .values.branch }}
+          tracked-components: << pipeline.parameters.track-component >>
+          filters: *bors_branches_filters
+          requires:
+            - vfcommon/provision-env
+            - vfcommon/update_track
+      - vfcommon/build-e2e-tests:
+          context: dev-test
+          filters: *bors_branches_filters
+          e2e_git_ref: ben/e2e-refactor/DX-355
+      - vfcommon/run-e2e-tests:
+          context: dev-test
+          env-name: {{ .values.e2e_env_name }}
+          requires:
+            - vfcommon/build-e2e-tests
+            - vfcommon/prepare-env
+          filters: *bors_branches_filters
+      - vfcommon/release-env:
+          context: dev-test
+          env-name: {{ .values.e2e_env_name }}
+          requires:
+            - vfcommon/run-e2e-tests
+          filters: *bors_branches_filters
+
+      - vfcommon/build_push_image:
+          name: build-push-image-e2e
+          context: dev-test
+          image_repo: << pipeline.parameters.container-image-url >>
+          dockerfile: "Dockerfile.e2e"
+          image_tag: "latest-master-e2e"
+          requires:
+            - vfcommon/update_track
+          filters:
+            branches:
+              only: master
 
       - vfcommon/sync_branches:
           check_commit_message: "[bugfix]"
           ssh_key: << pipeline.parameters.ssh-fingerprint >>
+          checkout: true
           context: dev-test
           name: sync-branches-bugfix
-          checkout: true
           requires:
             - vfcommon/install_and_build
-            - test-master
             - test
             - vfcommon/release
           filters:
@@ -183,40 +193,14 @@ workflows:
 
       # Update Production branch
       - vfcommon/post_image_push_actions:
-          <<: *prod_deploy_filters
           namespace: << pipeline.parameters.k8s-namespace >>
           component: << pipeline.parameters.track-component >>
           tagged: true
           context: dev-test
           requires:
             - vfcommon/update_track
-
-      - vfcommon/build_push_image:
-          name: build-push-image-e2e
-          context: dev-test
-          image_repo: << pipeline.parameters.container-image-url >>
-          dockerfile: "Dockerfile.e2e"
-          image_tag: "latest-master-e2e"
-          requires:
-            - vfcommon/update_track
           filters:
             branches:
-              only: master
+              only:
+                - production
 
-  # Cron Production update
-  update-production-branch:
-    when:
-      and:
-        - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
-        - equal: [ "update-production-branch", << pipeline.schedule.name >> ]
-    jobs:
-      - vfcommon/sync_branches:
-          checkout: true
-          ssh_key: << pipeline.parameters.ssh-fingerprint >>
-          name: sync-branches-scheduled
-          context: dev-test
-          filters:
-            branches:
-              only: master
-
-# VS Code Extension Version: 1.5.1
