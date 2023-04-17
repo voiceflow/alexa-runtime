@@ -1,4 +1,12 @@
-status = ["ci/circleci: test_e2e_start_service", "ci/circleci: test"]
+status = [
+  "ci/circleci: update_track",
+  "ci/circleci: install_and_build",
+  "ci/circleci: test",
+  "ci/circleci: run-e2e-tests",
+  "ci/circleci: provision-env",
+  "ci/circleci: prepare-env",
+  "ci/circleci: old_e2e_tests",
+]
 delete_merged_branches = true
 use_squash_merge = true
 cut_body_after = "### Implementation details. How do you make this change?"
