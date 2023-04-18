@@ -1,5 +1,8 @@
 name: PR-label -> preview dev env
 
+env:
+  COMPONENTS: alexa-runtime
+
 on:
   pull_request:
     types: [reopened, labeled]
@@ -68,7 +71,7 @@ jobs:
           NEW_LABEL="env-${ENV_NAME}"
 
           # Get all components and retrieve the line that has the json output
-          COMPONENT_URL=$(./vfcli component list  --interactive false --full  --output json --no-telepresence -n ${ENV_NAME} | jq -cr '.[] | select(.id | contains("creator-app")).endpoint')
+          COMPONENT_URL=$(./vfcli component list --interactive false --full --output json  --no-telepresence --name ${ENV_NAME} | jq -cr '.[] | select(.id | contains("creator-app")).endpoint')
           echo ${COMPONENT_URL}
 
           echo -e "::set-output name=newEnvName::${ENV_NAME}"
@@ -96,28 +99,31 @@ jobs:
           ./vfcli init --interactive false
 
           echo "Creating track..."
-          COMPONENT=$(echo "${GITHUB_REPOSITORY}" | sed 's:.*/::')
           BRANCH="$(echo ${GITHUB_HEAD_REF#refs/heads/})"
           NEW_LABEL="${{ github.event.label.name }}"
 
           if [[ $NEW_LABEL == *"env-"* ]]
           then
             ENV_NAME=$(sed 's|env-||g' <<< $NEW_LABEL)
-            ./vfcli track create -n  $ENV_NAME -c $COMPONENT -b $BRANCH --interactive false --no-telepresence
           else
-            ./vfcli track create -n  ${{ steps.createNewEnv.outputs.newEnvName }} -c $COMPONENT -b $BRANCH --interactive false --no-telepresence
+            ENV_NAME=${{ steps.createNewEnv.outputs.newEnvName }}
           fi
+
+          ./vfcli track create -n  $ENV_NAME -c $COMPONENTS -b $BRANCH --interactive false --no-telepresence
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@main
         if: steps.newEnvLabel.outputs.hasLabel == 'true' && steps.envNameLabel.outputs.label == ''
         with:
-          message: 'Dev environment ${{ steps.createNewEnv.outputs.newEnvName }} created!'
+          message: |
+            Dev environment ${{ steps.createNewEnv.outputs.newEnvName }} created!
+            Preview available at: https://${{ steps.createNewEnv.outputs.endpoint }}
           GITHUB_TOKEN: ${{ secrets.GH_SA_TOKEN }}
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@main
-        if: steps.newEnvLabel.outputs.hasLabel == 'true' && steps.envNameLabel.outputs.label == ''
+        if: ${{ failure() }}
         with:
-          message: 'https://${{ steps.createNewEnv.outputs.endpoint }}'
+          message: |
+            Creation of review environment failed! See details here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GITHUB_TOKEN: ${{ secrets.GH_SA_TOKEN }}
