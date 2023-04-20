@@ -18,6 +18,8 @@ import { Config } from '@/types';
 
 import _V1Handler from './_v1';
 import AccountLinkingHandler, { AccountLinkingResponseBuilder } from './accountLinking';
+import AIResponseHandler from './aiResponse';
+import AISetHandler from './aiSet';
 import CancelPaymentHandler, { CancelPaymentResponseBuilder } from './cancelPayment';
 import CaptureHandler from './capture';
 import CaptureV2Handler from './captureV2';
@@ -26,7 +28,6 @@ import CodeHandler from './code';
 import DirectiveHandler, { DirectiveResponseBuilder } from './directive';
 import DisplayHandler, { DisplayResponseBuilder } from './display';
 import DisplayHandlerV2 from './displayV2';
-import GenerativeHandler from './generative';
 import GoToHandler from './goTo';
 import InteractionHandler from './interaction';
 import PaymentHandler, { PaymentResponseBuilder } from './payment';
@@ -61,7 +62,8 @@ export default ({
   API_MAX_TIMEOUT_MS,
 }: Config) => [
   ...StateHandlers(),
-  GenerativeHandler(),
+  AIResponseHandler(),
+  AISetHandler(),
   SpeakHandler(),
   GoToHandler(),
   DirectiveHandler(),

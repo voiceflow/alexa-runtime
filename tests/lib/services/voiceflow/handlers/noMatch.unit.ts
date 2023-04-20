@@ -23,6 +23,10 @@ describe('noMatch handler unit tests', () => {
           get: sinon.stub().returns(2),
           produce: sinon.stub(),
         },
+        variables: {
+          set: sinon.stub(),
+          get: sinon.stub(),
+        },
         trace: {
           addTrace: sinon.stub(),
         },
@@ -44,6 +48,10 @@ describe('noMatch handler unit tests', () => {
           produce: sinon.stub(),
           set: sinon.stub(),
           get: sinon.stub().returns(0),
+        },
+        variables: {
+          set: sinon.stub(),
+          get: sinon.stub(),
         },
         turn: { set: sinon.stub() },
         trace: {
@@ -89,6 +97,10 @@ describe('noMatch handler unit tests', () => {
           set: sinon.stub(),
           produce: sinon.stub(),
           get: sinon.stub().returns(null),
+        },
+        variables: {
+          set: sinon.stub(),
+          get: sinon.stub(),
         },
         trace: {
           addTrace: sinon.stub(),
@@ -139,6 +151,10 @@ describe('noMatch handler unit tests', () => {
           get: sinon.stub().returns(null),
           delete: sinon.stub(),
         },
+        variables: {
+          set: sinon.stub(),
+          get: sinon.stub(),
+        },
         trace: {
           addTrace: sinon.stub(),
         },
@@ -183,6 +199,10 @@ describe('noMatch handler unit tests', () => {
           produce: sinon.stub(),
           delete: sinon.stub(),
           get: sinon.stub().returns(null),
+        },
+        variables: {
+          set: sinon.stub(),
+          get: sinon.stub(),
         },
         trace: {
           addTrace: sinon.stub(),
@@ -273,6 +293,10 @@ describe('noMatch handler unit tests', () => {
           produce: sinon.stub(),
           get: sinon.stub().returns(0),
         },
+        variables: {
+          set: sinon.stub(),
+          get: sinon.stub(),
+        },
         trace: {
           addTrace: sinon.stub(),
         },
@@ -300,6 +324,10 @@ describe('noMatch handler unit tests', () => {
           set: sinon.stub(),
           produce: sinon.stub(),
           get: sinon.stub().returns(0),
+        },
+        variables: {
+          set: sinon.stub(),
+          get: sinon.stub(),
         },
         trace: {
           addTrace: sinon.stub(),
@@ -329,6 +357,10 @@ describe('noMatch handler unit tests', () => {
           set: sinon.stub(),
           produce: sinon.stub(),
           get: sinon.stub().returns(0),
+        },
+        variables: {
+          set: sinon.stub(),
+          get: sinon.stub(),
         },
         trace: {
           addTrace: sinon.stub(),

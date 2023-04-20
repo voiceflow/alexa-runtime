@@ -2,6 +2,7 @@ import { BaseVersion } from '@voiceflow/base-types';
 import { Runtime } from '@voiceflow/general-runtime/build/runtime';
 
 import { F, S, T } from '@/lib/constants';
+import { addOutput } from '@/lib/services/runtime/handlers/utils/output';
 
 import { IntentName, IntentRequest } from '../types';
 
@@ -20,12 +21,10 @@ const RepeatHandler = {
     const repeat = runtime.storage.get<BaseVersion.RepeatType>(S.REPEAT);
     const top = runtime.stack.top();
 
-    const output =
+    const output: string =
       (repeat === BaseVersion.RepeatType.ALL ? runtime.turn.get(T.PREVIOUS_OUTPUT) : top.storage.get(F.SPEAK)) || '';
 
-    runtime.storage.produce<{ [S.OUTPUT]: string }>((draft) => {
-      draft[S.OUTPUT] += output;
-    });
+    addOutput(output, runtime);
 
     return top.getNodeID() || null;
   },

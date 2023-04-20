@@ -1,10 +1,9 @@
 import { AlexaNode } from '@voiceflow/alexa-types';
-import { BaseNode } from '@voiceflow/base-types';
 import { replaceVariables, sanitizeVariables } from '@voiceflow/common';
 import { HandlerFactory } from '@voiceflow/general-runtime/build/runtime';
 import _ from 'lodash';
 
-import { F, S } from '@/lib/constants';
+import { addOutput } from '@/lib/services/runtime/handlers/utils/output';
 
 // TODO: probably we can remove it, since prompt is not used in the node handler,
 // and does not exist in the alexa/general service handler
@@ -29,15 +28,7 @@ const SpeakHandler: HandlerFactory<AlexaNode.Speak.Node> = () => ({
     if (_.isString(speak)) {
       const output = replaceVariables(speak, sanitizedVars);
 
-      runtime.storage.produce((draft) => {
-        draft[S.OUTPUT] += output;
-      });
-
-      runtime.stack.top().storage.set(F.SPEAK, output);
-      runtime.trace.addTrace<BaseNode.Speak.TraceFrame>({
-        type: BaseNode.Utils.TraceType.SPEAK,
-        payload: { message: output, type: BaseNode.Speak.TraceSpeakType.MESSAGE },
-      });
+      addOutput(output, runtime, { addToTop: true });
     }
 
     return node.nextId ?? null;

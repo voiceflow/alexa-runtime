@@ -7,6 +7,7 @@ import { VoiceflowConstants } from '@voiceflow/voiceflow-types';
 import _ from 'lodash';
 
 import { S } from '@/lib/constants';
+import { addOutput } from '@/lib/services/runtime/handlers/utils/output';
 
 import { addRepromptIfExists, getGlobalNoMatchPrompt, RepromptNode } from '../utils';
 
@@ -77,14 +78,7 @@ export const NoMatchHandler = () => ({
       return node.noMatch?.nodeID ?? null;
     }
 
-    runtime.storage.produce((draft) => {
-      draft[S.OUTPUT] += output;
-    });
-
-    runtime.trace.addTrace<BaseNode.Speak.TraceFrame>({
-      type: BaseNode.Utils.TraceType.SPEAK,
-      payload: { message: output, type: BaseNode.Speak.TraceSpeakType.MESSAGE },
-    });
+    addOutput(output, runtime);
 
     runtime.storage.set(S.NO_MATCHES_COUNTER, noMatchCounter + 1);
     addRepromptIfExists({ node: _node, runtime, variables });
