@@ -112,7 +112,7 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (
 
     const lastSpeak = stack.top().storage.get<string>(F.SPEAK) ?? '';
 
-    addOutput(lastSpeak, runtime, { addToTop: false });
+    addOutput(lastSpeak, runtime);
   }
 };
 

@@ -1,7 +1,7 @@
 import { BaseNode } from '@voiceflow/base-types';
 import Client, { EventType } from '@voiceflow/general-runtime/build/runtime';
 
-import { F, S } from '@/lib/constants';
+import { F } from '@/lib/constants';
 import { executeEvents } from '@/lib/services/runtime/handlers/events';
 import { addOutput } from '@/lib/services/runtime/handlers/utils/output';
 import { RESUME_PROGRAM_ID, ResumeDiagram } from '@/lib/services/runtime/programs/resume';
