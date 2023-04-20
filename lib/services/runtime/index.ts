@@ -3,6 +3,7 @@ import Client, { EventType } from '@voiceflow/general-runtime/build/runtime';
 
 import { F, S } from '@/lib/constants';
 import { executeEvents } from '@/lib/services/runtime/handlers/events';
+import { addOutput } from '@/lib/services/runtime/handlers/utils/output';
 import { RESUME_PROGRAM_ID, ResumeDiagram } from '@/lib/services/runtime/programs/resume';
 
 import { Config, Services } from '../utils';
@@ -46,16 +47,7 @@ const RuntimeClientManager = (services: Services, config: Config, utils = utilsO
 
       const output = runtime.stack.top().storage.get<string>(F.SPEAK);
 
-      if (output) {
-        runtime.storage.produce((draft) => {
-          draft[S.OUTPUT] += output;
-        });
-
-        runtime.trace.addTrace<BaseNode.Speak.TraceFrame>({
-          type: BaseNode.Utils.TraceType.SPEAK,
-          payload: { message: output, type: BaseNode.Speak.TraceSpeakType.MESSAGE },
-        });
-      }
+      if (output) addOutput(output, runtime);
     }
   });
 

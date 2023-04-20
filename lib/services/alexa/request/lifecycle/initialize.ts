@@ -1,9 +1,10 @@
-import { BaseNode, BaseVersion } from '@voiceflow/base-types';
+import { BaseVersion } from '@voiceflow/base-types';
 import { Frame, Store } from '@voiceflow/general-runtime/build/runtime';
 import { VoiceflowConstants } from '@voiceflow/voiceflow-types';
 
 import { F, S, T, V } from '@/lib/constants';
 import { StreamAction } from '@/lib/services/runtime/handlers/stream';
+import { addOutput } from '@/lib/services/runtime/handlers/utils/output';
 import { createResumeFrame, RESUME_PROGRAM_ID } from '@/lib/services/runtime/programs/resume';
 import { AlexaRuntime } from '@/lib/services/runtime/types';
 
@@ -108,13 +109,10 @@ export const initializeGenerator = (utils: typeof utilsObj) => async (
   } else {
     // give runtime to where the user left off with last speak node
     stack.top().storage.delete(F.CALLED_COMMAND);
+
     const lastSpeak = stack.top().storage.get<string>(F.SPEAK) ?? '';
 
-    storage.set(S.OUTPUT, lastSpeak);
-    runtime.trace.addTrace<BaseNode.Speak.TraceFrame>({
-      type: BaseNode.Utils.TraceType.SPEAK,
-      payload: { message: lastSpeak, type: BaseNode.Speak.TraceSpeakType.MESSAGE },
-    });
+    addOutput(lastSpeak, runtime, { addToTop: false });
   }
 };
 
