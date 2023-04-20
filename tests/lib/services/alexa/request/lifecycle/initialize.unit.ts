@@ -77,6 +77,7 @@ describe('initialize lifecycle unit tests', async () => {
         },
         variables: {
           get: sinon.stub(),
+          set: sinon.stub(),
           merge: sinon.stub(),
         },
         trace: {
@@ -305,7 +306,7 @@ describe('initialize lifecycle unit tests', async () => {
 
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
-          expect(runtime.storage.set.args[4]).to.eql([S.OUTPUT, '']);
+          expect(runtime.storage.produce.callCount).to.eql(3);
           expect(runtime.trace.addTrace.args).to.eql([
             [{ type: BaseNode.Utils.TraceType.SPEAK, payload: { message: '', type: 'message' } }],
           ]);
@@ -325,7 +326,7 @@ describe('initialize lifecycle unit tests', async () => {
 
           expect(topStorage.delete.args[0]).to.eql([F.CALLED_COMMAND]);
           expect(topStorage.get.args[0]).to.eql([F.SPEAK]);
-          expect(runtime.storage.set.args[4]).to.eql([S.OUTPUT, lastSpeak]);
+          expect(runtime.storage.produce.callCount).to.eql(3);
           expect(runtime.trace.addTrace.args).to.eql([
             [{ type: BaseNode.Utils.TraceType.SPEAK, payload: { message: lastSpeak, type: 'message' } }],
           ]);

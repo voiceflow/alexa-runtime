@@ -191,6 +191,7 @@ describe('voiceflowManager unit tests', async () => {
           stack: {
             top: sinon.stub().returns({ storage: storageTop }),
           },
+          variables: { get: sinon.stub(), set: sinon.stub() },
           storage: {
             produce: sinon.stub(),
           },

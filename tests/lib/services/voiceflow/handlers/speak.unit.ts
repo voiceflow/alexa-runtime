@@ -39,6 +39,7 @@ describe('speak handler unit tests', async () => {
         trace: { addTrace: sinon.stub() },
         storage: { produce: sinon.stub() },
         stack: { top: sinon.stub().returns(topFrame) },
+        variables: { get: sinon.stub(), set: sinon.stub() },
       };
       const variables = { getState: sinon.stub().returns({}) };
 
@@ -60,6 +61,7 @@ describe('speak handler unit tests', async () => {
         trace: { addTrace: sinon.stub() },
         storage: { produce: sinon.stub() },
         stack: { top: sinon.stub().returns(topFrame) },
+        variables: { get: sinon.stub(), set: sinon.stub() },
       };
       const varState = { var: 1.234, var1: 'here' };
       const variables = { getState: sinon.stub().returns(varState) };

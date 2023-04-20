@@ -60,6 +60,8 @@ describe('repeat handler', () => {
           stack: {
             top: sinon.stub().returns(frame),
           },
+          variables: { get: sinon.stub(), set: sinon.stub() },
+          trace: { addTrace: sinon.stub() },
         };
 
         repeatHandler.handle(runtime as any);
@@ -96,6 +98,8 @@ describe('repeat handler', () => {
           stack: {
             top: sinon.stub().returns(frame),
           },
+          variables: { get: sinon.stub(), set: sinon.stub() },
+          trace: { addTrace: sinon.stub() },
         };
 
         repeatHandler.handle(runtime as any);
