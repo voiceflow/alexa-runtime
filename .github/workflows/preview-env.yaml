@@ -64,7 +64,7 @@ jobs:
           ./vfcli init --interactive false --no-telepresence
 
           echo "Creating new environment..."
-          ./vfcli env create --random --interactive false --no-telepresence --prefix review
+          ./vfcli env create --random --interactive false --no-telepresence --prefix review --shared
           # From the vfcli config file, gets the value from the name YAML property and the replace " to empty
           ENV_NAME=$(cat /home/runner/.vf/.vfcli.yaml | grep review- | awk '/name:/ {print $2}' | sed 's/"//g' )
 
@@ -118,6 +118,8 @@ jobs:
           message: |
             Dev environment ${{ steps.createNewEnv.outputs.newEnvName }} created!
             Preview available at: https://${{ steps.createNewEnv.outputs.endpoint }}
+
+            If you want to interact with this env through `vfcli`, just run `vfcli env set-active ${{ steps.createNewEnv.outputs.newEnvName }}`
           GITHUB_TOKEN: ${{ secrets.GH_SA_TOKEN }}
 
       - name: Comment PR
