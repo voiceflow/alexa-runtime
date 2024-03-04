@@ -5,7 +5,6 @@ import {
   GoToNodeHandler,
   IfHandler,
   IfV2Handler,
-  IntegrationsHandler,
   NextHandler,
   RandomHandler,
   ResetHandler,
@@ -29,6 +28,7 @@ import DirectiveHandler, { DirectiveResponseBuilder } from './directive';
 import DisplayHandler, { DisplayResponseBuilder } from './display';
 import DisplayHandlerV2 from './displayV2';
 import GoToHandler from './goTo';
+import IntegrationsHandler from './integrations';
 import InteractionHandler from './interaction';
 import PaymentHandler, { PaymentResponseBuilder } from './payment';
 import PermissionCardHandler, { PermissionCardResponseBuilder } from './permissionCard';
