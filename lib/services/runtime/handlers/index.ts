@@ -28,7 +28,7 @@ import DirectiveHandler, { DirectiveResponseBuilder } from './directive';
 import DisplayHandler, { DisplayResponseBuilder } from './display';
 import DisplayHandlerV2 from './displayV2';
 import GoToHandler from './goTo';
-import IntegrationsHandler from './integrations';
+import IntegrationsStubHandler from './integrations';
 import InteractionHandler from './interaction';
 import PaymentHandler, { PaymentResponseBuilder } from './payment';
 import PermissionCardHandler, { PermissionCardResponseBuilder } from './permissionCard';
@@ -90,6 +90,7 @@ export default ({
     maxResponseBodySizeBytes: API_MAX_CONTENT_LENGTH_BYTES ?? undefined,
     maxRequestBodySizeBytes: API_MAX_BODY_LENGTH_BYTES ?? undefined,
   }),
+  IntegrationsStubHandler(),
   RandomHandler(),
   SetHandler(),
   SetV2Handler(),
