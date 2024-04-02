@@ -20,7 +20,6 @@ export interface Config {
   // Application secrets
   DYNAMO_ENDPOINT: string | null;
   CODE_HANDLER_ENDPOINT: string | null;
-  INTEGRATIONS_HANDLER_ENDPOINT: string;
 
   API_MAX_TIMEOUT_MS: number | null;
   API_MAX_CONTENT_LENGTH_BYTES: number | null;

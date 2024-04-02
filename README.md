@@ -59,8 +59,6 @@ Also add the following file to the local repository:
 > PORT=4000
 > SESSIONS_DYNAMO_TABLE="none"
 >
-> INTEGRATIONS_HANDLER_ENDPOINT="none"
->
 > LOG_LEVEL="debug"
 > MIDDLEWARE_VERBOSITY="short"
 >
@@ -143,7 +141,6 @@ If you want to add your own database or custom methods, feel free to look at the
 
 These environment variables are optional and meant for specific blocks that have microservices that perform external functions. If left undefined the `code`/`API` block will run their requests locally on this server, as long as the project is trusted it is not an issue.
 
-| name                            | example/values          |                                                                                            desc | required |
-| ------------------------------- | :---------------------- | ----------------------------------------------------------------------------------------------: | -------- |
-| `CODE_HANDLER_ENDPOINT`         | `http://localhost:8804` |                                      stateless cloud service endpoint to execute the code block | NO       |
-| `INTEGRATIONS_HANDLER_ENDPOINT` | `http://localhost:8100` | cloud endpoint for zapier/google blocks - not available if `alexa-runtime` is ran as standalone | NO       |
+| name                    | example/values          |                                                       desc | required |
+| ----------------------- | :---------------------- | ---------------------------------------------------------: | -------- |
+| `CODE_HANDLER_ENDPOINT` | `http://localhost:8804` | stateless cloud service endpoint to execute the code block | NO       |

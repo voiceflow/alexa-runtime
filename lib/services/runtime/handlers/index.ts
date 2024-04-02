@@ -55,7 +55,6 @@ export const responseHandlers = [
 const _v1Handler = _V1Handler();
 
 export default ({
-  INTEGRATIONS_HANDLER_ENDPOINT,
   CODE_HANDLER_ENDPOINT,
   API_MAX_BODY_LENGTH_BYTES,
   API_MAX_CONTENT_LENGTH_BYTES,
@@ -91,7 +90,6 @@ export default ({
     maxResponseBodySizeBytes: API_MAX_CONTENT_LENGTH_BYTES ?? undefined,
     maxRequestBodySizeBytes: API_MAX_BODY_LENGTH_BYTES ?? undefined,
   }),
-  IntegrationsHandler({ integrationsEndpoint: INTEGRATIONS_HANDLER_ENDPOINT }),
   RandomHandler(),
   SetHandler(),
   SetV2Handler(),
