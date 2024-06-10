@@ -126,6 +126,7 @@ workflows:
           context: dev-test
           env-name: {{ .values.e2e_env_name }}
           filters: *bors_branches_filters
+          pool-type: e2e
       - vfcommon/prepare-env:
           context: dev-test
           env-name: {{ .values.e2e_env_name }}
@@ -145,12 +146,15 @@ workflows:
           requires:
             # - vfcommon/build-e2e-tests
             - vfcommon/prepare-env
+      - vfcommon/waiter:
+          context: dev-test
+          filters: *bors_branches_filters
       - vfcommon/release-env:
           context: dev-test
           env-name: {{ .values.e2e_env_name }}
           requires:
 #            - vfcommon/run-e2e-tests
-            - vfcommon/run-smoke-tests
+            - vfcommon/waiter
           filters: *bors_branches_filters
 
       - vfcommon/build_push_image:
