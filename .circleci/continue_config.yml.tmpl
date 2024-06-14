@@ -41,6 +41,10 @@ defaults:
           template: basic_fail_1
           branch_pattern: master
 
+  executor: &node-executor
+    name: vfcommon/node-executor-node-20
+    tag: 20.11.1-vf-2
+
 orbs:
   vfcommon: voiceflow/common@{{ .values.common_orb_version }}
   sonarcloud: sonarsource/sonarcloud@2.0.0
@@ -139,7 +143,13 @@ workflows:
 #      - vfcommon/build-e2e-tests:
 #          context: dev-test
 #          filters: *bors_branches_filters
-
+      - vfcommon/collect-e2e-logs:
+          context: dev-test
+          executor: *node-executor
+          e2e-env-name: {{ .values.e2e_env_name }}
+          requires:
+            - vfcommon/prepare-env
+          filters: *bors_branches_filters
       - vfcommon/run-smoke-tests:
           context: dev-test
           e2e-env-name: {{ .values.e2e_env_name }}
