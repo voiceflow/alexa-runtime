@@ -166,6 +166,16 @@ workflows:
             - vfcommon/waiter
           filters: *bors_branches_filters
 
+      - vfcommon/report_smoke_failures:
+          context: dev-test
+          e2e-env-name: {{ .values.e2e_env_name }}
+          requires:
+            - vfcommon/waiter
+          filters:
+            branches:
+              only:
+                - staging
+
       - vfcommon/build_push_image:
           name: build-push-image-e2e
           context: dev-test
