@@ -3,6 +3,7 @@ status = [
   "ci/circleci: install_and_build",
   "ci/circleci: test",
   "ci/circleci: run-smoke-tests",
+  "ci/circleci: report_smoke_failures",
   "ci/circleci: provision-env",
   "ci/circleci: prepare-env",
 ]
