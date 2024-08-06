@@ -44,7 +44,7 @@
     "helmet": "^4.6.0",
     "json-stringify-safe": "^5.0.1",
     "lodash": "^4.17.21",
-    "mongodb": "^3.6.3",
+    "mongodb": "^4.0.0",
     "pg": "^8.5.1",
     "pg-format": "^1.0.4",
     "randomstring": "^1.1.5",
