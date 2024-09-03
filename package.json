@@ -159,5 +159,9 @@
     "test:single": "NODE_ENV=test ts-mocha --paths --opts ./config/tests/mocha.opts",
     "test:smoke": "NODE_ENV=test ts-node --files -r tsconfig-paths/register tests/smoke/initSmokeTest.ts",
     "test:unit": "NODE_ENV=test nyc --report-dir=nyc_coverage_unit ts-mocha --paths --opts ./config/tests/mocha.opts 'tests/**/*.unit.ts'"
+  },
+  "volta": {
+    "node": "16.13.0",
+    "yarn": "1.22.21"
   }
 }
